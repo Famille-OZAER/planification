@@ -64,8 +64,8 @@
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
 			<li role="presentation" class="active"><a href="#tab_eqlogic" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
-			<li role="presentation" id ="menu_tab_programmations"><a href="#tab_programmations" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Programmations}}</a></li>
-			<li role="presentation"><a href="#tab_commandes_programmation" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Commandes programmation}}</a></li>
+			<li role="presentation" id ="menu_tab_planifications"><a href="#tab_planifications" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{planifications}}</a></li>
+			<li role="presentation"><a href="#tab_commandes_planification" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Commandes planification}}</a></li>
 			<li role="presentation" id ="menu_tab_gestion"><a href="#tab_gestion" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Gestion Lever/Coucher soleil}}</a></li>
 			<li role="presentation"><a href="#tab_commandes" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes équipement}}</a></li>
 			
@@ -144,33 +144,33 @@
 				<hr>
 			</div>
 
-			<!--Programmations Tab-->
-			<div role="tabpanel" class="tab-pane" id="tab_programmations">
-					<a class="btn btn-sm btn-success pull-right" id="bt_ajouter_programme" style="margin-top: 5px;"><i class="fa fa-plus-circle"></i> {{Ajouter Programmation}}</a>
-					<a class="btn btn-sm btn-success pull-right" id="bt_importer_programme" style="margin-top: 5px;"><i class="fas fa-sign-in-alt" style=" transform:rotate(90deg)"></i> {{Importer Programmation}}</a><br/><br/>
-				<div id="div_programmations" class="panel-group"></div>
+			<!--planifications Tab-->
+			<div role="tabpanel" class="tab-pane" id="tab_planifications">
+					<a class="btn btn-sm btn-success pull-right" id="bt_ajouter_planification" style="margin-top: 5px;"><i class="fa fa-plus-circle"></i> {{Ajouter planification}}</a>
+					<a class="btn btn-sm btn-success pull-right" id="bt_importer_planification" style="margin-top: 5px;"><i class="fas fa-sign-in-alt" style=" transform:rotate(90deg)"></i> {{Importer planification}}</a><br/><br/>
+				<div id="div_planifications" class="panel-group"></div>
 			</div>
-			<!--fin Programmations Tab-->    
+			<!--fin planifications Tab-->    
 
 		
 
 
 			
-			<div role="tabpanel" class="tab-pane" id="tab_commandes_programmation">
+			<div role="tabpanel" class="tab-pane" id="tab_commandes_planification">
 			<!--<fieldset>-->
 			<div class="alert alert-danger">
-				ATTENTION. Si vous modifiez ou supprimez des commandes qui sont utilisées dans vos programmations, celles-ci risquent de ne plus fonctionner correctement.<br>
-				Un ajout de commande n'a aucune inscidence sur le fonctionnement de vos programmations.
+				ATTENTION. Si vous modifiez ou supprimez des commandes qui sont utilisées dans vos planifications, celles-ci risquent de ne plus fonctionner correctement.<br>
+				Un ajout de commande n'a aucune inscidence sur le fonctionnement de vos planifications.
 			</div>
             	<div class="input-group pull-right" style="display:inline-flex">
 				    <a class="btn btn-default btn-sm bt_Importer_EqLogic" style="margin-top:5px;"><i class="fas fa-sign-in-alt" style=" transform:rotate(90deg)"></i> {{Importer équipement}}</a>
-					<a class="btn btn-default btn-sm  pull-right bt_Ajout_commande_programmation" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une commande}}</a>
+					<a class="btn btn-default btn-sm  pull-right bt_Ajout_commande_planification" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une commande}}</a>
                    
                 </div> 
 					
 		
 				<div class="col-sm-12">
-					<table id="table_cmd_programmation" class="table table-bordered table-condensed">
+					<table id="table_cmd_planification" class="table table-bordered table-condensed">
 						<thead>
 							<tr>
 								<th class="col-sm-2">{{ID}}</th>
@@ -222,7 +222,7 @@
 								<div class="form-group ">
 									<label class="col-sm-5 control-label">{{Prochaine ouverture du volet}}</label>
 									<div class="col-sm-2">
-										<span class="ProgrammationJour label label-success eqLogicAttr" data-l1key="configuration" data-l2key="ProgrammationJour"></span>
+										<span class="planificationJour label label-success eqLogicAttr" data-l1key="configuration" data-l2key="planificationJour"></span>
 									</div>
 								</div>
 								<div class="form-group ">
@@ -236,7 +236,7 @@
 									<label class="col-sm-5 control-label">{{Heure ouverture minimum}}</label>
 									<div class="col-sm-5">
 										<div class="input-group">
-											<input type="time" class="HeureOuvertureMin eqLogicAttr form-control" data-l1key="configuration" data-l2key="OuvertureMin" onchange="UpdateProgrammationJour()"/>
+											<input type="time" class="HeureOuvertureMin eqLogicAttr form-control" data-l1key="configuration" data-l2key="OuvertureMin" onchange="UpdateplanificationJour()"/>
 										</div>
 									</div>
 								</div>
@@ -244,7 +244,7 @@
 									<label class="col-sm-5 control-label">{{Heure ouverture maximum}}</label>
 									<div class="col-sm-5">
 										<div class="input-group">
-											<input type="time" class="HeureOuvertureMax eqLogicAttr form-control" data-l1key="configuration" data-l2key="OuvertureMax" onchange="UpdateProgrammationJour()"/>
+											<input type="time" class="HeureOuvertureMax eqLogicAttr form-control" data-l1key="configuration" data-l2key="OuvertureMax" onchange="UpdateplanificationJour()"/>
 										</div>
 									</div>
 								</div>
@@ -260,7 +260,7 @@
 								<div class="form-group ">
 									<label class="col-sm-5 control-label">{{Prochaine fermeture du volet}}</label>
 									<div class="col-sm-2">
-										<span class="ProgrammationNuit label label-warning eqLogicAttr" data-l1key="configuration" data-l2key="ProgrammationNuit"></span>
+										<span class="planificationNuit label label-warning eqLogicAttr" data-l1key="configuration" data-l2key="planificationNuit"></span>
 									</div>
 								</div>
                                 <div class="form-group ">
@@ -274,7 +274,7 @@
 									<label class="col-sm-5 control-label">{{Heure de fermeture minimum}}</label>
 									<div class="col-sm-5">
 										<div class="input-group">
-											<input type="time" class="HeureFermetureMin eqLogicAttr form-control" data-l1key="configuration" data-l2key="FermetureMin" onchange="UpdateProgrammationNuit()"/>
+											<input type="time" class="HeureFermetureMin eqLogicAttr form-control" data-l1key="configuration" data-l2key="FermetureMin" onchange="UpdateplanificationNuit()"/>
 										</div>
 										
 									</div>
@@ -283,7 +283,7 @@
 									<label class="col-sm-5 control-label">{{Heure de fermeture maximum}}</label>
 									<div class="col-sm-5">
                                     	<div class="input-group">
-                                    		<input type="time" class="HeureFermetureMax eqLogicAttr form-control" data-l1key="configuration" data-l2key="FermetureMax" onchange="UpdateProgrammationNuit()"/>
+                                    		<input type="time" class="HeureFermetureMax eqLogicAttr form-control" data-l1key="configuration" data-l2key="FermetureMax" onchange="UpdateplanificationNuit()"/>
 
                                         </div>
                                     </div>

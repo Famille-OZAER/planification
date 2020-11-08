@@ -169,31 +169,31 @@ function closeAllSelect(elmnt) {
 /* If the user clicks anywhere outside the select box,
 then close all select boxes: */
 document.addEventListener("click", closeAllSelect);
-function UpdateProgrammationNuit() {
+function UpdateplanificationNuit() {
   if ($('.HeureCoucher')[0].firstChild == null){ return null}
-  $('.ProgrammationNuit').text($('.HeureCoucher')[0].firstChild.data);
+  $('.planificationNuit').text($('.HeureCoucher')[0].firstChild.data);
   if (!isNaN(parseInt($('.HeureFermetureMin')[0].value.replace(":", "")))) {
     if ( parseInt($('.HeureCoucher')[0].firstChild.data.replace(":", "")) <parseInt($('.HeureFermetureMin')[0].value.replace(":", ""))){ 
-      $('.ProgrammationNuit').text($('.HeureFermetureMin')[0].value);
+      $('.planificationNuit').text($('.HeureFermetureMin')[0].value);
     }
   }
   if (!isNaN(parseInt($('.HeureFermetureMax')[0].value.replace(":", "")))) { 
     if (parseInt($('.HeureCoucher')[0].firstChild.data.replace(":", "")) > parseInt($('.HeureFermetureMax')[0].value.replace(":", ""))){ 
-      $('.ProgrammationNuit').text($('.HeureFermetureMax')[0].value);
+      $('.planificationNuit').text($('.HeureFermetureMax')[0].value);
     }
   }
 }
-function UpdateProgrammationJour() {
+function UpdateplanificationJour() {
   if ($('.HeureLever')[0].firstChild == null){ return null}
-  $('.ProgrammationJour').text($('.HeureLever')[0].firstChild.data);
+  $('.planificationJour').text($('.HeureLever')[0].firstChild.data);
   if (!isNaN(parseInt($('.HeureOuvertureMin')[0].value.replace(":", "")))) {
     if ( parseInt($('.HeureLever')[0].firstChild.data.replace(":", "")) <parseInt($('.HeureOuvertureMin')[0].value.replace(":", ""))){ 
-      $('.ProgrammationJour').text($('.HeureOuvertureMin')[0].value);
+      $('.planificationJour').text($('.HeureOuvertureMin')[0].value);
     }
   }
   if (!isNaN(parseInt($('.HeureOuvertureMax')[0].value.replace(":", "")))) { 
     if (parseInt($('.HeureLever')[0].firstChild.data.replace(":", "")) > parseInt($('.HeureOuvertureMax')[0].value.replace(":", ""))){ 
-      $('.ProgrammationJour').text($('.HeureOuvertureMax')[0].value);
+      $('.planificationJour').text($('.HeureOuvertureMax')[0].value);
     }
   }
 }
@@ -238,40 +238,40 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change',functio
    }
 })
   
-//Programmes:
-$('#bt_ajouter_programme').off('click').on('click', function () {//OK
+//planifications:
+$('#bt_ajouter_planification').off('click').on('click', function () {//OK
 	bootbox.prompt({
-        title: "Veuillez inserer le nouveau nom du programme à ajouter.",
+        title: "Veuillez inserer le nouveau nom de la planification à ajouter.",
         buttons: {
             confirm: {label: 'Ajouter', className: 'btn-success'},
             cancel: {label: 'Annuler', className: 'btn-danger'}
         },
         callback: function (resultat) {
             if (resultat!== null && resultat != '') {
-               AjoutProgrammation({nom: resultat, nouveau: true})
+               Ajoutplanification({nom: resultat, nouveau: true})
             }
         }
     })
 })
-$('#bt_importer_programme').off('click').on('click', function () {//OK
-     $('#md_modal').dialog({title: "{{Importation de programme}}"});
-    $('#md_modal').load('index.php?v=d&plugin=planification&modal=Importer_Programme&type=' + $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value()).dialog('open');
+$('#bt_importer_planification').off('click').on('click', function () {//OK
+     $('#md_modal').dialog({title: "{{Importation de planification}}"});
+    $('#md_modal').load('index.php?v=d&plugin=planification&modal=Importer_planification&type=' + $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value()).dialog('open');
 })
 
-function AjoutProgrammation(_programme, _updateProgram) {//OK
-    if (init(_programme.nom) == '') return
+function Ajoutplanification(_planification, _updateProgram) {//OK
+    if (init(_planification.nom) == '') return
     var random = Math.floor((Math.random() * 1000000) + 1)
-    var div = '<div class="programme panel panel-default">'
+    var div = '<div class="planification panel panel-default">'
 			div += '<div class="panel-heading">'
 				div += '<h3 class="panel-title" style="padding-bottom: 4px;">'
 					div += '<a class="accordion-toggle collapsed" style="width: calc(100% - 420px);" data-toggle="collapse" data-parent="" href="#collapse' + random + '">'
-						div += '<span class="nom_programme">' + _programme.nom + '</span>'
+						div += '<span class="nom_planification">' + _planification.nom + '</span>'
 							div += '<span class="input-group-btn pull-right">'
-								div += '<a class="btn btn-sm bt_renommer_programme btn-warning roundedLeft"><i class="fas fa-copy"></i> {{Renommer}}</a>'																										 
-								div += '<a class="btn btn-sm bt_dupliquer_Programme btn-primary roundedLeft"><i class="fas fa-copy"></i> {{Dupliquer}}</a>'
-								div += '<a class="btn btn-sm bt_exporter_Programme btn-default"><i class="fas fa-sign-out-alt"></i> {{Exporter}}</a>'
-								div += '<a class="btn btn-sm bt_appliquer_programme btn-danger" title="Appliquez le programme maintenant"><i class="fas fa-check-circle"></i> {{Appliquer}}</a>'
-								div += '<a class="btn btn-sm bt_supprimer_Programme btn-danger roundedRight"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>'
+								div += '<a class="btn btn-sm bt_renommer_planification btn-warning roundedLeft"><i class="fas fa-copy"></i> {{Renommer}}</a>'																										 
+								div += '<a class="btn btn-sm bt_dupliquer_planification btn-primary roundedLeft"><i class="fas fa-copy"></i> {{Dupliquer}}</a>'
+								div += '<a class="btn btn-sm bt_exporter_planification btn-default"><i class="fas fa-sign-out-alt"></i> {{Exporter}}</a>'
+								div += '<a class="btn btn-sm bt_appliquer_planification btn-danger" title="Appliquez le planification maintenant"><i class="fas fa-check-circle"></i> {{Appliquer}}</a>'
+								div += '<a class="btn btn-sm bt_supprimer_planification btn-danger roundedRight"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>'
 							div += '</span>'
 					div += '</a>'
 					
@@ -327,12 +327,12 @@ function AjoutProgrammation(_programme, _updateProgram) {//OK
     div += '</div>'
     div += '</div>'
 
-    $('#div_programmations').append(div)
-    $('#div_programmations .programme:last').setValues(_programme, '.programAttr')
+    $('#div_planifications').append(div)
+    $('#div_planifications .planification:last').setValues(_planification, '.programAttr')
 
     //init jours:
-    if (_programme.nouveau) {
-        $('#div_programmations .programme:last .JourSemaine').each(function () {
+    if (_planification.nouveau) {
+        $('#div_planifications .planification:last .JourSemaine').each(function () {
             jour = $(this).closest('.JourSemaine')
             Ajout_Periode(jour)
         })
@@ -340,16 +340,16 @@ function AjoutProgrammation(_programme, _updateProgram) {//OK
 	
 }
   
-$('#div_programmations').off('click','.bt_exporter_Programme').on('click','.bt_exporter_Programme',  function () {//OK
-    programmation = $(this).closest('.programme')
-	Programmation_a_exporter = {}
-    Programmation_a_exporter.nom_programme = programmation.find('.nom_programme').html()
-	Programmation_a_exporter.type_programme=$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val()
-	Programmation_a_exporter.edLogicId=$('.eqLogicAttr[data-l1key=id ]').val()
+$('#div_planifications').off('click','.bt_exporter_planification').on('click','.bt_exporter_planification',  function () {//OK
+    planification = $(this).closest('.planification')
+	planification_a_exporter = {}
+    planification_a_exporter.nom_planification = planification.find('.nom_planification').html()
+	planification_a_exporter.type_planification=$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val()
+	planification_a_exporter.edLogicId=$('.eqLogicAttr[data-l1key=id ]').val()
 	
     semaine = []
 	erreur=false
-    programmation.find('.JourSemaine').each(function () {
+    planification.find('.JourSemaine').each(function () {
 		jour = {}
         jour.jour = $(this).find('.NomJour').html()
         periodes = []
@@ -369,10 +369,10 @@ $('#div_programmations').off('click','.bt_exporter_Programme').on('click','.bt_e
         jour.periodes = periodes
         semaine.push(jour)
     })
-    Programmation_a_exporter.semaine = semaine
+    planification_a_exporter.semaine = semaine
 	if (erreur){
 		$('#div_alert').showAlert({
-			message: "{{Impossible d'exporter le programme. Celui-ci comporte des erreurs.}}",
+			message: "{{Impossible d'exporter le planification. Celui-ci comporte des erreurs.}}",
 			level: 'danger'
 		})
 		return;
@@ -381,9 +381,9 @@ $('#div_programmations').off('click','.bt_exporter_Programme').on('click','.bt_e
 		type: "POST",
 		url: "plugins/planification/core/ajax/planification.ajax.php",
 		data: {
-			action: "exporter_programme",
-			nom: Programmation_a_exporter.nom_programme,
-			programmation: Programmation_a_exporter
+			action: "exporter_planification",
+			nom: planification_a_exporter.nom_planification,
+			planification: planification_a_exporter
 		},
 		dataType: 'json',
 		global: false,
@@ -404,10 +404,10 @@ $('#div_programmations').off('click','.bt_exporter_Programme').on('click','.bt_e
 	})
 })
 
-$("#div_programmations").off('click','.bt_supprimer_Programme').on('click', '.bt_supprimer_Programme',function () {//OK
-    Ce_progamme = $(this).closest('.programme')
+$("#div_planifications").off('click','.bt_supprimer_planification').on('click', '.bt_supprimer_planification',function () {//OK
+    Ce_progamme = $(this).closest('.planification')
     bootbox.confirm({
-        message: "Voulez vous vraiment supprimer ce programme ?",
+        message: "Voulez vous vraiment supprimer ce planification ?",
         buttons: {
             confirm: {
                 label: 'Oui',
@@ -426,10 +426,10 @@ $("#div_programmations").off('click','.bt_supprimer_Programme').on('click', '.bt
     })
 })
 
-$('#div_programmations').off('click','.bt_dupliquer_Programme').on('click','.bt_dupliquer_Programme',  function () {//OK
-    var programmation = $(this).closest('.programme').clone()
+$('#div_planifications').off('click','.bt_dupliquer_planification').on('click','.bt_dupliquer_planification',  function () {//OK
+    var planification = $(this).closest('.planification').clone()
      bootbox.prompt({
-        title: "Veuillez inserer le nom pour le programme dupliqué.",
+        title: "Veuillez inserer le nom pour le planification dupliqué.",
         buttons: {
             confirm: {label: 'Dupliquer', className: 'btn-success'},
             cancel: {label: 'Annuler', className: 'btn-danger'}
@@ -437,21 +437,21 @@ $('#div_programmations').off('click','.bt_dupliquer_Programme').on('click','.bt_
         callback: function (resultat) {
             if (resultat!== null && resultat != '') {
 				var random = Math.floor((Math.random() * 1000000) + 1)
-				programmation.find('a[data-toggle=collapse]').attr('href', '#collapse' + random)
-				programmation.find('.panel-collapse.collapse').attr('id', 'collapse' + random)
-				programmation.find('.nom_programme').html(resultat)
-				$('#div_programmations').append(programmation)
+				planification.find('a[data-toggle=collapse]').attr('href', '#collapse' + random)
+				planification.find('.panel-collapse.collapse').attr('id', 'collapse' + random)
+				planification.find('.nom_planification').html(resultat)
+				$('#div_planifications').append(planification)
 				$('.collapse').collapse()
             }
         }
     })
 })
 
-$('#div_programmations').off('click','.bt_appliquer_programme').on('click','.bt_appliquer_programme',  function () {//OK
-    programmation = $(this).closest('.programme')
-    programName=programmation.find('.nom_programme').html()
+$('#div_planifications').off('click','.bt_appliquer_planification').on('click','.bt_appliquer_planification',  function () {//OK
+    planification = $(this).closest('.planification')
+    programName=planification.find('.nom_planification').html()
     bootbox.confirm({
-        message: "Voulez vous vraiment appliquer le programme "+programName+" maintenant ?",
+        message: "Voulez vous vraiment appliquer le planification "+programName+" maintenant ?",
         buttons: {
             confirm: {
                 label: 'Oui',
@@ -470,24 +470,24 @@ $('#div_programmations').off('click','.bt_appliquer_programme').on('click','.bt_
     })
 })
 
-$('#div_programmations').off('click','.bt_renommer_programme').on('click','.bt_renommer_programme',  function () {//OK
+$('#div_planifications').off('click','.bt_renommer_planification').on('click','.bt_renommer_planification',  function () {//OK
 	var el = $(this)
 	bootbox.prompt({
-        title: "Veuillez inserer le nouveau nom pour le programme:" + $(this).closest('.programme').find('.nom_programme').html() +".",
+        title: "Veuillez inserer le nouveau nom pour le planification:" + $(this).closest('.planification').find('.nom_planification').html() +".",
         buttons: {
             confirm: {label: 'Modifier', className: 'btn-success'},
             cancel: {label: 'Annuler', className: 'btn-danger'}
         },
         callback: function (resultat) {
             if (resultat !== null && resultat != '') {
-               el.closest('.panel.panel-default').find('span.nom_programme').text(resultat)
+               el.closest('.panel.panel-default').find('span.nom_planification').text(resultat)
             }
         }
     })
 })
 
-$("#div_programmations").sortable({
-	axis: "y", cursor: "move", items: ".programme", handle: ".panel-heading", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true
+$("#div_planifications").sortable({
+	axis: "y", cursor: "move", items: ".planification", handle: ".panel-heading", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true
 })
   
 $("body").off('click', '.bt_supprimer_perdiode').on( 'click', '.bt_supprimer_perdiode',function () {//OK
@@ -612,7 +612,7 @@ function Ajout_Periode(Div_jour, time=null, Mode_periode=null){//OK
         }
     }
 	
-	PROGRAM_MODE_LIST = Recup_liste_mode_programme()
+	PROGRAM_MODE_LIST = Recup_liste_mode_planification()
     if (time == null) time = '00:00'
 	div = '<div class="Periode_jour">'
 		div += '<div class="input-group" style="width:100% !important; line-height:1.4px !important;">'
@@ -677,13 +677,13 @@ function Vider_jour(jour){//OK
     })
 }
 
-function Recup_liste_mode_programme(){
+function Recup_liste_mode_planification(){
 	temp = []
  $.ajax({
       type: "POST",
       url: "plugins/planification/core/ajax/planification.ajax.php",
       data: {
-        action: "Recup_liste_mode_programme",
+        action: "Recup_liste_mode_planification",
         eqLogic_id: $('.eqLogicAttr[data-l1key=id]').value()
       },
 	  dataType: 'json',
@@ -706,26 +706,26 @@ function Recup_liste_mode_programme(){
 	return temp
 	
 }
-$('.bt_Importer_Programme').on('click',function(){ //appelé par modal!
-    programFilePath = "/plugins/planification/programmations/" + $(this).attr("nom_fichier")
+$('.bt_Importer_planification').on('click',function(){ //appelé par modal!
+    programFilePath = "/plugins/planification/planifications/" + $(this).attr("nom_fichier")
     $.getJSON(programFilePath, function(jsonDatas){
 		divDays = null
-        $('#div_programmations .programme').each(function (){
-            if ($(this).find('.nom_programme').html() == jsonDatas.nom_programme){
+        $('#div_planifications .planification').each(function (){
+            if ($(this).find('.nom_planification').html() == jsonDatas.nom_planification){
 				divDays = $(this).find(".div_programDays")
 				return
 			}
         })
 		if(divDays == null){
-			AjoutProgrammation({nom:jsonDatas.nom_programme,nouveau:false})
+			Ajoutplanification({nom:jsonDatas.nom_planification,nouveau:false})
 			
-			$('#div_programmations .programme:last .JourSemaine').each(function () {
+			$('#div_planifications .planification:last .JourSemaine').each(function () {
 				dayElName = $(this).find('.NomJour').html()
 				dayElNameRef = JOURREF[JOURS.indexOf(dayElName)]
 				for (j in jsonDatas.semaine) {
-					programme_jour = jsonDatas.semaine[j]
-					if (programme_jour.jour == dayElNameRef){
-						periodes = programme_jour.periodes
+					planification_jour = jsonDatas.semaine[j]
+					if (planification_jour.jour == dayElNameRef){
+						periodes = planification_jour.periodes
 						for (k in periodes) {
 							periode = periodes[k]
 							Ajout_Periode($(this), periode.Debut_periode, periode.Id)
@@ -757,12 +757,12 @@ $('.bt_Importer_Programme').on('click',function(){ //appelé par modal!
     $('#md_modal').dialog("close")
 })
 
-$('.bt_Supprimer_Programme').on('click',function(){ //appelé par modal!
-    _Programe_Div_a_supprimer = $(this).closest(".Programme")
-    _nom_fichier = $(this).closest(".bt_Supprimer_Programme").attr("nom_fichier")
+$('.bt_Supprimer_planification').on('click',function(){ //appelé par modal!
+    _Programe_Div_a_supprimer = $(this).closest(".planification")
+    _nom_fichier = $(this).closest(".bt_Supprimer_planification").attr("nom_fichier")
 	_nom_fichier = $(this).attr("nom_fichier")
     bootbox.confirm({
-        message: "Voulez vous vraiment supprimer ce fichier de programme ?",
+        message: "Voulez vous vraiment supprimer ce fichier de planification ?",
         buttons: {
             confirm: {label: 'Supprimer', className: 'btn-danger'},
             cancel: {label: 'Annuler', className: 'btn-success'}
@@ -772,7 +772,7 @@ $('.bt_Supprimer_Programme').on('click',function(){ //appelé par modal!
                 $.ajax({
                     type: "POST",
                     url: "plugins/planification/core/ajax/planification.ajax.php",
-                    data: { action: "supprimer_programme", nom_fichier: _nom_fichier},
+                    data: { action: "supprimer_planification", nom_fichier: _nom_fichier},
                     dataType: 'json',
                     error: function (request, status, error) {
                         handleAjaxError(request, status, error)
@@ -788,9 +788,9 @@ $('.bt_Supprimer_Programme').on('click',function(){ //appelé par modal!
     })
 })
 
-$('.bt_Telecharger_Programme').on('click',function(){ //appelé par modal!
+$('.bt_Telecharger_planification').on('click',function(){ //appelé par modal!
     Nom_fichier = $(this).attr("nom_fichier")
-    programFilePath = "/plugins/planification/programmations/" + Nom_fichier
+    programFilePath = "/plugins/planification/planifications/" + Nom_fichier
     $.getJSON(programFilePath, function(data){
         dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data))
         downloadAnchorNode = document.createElement('a')
@@ -837,8 +837,8 @@ $('.bt_Importer_EqLogic').off('click').on('click', function () {
   });
 });
 
-$('.bt_Ajout_commande_programmation').on('click', function () {
-  addEvent({});
+$('.bt_Ajout_commande_planification').on('click', function () {
+  addCmdPlanificationToTable({});
   modifyWithoutSave = true;
 });
 
@@ -869,10 +869,10 @@ $("body").delegate('.bt_removeAction', 'click', function() {
 			var progs = [];
 
 			cmd_id=$(this).closest('div tr').getValues('.expressionAttr')[0]['Id']
-			$('#div_programmations').find('.select-items .same-as-selected').each(function () {
+			$('#div_planifications').find('.select-items .same-as-selected').each(function () {
 				if($(this)[0].getAttribute("id")==cmd_id){
-					if (!progs.includes($(this).closest('div .programme').find(".nom_programme")[0].innerHTML)){
-						progs.push($(this).closest('div .programme').find(".nom_programme")[0].innerHTML);
+					if (!progs.includes($(this).closest('div .planification').find(".nom_planification")[0].innerHTML)){
+						progs.push($(this).closest('div .planification').find(".nom_planification")[0].innerHTML);
 					}					
 				}
 			})
@@ -893,7 +893,7 @@ $("body").delegate('.bt_removeAction', 'click', function() {
 		type: "POST",
 		url: "plugins/planification/core/ajax/planification.ajax.php",
 		data: {
-			action: "Verificarion_programme_avant_suppression_commande",
+			action: "Verificarion_planification_avant_suppression_commande",
 			eqLogic_id: $('.eqLogicAttr[data-l1key=id]').value(),
 			cmd_id:$(this).closest('div tr').getValues('.expressionAttr')[0]['Id'],
 		},
@@ -916,7 +916,7 @@ $("body").delegate('.bt_removeAction', 'click', function() {
 		}
 	});*/
 })
-$('body').delegate('.row_cmd_programmation .expressionAttr[data-l1key=cmd]', 'focusout', function (event) {
+$('body').delegate('.row_cmd_planification .expressionAttr[data-l1key=cmd]', 'focusout', function (event) {
   	var el = $(this);
  	var expression = el.closest('div div').getValues('.expressionAttr');
     jeedom.cmd.displayActionOption(el.value(), init(expression[0].options), function (html) {
@@ -924,16 +924,13 @@ $('body').delegate('.row_cmd_programmation .expressionAttr[data-l1key=cmd]', 'fo
     });
 });
 function printEqLogic(_eqLogic) {//OK
-	//console.clear()
-	
-	
-    $('#div_programmations').empty()
-	$('#table_cmd_programmation tbody').empty()
-	nom_programmation_erreur=[]	
-	if (isset(_eqLogic.configuration.commandes_programmation)) {
-		for (var i in _eqLogic.configuration.commandes_programmation) {
+	$('#div_planifications').empty()
+	$('#table_cmd_planification tbody').empty()
+	nom_planification_erreur=[]	
+	if (isset(_eqLogic.configuration.commandes_planification)) {
+		for (var i in _eqLogic.configuration.commandes_planification) {
 			actionOptions = [];
-			addEvent(_eqLogic.configuration.commandes_programmation[i]);
+			addCmdPlanificationToTable(_eqLogic.configuration.commandes_planification[i]);
 			jeedom.cmd.displayActionsOption({
 				params : actionOptions,
 				async : false,
@@ -951,27 +948,25 @@ function printEqLogic(_eqLogic) {//OK
 	}
 	
 			
-	PROGRAM_MODE_LIST = Recup_liste_mode_programme()
+	PROGRAM_MODE_LIST = Recup_liste_mode_planification()
 	for (var i = 0; i < PROGRAM_MODE_LIST.length; i++) {
 		if (PROGRAM_MODE_LIST[i] == ""){
-			$('#menu_tab_programmations').hide();
+			$('#menu_tab_planifications').hide();
 		}
-		if (isset(_eqLogic.configuration) && isset(_eqLogic.configuration.programmations)) {
-			for (i in _eqLogic.configuration.programmations) {
+		if (isset(_eqLogic.configuration) && isset(_eqLogic.configuration.planifications)) {
+			for (i in _eqLogic.configuration.planifications) {
 				try{
-					Ce_progamme = _eqLogic.configuration.programmations[i]
-					AjoutProgrammation({nom: Ce_progamme.nom_programme, nouveau: false})
-					$('#div_programmations .programme:last .JourSemaine').each(function () {
+					Ce_progamme = _eqLogic.configuration.planifications[i]
+					Ajoutplanification({nom: Ce_progamme.nom_planification, nouveau: false})
+					$('#div_planifications .planification:last .JourSemaine').each(function () {
 						dayElName = $(this).find('.NomJour').html()
 						dayElNameRef = JOURREF[JOURS.indexOf(dayElName)]
 						for (j in Ce_progamme.semaine) {
-							programme_jour = Ce_progamme.semaine[j]
-							if (programme_jour.jour == dayElNameRef){
-								periodes = programme_jour.periodes
+							planification_jour = Ce_progamme.semaine[j]
+							if (planification_jour.jour == dayElNameRef){
+								periodes = planification_jour.periodes
 								for (k in periodes) {
 									periode = periodes[k]
-									
-									//Ajout_Periode($(this), periode.Debut_periode, periode.Mode,periode.Value)
 									Ajout_Periode($(this), periode.Debut_periode, periode.Id)
 								}
 							}
@@ -979,14 +974,14 @@ function printEqLogic(_eqLogic) {//OK
 					})
 				}catch(err) {
 					throw (err)
-					progamme = $('#div_programmations .programme:last').remove()
-					nom_programmation_erreur.push(Ce_progamme.nom_programme);
+					progamme = $('#div_planifications .planification:last').remove()
+					nom_planification_erreur.push(Ce_progamme.nom_planification);
 				} 
 			}
 			
 			//set_custom_select(periode=true)
 
-			if (nom_programmation_erreur.length>0){
+			if (nom_planification_erreur.length>0){
 				$('#div_alert').showAlert({
 								message: "Erreur",
 								level: 'warning'
@@ -997,20 +992,20 @@ function printEqLogic(_eqLogic) {//OK
 					type: "POST",
 					url: "plugins/planification/core/ajax/planification.ajax.php",
 					data: {
-						action: "Sauvegarde_programmations",
+						action: "Sauvegarde_planifications",
 						eqLogic_id: _eqLogic.id,
-						programmations:_eqLogic.configuration.programmations
+						planifications:_eqLogic.configuration.planifications
 					},
 					async: false,
 					global: false,
 					error: function (request, status, error) {handleAjaxError(request, status, error)},
 					success: function (data) {
-						if(nom_programmation_erreur.length==1){
-							message= "Votre programmation " + nom_programmation_erreur[0]+" contient des erreurs.<br>Elle a été automatiquement supprimée."
+						if(nom_planification_erreur.length==1){
+							message= "Votre planification " + nom_planification_erreur[0]+" contient des erreurs.<br>Elle a été automatiquement supprimée."
 						}else{
-							message= "Vos programmations :<br>"
-							for (e in nom_programmation_erreur) {
-								message+=nom_programmation_erreur[e] + "<br>"
+							message= "Vos planifications :<br>"
+							for (e in nom_planification_erreur) {
+								message+=nom_planification_erreur[e] + "<br>"
 							}
 							message+=" contiennent des erreurs.<br>Elles ont été automatiquement supprimées."
 						}
@@ -1032,14 +1027,14 @@ function saveEqLogic(_eqLogic) {//OK
     if (!isset(_eqLogic.configuration)) {
         _eqLogic.configuration = {}
     }
-	_eqLogic.configuration.programmations = []
-	_eqLogic.configuration.commandes_programmation = []
+	_eqLogic.configuration.planifications = []
+	_eqLogic.configuration.commandes_planification = []
 	
 	for (var i = 0; i < PROGRAM_MODE_LIST.length; i++) {
 		if (PROGRAM_MODE_LIST[i] != ""){
-   			$('#div_programmations .programme').each(function () {
-				_CeProgramme = {}
-				_CeProgramme.nom_programme = $(this).find('.nom_programme').html()
+   			$('#div_planifications .planification').each(function () {
+				_Ceplanification = {}
+				_Ceplanification.nom_planification = $(this).find('.nom_planification').html()
 				semaine = []
 				$(this).find('.JourSemaine').each(function () {
 					jour = {}
@@ -1059,15 +1054,15 @@ function saveEqLogic(_eqLogic) {//OK
 					jour.periodes = periodes
 					semaine.push(jour)
 				})
-				_CeProgramme.semaine = semaine
+				_Ceplanification.semaine = semaine
 				
-				_eqLogic.configuration.programmations.push(_CeProgramme)
+				_eqLogic.configuration.planifications.push(_Ceplanification)
 			})
 		}
 	}
 	
-	$('#table_cmd_programmation tbody tr').each(function(){
-		_eqLogic.configuration.commandes_programmation.push($(this).getValues('.expressionAttr')[0])
+	$('#table_cmd_planification tbody tr').each(function(){
+		_eqLogic.configuration.commandes_planification.push($(this).getValues('.expressionAttr')[0])
 	})
 	return _eqLogic
 }
@@ -1113,10 +1108,10 @@ function addCmdToTable(_cmd) {//OK
 			if (isset(_cmd.type)) $('#table_actions tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type))
 			jeedom.cmd.changeType($('#table_actions tbody tr:last'), init(_cmd.subType))
 		}
-		//if (_cmd.nom_programme == 'SetProgram') _setProgramId_ = _cmd.id
+		//if (_cmd.nom_planification == 'SetProgram') _setProgramId_ = _cmd.id
 }
 
-function addEvent(_action,id) {
+function addCmdPlanificationToTable(_action,id) {
 	
     if (!isset(_action)) {
         _action = {};
@@ -1126,8 +1121,9 @@ function addEvent(_action,id) {
     }
 	var actionOption_id = uniqId();
 	var Id = uniqId();
-	var tr = '';
-			tr += '<tr class="row_cmd_programmation">';
+	actionOptions = [];
+	tr = '';
+			tr += '<tr class="row_cmd_planification">';
 			tr += '<td>';
 					tr += '<div class="row">';
 						tr += '<div class="col-sm-6" style="width:100%;">';
@@ -1185,8 +1181,8 @@ function addEvent(_action,id) {
 				tr += '</td>';
 			tr+= '</tr>';
 			
-			$('#table_cmd_programmation tbody').append(tr);
-			$('#table_cmd_programmation tbody tr:last').setValues(_action, '.expressionAttr');
+			$('#table_cmd_planification tbody').append(tr);
+			$('#table_cmd_planification tbody tr:last').setValues(_action, '.expressionAttr');
 			set_custom_select(periode=false)
 				
     

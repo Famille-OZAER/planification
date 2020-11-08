@@ -23,13 +23,13 @@ if (!isConnect('admin')) {
     $type_eqlogic = $_GET['type'];
 
     //get all exported programs:
-    $dossier = dirname(__FILE__) . '/../../programmations/';
+    $dossier = dirname(__FILE__) . '/../../planifications/';
     $commande = 'ls '.$dossier;
     $res = exec($commande, $fichiers, $return_var);
     $div = '<div class="col-sm-12" style="padding-top:5px;">';
         $div .= '<div class="form-group">';
             $div .= '<div class="col-sm-1">';
-                $div .= '<label>{{Programme}}</label>';
+                $div .= '<label>{{Planification}}</label>';
             $div .= '</div>';
 			$div .= '<div class="col-sm-1">';
                 $div .= '<label>{{Type}}</label>';
@@ -48,14 +48,14 @@ if (!isConnect('admin')) {
     {
         $file = file_get_contents($dossier.$fichier);
 		$_json = json_decode($file);
-      	$nom_programme = $_json->nom_programme;
+      	$nom_planification = $_json->nom_planification;
       	$mois = array("Janvier", "Fécrier", "Mars", "Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre");
       	$date=substr(explode("_",$fichier)[0],0,2) . " " . $mois[intval(substr(explode("_",$fichier)[0],2,2))]. " " . substr(explode("_",$fichier)[0],4,4) . " " .substr(explode("_",$fichier)[1],0,2) . ":" . substr(explode("_",$fichier)[1],2,2). ":" . substr(explode("_",$fichier)[1],4,2);
-      	$type = $_json->type_programme;
-        $div = '<div class="Programme col-sm-12" style="display:;padding-top:5px">';
+      	$type = $_json->type_planification;
+        $div = '<div class="Planification col-sm-12" style="display:;padding-top:5px">';
             $div .= '<div class="form-group">';
                 $div .= '<div class="col-sm-1">';
-                    $div .= '<label>'.$nom_programme.'</label>';
+                    $div .= '<label>'.$nom_planification.'</label>';
                 $div .= '</div>';
       			$div .= '<div class="col-sm-1">';
                     $div .= '<label>'.$type.'</label>';
@@ -65,14 +65,14 @@ if (!isConnect('admin')) {
                 $div .= '</div>';
                 $div .= '<div class="col-sm-3">';
       				if ($type == $type_eqlogic){
-						$div .= '<a class="btn btn-success bt_Importer_Programme" nom_fichier="'.$fichier.'"><i class="fa fa-plus-circle"></i> {{Importer}}</a>';
+						$div .= '<a class="btn btn-success bt_Importer_planification" nom_fichier="'.$fichier.'"><i class="fa fa-plus-circle"></i> {{Importer}}</a>';
                     }else{
 						$div .= '<label style="font-size:12px;margin:0px;padding-top:7px;padding-right:8px;padding-bottom:7px;padding-left:8px"><i class="fa fa-plus-circle"></i> {{Importer}}</label>';
                     }
        				$div .= '  ';
-                    $div .= '<a class="btn btn-success bt_Telecharger_Programme" nom_fichier="'.$fichier.'"><i class="fa fa-download"></i></a>';
+                    $div .= '<a class="btn btn-success bt_Telecharger_planification" nom_fichier="'.$fichier.'"><i class="fa fa-download"></i></a>';
                     $div .= '  ';
-                    $div .= '<a class="btn btn-success bt_Supprimer_Programme" nom_fichier="'.$fichier.'"><i class="fa divers-slightly"></i></a>';
+                    $div .= '<a class="btn btn-success bt_Supprimer_planification" nom_fichier="'.$fichier.'"><i class="fa divers-slightly"></i></a>';
                 $div .= '</div>';
             $div .= '</div>';
         $div .= '</div>';

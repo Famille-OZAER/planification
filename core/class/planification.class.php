@@ -21,12 +21,12 @@ class planification extends eqLogic {
         $msg = '['.$class_name.'] <'. $function_name .'> '.$str;
         log::add('planification', $level, $msg);
     }
-  	public function Recup_liste_mode_programme($eqLogic_id) {
+  	public function Recup_liste_mode_planification($eqLogic_id) {
       	$eqLogic = eqLogic::byId($eqLogic_id);
       	if (!is_object($eqLogic)) {
 			throw new Exception(__('Impossible de trouver l\'équipement : ', __FILE__) . $eqLogic_id);
 		}
-      	$cmds=$eqLogic->getConfiguration("commandes_programmation","");
+      	$cmds=$eqLogic->getConfiguration("commandes_planification","");
       	$arr =array();
       	foreach ($cmds as $cmd) {
            	array_push($arr, '<option class="Option_Mode_Periode couleur-'.$cmd["couleur"].'" id="'.$cmd["Id"].'" value="'. $cmd["nom"] . '">'.$cmd["nom"] .'</option>');
@@ -34,25 +34,25 @@ class planification extends eqLogic {
       
       return $arr;
     }
-	public function Verificarion_programme_avant_suppression_commande($eqLogic_id,$cmd_id){
+	public function Verificarion_planification_avant_suppression_commande($eqLogic_id,$cmd_id){
 		$eqLogic = eqLogic::byId($eqLogic_id);
       	if (!is_object($eqLogic)) {
 			throw new Exception(__('Impossible de trouver l\'équipement : ', __FILE__) . $eqLogic_id);
 		}
 		$arr=[];
-		$programmations=$this->getConfiguration('programmations', "");
-		foreach ( $programmations as $programmation){
+		$planifications=$this->getConfiguration('planifications', "");
+		foreach ( $planifications as $planification){
 			$existe=false;
-			$nom_programme=$programmation['nom_programme'];
-			foreach ( $programmation['semaine'] as $jour){
+			$nom_planification=$planification['nom_planification'];
+			foreach ( $planification['semaine'] as $jour){
 				
 				foreach($jour['periodes'] as $periode){
 					
 					//var_dump( $periode['Id']);
 					if ($periode['Id'] == $cmd_id){
 						$existe=true;
-						array_push ( $arr, $nom_programme );
-						//$arr["Nom_programme"] = $nom_programme;
+						array_push ( $arr, $nom_planification );
+						//$arr["Nom_planification"] = $nom_planification;
 						break;
 						//return true;
 					}
@@ -73,7 +73,7 @@ class planification extends eqLogic {
 			throw new Exception(__('Vous ne pouvez importer les commandes d\'un équipement planification', __FILE__));
 		}
 		$cmds_prog=[];
-		$arr=$this->getConfiguration('commandes_programmation', "");
+		$arr=$this->getConfiguration('commandes_planification', "");
 		for ($i = 0; $i < count($arr); $i++) {
 			$cmd_prog["Id"] = $arr[$i]["Id"];
 			$cmd_prog["nom"] = $arr[$i]["nom"];
@@ -93,7 +93,7 @@ class planification extends eqLogic {
 			}
 		}
 		
-		$this->setConfiguration('commandes_programmation', $cmds_prog);
+		$this->setConfiguration('commandes_planification', $cmds_prog);
 		$this->save();
 	} 
     public function preSave() {
@@ -300,14 +300,14 @@ class planificationCmd extends cmd {
     public static $_widgetPossibility = array('custom' => false);
 
     public function dontRemoveCmd() {
-		if ($this->getConfiguration('programmation') == '1') {
+		if ($this->getConfiguration('planification') == '1') {
 			return false;
 		}
         return true;
     }
 
     public function execute($_options = array()) {
-		if ($this->getConfiguration("programmation",'0') == '1'){
+		if ($this->getConfiguration("planification",'0') == '1'){
 			$cmd = cmd::byId(str_replace('#', '', $this->getConfiguration('infoName')));
 			if (is_object($cmd)) {
 				$cmd->execCmd();
@@ -318,8 +318,8 @@ class planificationCmd extends cmd {
     }
 	public function preSave() {
 		
-		// uniquement les commande pour la programmation
-		if ($this->getConfiguration("programmation",'0') == '1') {
+		// uniquement les commande pour la planification
+		if ($this->getConfiguration("planification",'0') == '1') {
           	if ($this->getLogicalId() == ''){
 			   $this->setLogicalId($this->getName());
 		   }

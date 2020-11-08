@@ -26,19 +26,19 @@ try {
 
     ajax::init();
 
-    if (init('action') == 'exporter_programme') {//OK
-		$dossier = dirname(__FILE__) . '/../../programmations/';
+    if (init('action') == 'exporter_planification') {//OK
+		$dossier = dirname(__FILE__) . '/../../planifications/';
         if (!is_dir($dossier)) mkdir($dossier, 0755, true);
 		$now = date("dmY_His");
-        $fichier = fopen(dirname(__FILE__) . '/../../programmations/'.$now.'_'.init('nom').'.json', 'w');
-        $res = fwrite($fichier, json_encode(init('programmation')));
-		log::add('planification', 'debug', 'ajax exporter_programme: '.dirname(__FILE__) . '/../../programmations/'.$now.'_'.init('nom').'.json');
+        $fichier = fopen(dirname(__FILE__) . '/../../planifications/'.$now.'_'.init('nom').'.json', 'w');
+        $res = fwrite($fichier, json_encode(init('planification')));
+		log::add('planification', 'debug', 'ajax exporter_planification: '.dirname(__FILE__) . '/../../planifications/'.$now.'_'.init('nom').'.json');
         ajax::success();
     }
 
-    if (init('action') == 'supprimer_programme') {//OK
-        log::add('planification', 'debug', 'ajax supprimer_programme: '.dirname(__FILE__) . '/../../programmations/'.init('nom_fichier'));
-        @unlink(dirname(__FILE__) . '/../../programmations/'.init('nom_fichier'));
+    if (init('action') == 'supprimer_planification') {//OK
+        log::add('planification', 'debug', 'ajax supprimer_planification: '.dirname(__FILE__) . '/../../planifications/'.init('nom_fichier'));
+        @unlink(dirname(__FILE__) . '/../../planifications/'.init('nom_fichier'));
         ajax::success();
     }
 	
@@ -51,18 +51,18 @@ try {
 		ajax::success();
 	}
   
-  	if (init('action') == 'Recup_liste_mode_programme') {
+  	if (init('action') == 'Recup_liste_mode_planification') {
       $planification = planification::byId(init('eqLogic_id'));
       if (!is_object($planification)) {
 			throw new Exception(__('Equipement planification introuvable : ', __FILE__) . init('id'));
 		}
-      $res=$planification->Recup_liste_mode_programme(init('eqLogic_id'));
+      $res=$planification->Recup_liste_mode_planification(init('eqLogic_id'));
       ajax::success($res);
   	}
   
-	if (init('action') == 'Sauvegarde_programmations') {
+	if (init('action') == 'Sauvegarde_planifications') {
       $planification = planification::byId(init('eqLogic_id'));
-	  $planification->setConfiguration("programmations",init('programmations'));
+	  $planification->setConfiguration("planifications",init('planifications'));
       $planification->save();
       if (!is_object($planification)) {
 			throw new Exception(__('Equipement planification introuvable : ', __FILE__) . init('id'));
@@ -70,12 +70,12 @@ try {
       ajax::success();
   	}
 
-	if (init('action') == "Verificarion_programme_avant_suppression_commande"){
+	if (init('action') == "Verificarion_planification_avant_suppression_commande"){
 		 $planification = planification::byId(init('eqLogic_id'));
 		  if (!is_object($planification)) {
 			throw new Exception(__('Equipement planification introuvable : ', __FILE__) . init('id'));
 		}
-      $res=$planification->Verificarion_programme_avant_suppression_commande(init('eqLogic_id'),init('cmd_id'));
+      $res=$planification->Verificarion_planification_avant_suppression_commande(init('eqLogic_id'),init('cmd_id'));
       ajax::success($res);
   	}
 	

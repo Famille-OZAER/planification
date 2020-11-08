@@ -2,7 +2,7 @@
 
 # Jeedom-planification
 
-Intégration du Thermostat planification
+Intégration du planification
 
 *[Documentation](https://kiboost.github.io/jeedom_docs/plugins/planification/fr_FR/)*
 

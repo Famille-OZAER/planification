@@ -1,7 +1,7 @@
 {
 	"id" : "planification",
-	"name" : "planification",
-	"description" : "Planification",
+	"name" : "Planification",
+	"description" : "Planification sous forme de semaine",
 	"licence" : "AGPL",
 	"author" : "OZAER Michaël",
 	"require" : "4.0",

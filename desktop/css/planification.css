@@ -31,7 +31,6 @@ top: 5px;
 .custom-select {
   position: relative!important;
   font-family: Arial!important;
-  //width: calc(100% - 93px)!important;
   width: calc(100% - 110px)!important;
   display: inline-block;
   top: -4px;
@@ -114,7 +113,7 @@ top:0px;
 /*.select-items div:hover, .same-as-selected {
   background-color: rgba(0, 0, 0, 0.1)!important;
 }*/
-#table_cmd_programmation.table{
+#table_cmd_planification.table{
 width:auto}
 .erreur{
 	background-color:red !important;
