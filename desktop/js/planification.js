@@ -214,6 +214,8 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change',functio
 	   $('#img_planificationModel').attr('src','plugins/planification/core/img/volet.png')
    }else if ($(this).value() == "Chauffage"){
 	   $('#img_planificationModel').attr('src','plugins/planification/core/img/chauffage.png')
+   }else if ($(this).value() == "Poelle"){
+		$('#img_planificationModel').attr('src','plugins/planification/core/img/poele.png')
    }else{
 	   $('#img_planificationModel').attr('src','plugins/planification/core/img/autre.png')
    }
