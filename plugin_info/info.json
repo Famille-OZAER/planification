@@ -12,5 +12,5 @@
 	"changelog" : "https://famille-ozaer.github.io/planification/#language#/",
 	"documentation" : "https://famille-ozaer.github.io/planification/#language#/" ,	
 	"language" : ["fr_FR"],
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","v4"]
+	"compatibility" : ["smart","rpi","docker","diy","v4"]
 }
