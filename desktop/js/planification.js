@@ -197,27 +197,8 @@ function UpdateplanificationJour() {
     }
   }
 }
-String.prototype.sansAccent = function(){//OK
-    var accent = [
-        /[\300-\306]/g, /[\340-\346]/g, // A, a
-        /[\310-\313]/g, /[\350-\353]/g, // E, e
-        /[\314-\317]/g, /[\354-\357]/g, // I, i
-        /[\322-\330]/g, /[\362-\370]/g, // O, o
-        /[\331-\334]/g, /[\371-\374]/g, // U, u
-        /[\321]/g, /[\361]/g, // N, n
-        /[\307]/g, /[\347]/g, // C, c
-    ];
-    var noaccent = ['A','a','E','e','I','i','O','o','U','u','N','n','C','c'];
-     
-    var str = this;
-    for(var i = 0; i < accent.length; i++){
-        str = str.replace(accent[i], noaccent[i]);
-    }
-     
-    return str;
-}
 
-$("input[data-l1key='functionality::cron15::enable']").on('change',function(){//OK
+$("input[data-l1key='functionality::cron15::enable']").on('change',function(){
   if ($(this).is(':checked')) {
     $("input[data-l1key='functionality::cron5::enable']").prop("checked", false);
     $("input[data-l1key='functionality::cron::enable']").prop("checked", false);
@@ -225,7 +206,7 @@ $("input[data-l1key='functionality::cron15::enable']").on('change',function(){//
 });
 //selection du type d'équipement et maj de son image:
 
-$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change',function(){//OK
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change',function(){
    
    if ($(this).value() == "PAC"){
 	   $('#img_planificationModel').attr('src','plugins/planification/core/img/pac.png')
@@ -239,7 +220,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change',functio
 })
   
 //planifications:
-$('#bt_ajouter_planification').off('click').on('click', function () {//OK
+$('#bt_ajouter_planification').off('click').on('click', function () {
 	bootbox.prompt({
         title: "Veuillez inserer le nouveau nom de la planification à ajouter.",
         buttons: {
@@ -253,12 +234,13 @@ $('#bt_ajouter_planification').off('click').on('click', function () {//OK
         }
     })
 })
-$('#bt_importer_planification').off('click').on('click', function () {//OK
+
+$('#bt_importer_planification').off('click').on('click', function () {
      $('#md_modal').dialog({title: "{{Importation de planification}}"});
     $('#md_modal').load('index.php?v=d&plugin=planification&modal=Importer_planification&type=' + $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value()).dialog('open');
 })
 
-function Ajoutplanification(_planification, _updateProgram) {//OK
+function Ajoutplanification(_planification, _updateProgram) {
     if (init(_planification.nom) == '') return
     var random = Math.floor((Math.random() * 1000000) + 1)
     var div = '<div class="planification panel panel-default">'
@@ -340,7 +322,7 @@ function Ajoutplanification(_planification, _updateProgram) {//OK
 	
 }
   
-$('#div_planifications').off('click','.bt_exporter_planification').on('click','.bt_exporter_planification',  function () {//OK
+$('#div_planifications').off('click','.bt_exporter_planification').on('click','.bt_exporter_planification',  function () {
     planification = $(this).closest('.planification')
 	planification_a_exporter = {}
     planification_a_exporter.nom_planification = planification.find('.nom_planification').html()
@@ -404,7 +386,7 @@ $('#div_planifications').off('click','.bt_exporter_planification').on('click','.
 	})
 })
 
-$("#div_planifications").off('click','.bt_supprimer_planification').on('click', '.bt_supprimer_planification',function () {//OK
+$("#div_planifications").off('click','.bt_supprimer_planification').on('click', '.bt_supprimer_planification',function () {
     Ce_progamme = $(this).closest('.planification')
     bootbox.confirm({
         message: "Voulez vous vraiment supprimer ce planification ?",
@@ -426,7 +408,7 @@ $("#div_planifications").off('click','.bt_supprimer_planification').on('click', 
     })
 })
 
-$('#div_planifications').off('click','.bt_dupliquer_planification').on('click','.bt_dupliquer_planification',  function () {//OK
+$('#div_planifications').off('click','.bt_dupliquer_planification').on('click','.bt_dupliquer_planification',  function () {
     var planification = $(this).closest('.planification').clone()
      bootbox.prompt({
         title: "Veuillez inserer le nom pour le planification dupliqué.",
@@ -447,7 +429,7 @@ $('#div_planifications').off('click','.bt_dupliquer_planification').on('click','
     })
 })
 
-$('#div_planifications').off('click','.bt_appliquer_planification').on('click','.bt_appliquer_planification',  function () {//OK
+$('#div_planifications').off('click','.bt_appliquer_planification').on('click','.bt_appliquer_planification',  function () {
     planification = $(this).closest('.planification')
     programName=planification.find('.nom_planification').html()
     bootbox.confirm({
@@ -470,8 +452,8 @@ $('#div_planifications').off('click','.bt_appliquer_planification').on('click','
     })
 })
 
-$('#div_planifications').off('click','.bt_renommer_planification').on('click','.bt_renommer_planification',  function () {//OK
-	var el = $(this)
+$('#div_planifications').off('click','.bt_renommer_planification').on('click','.bt_renommer_planification',  function () {
+		var el = $(this)
 	bootbox.prompt({
         title: "Veuillez inserer le nouveau nom pour le planification:" + $(this).closest('.planification').find('.nom_planification').html() +".",
         buttons: {
@@ -490,18 +472,18 @@ $("#div_planifications").sortable({
 	axis: "y", cursor: "move", items: ".planification", handle: ".panel-heading", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true
 })
   
-$("body").off('click', '.bt_supprimer_perdiode').on( 'click', '.bt_supprimer_perdiode',function () {//OK
+$("body").off('click', '.bt_supprimer_perdiode').on( 'click', '.bt_supprimer_perdiode',function () {
     Divjour = $(this).closest('.JourSemaine')
     $(this).closest('.Periode_jour').remove()
     MAJ_Graphique_jour(Divjour)
 });
 
-$('body').off('click','.bt_ajout_periode').on('click','.bt_ajout_periode',  function () {//OK
+$('body').off('click','.bt_ajout_periode').on('click','.bt_ajout_periode',  function () {
     Divjour = $(this).closest('.JourSemaine')
     Ajout_Periode(Divjour)
 })
 
-$('body').off('click','.bt_copier_jour').on('click','.bt_copier_jour',  function () {//OK
+$('body').off('click','.bt_copier_jour').on('click','.bt_copier_jour',  function () {
     var jour = $(this).closest('.JourSemaine')
 	JSONCLIPBOARD = { data : []}
     jour.find('.Periode_jour').each(function  () {
@@ -511,7 +493,7 @@ $('body').off('click','.bt_copier_jour').on('click','.bt_copier_jour',  function
     })
 })
 
-$('body').off('click','.bt_coller_jour').on('click','.bt_coller_jour',  function () {//OK
+$('body').off('click','.bt_coller_jour').on('click','.bt_coller_jour',  function () {
     Divjour = $(this).closest('.JourSemaine')
 	if (JSONCLIPBOARD == null) return
     Vider_jour(Divjour)
@@ -523,7 +505,7 @@ $('body').off('click','.bt_coller_jour').on('click','.bt_coller_jour',  function
     })
 })
 
-function MAJ_Graphique_jour(Div_jour){//OK
+function MAJ_Graphique_jour(Div_jour){
     graphDiv = $(Div_jour).closest('.div_programDays').find('.graphique_jour_' + $(Div_jour).attr("class").split(' ')[1])
 	graphDiv.empty()
     Periode_jour = $(Div_jour).find('.Periode_jour')
@@ -589,7 +571,7 @@ function checkTimePicker(picker){
     }
 }
 
-function Ajout_Periode(Div_jour, time=null, Mode_periode=null){//OK
+function Ajout_Periode(Div_jour, time=null, Mode_periode=null){
     Periode_jours = $(Div_jour).find('.Periode_jour')
     if (Periode_jours.length > 0){
         periode_precedente = Periode_jours[Periode_jours.length-1]
@@ -663,7 +645,7 @@ function Ajout_Periode(Div_jour, time=null, Mode_periode=null){//OK
 		
 		select = nouvelle_periode.find('.Select_Mode_Periode')
 		select.selectedIndex = 0;
-		select.val(select.value().sansAccent())
+		select.val(select.value())
 	}
     Div_jour.append(nouvelle_periode)
 	set_custom_select(periode=true)
@@ -671,7 +653,7 @@ function Ajout_Periode(Div_jour, time=null, Mode_periode=null){//OK
 	
 }
 
-function Vider_jour(jour){//OK
+function Vider_jour(jour){
     jour.find('.Periode_jour').each(function  () {
         $(this).remove()
     })
@@ -808,14 +790,14 @@ $('.bt_showExpressionTest').off('click').on('click', function () {
   $("#md_modal").load('index.php?v=d&modal=expression.test').dialog('open');
 });
 
-$('.bt_Importer_EqLogic').off('click').on('click', function () {
+$('.bt_Importer_Commandes_EqLogic').off('click').on('click', function () {
   
   jeedom.eqLogic.getSelectModal({}, function (result) {
     $.ajax({
       type: "POST",
       url: "plugins/planification/core/ajax/planification.ajax.php",
       data: {
-        action: "importer_eqlogic",
+        action: "importer_commandes_eqlogic",
         eqLogic_id: result.id,
         id: $('.eqLogicAttr[data-l1key=id]').value()
       },
@@ -854,7 +836,6 @@ $("body").delegate(".listCmdAction", 'click', function() {
 });
 
 $("body").delegate(".listAction", 'click', function () {
-	//var type = $(this).attr('data-type');
 	var el = $(this).closest('div div').find('.expressionAttr[data-l1key=cmd]');
 	jeedom.getSelectActionModal({}, function (result) {
 		el.value(result.human);
@@ -864,6 +845,7 @@ $("body").delegate(".listAction", 'click', function () {
 		});
 	});
 });
+
 $("body").delegate('.bt_Suppression_commande_planification', 'click', function() {
 	var progs = [];
 
@@ -908,6 +890,7 @@ $("body").delegate('.bt_Suppression_commande_planification', 'click', function()
 		$(this).closest('div tr').remove();
 	}
 })
+
 $('body').delegate('.row_cmd_planification .expressionAttr[data-l1key=cmd]', 'focusout', function (event) {
   	var el = $(this);
  	var expression = el.closest('div div').getValues('.expressionAttr');
@@ -915,7 +898,8 @@ $('body').delegate('.row_cmd_planification .expressionAttr[data-l1key=cmd]', 'fo
       el.closest('div td').find('.actionOptions').html(html);
     });
 });
-function printEqLogic(_eqLogic) {//OK
+
+function printEqLogic(_eqLogic) {
 	$('#div_planifications').empty()
 	$('#table_cmd_planification tbody').empty()
 	nom_planification_erreur=[]	
@@ -1015,7 +999,7 @@ function printEqLogic(_eqLogic) {//OK
 	
 }
 
-function saveEqLogic(_eqLogic) {//OK
+function saveEqLogic(_eqLogic) {
     if (!isset(_eqLogic.configuration)) {
         _eqLogic.configuration = {}
     }
@@ -1060,7 +1044,7 @@ function saveEqLogic(_eqLogic) {//OK
 }
 
 //Commandes:
-function addCmdToTable(_cmd) {//OK
+function addCmdToTable(_cmd) {
   
     if (!isset(_cmd)) var _cmd = {configuration:{}}
     if (!isset(_cmd.configuration)) _cmd.configuration = {}

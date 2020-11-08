@@ -125,6 +125,7 @@
                                   	 <option value="Volet">Volet Roulant</option>
                                      <option value="Chauffage">Chauffage avec fil pilote</option>
                                      <option value="PAC">Pompe à chaleur</option>
+									 <option value="Poelle">Poêlle à granules</option>
                                      <option value="Autre">Autre</option>
                                   </select>
 							</div>
@@ -163,7 +164,7 @@
 				Un ajout de commande n'a aucune inscidence sur le fonctionnement de vos planifications.
 			</div>
             	<div class="input-group pull-right" style="display:inline-flex">
-				    <a class="btn btn-default btn-sm bt_Importer_EqLogic" style="margin-top:5px;"><i class="fas fa-sign-in-alt" style=" transform:rotate(90deg)"></i> {{Importer équipement}}</a>
+				    <a class="btn btn-default btn-sm bt_Importer_Commandes_EqLogic" style="margin-top:5px;"><i class="fas fa-sign-in-alt" style=" transform:rotate(90deg)"></i> {{Importer équipement}}</a>
 					<a class="btn btn-default btn-sm  pull-right bt_Ajout_commande_planification" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une commande}}</a>
                    
                 </div> 

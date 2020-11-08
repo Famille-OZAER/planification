@@ -42,12 +42,12 @@ try {
         ajax::success();
     }
 	
-	if (init('action') == 'importer_eqlogic') {
+	if (init('action') == 'importer_commandes_eqlogic') {
 		$planification = planification::byId(init('id'));
 		if (!is_object($planification)) {
 			throw new Exception(__('Equipement planification introuvable : ', __FILE__) . init('id'));
 		}
-		$planification->importer_eqlogic(init('eqLogic_id'));
+		$planification->importer_commandes_eqlogic(init('eqLogic_id'));
 		ajax::success();
 	}
   

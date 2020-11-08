@@ -3,24 +3,14 @@ require_once  '/var/www/html/core/php/core.inc.php';
 
 class planification extends eqLogic {
 	function supp_accents( $str, $charset='utf-8' ) {
- 
-    $str = htmlentities( $str, ENT_NOQUOTES, $charset );
-    
-    $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
-    $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
-    $str = preg_replace( '#&[^;]+;#', '', $str );
-    
-    return $str;
-}
+        $str = htmlentities( $str, ENT_NOQUOTES, $charset );
+        $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
+        $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
+        $str = preg_replace( '#&[^;]+;#', '', $str );
+        return $str;
+    }
     public static $_widgetPossibility = array('custom' => true, 'custom::layout' => false);
 
-    public static function logger($str = '', $level = 'debug') {
-        if (is_array($str)) $str = json_encode($str);
-        $function_name = debug_backtrace(false, 2)[1]['function'];
-        $class_name = debug_backtrace(false, 2)[1]['class'];
-        $msg = '['.$class_name.'] <'. $function_name .'> '.$str;
-        log::add('planification', $level, $msg);
-    }
   	public function Recup_liste_mode_planification($eqLogic_id) {
       	$eqLogic = eqLogic::byId($eqLogic_id);
       	if (!is_object($eqLogic)) {
@@ -63,7 +53,7 @@ class planification extends eqLogic {
 		}
 		return $arr;
 	}
-	public function importer_eqlogic($_eqLogic_id) {
+	public function importer_commandes_eqlogic($_eqLogic_id) {
 	
 		$eqLogic = eqLogic::byId($_eqLogic_id);
 		if (!is_object($eqLogic)) {
@@ -101,7 +91,8 @@ class planification extends eqLogic {
 		   	$this->setConfiguration('type', 'Autre');
 			$this->setIsVisible(1);
            	$this->setIsEnable(1);
-              
+        }
+        if ($this->getConfiguration('type','') == ''){
         }
     }
 
@@ -275,25 +266,7 @@ class planification extends eqLogic {
         return $html;*/
     }
 
-    /*public static function deadCmd() {
-        planification::logger();
-        $return = array();
-        $actionsOnError = config::byKey('actionsOnError', 'planification');
-        foreach ($actionsOnError as $cmdAr) {
-            $options = $cmdAr['options'];
-            if ($options['enable'] == 1)
-            {
-                $cmdId = $cmdAr['cmd'];
-                if ($cmdId != '') {
-                    if (!cmd::byId($cmdId)) {
-                        $return[] = array('detail' => 'Configuration planification', 'help' => 'Action sur erreur', 'who' => $cmdId);
-                        planification::logger('deadCmd found: cmdId:'.$cmdId);
-                    }
-                }
-            }
-        }
-        return $return;
-    }*/
+   
 }
 
 class planificationCmd extends cmd {
