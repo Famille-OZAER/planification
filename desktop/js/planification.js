@@ -488,18 +488,8 @@ $('#div_programmations').off('click','.bt_renommer_programme').on('click','.bt_r
 
 $("#div_programmations").sortable({
 	axis: "y", cursor: "move", items: ".programme", handle: ".panel-heading", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true
-	})
+})
   
-/*$("body").on('click', ".listCmdAction", function() {
-  var el = $(this).closest('.input-group').find('input:first');
-  jeedom.cmd.getSelectModal({cmd: {type: "action"}}, function (result) {
-    el.value(result.human);
-    jeedom.cmd.displayActionOption(result.human, '', function (html) {
-      el.parent().find('.actionOptions').html(html);
-    });
-  });
-});*/	
-
 $("body").off('click', '.bt_supprimer_perdiode').on( 'click', '.bt_supprimer_perdiode',function () {//OK
     Divjour = $(this).closest('.JourSemaine')
     $(this).closest('.Periode_jour').remove()

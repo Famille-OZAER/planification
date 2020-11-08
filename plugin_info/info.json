@@ -9,5 +9,5 @@
 	"hasDependency" : false,
 	"hasOwnDeamon" : false,
 	"maxDependancyInstallTime" : 0,
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","v4"],
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","v4"]
 }
