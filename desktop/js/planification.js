@@ -864,57 +864,49 @@ $("body").delegate(".listAction", 'click', function () {
 		});
 	});
 });
+$("body").delegate('.bt_Suppression_commande_planification', 'click', function() {
+	var progs = [];
 
-$("body").delegate('.bt_removeAction', 'click', function() {
-			var progs = [];
-
-			cmd_id=$(this).closest('div tr').getValues('.expressionAttr')[0]['Id']
-			$('#div_planifications').find('.select-items .same-as-selected').each(function () {
-				if($(this)[0].getAttribute("id")==cmd_id){
-					if (!progs.includes($(this).closest('div .planification').find(".nom_planification")[0].innerHTML)){
-						progs.push($(this).closest('div .planification').find(".nom_planification")[0].innerHTML);
-					}					
-				}
-			})
-			if (progs.length >0){
-				bootbox.confirm('{{Êtes-vous sûr de vouloir supprimer cette commande ?}}', function (result) {
-					if (result) {
-						$(this).closest('div tr').remove();
-					}
-				});
-
-				
-				
-				
-				console.log(progs)
-			}
-			
-	/*$.ajax({
-		type: "POST",
-		url: "plugins/planification/core/ajax/planification.ajax.php",
-		data: {
-			action: "Verificarion_planification_avant_suppression_commande",
-			eqLogic_id: $('.eqLogicAttr[data-l1key=id]').value(),
-			cmd_id:$(this).closest('div tr').getValues('.expressionAttr')[0]['Id'],
-		},
-		dataType: 'json',
-		global: false,
-		error: function (request, status, error) {
-			handleAjaxError(request, status, error);
-		},
-		success: function (data) {
-			if (data.state != 'ok') {
-				$('#div_alert').showAlert({message: data.result, level: 'danger'});
-				return;
-			}else{
-				$('#div_alert').showAlert({message: data.result, level: 'success'});
-				return;
-			}
-		//window.location.reload()
-
-		//$('.eqLogicDisplayCard[data-eqLogic_id='+$('.eqLogicAttr[data-l1key=id]').value()+']').click();
+	var cmd_id=$(this).closest('div tr').getValues('.expressionAttr')[0]['Id']
+	$('#div_planifications').find('.select-selected').each(function () {
+		if($(this)[0].getAttribute("id")==cmd_id){
+			if (!progs.includes($(this).closest('div .planification').find(".nom_planification")[0].innerHTML)){
+				progs.push($(this).closest('div .planification').find(".nom_planification")[0].innerHTML);
+			}					
 		}
-	});*/
+	})
+	var div=$(this).closest('div tr')
+	if (progs.length >0){
+		if (progs.length >1){
+			message ="Êtes-vous sûr de vouloir supprimer cette commande ?<br>Celle-ci est utilisée dans les planifications suivante:<br>" 
+			progs.forEach(element => message+= "- " + element + "<br>");
+			message+= "Ces planification ne fonctionneront plus correctement..." 
+		}else{
+			message ="Êtes-vous sûr de vouloir supprimer cette commande ?<br>Celle-ci est utilisée dans la planification suivante:<br> - " + progs + '<br>' + "Cette planification ne fonctionnera plus correctement..." 
+			
+		}
+		bootbox.confirm({
+			
+			message: message,
+			buttons: {
+				confirm: {
+					label: 'Oui',
+					className: 'btn-success'
+				},
+				cancel: {
+					label: 'Non',
+					className: 'btn-danger'
+				}
+			},
+			callback: function (result) {
+				if(result){
+					div.remove();
+				}
+			}
+		});
+	}else{
+		$(this).closest('div tr').remove();
+	}
 })
 $('body').delegate('.row_cmd_planification .expressionAttr[data-l1key=cmd]', 'focusout', function (event) {
   	var el = $(this);
@@ -1146,7 +1138,7 @@ function addCmdPlanificationToTable(_action,id) {
 						tr += '<span class="input-group-btn">';
 							tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
 							tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
-							tr += '<a class="btn btn-default bt_removeAction btn-sm"><i class="fa fa-minus-circle"></i></a>';
+							tr += '<a class="btn btn-default bt_Suppression_commande_planification btn-sm"><i class="fa fa-minus-circle"></i></a>';
 						tr += '</span>';
 						
 					tr += '</div>';
