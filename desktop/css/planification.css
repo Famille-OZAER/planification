@@ -1,0 +1,158 @@
+div.couleur-bleu{
+  background-color:Dodgerblue!important;
+}
+div.couleur-orange{
+  background-color:Darkorange!important;  
+}
+div.couleur-rouge{
+  background-color:Firebrick!important;  
+}
+div.couleur-magenta{
+  background-color:Plum!important;  
+}
+div.couleur-jaune{
+  background-color:Goldenrod!important;  
+}
+div.couleur-vert{
+  background-color:Forestgreen!important;  
+}
+div.couleur-marron{
+  background-color:Maroon!important;  
+}
+div.couleur-violet{
+  background-color:Darkslateblue!important;  
+}
+div.tooltipstered{
+  
+top: 5px;
+    position: relative;
+}
+/* The container must be positioned relative: */
+.custom-select {
+  position: relative!important;
+  font-family: Arial!important;
+  //width: calc(100% - 93px)!important;
+  width: calc(100% - 110px)!important;
+  display: inline-block;
+  top: -4px;
+
+}
+input.checkbox.form-control{
+  background-color:var(--btn-default-color) !important;
+top:0px;
+}
+.custom-select.commande {
+  width: calc(100%)!important;
+  top: 0px!important;
+
+}
+.custom-select select {
+  display: none!important; /*hide original SELECT element: */
+}
+
+/*.select-selected {
+  background-color: white!important;
+  height: 28px;
+}*/
+
+/* Style the arrow inside the select element: */
+.select-selected:after {
+  position: absolute!important;
+  content: ""!important;
+  top: 10px!important;
+  right: 10px!important;
+  width: 0!important;
+  height: 0!important;
+  border: 6px solid transparent!important;
+  border-color: #fff transparent transparent transparent!important;
+}
+
+/* Point the arrow upwards when the select box is open (active): */
+.select-selected.select-arrow-active:after {
+  border-color: transparent transparent #fff transparent!important;
+  top: 2px!important;
+}
+
+/* style the items (options), including the selected item: */
+.select-items div span,.select-items div,.select-selected {
+  color: rgb(255,255,255) !important;
+  padding: 8px 16px!important;
+  height:28px!important;
+ cursor: pointer!important;
+}
+
+.select-items div span {
+  color: rgb(255,255,255) !important;
+  padding: 0px 0px!important;
+  cursor: pointer!important;
+  top: 5px;
+  position: relative
+}
+
+
+.select-selected span {
+  top: 5px;
+  position: relative;
+  cursor: pointer!important;
+}
+
+/* Style items (options): */
+.select-items {
+  position: absolute!important;
+  background-color: white!important;
+  top: 100%!important;
+  left: 0!important;
+  right: 0!important;
+  z-index: 99!important;
+}
+
+/* Hide the items when the select box is closed: */
+.select-hide {
+  display: none!important;
+}
+
+/*.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1)!important;
+}*/
+#table_cmd_programmation.table{
+width:auto}
+.erreur{
+	background-color:red !important;
+	-moz-animation: mymove 1s ease infinite;
+    -webkit-animation: mymove 1s ease infinite;
+	position: relative;}
+
+/* Simple Animation */
+@-webkit-keyframes mymove {
+	0% {opacity: 1.0;
+	    text-shadow: 0 0 20px #00c6ff;
+	}
+	
+	50% {
+	    opacity: 0;
+	    text-shadow: none;
+	}
+	
+	100% {
+	    opacity: 1.0;
+	    text-shadow: 0 0 20px #00c6ff;
+	}
+}
+
+@-moz-keyframes mymove {
+    0% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    }
+
+    50% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    100% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    }
+}
+.panel-body{padding-bottom: 10px;}

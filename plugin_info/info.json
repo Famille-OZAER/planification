@@ -1,0 +1,13 @@
+{
+	"id" : "planification",
+	"name" : "planification",
+	"description" : "Planification",
+	"licence" : "AGPL",
+	"author" : "OZAER Michaël",
+	"require" : "4.0",
+	"category" : "wellness",
+	"hasDependency" : false,
+	"hasOwnDeamon" : false,
+	"maxDependancyInstallTime" : 0,
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","v4"],
+}
