@@ -577,7 +577,7 @@ function Recup_liste_commandes_planification(){
 }
 
 function checkTimePicker(picker){
-	
+
     val = $(picker).val()
     Div_jour = $(picker).closest('.JourSemaine')
     periode_jour = $(Div_jour).find('.Periode_jour')
@@ -672,6 +672,18 @@ $("body").delegate(".listAction", 'click', function () {
 $("body").delegate(".listCmdTemperature", 'click', function () {
 	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=temperature_id]');
 	jeedom.cmd.getSelectModal({cmd: {type: 'info',subType:"numeric"}}, function (result) {
+		el.value(result.human);
+	});
+});
+$("body").delegate(".listCmdEtat", 'click', function () {
+	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_id]');
+	jeedom.cmd.getSelectModal({cmd: {type: 'info',subType:"binary"}}, function (result) {
+		el.value(result.human);
+	});
+});
+$("body").delegate(".listCmdEtatBoost", 'click', function () {
+	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_boost_id]');
+	jeedom.cmd.getSelectModal({cmd: {type: 'info',subType:"binary"}}, function (result) {
 		el.value(result.human);
 	});
 });

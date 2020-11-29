@@ -187,21 +187,31 @@ class planification extends eqLogic {
 			}
 		}
 		if(count($cette_planification) == 0){return;}
-		
-		for ($i = $numéro_jour; $i <= $numéro_jour+7; $i++) {
+		log::add("planification","debug","numéro_jour:".$numéro_jour);
+		$numBoucle=0;				
+		for ($i = $numéro_jour; $i > $numéro_jour-7; $i--) {
 			$num=$i;
-			if($i>7){$num -=7;}
+			if($i<1){$num = 7-$i;}
+			log::add("planification","debug","num :" . $num);
+				
 			if (isset($cette_planification[ $num-1]["periodes"])){
+				log::add("planification","debug",$cette_planification[ $num-1]["jour"]);
+					
 				$periodes=$cette_planification[$num-1]["periodes"];
 				$action=[];
 				$trouve=false;
 				foreach($periodes as $periode){
 					//$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string($i-9 .' days'));
-					$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string($numéro_jour-$i .' days'));
+					$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string(-$numBoucle.' days'));
+					log::add("planification","debug",implode("|",$periode));
+					log::add("planification","debug","date:".$date->format(' d-m-Y H:i'));
 					if($date->getTimestamp() <= $timestamp_prochaine_action){
 						$trouve=true;
 						foreach ($CMD_LIST as $cmd) {
 							if($periode["Id"]==$cmd["Id"]){
+								log::add("planification","debug","id:".$cmd["Id"]);
+								log::add("planification","debug","nom:".$cmd["nom"]);
+								
 								$action["datetime="]=$date->format(' d-m-Y H:i');
 								$action["nom"]=$cmd["nom"];
 								$action["cmd"]=$cmd["cmd"];
@@ -218,9 +228,13 @@ class planification extends eqLogic {
 				
 			}
 			if($trouve){
+				$cmd_action_en_cours_fin = $this->getCmd(null, "action_en_cours");
+				if(is_object($cmd_action_en_cours_fin)){
+					$cmd_action_en_cours_fin->event($action["nom"]);
+				}
 				return $action;
-			}
-			$num-=$i;
+			}			
+			$numBoucle+=1;
 		}
 		return $action;
 	
@@ -347,8 +361,8 @@ class planification extends eqLogic {
 		$this->Ajout_Commande('action_en_cours','Action en cours','info','string');
 		$this->Ajout_Commande('action_suivante','Action suivante','info','string');
 		$this->Ajout_Commande('planification_en_cours','Planification en cours','info','string');	
-		//$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric');	
-		//$this->Ajout_Commande('duree_mode_manuel_par_defaut','Duree mode manuel par defaut (minutes)','info','numeric',null,null,60);	
+		$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric');	
+		$this->Ajout_Commande('duree_mode_manuel_par_defaut','Duree mode manuel par defaut (minutes)','info','numeric',null,null,60);	
 
 
 		$cmd = $this->getCmd(null, "set_planification");
