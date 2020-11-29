@@ -37,6 +37,7 @@
 					if ($eqLogic->getConfiguration('type', 'Autre') == 'PAC') $imgPath = 'plugins/planification/core/img/pac.png';
 					if ($eqLogic->getConfiguration('type', 'Autre') == 'Volet') $imgPath = 'plugins/planification/core/img/volet.png';
 					if ($eqLogic->getConfiguration('type', 'Autre') == 'Autre') $imgPath = 'plugins/planification/core/img/autre.png';
+                  	if ($eqLogic->getConfiguration('type', 'Autre') == 'Poele') $imgPath = 'plugins/planification/core/img/poele.png';
 					echo '<img src="' . $imgPath . '"/>';
 
 					echo '<br>';
@@ -49,27 +50,30 @@
 
 	<!--Equipement page-->
 	<div class="col-xs-12 eqLogic" style="display: none;">
-		<div>
+		
 		<div class="input-group pull-right" style="display:inline-flex">
 			<span class="input-group-btn">
-               	<a class="btn btn-primary btn-sm bt_showExpressionTest roundedLeft"><i class="fas fa-check"></i> {{Expression}}</a>
-              	<a class="btn btn-default btn-sm eqLogicAction" data-action="copy"><i class="fas fa-copy"></i> {{Dupliquer}}</a>
+		
+				<a class="btn btn-primary btn-sm bt_showExpressionTest roundedLeft"><i class="fas fa-check"></i> {{Expression}}</a>
+				<a class="btn btn-default btn-sm eqLogicAction" data-action="copy"><i class="fas fa-copy"></i> {{Dupliquer}}</a>
 				<a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fa fa-cogs"></i> {{Configuration avancée}}</a>
 				<a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fa fa-check-circle"></i> {{Sauvegarder}}</a>
 				<a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
-              	
+				
 			</span>
 		</div>
-</div>
-		<ul class="nav nav-tabs" role="tablist">
+		<ul class="nav nav-tabs" role="tablist" style="display:inline-block">
 			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
 			<li role="presentation" class="active"><a href="#tab_eqlogic" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
 			<li role="presentation" id ="menu_tab_planifications"><a href="#tab_planifications" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{planifications}}</a></li>
 			<li role="presentation"><a href="#tab_commandes_planification" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Commandes planification}}</a></li>
 			<li role="presentation" id ="menu_tab_gestion"><a href="#tab_gestion" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Gestion Lever/Coucher soleil}}</a></li>
 			<li role="presentation"><a href="#tab_commandes" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes équipement}}</a></li>
+		
+		</ul>	
+		
 			
-		</ul>
+		
 		<div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
 
 
@@ -90,9 +94,12 @@
 								<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
 									<option value="">{{Aucun}}</option>
 									<?php
-										foreach (jeeObject::all() as $object) {
-											echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-										}
+										 $options = '';
+										 foreach ((jeeObject::buildTree(null, false)) as $object) {
+											 $options .= '<option value="' . $object->getId() . '"><i class="icon divers-umbrella2"></i>' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration('parentNumber'))  . $object->getName() . '</option>';
+										 }
+										 
+										 echo $options;
 									?>
 								</select>
 							</div>
@@ -125,9 +132,18 @@
                                   	 <option value="Volet">Volet Roulant</option>
                                      <option value="Chauffage">Chauffage avec fil pilote</option>
                                      <option value="PAC">Pompe à chaleur</option>
-									 <option value="Poelle">Poêlle à granules</option>
+									 <option value="Poele">Poêle à granules</option>
                                      <option value="Autre">Autre</option>
                                   </select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{Equipement de température}}</label>
+							<div class="col-sm-6 input-group">
+								<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="temperature_id"/>
+								<span class="input-group-btn">
+									<a class="btn btn-success btn-sm listCmdTemperature"><i class="fa fa-tasks"></i></a>
+								</span>
 							</div>
 						</div>
 
@@ -148,22 +164,13 @@
 			<!--planifications Tab-->
 			<div role="tabpanel" class="tab-pane" id="tab_planifications">
 					<a class="btn btn-sm btn-success pull-right" id="bt_ajouter_planification" style="margin-top: 5px;"><i class="fa fa-plus-circle"></i> {{Ajouter planification}}</a>
-					<a class="btn btn-sm btn-success pull-right" id="bt_importer_planification" style="margin-top: 5px;"><i class="fas fa-sign-in-alt" style=" transform:rotate(90deg)"></i> {{Importer planification}}</a><br/><br/>
+					<br/><br/>
 				<div id="div_planifications" class="panel-group"></div>
 			</div>
 			<!--fin planifications Tab-->    
 
-		
-
-
-			
 			<div role="tabpanel" class="tab-pane" id="tab_commandes_planification">
-			<!--<fieldset>-->
-			<div class="alert alert-danger">
-				ATTENTION. Si vous modifiez ou supprimez des commandes qui sont utilisées dans vos planifications, celles-ci risquent de ne plus fonctionner correctement.<br>
-				Un ajout de commande n'a aucune inscidence sur le fonctionnement de vos planifications.
-			</div>
-            	<div class="input-group pull-right" style="display:inline-flex">
+		       	<div class="input-group pull-right" style="display:inline-flex">
 				    <a class="btn btn-default btn-sm bt_Importer_Commandes_EqLogic" style="margin-top:5px;"><i class="fas fa-sign-in-alt" style=" transform:rotate(90deg)"></i> {{Importer équipement}}</a>
 					<a class="btn btn-default btn-sm  pull-right bt_Ajout_commande_planification" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une commande}}</a>
                    
@@ -174,22 +181,15 @@
 					<table id="table_cmd_planification" class="table table-bordered table-condensed">
 						<thead>
 							<tr>
-								<th class="col-sm-2">{{ID}}</th>
+								<th class="col-sm-2" style="display:none">{{ID}}</th>
 								<th class="col-sm-2">{{Nom}}</th>
 								<th class="col-sm-6">{{Commande}}</th>
-								<th class="col-sm-2" >{{Couleur}}</th>
+								<th class="col-sm-1" >{{Couleur}}</th>
 							</tr>
 						</thead>
-						<tbody>
-
-						</tbody>
+						<tbody></tbody>
 					</table>
-					
 				</div>
-				
-				
-				
-				<!--</fieldset>-->
 			</div>
 			<!--Gestion-->
 			<!--<div role="tabpanel" class="tab-pane" id="tab_gestion">

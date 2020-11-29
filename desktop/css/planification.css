@@ -1,39 +1,57 @@
 div.couleur-bleu{
   background-color:Dodgerblue!important;
 }
+
 div.couleur-orange{
   background-color:Darkorange!important;  
 }
+
 div.couleur-rouge{
   background-color:Firebrick!important;  
 }
+
 div.couleur-magenta{
   background-color:Plum!important;  
 }
+
 div.couleur-jaune{
   background-color:Goldenrod!important;  
 }
+
 div.couleur-vert{
   background-color:Forestgreen!important;  
 }
+
 div.couleur-marron{
   background-color:Maroon!important;  
 }
+
 div.couleur-violet{
   background-color:Darkslateblue!important;  
 }
+
+div.commande{
+  color:transparent!important;
+}
+.select-items div.commande{
+  color:transparent!important;
+}
 div.tooltipstered{
-  
-top: 5px;
-    position: relative;
+  top: 5px;
+  position: relative;
+}
+  i.cursor:hover {
+  color: rgb(50, 110, 160)!important;
+}
+
+.same-as-selected{
+	display:none
 }
 /* The container must be positioned relative: */
 .custom-select {
   position: relative!important;
   font-family: Arial!important;
-  width: calc(100% - 110px)!important;
-  display: inline-block;
-  top: -4px;
+  min-width: 100px;
 
 }
 input.checkbox.form-control{
@@ -45,10 +63,95 @@ top:0px;
   top: 0px!important;
 
 }
-.custom-select select {
-  display: none!important; /*hide original SELECT element: */
+:not(.ui-dialog-content) table:not(.tableCmd) > tbody tr:nth-child(2n+1){
+  width: 100%;
+  background-color: transparent!important;
+}
+:not(.ui-dialog-content) table:not(.tableCmd) > tbody tr:nth-child(2n){
+  width: 100%;
+  background-color: transparent!important;
 }
 
+
+.collapsible:after {
+  cursor: pointer;
+  position: relative!important;
+  content: ""!important;
+  top: 13px!important;
+  right: -10px!important;
+  width: 0!important;
+  height: 0!important;
+  border: 6px solid transparent!important;
+  border-color:  #C3C3C3  transparent transparent transparent!important;
+}
+.collapsible.no-arrow:after {
+  cursor: default;
+  position: relative!important;
+  content: ""!important;
+  top: 10px!important;
+  right: -13px!important;
+  width: 0!important;
+  height: 0!important;
+  border: 6px solid transparent!important;
+  border-color: transparent  transparent transparent transparent!important;
+}
+
+.programmation_collapsible.active:after {
+
+  border-color: transparent transparent #C3C3C3 transparent!important;
+  top: -7px!important;
+}
+
+
+.programmation_collapsible:after {
+  cursor: pointer;
+  position: relative!important;
+  content: ""!important;
+  top: 7px!important;
+  right: -10px!important;
+  width: 0!important;
+  height: 0!important;
+  border: 6px solid transparent!important;
+  border-color:  #C3C3C3  transparent transparent transparent!important;
+}
+
+
+
+.collapsible.active:after {
+
+  border-color: transparent transparent #C3C3C3 transparent!important;
+  top: -13px!important;
+}
+.collapsible.no-arrow.active:after {
+  border-color: transparent transparent transparent transparent!important;
+  top: -10px!important;
+}
+.planification-body {
+  padding: 0px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  padding: 0;
+}
+
+.div_programDays {
+  padding: 0px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+.graphJours {
+  padding: 0px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+.JourSemaine {
+  padding: 0 3px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
 /*.select-selected {
   background-color: white!important;
   height: 28px;
@@ -75,9 +178,9 @@ top:0px;
 /* style the items (options), including the selected item: */
 .select-items div span,.select-items div,.select-selected {
   color: rgb(255,255,255) !important;
-  padding: 8px 16px!important;
+  padding: 8px 8px!important;
   height:28px!important;
- cursor: pointer!important;
+   cursor: pointer!important;
 }
 
 .select-items div span {
