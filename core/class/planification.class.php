@@ -554,17 +554,17 @@ class planification extends eqLogic {
 			$replace['#temperature_id#']="";
 		}
 
-		$imagePoele="PoeleOff";
+		$imagePoele="PoeleOff.png";
 		$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_allume_id',"")));
 		if (is_object($cmd_Etat_Allume)){
 			if($cmd_Etat_Allume->execCmd())
 			{
-				$imagePoele="PoeleOn";
+				$imagePoele="PoeleOn.png";
 				$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_boost_id',"")));
 				if (is_object($cmd_Etat_Boost)){
 					if($cmd_Etat_Boost->execCmd())
 					{
-						$imagePoele="PoeleOnBoost";
+						$imagePoele="PoeleOnBoost.png";
 					}
 				}
 			}
