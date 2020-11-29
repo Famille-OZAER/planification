@@ -30,6 +30,9 @@ class planification extends eqLogic {
 		}else{
 			if(date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp()>time()){return;}
 		}
+
+
+
 		
 		$eqLogic = self::byId($_option['eqLogic_Id']);
 		log::add('planification', 'debug', "pull de : " . $eqLogic->getName() );
