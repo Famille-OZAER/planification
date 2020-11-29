@@ -105,7 +105,10 @@ class planification extends eqLogic {
 				$cmd_date_prochaine_action=cmd::byEqLogicIdAndLogicalId($this->getId(),'heure_fin');
 				if (is_object($cmd_date_prochaine_action)) {
 					$date=$cmd_date_prochaine_action->execCmd();
+					log::add('planification', 'debug', "date: " . $date );
+					
 					$datetime=date_create_from_format("d/m/y H:i",$date);
+					log::add('planification', 'debug', "datetime: " . $datetime );
 					$cron->setOption(array('eqLogic_Id' => intval($this->getId())));
 					$cron->setLastRun(date('Y-m-d H:i:s'));
 					log::add('planification', 'debug', "Mode: " . $mode ." Replanification le " . $date ." => Auto");
@@ -343,7 +346,9 @@ class planification extends eqLogic {
 		$this->Ajout_Commande('heure_fin','Heure fin mode en cours','info','string');
 		$this->Ajout_Commande('action_en_cours','Action en cours','info','string');
 		$this->Ajout_Commande('action_suivante','Action suivante','info','string');
-		$this->Ajout_Commande('planification_en_cours','Planification en cours','info','string');		
+		$this->Ajout_Commande('planification_en_cours','Planification en cours','info','string');	
+		//$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric');	
+		//$this->Ajout_Commande('duree_mode_manuel_par_defaut','Duree mode manuel par defaut (minutes)','info','numeric',null,null,60);	
 
 
 		$cmd = $this->getCmd(null, "set_planification");
@@ -555,7 +560,7 @@ class planificationCmd extends cmd {
     }
 
     public function execute($_options = array()) {
-		log::add('planification', 'info', "execute: " . $this->getLogicalId());
+		//log::add('planification', 'info', "execute: " . $this->getLogicalId());
 		$eqLogic = $this->getEqLogic();
 		
 		
@@ -567,6 +572,10 @@ class planificationCmd extends cmd {
 				break;
 			case 'set_consigne_temperature':
 				$eqLogic->checkAndUpdateCmd('consigne_temperature',$_options["slider"]);
+				$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
+				if (is_object($cmd_mode)){
+					$mode = $cmd_mode->event("force");
+				}
 				break;
 			case 'auto':
 			case 'force':
@@ -579,10 +588,28 @@ class planificationCmd extends cmd {
 				if($this->getLogicalId() == "auto"){
 					$eqLogic->set_cron();
 				}else if ($this->getLogicalId() == "arret"){
-					//suppresion du cron
-
+					$crons = cron::searchClassAndFunction('planification', 'pull');
+					foreach ($crons as $cron){
+							$options_cron=$cron->getOption();
+							if($options_cron["eqLogic_Id"]== $eqLogic->getId()){
+								cron::remove();
+							}
+					}					
+				}else{
+					$cmd_set_heure_fin=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'set_heure_fin');
+					$cmd_duree_mode_manuel_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'duree_mode_manuel_par_defaut');
+					$duree_mode_manuel_par_defaut=60*60*1000;
+					if (is_object($cmd_duree_mode_manuel_par_defaut)){
+						$duree_mode_manuel_par_defaut=$cmd_duree_mode_manuel_par_defaut->execCmd()*60*1000;
+					}
+								
+					
+					if (is_object($cmd_set_heure_fin)){
+						$date_Fin=date('d/m/y H:i',time() + $duree_mode_manuel_par_defaut);
+						$arr=["message" => $date_Fin];
+						$cmd_set_heure_fin->execute( $arr) ;
+					}
 				}
-				
 				break;
 			case 'set_heure_fin':	
 				if (strtotime("now") > strtotime($_options['message'])){
@@ -596,8 +623,6 @@ class planificationCmd extends cmd {
 						$eqLogic->set_cron();
 					}
 				}
-				//set cron heure
-				//via retour prendre la dernière action non jouée entre la date de manu et maintenant.
 				break;
 			case 'set_planification':
 			
@@ -625,6 +650,5 @@ class planificationCmd extends cmd {
 	public function preSave() {
      
 	}
-	
 }
 ?>
