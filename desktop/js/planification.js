@@ -486,7 +486,7 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 	}
 	Div_jour.closest("th").find(".collapsible")[0].classList.remove("no-arrow")
 	Div_jour.closest("th").find(".collapsible")[0].classList.add("cursor")
-	Div_jour.closest("th").find(".collapsible")[0].classList.add("active")
+	//Div_jour.closest("th").find(".collapsible")[0].classList.add("active")
 	Div_jour.append(nouvelle_periode)
 }
 
@@ -577,6 +577,7 @@ function Recup_liste_commandes_planification(){
 }
 
 function checkTimePicker(picker){
+	
     val = $(picker).val()
     Div_jour = $(picker).closest('.JourSemaine')
     periode_jour = $(Div_jour).find('.Periode_jour')

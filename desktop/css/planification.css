@@ -95,6 +95,15 @@ top:0px;
   border: 6px solid transparent!important;
   border-color: transparent  transparent transparent transparent!important;
 }
+.collapsible.active:after {
+
+  border-color: transparent transparent #C3C3C3 transparent!important;
+  top: -13px!important;
+}
+.collapsible.no-arrow.active:after {
+  border-color: transparent transparent transparent transparent!important;
+  top: -10px!important;
+}
 
 .programmation_collapsible.active:after {
 
@@ -117,15 +126,7 @@ top:0px;
 
 
 
-.collapsible.active:after {
 
-  border-color: transparent transparent #C3C3C3 transparent!important;
-  top: -13px!important;
-}
-.collapsible.no-arrow.active:after {
-  border-color: transparent transparent transparent transparent!important;
-  top: -10px!important;
-}
 .planification-body {
   padding: 0px;
   max-height: 0;

@@ -65,11 +65,10 @@
 		<ul class="nav nav-tabs" role="tablist" style="display:inline-block">
 			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
 			<li role="presentation" class="active"><a href="#tab_eqlogic" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
-			<li role="presentation" id ="menu_tab_planifications"><a href="#tab_planifications" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{planifications}}</a></li>
 			<li role="presentation"><a href="#tab_commandes_planification" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Commandes planification}}</a></li>
+			<li role="presentation" id ="menu_tab_planifications"><a href="#tab_planifications" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{planifications}}</a></li>
 			<li role="presentation" id ="menu_tab_gestion"><a href="#tab_gestion" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Gestion Lever/Coucher soleil}}</a></li>
 			<li role="presentation"><a href="#tab_commandes" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes équipement}}</a></li>
-		
 		</ul>	
 		
 			

@@ -39,7 +39,7 @@ try {
             unlink ($nom_fichier_json) ;
         }
         
-        log::add('planification', 'debug', 'ajax enregistrer_planifications: '. $nom_fichier_json);
+       // log::add('planification', 'debug', 'ajax enregistrer_planifications: '. $nom_fichier_json);
         ajax::success();
     }
 
@@ -51,7 +51,7 @@ try {
         if(file_exists ( $nom_fichier ) ){
             $res=file_get_contents ($nom_fichier);
         }
-        log::add('planification', 'debug', 'ajax lire_json: '. $nom_fichier);
+       // log::add('planification', 'debug', 'ajax lire_json: '. $nom_fichier);
         ajax::success($res);
     }
     if (init('action') == 'Recup_html') {//OK
