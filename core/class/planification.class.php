@@ -542,8 +542,9 @@ class planification extends eqLogic {
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$this->getCmd(null, 'set_planification'),"id");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$this->getCmd(null, 'planification_en_cours'),"value");
         $this::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$this->getCmd(null, 'action_en_cours'),"value");
-        $this::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$this->getCmd(null, 'action_suivante'),"value");
-      
+		$this::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$this->getCmd(null, 'action_suivante'),"value");
+		
+		
 		$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('temperature_id',"")));
 		if (is_object($cmd_temperature)){
 			$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
@@ -553,6 +554,24 @@ class planification extends eqLogic {
 			$replace['#temperature_id#']="";
 		}
 
+		$imagePoele="PoeleOff";
+		$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_allume_id',"")));
+		if (is_object($cmd_Etat_Allume)){
+			if($cmd_Etat_Allume->execCmd())
+			{
+				$imagePoele="PoeleOn";
+				$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_boost_id',"")));
+				if (is_object($cmd_Etat_Boost)){
+					if($cmd_Etat_Boost->execCmd())
+					{
+						$imagePoele="PoeleOnBoost";
+					}
+				}
+			}
+		}
+		$replace['#img_poele#'] = $imagePoele;
+
+		
 		if ($erreur){
 			$replace['#display_erreur#'] ="block";
 		}else{

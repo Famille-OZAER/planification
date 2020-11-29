@@ -148,7 +148,7 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label">{{Commande de l'état du poêle}}</label>
 							<div class="col-sm-6 input-group">
-								<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="etat_id"/>
+								<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="etat_allume_id"/>
 								<span class="input-group-btn">
 									<a class="btn btn-success btn-sm listCmdEtat"><i class="fa fa-tasks"></i></a>
 								</span>

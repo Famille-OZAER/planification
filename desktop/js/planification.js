@@ -676,7 +676,7 @@ $("body").delegate(".listCmdTemperature", 'click', function () {
 	});
 });
 $("body").delegate(".listCmdEtat", 'click', function () {
-	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_id]');
+	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_allume_id]');
 	jeedom.cmd.getSelectModal({cmd: {type: 'info',subType:"binary"}}, function (result) {
 		el.value(result.human);
 	});
