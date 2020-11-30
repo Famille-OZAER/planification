@@ -119,6 +119,7 @@ class planification extends eqLogic {
 		}
 	}
 	public function Recup_prochaine_action(){
+		$action_en_cours=$this::Recup_action_actuelle();
 		$maintenant=date_create_from_format ('Y-m-d H:i' ,date('Y-m-d H:i'));
 		$numéro_jour=date('N');
 		$Id_planification_en_cours=$this->getConfiguration("Id_planification_en_cours","");
@@ -141,7 +142,7 @@ class planification extends eqLogic {
 					$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string($i-1 .' days'));
 					if($date->getTimestamp() > $maintenant->getTimestamp()){
 						foreach ($CMD_LIST as $cmd) {
-							if($periode["Id"]==$cmd["Id"]){
+							if($periode["Id"]==$cmd["Id"] && $cmd["nom"] != $action_en_cours["nom"]){
 								$action["datetime"]=$date->format('d-m-Y H:i');
 								$action["nom"]=$cmd["nom"];
 														
