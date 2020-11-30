@@ -361,7 +361,7 @@ class planification extends eqLogic {
 		$this->Ajout_Commande('action_en_cours','Action en cours','info','string');
 		$this->Ajout_Commande('action_suivante','Action suivante','info','string');
 		$this->Ajout_Commande('planification_en_cours','Planification en cours','info','string');	
-		$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric');	
+		$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric',null,null,20);	
 		$this->Ajout_Commande('duree_mode_manuel_par_defaut','Duree mode manuel par defaut (minutes)','info','numeric',null,null,60);	
 
 
