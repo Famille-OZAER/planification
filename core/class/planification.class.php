@@ -625,7 +625,7 @@ class planificationCmd extends cmd {
 					foreach ($crons as $cron){
 							$options_cron=$cron->getOption();
 							if($options_cron["eqLogic_Id"]== $eqLogic->getId()){
-								cron::remove();
+								$cron->remove();
 							}
 					}					
 				}else{
