@@ -620,6 +620,12 @@ class planificationCmd extends cmd {
 				$eqLogic->checkAndUpdateCmd('mode_fonctionnement', $this->getLogicalId());
 				if($this->getLogicalId() == "auto"){
 					$eqLogic->Recup_action_actuelle();
+					$cmd_temperature_consigne_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'temperature_consigne_par_defaut');
+					$temperature_consigne_par_defaut=20;
+					if (is_object($cmd_temperature_consigne_par_defaut)){
+						$temperature_consigne_par_defaut=$cmd_temperature_consigne_par_defaut->execCmd();
+					}
+					$eqLogic->checkAndUpdateCmd('consigne_temperature',$temperature_consigne_par_defaut);
 					$eqLogic->set_cron();
 				}else if ($this->getLogicalId() == "arret"){
 					$crons = cron::searchClassAndFunction('planification', 'pull');
@@ -650,6 +656,7 @@ class planificationCmd extends cmd {
 						$cmd_set_heure_fin->execute( $arr) ;
 					}
 				}
+				$eqLogic->refresh();
 				break;
 			case 'set_heure_fin':
 				log::add('planification', 'info', "Heure: " . $_options['message']);
