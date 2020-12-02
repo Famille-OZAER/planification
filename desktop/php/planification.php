@@ -6,7 +6,9 @@
 	$plugin = plugin::byId('planification');
 	sendVarToJS('eqType', $plugin->getId());
 	$eqLogics = eqLogic::byType($plugin->getId());
-	include_file('3rdparty', 'jquery-clock-timepicker.min', 'js', 'planification');
+	
+	include_file('3rdparty', 'Moment', 'js', 'planification');
+	include_file('3rdparty', 'TimePicker', 'js', 'planification');
 ?>
 
 <div class="row row-overflow">
@@ -343,6 +345,7 @@
 	
 	include_file('desktop', 'planification', 'js', 'planification');
 	include_file('desktop', 'planification', 'css', 'planification');
+	include_file('3rdparty', 'TimePicker', 'css', 'planification');
 	include_file('core', 'plugin.template', 'js');
 	
 ?>

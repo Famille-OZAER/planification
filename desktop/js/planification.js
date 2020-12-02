@@ -243,7 +243,7 @@ $('body').off('click','.bt_copier_jour').on('click','.bt_copier_jour',  function
     var jour = $(this).closest('th').find('.JourSemaine')
 	JSONCLIPBOARD = { data : []}
     jour.find('.Periode_jour').each(function  () {
-        debut_periode = $(this).find('.timePicker').val()
+        debut_periode = $(this).find('.clock-timepicker').val()
 		Id = $(this).find('.select-selected').attr("id")
 		Nom=$(this).find('.select-selected span')[0].innerHTML
 		Couleur=recup_class_couleur($(this).find('.select-selected')[0].classList)
@@ -425,10 +425,17 @@ function Ajoutplanification(_planification) {
 
 function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null){
 	Periode_jours = $(Div_jour).find('.Periode_jour')
+	prochain_debut="00:00"
     if (Periode_jours.length > 0){
         periode_precedente = Periode_jours[Periode_jours.length-1]
-        dernier_debut = $(periode_precedente).find('.timePicker').val()	
-				
+		dernier_debut = $(periode_precedente).find('.clock-timepicker').val()	
+		prochain_debut_int=parseInt(dernier_debut.split(':')[0])*60 + parseInt(dernier_debut.split(':')[1])+1
+		heures=Math.trunc(prochain_debut_int/60)
+		heures_str="0"+heures
+		heures_str=heures_str.substr(heures_str.length -  2)
+		minutes_str="0"+ (prochain_debut_int - (heures * 60))
+		minutes_str=minutes_str.substr(minutes_str.length -  2)
+		prochain_debut=heures_str +":"+minutes_str
         if (time == null){
 			time_int=parseInt(parseInt(dernier_debut.split(':')[0] * 60) + parseInt(dernier_debut.split(':')[1]))
 			
@@ -457,7 +464,9 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 	div = '<div class="Periode_jour input-group" style="width:100% !important; line-height:1.4px !important;display: inline-grid">'
 		div += '<div>'
 			div += '<input class="checkbox form-control input-sm cursor" type="checkbox" onchange="Maj_checkbox(this)">'
-			div += '<input class="timePicker form-control input-sm cursor" type="text" value="'+time+'" style="width:60px;" onchange="checkTimePicker(this)">'
+			//div += '<input class="clock-timepicker form-control input-sm cursor" type="text"  value="'+time+'" style="width:60px;display:inline-block;position: relative" >'
+			div += '<input class="clock-timepicker form-control input-sm cursor" type="text"  value="'+time+'" style="width:60px;display:inline-block;position: relative" >'
+			
 			div += '<a class="btn btn-default bt_supprimer_perdiode btn-sm" style="vertical-align: bottom;right: 0px;position: absolute;" title="Supprimer cette période"><i class="fa fa-minus-circle"></i></a>'
 		div += '</div>'
 		div += '<div class="custom-select">'
@@ -465,13 +474,43 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 		div += '</div>'
 		
 	div += '</div>'
- 
+	
+
     nouvelle_periode = $(div)
     if (time != '00:00'){
-        nouvelle_periode.find('.timePicker').clockTimePicker()
-        nouvelle_periode.find('.clock-timepicker').attr('style','display: inline')
+		//nouvelle_periode.find('.clock-timepicker').clockTimePicker()
+		
+
+		nouvelle_periode.find('.clock-timepicker').TimePicker({
+			
+			date: false,
+				shortTime: false,
+				format: 'HH:mm',
+				switchOnClick : true,
+			
+		}).on('open', function(e, date)
+		{
+			debut_periode_precedente=$(this).closest(".Periode_jour").prev().find(".clock-timepicker").val()
+			debut_periode_precedente_int = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])+1
+			heures_debut_str="0"+Math.trunc(debut_periode_precedente_int/60)
+			heures_debut_str=heures_debut_str.substr(heures_debut_str.length -  2)
+			minutes_debut_str="0"+ (debut_periode_precedente_int - (Math.trunc(debut_periode_precedente_int/60)* 60))
+			minutes_debut_str=minutes_debut_str.substr(minutes_debut_str.length -  2)
+			
+			debut_periode_suivante=$(this).closest(".Periode_jour").next().find(".clock-timepicker").val()
+			debut_periode_suivante_int = (parseInt(debut_periode_suivante.split(':')[0]) * 60) + parseInt(debut_periode_suivante.split(':')[1])-1
+			heures_suivante_str="0"+Math.trunc(debut_periode_suivante_int/60)
+			heures_suivante_str=heures_suivante_str.substr(heures_suivante_str.length -  2)
+			minutes_suivante_str="0"+ (debut_periode_suivante - (Math.trunc(debut_periode_suivante/60)* 60))
+			minutes_suivante_str=minutes_suivante_str.substr(minutes_suivante_str.length -  2)
+
+			$(this).TimePicker('setMinDate', heures_debut_str + ":"  + minutes_debut_str );
+			$(this).TimePicker('setMaxDate', heures_suivante_str + ":"  + minutes_suivante_str);
+			
+		});
+        //nouvelle_periode.find('.clock-timepicker').attr('style','display: inline')
     }else{
-		nouvelle_periode.find('.timePicker').prop('readonly', true)
+		nouvelle_periode.find('.clock-timepicker').prop('readonly', true)
 	}
 	if(Mode_periode!=null){
 		
@@ -498,7 +537,7 @@ function MAJ_Graphique_jour(Div_jour){
         isFirst = (i == 0) ? true : false
         isLast = (i == Periode_jour.length-1) ? true : false
 		periode = Periode_jour[i]
-        debut_periode = $(periode).find('.timePicker').val()
+        debut_periode = $(periode).find('.clock-timepicker').val()
         heure_debut = (parseInt(debut_periode.split(':')[0]) * 60) + parseInt(debut_periode.split(':')[1])
         if(isFirst && heure_debut != 0){
 			heure_fin = heure_debut
@@ -512,7 +551,7 @@ function MAJ_Graphique_jour(Div_jour){
 		if (isLast){
             heure_fin = 1439
         }else{
-            fin_periode = $(Periode_jour[i+1]).find('.timePicker').val()
+            fin_periode = $(Periode_jour[i+1]).find('.clock-timepicker').val()
 			heure_fin = (parseInt(fin_periode.split(':')[0]) * 60) + parseInt(fin_periode.split(':')[1])
         }
         delta = heure_fin - heure_debut
@@ -523,6 +562,26 @@ function MAJ_Graphique_jour(Div_jour){
         graphDiv.append(nouveau_graph)
     }
 }
+$('body').off('mousedown','.clock-timepicker').on('mousedown','.clock-timepicker',  function () {
+	return
+	console.log($(this))
+	
+	$(this).clockTimePicker({
+		duration: true,
+		required:true,
+		durationNegative: true,
+		precision: 1,
+		alwaysSelectHoursFirst:true,
+		hideUnselectableNumbers:true,
+		minimum:$(this).closest(".Periode_jour").prev().find(".clock-timepicker").val(),
+		maximum:$(this).closest(".Periode_jour").next().find(".clock-timepicker").val(),
+		onChange: function(newValue, oldValue) {
+			//dispose()
+			//checkTimePicker(this,newValue,oldValue)
+		}
+	});
+	
+})
 
 function Recup_select($type) {
 	var SELECT=""
@@ -576,34 +635,43 @@ function Recup_liste_commandes_planification(){
 
 }
 
-function checkTimePicker(picker){
+function checkTimePicker(picker,newValue, oldValue){
 
-    val = $(picker).val()
+	console.log($(picker))
+	console.log("Nouvelle valeur:" + newValue)
+	console.log("Ancienne valeur:" + oldValue)
+	console.log("periode précedente:" + $(picker).closest(".Periode_jour").prev().find(".clock-timepicker").val())
+	console.log("periode suivante:" + $(picker).closest(".Periode_jour").next().find(".clock-timepicker").val())
+
+
+
+
+
+
     Div_jour = $(picker).closest('.JourSemaine')
     periode_jour = $(Div_jour).find('.Periode_jour')
-    if (periode_jour.length > 0){
-        for (i=0; i<periode_jour.length; i++){
-			if (i==0){
-				$(picker).clockTimePicker('value', "00:00")
-			}else{
-				periode = periode_jour[i]
-				debut = $(periode).find('.timePicker').val()
-				if (debut == val){
-					
-					debut_periode_precedente = $(periode_jour[i-1]).find('.timePicker').val()
-					heure_debut_periode_precedente = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])
-				
-					heure_debut = (parseInt(val.split(':')[0]) * 60) + parseInt(val.split(':')[1])
-
-					if (heure_debut <= heure_debut_periode_precedente){
-						nouvelle_valeur = debut_periode_precedente.split(':')[0] + ':' + (parseInt(debut_periode_precedente.split(':')[1]) + 1)
-						$(picker).clockTimePicker('value', nouvelle_valeur)
-					}
-				}else{
-					continue
-				}
-			}
-        }
+    if (periode_jour.length > 1){
+		heure_debut_selectionne = $(picker).val()
+		heure_debut_selectionne_int = (parseInt(heure_debut_selectionne.split(':')[0]) * 60) + parseInt(heure_debut_selectionne.split(':')[1])		
+		debut_periode_precedente=$(picker).closest(".Periode_jour").prev().find(".clock-timepicker").val()
+		debut_periode_precedente_int = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])
+		
+		console.log("heure_debut_selectionne_int : " + heure_debut_selectionne_int)
+		console.log("debut_periode_precedente_int : " + debut_periode_precedente_int)
+		if (heure_debut_selectionne_int <= debut_periode_precedente_int){
+			
+			console.log("toto : ")
+			debut_periode_precedente_int+=1
+			heures=Math.trunc(debut_periode_precedente_int/60)
+			heures_str="0"+heures
+			heures_str=heures_str.substr(heures_str.length -  2)
+			
+			minutes_str="0"+ (debut_periode_precedente_int - (heures * 60))
+			minutes_str=minutes_str.substr(minutes_str.length -  2)
+			console.log($(picker).val())
+			$(picker).val(oldValue)
+			console.log($(picker).val())
+		}        
     }
 }
 
@@ -846,7 +914,7 @@ function saveEqLogic(_eqLogic) {
 			jour.jour = $(this).attr("class").split(' ')[1]
 			periodes = []
 			$(this).find('.Periode_jour').each(function () {
-				debut_periode = $(this).find('.timePicker').val()
+				debut_periode = $(this).find('.clock-timepicker').val()
 				Id = $(this).find('.select-selected')[0].getAttribute('id')
 				//couleur=recup_class_couleur($(this).find('.select-selected')[0].classList)
 				if(typeof(Id) != 'string'){
