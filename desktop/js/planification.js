@@ -490,19 +490,30 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 			
 		}).on('open', function(e, date)
 		{
+			debut_periode_precedente=""
+			debut_periode_suivante=""
 			debut_periode_precedente=$(this).closest(".Periode_jour").prev().find(".clock-timepicker").val()
-			debut_periode_precedente_int = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])+1
-			heures_debut_str="0"+Math.trunc(debut_periode_precedente_int/60)
-			heures_debut_str=heures_debut_str.substr(heures_debut_str.length -  2)
-			minutes_debut_str="0"+ (debut_periode_precedente_int - (Math.trunc(debut_periode_precedente_int/60)* 60))
-			minutes_debut_str=minutes_debut_str.substr(minutes_debut_str.length -  2)
+			if (debut_periode_precedente != ""){
+				debut_periode_precedente_int = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])+1
+				heures_debut_str="0"+Math.trunc(debut_periode_precedente_int/60)
+				heures_debut_str=heures_debut_str.substr(heures_debut_str.length -  2)
+				minutes_debut_str="0"+ (debut_periode_precedente_int - (Math.trunc(debut_periode_precedente_int/60)* 60))
+				minutes_debut_str=minutes_debut_str.substr(minutes_debut_str.length -  2)
+			}
+			if (debut_periode_suivante!=""){
+				debut_periode_suivante=$(this).closest(".Periode_jour").next().find(".clock-timepicker").val()
+				console.log(debut_periode_suivante)
+				debut_periode_suivante_int = (parseInt(debut_periode_suivante.split(':')[0]) * 60) + parseInt(debut_periode_suivante.split(':')[1])-1
+				heures_suivante_str="0"+Math.trunc(debut_periode_suivante_int/60)
+				heures_suivante_str=heures_suivante_str.substr(heures_suivante_str.length -  2)
+				minutes_suivante_str="0"+ (debut_periode_suivante - (Math.trunc(debut_periode_suivante/60)* 60))
+				minutes_suivante_str=minutes_suivante_str.substr(minutes_suivante_str.length -  2)
+			}else{
+				heures_suivante_str="23"
+				minutes_suivante_str="59"
+			}
 			
-			debut_periode_suivante=$(this).closest(".Periode_jour").next().find(".clock-timepicker").val()
-			debut_periode_suivante_int = (parseInt(debut_periode_suivante.split(':')[0]) * 60) + parseInt(debut_periode_suivante.split(':')[1])-1
-			heures_suivante_str="0"+Math.trunc(debut_periode_suivante_int/60)
-			heures_suivante_str=heures_suivante_str.substr(heures_suivante_str.length -  2)
-			minutes_suivante_str="0"+ (debut_periode_suivante - (Math.trunc(debut_periode_suivante/60)* 60))
-			minutes_suivante_str=minutes_suivante_str.substr(minutes_suivante_str.length -  2)
+			
 
 			$(this).TimePicker('setMinDate', heures_debut_str + ":"  + minutes_debut_str );
 			$(this).TimePicker('setMaxDate', heures_suivante_str + ":"  + minutes_suivante_str);
