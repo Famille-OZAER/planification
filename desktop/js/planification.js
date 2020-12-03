@@ -16,7 +16,74 @@ function recup_class_couleur(classes){
 	
 	return class_color
 }
-
+$('.ajouter_eqlogic').on('click', function () {
+	var dialog_title = '{{Choisissez le type d\'équipement que souhaitez ajouter}}';
+	var dialog_message = '<form class="form-horizontal onsubmit="return false;"> ';
+	dialog_message += 
+	'<div> <div class="radio"> <label > ' +
+	'<input type="radio" name="type" id="Volet" value="Volet" checked="checked"> {{Volet}} </label> ' +
+	'</div>' +
+	'<div class="radio"> <label > ' +
+	'<input type="radio" name="type" id="PAC" value="PAC"> {{Pompe à chaleur}}</label> ' +
+	'</div> ' +
+	'<div class="radio"> <label > ' +
+	'<input type="radio" name="type" id="Poele" value="Poele"> {{Poêle à granules}}</label> ' +
+	'</div> ' +
+	'<div class="radio"> <label > ' +
+	'<input type="radio" name="type" id="Autre" value="Autre" placeholder="Nom de l\'équipement"> {{Autre}}</label> ' +
+	'</div> <br>' +
+	'<div class="input">' +
+	'<input class="col-sm-8" type="text" placeholder="Nom de l\'équipement" name="nom" id="nom" >  ' +
+	
+	'</div> <br>' +
+	'</div>';
+	
+	dialog_message += '</form>';
+	bootbox.dialog({
+		title: dialog_title,
+		message: dialog_message,
+		buttons: {
+			"{{Annuler}}": {
+				className: "btn-danger",
+				callback: function () {
+				}
+			},
+			success: {
+				label: "{{Valider}}",
+				className: "btn-success",
+				
+				callback: function () {
+					if($("input[name='nom']").val() == ""){
+						$('#div_alert').showAlert({message: "Le nom de l'équipement ne peut pas être vide.", level: 'danger'});
+						return;
+					}
+					$.ajax({
+						type: "POST",
+						url: "plugins/planification/core/ajax/planification.ajax.php",
+						data: {
+							action : "Ajout_equipement",
+							nom : $("input[name='nom']").val(),
+							type : $("input[name='type']:checked").val()
+						},
+						global: true,
+						async: false,
+						error: function (request, status, error) {
+							handleAjaxError(request, status, error);
+						},
+						success: function (data) {
+							if (data.state != 'ok') {
+								$('#div_alert').showAlert({message: data.result, level: 'danger'});
+								
+							}
+							window.location.href = 'index.php?v=d&p=planification&m=planification&id=' + data.result;
+							
+						}
+					});	
+				}
+			}
+		},
+	})
+})
 $('#div_planifications').off('click','.select-selected').on('click','.select-selected',  function (e) {
 	/* When the select box is clicked, close any other select boxes,
 	and open/close the current select box: */
@@ -93,15 +160,25 @@ $("input[data-l1key='functionality::cron15::enable']").on('change',function(){
 $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change',function(){
    
    if ($(this).value() == "PAC"){
-	   $('#img_planificationModel').attr('src','plugins/planification/core/img/pac.png')
+		$(".poele").hide()
+		$(".PAC").show()
+	  	$('#img_planificationModel').attr('src','plugins/planification/core/img/pac.png')
    }else if ($(this).value() == "Volet"){
-	   $('#img_planificationModel').attr('src','plugins/planification/core/img/volet.png')
+		$('#img_planificationModel').attr('src','plugins/planification/core/img/volet.png')
+		$(".poele").hide()
+		$(".PAC").hide()
    }else if ($(this).value() == "Chauffage"){
-	   $('#img_planificationModel').attr('src','plugins/planification/core/img/chauffage.png')
+		$('#img_planificationModel').attr('src','plugins/planification/core/img/chauffage.png')
+		$(".poele").hide()
+		$(".PAC").hide()
    }else if ($(this).value() == "Poele"){
-		$('#img_planificationModel').attr('src','plugins/planification/core/img/poele.png')
+		$(".poele").show()
+		$(".PAC").hide()
+		$('#img_planificationModel').attr('src','plugins/planification/core/img/poele.png')	
    }else{
-	   $('#img_planificationModel').attr('src','plugins/planification/core/img/autre.png')
+	   	$('#img_planificationModel').attr('src','plugins/planification/core/img/autre.png')
+	   	$(".poele").hide()
+		$(".PAC").hide()
    }
 })
   
@@ -310,7 +387,7 @@ $('body').off('click','.collapsible').on('click','.collapsible',  function () {
 	}
 //$(this).closest('form').find('.JourSemaine.' + $(this)[0].innerText).toggle();
 })
-$('body').off('click','.programmation_collapsible').on('click','.programmation_collapsible',  function () {
+$('body').off('click','.planification_collapsible').on('click','.planification_collapsible',  function () {
 	this.classList.toggle("active");
 	
 	var DivPlanification=$(this).closest(".planification").find(".planification-body")
@@ -350,8 +427,7 @@ function Ajoutplanification(_planification) {
     var div = '<div class="planification panel panel-default" Id='+  _planification.Id+'>'
 			div += '<div class="panel-heading">'
 				div += '<h3 class="panel-title" style="padding-bottom: 4px;">'
-					div+='<div class="programmation_collapsible cursor" style="height:32px;padding-top: 10px;width: calc(100% - 345px)">'
-						//div += '<a class="accordion-toggle collapsed" style="width: calc(100% - 345px);" data-toggle="collapse" data-parent="" href="#collapse' + random + '">'
+					div+='<div class="planification_collapsible cursor" style="height:32px;padding-top: 10px;width: calc(100% - 345px)">'
 							div += '<span class="nom_planification">' + _planification.nom + '</span>'
 								div += '<span class="input-group-btn pull-right" style="top: -5px!important;">'
 									div += '<a class="btn btn-sm bt_renommer_planification btn-warning roundedLeft"><i class="fas fa-copy"></i> {{Renommer}}</a>'																										 
@@ -359,12 +435,10 @@ function Ajoutplanification(_planification) {
 									div += '<a class="btn btn-sm bt_appliquer_planification btn-success" title="Appliquez la planification maintenant"><i class="fas fa-check-circle"></i> {{Appliquer}}</a>'
 									div += '<a class="btn btn-sm bt_supprimer_planification btn-danger roundedRight"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>'
 								div += '</span>'
-						//div += '</a>'
 					
 					div += '</div>'		
 				div += '</h3>'
 			div += '</div>'
-			//div += '<div id="collapse' + random + '" class="panel-collapse collapse" style="height: 0px;">'
 				div += '<div class="planification-body" style=" background-color: rgb(var(--defaultBkg-color))  !important;>'
 					div += '<form class="form-horizontal" role="form">'
 						div += '<div class="div_programDays" style="width:100%">'
@@ -419,8 +493,6 @@ function Ajoutplanification(_planification) {
 		div += '</div>'
 
 	$('#div_planifications').append(div)
-	
-   // $('#div_planifications .planification:last').setValues(_planification, '.programAttr')
 }
 
 function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null){
@@ -573,26 +645,6 @@ function MAJ_Graphique_jour(Div_jour){
         graphDiv.append(nouveau_graph)
     }
 }
-$('body').off('mousedown','.clock-timepicker').on('mousedown','.clock-timepicker',  function () {
-	return
-	console.log($(this))
-	
-	$(this).clockTimePicker({
-		duration: true,
-		required:true,
-		durationNegative: true,
-		precision: 1,
-		alwaysSelectHoursFirst:true,
-		hideUnselectableNumbers:true,
-		minimum:$(this).closest(".Periode_jour").prev().find(".clock-timepicker").val(),
-		maximum:$(this).closest(".Periode_jour").next().find(".clock-timepicker").val(),
-		onChange: function(newValue, oldValue) {
-			//dispose()
-			//checkTimePicker(this,newValue,oldValue)
-		}
-	});
-	
-})
 
 function Recup_select($type) {
 	var SELECT=""
@@ -699,7 +751,7 @@ $('.bt_Importer_Commandes_EqLogic').off('click').on('click', function () {
       type: "POST",
       url: "plugins/planification/core/ajax/planification.ajax.php",
       data: {
-        action: "importer_commandes_eqlogic",
+        action: "Importer_commandes_eqlogic",
         eqLogic_id: result.id,
         id: $('.eqLogicAttr[data-l1key=id]').value()
       },
@@ -727,7 +779,6 @@ $('.bt_Ajout_commande_planification').on('click', function () {
 });
 
 $("body").delegate(".listCmdAction", 'click', function() {
-    //var type = $(this).attr('data-type');
     var el = $(this).closest('div div').find('.expressionAttr[data-l1key=cmd]');
     jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function(result) {
         el.value(result.human);
@@ -824,6 +875,14 @@ $('body').delegate('.row_cmd_planification .expressionAttr[data-l1key=cmd]', 'fo
 function printEqLogic(_eqLogic) {
 	$('#div_planifications').empty()
 	$('#table_cmd_planification tbody').empty()
+	if(_eqLogic.configuration.type == 'Poele') {
+		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id )
+		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_allume_id]').val(_eqLogic.configuration.etat_allume_id)
+		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_boost_id]').val(_eqLogic.configuration.etat_boost_id)
+	}
+	if(_eqLogic.configuration.type == 'PAC') {
+		$('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id )
+	}
 	nom_planification_erreur=[]	
 	if (isset(_eqLogic.configuration.commandes_planification)) {
 		for (var i in _eqLogic.configuration.commandes_planification) {
@@ -852,7 +911,7 @@ function printEqLogic(_eqLogic) {
 			type: "POST",
 			url: "plugins/planification/core/ajax/planification.ajax.php",
 			data: {
-				action: "lire_json",
+				action: "Recup_planification",
 				id: _eqLogic["id"]
 			},
 			dataType: 'json',
@@ -914,27 +973,25 @@ function saveEqLogic(_eqLogic) {
 	_eqLogic.configuration.commandes_planification = []
 	planifications = [];
 	erreur=false
+	
 	$('#div_planifications .planification').each(function () {
 		_Cette_planification = {}
 		_Cette_planification.nom_planification = $(this).find('.nom_planification').html()
 		_Cette_planification.Id=$(this).attr("Id")
 		semaine = []
 		$(this).find('th').find(".JourSemaine").each(function () {
-		//$(this).find('.JourSemaine').each(function () {
 			jour = {}
 			jour.jour = $(this).attr("class").split(' ')[1]
 			periodes = []
 			$(this).find('.Periode_jour').each(function () {
 				debut_periode = $(this).find('.clock-timepicker').val()
 				Id = $(this).find('.select-selected')[0].getAttribute('id')
-				//couleur=recup_class_couleur($(this).find('.select-selected')[0].classList)
 				if(typeof(Id) != 'string'){
 					erreur=true
 					$(this).find('.select-selected')[0].classList.add("erreur")
 				}
 				periodes.push({'Debut_periode':debut_periode, 'Id':Id})
 			})
-			//if(periodes.length ==0){periodes.push('')}
 			jour.periodes = periodes
 			semaine.push(jour)
 			
@@ -944,17 +1001,15 @@ function saveEqLogic(_eqLogic) {
 	})
 	if (erreur){
 		alert("Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.")
-		
 		return ;
 	}
 	$.ajax({
 		type: "POST",
 		url: "plugins/planification/core/ajax/planification.ajax.php",
 		data: {
-			action: "enregistrer_planifications",
+			action: "Enregistrer_planifications",
 			id: _eqLogic["id"],
 			planifications: planifications
-			//html:html
 		},
 		global: false,
 		error: function (request, status, error) {handleAjaxError(request, status, error)},
@@ -967,9 +1022,16 @@ function saveEqLogic(_eqLogic) {
 				return
 			}
 		}
-	})	 									   	
-
-	
+	})	 
+	console.log(_eqLogic.configuration.type)
+	if(_eqLogic.configuration.type == 'Poele') {
+		_eqLogic.configuration.temperature_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_id]').val();
+		_eqLogic.configuration.etat_allume_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_allume_id]').val();
+		_eqLogic.configuration.etat_boost_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_boost_id]').val();
+	}								   	
+	if(_eqLogic.configuration.type == 'PAC') {
+		_eqLogic.configuration.temperature_id = $('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=temperature_id]').val();
+	}	
 
 	$('#table_cmd_planification tbody tr').each(function(){
 		_eqLogic.configuration.commandes_planification.push($(this).getValues('.expressionAttr')[0])

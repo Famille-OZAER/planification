@@ -1,0 +1,176 @@
+<div class="eqLogic-widget eqLogic allowResize allowReorderCmd" style="width: 350px;border:#border#;border-radius:#border-radius#;background-color: #background-color#;color: #color#;#style#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#">
+    <div>
+        <span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#">
+			<i class="fas fa-sync"></i>
+		</span>
+		<i class="fa fa-retweet cursor tooltips changecmd noRefresh" title="Changer commandes" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
+        <center class="widget-name"><a href="#eqLink#" style="font-size : 1.3em;#hideEqLogicName#">#name_display#</a></center>
+		<center>
+			<span class="alert-danger cmd cmd-widget"  style="display:#display_erreur#;">Certaines commandes n'existent pas, veuillez sauvegarder votre équipement afin de résourdre le problème.</span>
+		</center>
+        <div class="row" style="margin-top: -10px">
+            <div class="col-xs-6">
+				<br/>
+				<center>
+					<span class="heatstatus #temperature_history# tooltips" data-cmd_id="#temperature_id#" style="color:white;font-size : 1.5em; font-weight: bold;margin-left : 5px;" title="Température mesurée">#temperature# </span>
+				</center>
+				<center>
+					<div class="modetemp">
+						<center>
+							<img src="plugins/planification/core/template/dashboard/images/#img_pac#" style="height: 80px;"/> 
+						</center>
+					</div>
+				<div class="modeplan" style="display : none;margin-top : 10px">
+				
+				
+					<span class="cmd cmd-widget" data-cmd_id="#absent_id#" style="display:none;"></span>
+					<!--<span class="cmd cmd-widget" data-cmd_id="#hors_gel_id#" style="display:none;"></span>-->
+					<span class="cmd cmd-widget" data-cmd_id="#auto_id#" style="display:none;"></span>
+					<span class="cmd cmd-widget" data-cmd_id="#arret_id#" style="display:none;"></span>
+					<span class="cmd cmd-widget" data-cmd_id="#chauffage_id#" style="display:none;"></span>
+					<span class="cmd cmd-widget" data-cmd_id="#refresh_id#" style="display:none;"></span>
+					<span class="cmd cmd-widget" data-cmd_id="#endtime_change_id#" style="display:none;"></span>
+					<span class="cmd cmd-widget" data-cmd_id="#planning_change#" style="display:none;"></span>
+
+					<i class="fa fa-cog auto cursor tooltips" title="Mettre le planning en mode automatique" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
+					<i class="icon jeedom-mouvement absent cursor tooltips" title="Mettre le planning en mode absent" style="font-size: 1.9em;margin-left: 2px;color:#3498db!important"></i>
+					<!--<i class="icon nature-snowflake hors-gel cursor tooltips" title="Mettre le planning en mode hors-gel" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>-->
+					<i class="icon nature-weather1 force cursor tooltips" title="Mettre le planning en mode chauffe forcée" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
+					<i class="fa fa-times arret cursor tooltips" title="Arrêter le planning" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
+					<br/>
+                  
+					<script>
+					
+						$('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function () {
+							jeedom.cmd.execute({id: '#refresh_id#'});
+						});
+						$('.eqLogic[data-eqLogic_uid=#uid#] .absent').on('click', function () {
+							jeedom.cmd.execute({id: '#absent_id#'});
+						});
+						/*$('.eqLogic[data-eqLogic_uid=#uid#] .hors-gel').on('click', function () {
+							jeedom.cmd.execute({id: '#hors_gel_id#'});
+						});*/
+						$('.eqLogic[data-eqLogic_uid=#uid#] .auto').on('click', function () {
+							jeedom.cmd.execute({id: '#auto_id#'});
+						});
+						$('.eqLogic[data-eqLogic_uid=#uid#] .force').on('click', function () {
+							jeedom.cmd.execute({id: '#chauffage_id#'});
+						});
+						$('.eqLogic[data-eqLogic_uid=#uid#] .arret').on('click', function () {
+							jeedom.cmd.execute({id: '#arret_id#'});
+						});
+						
+						if ('#mode_fonctionnement#' == 'absent' || '#mode_fonctionnement#' == 'force') {
+							
+							$('.eqLogic[data-eqLogic_uid=#uid#] .#mode_fonctionnement#').css('color', 'white');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#mode_fonctionnement_name# <i class="fa fa-arrow-right"></i> #endtime#');
+						} else if ('#mode_fonctionnement#' == 'auto') {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .auto').css('color', 'white');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours# <i class="fa fa-arrow-right"></i>');
+                          	$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('#prochaine_action#');
+                          	$('.eqLogic[data-eqLogic_uid=#uid#] .heure_prochaine_action').append('#endtime#');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').append('#planification_en_cours#');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').css('display', 'block');
+						} else if ('#mode_fonctionnement#' == 'arret') {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .arret').css('color', 'white');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('Arrêt');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').css('display', 'block');
+						} else {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('INCONNU <i class="fa fa-arrow-right"></i> #endtime#');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').css('display', 'block');
+						}
+					</script>
+				</div>
+			</center>
+             
+            </div>
+			
+            <div class="col-xs-6">
+				<div class="modeplan" style="display : none;margin-top : 10px">
+					<br/>
+					<center>
+						<select class="cmd form-control selectCalendar cursor tooltips" style="background-color:'#cmdColor#';width:70%;color:white;border-radius: 10px;" title="Choisir planification">
+								#calendar_selector#
+						</select>
+						<!--</br>-->
+					<div class='cmd input-group date datetimepicker'>
+						<span class="input-group-addon cursor tooltips" style="background-color:'#cmdColor#';width:70%;border-radius: 10px;" title="Choisir Fin">
+							<span class="fa fa-calendar" style="color:white"></span>
+						</span>
+					</div>
+					</center>
+				</div>
+                <div class="cmd cmd-widget modetemp" data-type="action" data-subtype="slider" data-cmd_id="#set_consigne_temperature_id#" style="width : 150px;height : 110px;display : block;">
+                    <span class="pull-left iconCmd#set_consigne_temperature_id#" style="position : relative;font-size: 6em;height:100px;"></span>
+                    <div>
+                        <div style="margin-top : 20px;" >
+                            <input type="text" class="dial #consigne_history# tooltips noRefresh" data-cmd_id="#consigne_temperature_id#" value="#consigne_temperature#" data-min="#set_consigne_temperature_min#" data-max="#set_consigne_temperature_max#" data-step="1" data-width="110" data-height="110"  title="Consigne température"/>
+                        </div>
+                        <div style="cursor : default;position: relative; top: -70px; left : 105px;color: rgb(255, 255, 255);">
+                            °C
+                        </div>
+                    </div>
+                    <script>
+						$.include(['plugins/planification/core/template/dashboard/jquery.kontrol.js'], function () {
+						$(".eqLogic[data-eqLogic_uid=#uid#] .cmd[data-cmd_id=#set_consigne_temperature_id#] .dial").dial({
+							bgColor: "#3498db",
+							fgColor: '#FFFFFF',
+							noScroll: true,
+							release: function (temp) {
+								jeedom.cmd.execute({id: '#set_consigne_temperature_id#', value: {slider: temp}});
+							}
+						});
+						if (parseInt('#consigne_temperature#') > 21) {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-chaud"></"></i>');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'red');
+						} else if (parseInt('#consigne_temperature#') > 18) {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-moyen"></i>');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'orange');
+						} else if (parseInt('#consigne_temperature#') > 16) {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-froid"></i>');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'green');
+						} else {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-froid"></i>');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'blue');
+						}
+						
+					});
+						$('.eqLogic[data-eqLogic_uid=#uid#] .changecmd').on('click', function () {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .modeplan').toggle();
+							$('.eqLogic[data-eqLogic_uid=#uid#] .modetemp').toggle();
+							
+						});
+						$('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').on('change', function() {
+							//var arr = [];
+							//arr.push($(this).value())
+							//arr.push($(this)[0].options[$(this)[0].selectedIndex].id)
+							jeedom.cmd.execute({id: '#set_planification_id#', value: {'select': $(this).value(),Id_planification:$(this)[0].options[$(this)[0].selectedIndex].id}});
+							//jeedom.cmd.execute({id: '#set_planification_id#', value: arr});
+						});
+						
+						$(function () {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').datetimepicker({
+								locale: 'fr',
+								minDate : '-0d',
+								step: 15,
+								onChangeDateTime:function(dp,$input){
+									jeedom.cmd.execute({id: '#endtime_change_id#', value: {'message': $input.val()}});
+								}
+							});
+						});
+                    </script>
+                </div>
+            </div>
+           <div class="modetemp">
+				<center>
+					<span class="action_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Action en cours"></span>
+                  	<span class="prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Prochaine action"></span>
+					<span class="heure_prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Heure prochaine action"></span>
+					<div><span class="planification_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="planification en cours"></span></div>
+					
+					<!--<span class="calendar tooltips" style="cursor:default;font-size: 0.9em;position: relative;top: -2px;left: 5px;"  title="Calendrier en cours"></span>-->
+             </center>
+			</div>
+        </div>
+    </div>
+</div>

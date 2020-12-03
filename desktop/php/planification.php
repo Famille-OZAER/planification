@@ -19,7 +19,8 @@
 				<i class="fas fa-wrench"></i>
 				<span>{{Configuration}}</span>
 			</div>
-			<div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 90px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
+			
+			<div class="cursor ajouter_eqlogic"  style="background-color : #ffffff; height : 90px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
 				<i class="fa fa-plus-circle" style="font-size : 70px;color:#94ca02;"></i>
 				<span style="font-size : 1.1em;color:#94ca02"><center>{{Ajouter}}</center></span>
 			</div>
@@ -126,43 +127,50 @@
 							</div>
 						</div>
                                   
-						<div class="form-group">
+						<div class="form-group" style="display : none;" >
 							<label class="col-sm-3 control-label">{{Type équipement}}</label>
 							<div class="col-sm-3">
-                                  <select class="eqLogicAttr" data-l1key="configuration" data-l2key="type">
-                                  	 <option value="Volet">Volet Roulant</option>
-                                     <option value="Chauffage">Chauffage avec fil pilote</option>
-                                     <option value="PAC">Pompe à chaleur</option>
-									 <option value="Poele">Poêle à granules</option>
-                                     <option value="Autre">Autre</option>
-                                  </select>
+							<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="type" />
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">{{Commande de température}}</label>
-							<div class="col-sm-6 input-group">
-								<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="temperature_id"/>
-								<span class="input-group-btn">
-									<a class="btn btn-success btn-sm listCmdTemperature"><i class="fa fa-tasks"></i></a>
-								</span>
+						<div class="poele" style="display:none">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Commande de température}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="temperature_id"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm listCmdTemperature"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Commande de l'état du poêle}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_allume_id"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm listCmdEtat"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Commande de l'état boost du poêle}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_boost_id"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm listCmdEtatBoost"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">{{Commande de l'état du poêle}}</label>
-							<div class="col-sm-6 input-group">
-								<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="etat_allume_id"/>
-								<span class="input-group-btn">
-									<a class="btn btn-success btn-sm listCmdEtat"><i class="fa fa-tasks"></i></a>
-								</span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">{{Commande de l'état boost du poêle}}</label>
-							<div class="col-sm-6 input-group">
-								<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="etat_boost_id"/>
-								<span class="input-group-btn">
-									<a class="btn btn-success btn-sm listCmdEtatBoost"><i class="fa fa-tasks"></i></a>
-								</span>
+						<div class="PAC" style="display:none">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Commande de température}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="temperature_id"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm listCmdTemperature"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
 							</div>
 						</div>
 					</fieldset>
@@ -316,7 +324,6 @@
             </div>-->
 			<!--Commands Tab-->
 			<div role="tabpanel" class="tab-pane" id="tab_commandes">
-				<!--<div id="div_cmds"></div>-->
 				<legend><i class="fa fa-list-alt"></i>  {{Commandes Infos}}</legend>
 				<table id="table_infos" class="table table-bordered table-condensed">
 					<thead>

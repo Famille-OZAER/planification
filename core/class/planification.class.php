@@ -3,8 +3,8 @@ require_once  '/var/www/html/core/php/core.inc.php';
 
 class planification extends eqLogic {
 	public static $_widgetPossibility = array('custom' => true);
-	
-  	function recup_planifications(){
+	//debut fonctions ajax
+  	function Recup_planifications(){
 		$dossier = dirname(__FILE__) . '/../../planifications/';
 		if (!is_dir($dossier)) mkdir($dossier, 0755, true);
 		$nom_fichier=dirname(__FILE__) ."/../../planifications/" . $this->getId() . ".json";
@@ -12,7 +12,68 @@ class planification extends eqLogic {
 		if(file_exists ( $nom_fichier ) ){$planifications=file_get_contents ($nom_fichier);}
 		if($planifications==""){return ;}
 		return json_decode($planifications,true);
-    }
+	}
+	public function Recup_select($type,$eqLogic_id) {
+		$eqLogic = eqLogic::byId($eqLogic_id);
+		if (!is_object($eqLogic)) {
+		  throw new Exception(__('Impossible de trouver l\'équipement : ', __FILE__) . $eqLogic_id);
+	  }
+	  if ($type == "planification"){
+		  $cmds=$eqLogic->getConfiguration("commandes_planification","");
+
+		  $div ='<div class="select-selected expressionAttr #COULEUR#" id="#ID#" data-l1key = "couleur">';
+			  $div .='<span>#VALUE#</span></div>';
+
+			  $div .='<div class="select-items select-hide">';
+			  
+	  
+			  foreach ($cmds as $cmd) {
+				  $div.='<div class="couleur-'.$cmd["couleur"].'" id="'.$cmd["Id"].'" value="'. $cmd["nom"] . '">';
+					  $div.='<span>'.$cmd["nom"] .'</span>';
+				  $div.='</div>';
+			  }
+		  $div .='</div>';
+
+	  }else{
+		  $div ='<div class="select-selected commande expressionAttr #COULEUR#" data-l1key = "couleur">';
+			  $div .='<span>#VALUE#</span></div>';
+			  $div .='<div class="select-items select-hide">';
+				  $div .=  '<div class ="commande couleur-orange" value="orange">orange</div>';
+				  $div .=  '<div class ="commande couleur-jaune" value="jaune">jaune</div>';
+				  $div .=  '<div class ="commande couleur-vert" value="vert">vert</div>';
+				  $div .=  '<div class ="commande couleur-bleu" value="bleu">bleu</div>';
+				  $div .=  '<div class ="commande couleur-rouge" value="rouge">rouge</div>';
+				  $div .=  '<div class ="commande couleur-magenta" value="magenta">magenta</div>';
+				  $div .=  '<div class ="commande couleur-marron" value="marron">marron</div>';
+				  $div .=  '<div class ="commande couleur-violet" value="violet">violet</div>';	
+			  $div.='</div>';
+		  $div .='</div>';
+
+	  }
+		return $div;
+  	}
+ 	 public function Recup_liste_commandes_planification($eqLogic_id) {
+	  $eqLogic = eqLogic::byId($eqLogic_id);
+	  if (!is_object($eqLogic)) {
+		  throw new Exception(__('Impossible de trouver l\'équipement : ', __FILE__) . $eqLogic_id);
+		}
+	
+	  return $eqLogic->getConfiguration("commandes_planification","");
+		
+	}
+	public function Ajout_equipement($nom,$type){
+		$eqLogic = new self();
+		$eqLogic->setLogicalId($nom);
+		$eqLogic->setName($nom);
+		$eqLogic->setEqType_name('planification');
+		$eqLogic->setIsVisible(0);
+		$eqLogic->setIsEnable(1);
+		$eqLogic->setConfiguration('type', $type);
+		$eqLogic->setConfiguration('protocole', $detail[0]);
+		$eqLogic->save();
+		return $eqLogic->getId();
+	}
+//fin fonctions ajax
 	function pull($_option){
 		$crons = cron::searchClassAndFunction('planification', 'pull');
 		$cron_id="";
@@ -125,7 +186,7 @@ class planification extends eqLogic {
 		$Id_planification_en_cours=$this->getConfiguration("Id_planification_en_cours","");
 		if($Id_planification_en_cours==""){return;}
 		$CMD_LIST=$this::Recup_liste_commandes_planification($this->getId());
-		$planifications=$this::recup_planifications();
+		$planifications=$this::Recup_planifications();
 		$cette_planification=[];
 		foreach($planifications as $planification){
 			if($planification["Id"]==$Id_planification_en_cours){
@@ -179,7 +240,7 @@ class planification extends eqLogic {
 		$Id_planification_en_cours=$this->getConfiguration("Id_planification_en_cours","");
 		if($Id_planification_en_cours==""){return;}
 		$CMD_LIST=$this::Recup_liste_commandes_planification($this->getId());
-		$planifications=$this::recup_planifications();
+		$planifications=$this::Recup_planifications();
 		$cette_planification=[];
 		foreach($planifications as $planification){
 			if($planification["Id"]==$Id_planification_en_cours){
@@ -241,56 +302,9 @@ class planification extends eqLogic {
 	
 	}
 	
-  	public function Recup_select($type,$eqLogic_id) {
-      	$eqLogic = eqLogic::byId($eqLogic_id);
-      	if (!is_object($eqLogic)) {
-			throw new Exception(__('Impossible de trouver l\'équipement : ', __FILE__) . $eqLogic_id);
-		}
-		if ($type == "planification"){
-			$cmds=$eqLogic->getConfiguration("commandes_planification","");
-
-			$div ='<div class="select-selected expressionAttr #COULEUR#" id="#ID#" data-l1key = "couleur">';
-				$div .='<span>#VALUE#</span></div>';
-
-				$div .='<div class="select-items select-hide">';
-				
-		
-				foreach ($cmds as $cmd) {
-					$div.='<div class="couleur-'.$cmd["couleur"].'" id="'.$cmd["Id"].'" value="'. $cmd["nom"] . '">';
-						$div.='<span>'.$cmd["nom"] .'</span>';
-					$div.='</div>';
-				}
-			$div .='</div>';
-
-		}else{
-			$div ='<div class="select-selected commande expressionAttr #COULEUR#" data-l1key = "couleur">';
-				$div .='<span>#VALUE#</span></div>';
-				$div .='<div class="select-items select-hide">';
-					$div .=  '<div class ="commande couleur-orange" value="orange">orange</div>';
-					$div .=  '<div class ="commande couleur-jaune" value="jaune">jaune</div>';
-					$div .=  '<div class ="commande couleur-vert" value="vert">vert</div>';
-					$div .=  '<div class ="commande couleur-bleu" value="bleu">bleu</div>';
-					$div .=  '<div class ="commande couleur-rouge" value="rouge">rouge</div>';
-					$div .=  '<div class ="commande couleur-magenta" value="magenta">magenta</div>';
-					$div .=  '<div class ="commande couleur-marron" value="marron">marron</div>';
-					$div .=  '<div class ="commande couleur-violet" value="violet">violet</div>';	
-				$div.='</div>';
-			$div .='</div>';
-
-		}
-      	return $div;
-	}
-	public function Recup_liste_commandes_planification($eqLogic_id) {
-		$eqLogic = eqLogic::byId($eqLogic_id);
-		if (!is_object($eqLogic)) {
-			throw new Exception(__('Impossible de trouver l\'équipement : ', __FILE__) . $eqLogic_id);
-	  	}
-	  
-		return $eqLogic->getConfiguration("commandes_planification","");
-	  	
-  	}
+  	
 	
-	public function importer_commandes_eqlogic($_eqLogic_id) {
+	public function Importer_commandes_eqlogic($_eqLogic_id) {
 	
 		$eqLogic = eqLogic::byId($_eqLogic_id);
 		if (!is_object($eqLogic)) {
@@ -416,7 +430,7 @@ class planification extends eqLogic {
 
         $cmd_set_planification = $this->getCmd(null, "set_planification");
 		if (!is_object($cmd_set_planification)){return;}
-		$planifications=$this::recup_planifications();
+		$planifications=$this::Recup_planifications();
 		$arr=[];
 		switch (count($planifications)) {
 			case 0:
@@ -506,7 +520,7 @@ class planification extends eqLogic {
 		$commande = $this->getCmd(null, 'planification_en_cours');
 		//$planification_en_cours=$commande->execCmd();
 		if (is_object($commande)){
-			$liste_planifications = $this::recup_planifications();
+			$liste_planifications = $this::Recup_planifications();
 			$Id_planification_en_cours=$this->getConfiguration("Id_planification_en_cours","");
 
 			
@@ -525,18 +539,13 @@ class planification extends eqLogic {
 			}
 		}
 	
+
+
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement#',$this->getCmd(null, 'mode_fonctionnement'),"value");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement_name#',$this->getCmd(null, 'mode_fonctionnement'),'name');
-		$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$this->getCmd(null, 'consigne_temperature'),"value");
-		$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$this->getCmd(null, 'consigne_temperature'),"id");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#refresh_id#',$this->getCmd(null, 'refresh'),"id");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#auto_id#',$this->getCmd(null, 'auto'),"id");
-		$this::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$this->getCmd(null, 'absent'),"id");
-		$this::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$this->getCmd(null, 'force'),"id");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$this->getCmd(null, 'arret'),"id");
-		$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$this->getCmd(null, 'set_consigne_temperature'),"id");
-		$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$this->getCmd(null, 'set_consigne_temperature'),"min");
-		$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$this->getCmd(null, 'set_consigne_temperature'),"max");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#endtime_change_id#',$this->getCmd(null, 'set_heure_fin'),"id");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#endtime#',$this->getCmd(null, 'heure_fin'),"value");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$this->getCmd(null, 'set_planification'),"id");
@@ -545,31 +554,98 @@ class planification extends eqLogic {
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$this->getCmd(null, 'action_suivante'),"value");
 		
 		
-		$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('temperature_id',"")));
-		if (is_object($cmd_temperature)){
-			$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
-			$replace['#temperature_id#'] = $cmd_temperature->getId();
-		}else{
-			$replace['#temperature#'] = "";
-			$replace['#temperature_id#']="";
-		}
+		if ($this->getConfiguration("type","")== "Poele"){
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$this->getCmd(null, 'consigne_temperature'),"value");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$this->getCmd(null, 'consigne_temperature'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$this->getCmd(null, 'absent'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$this->getCmd(null, 'force'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$this->getCmd(null, 'set_consigne_temperature'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$this->getCmd(null, 'set_consigne_temperature'),"min");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$this->getCmd(null, 'set_consigne_temperature'),"max");
+			$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('temperature_id',"")));
+			if (is_object($cmd_temperature)){
+				$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
+				$replace['#temperature_id#'] = $cmd_temperature->getId();
+			}else{
+				$replace['#temperature#'] = "";
+				$replace['#temperature_id#']="";
+			}
 
-		$imagePoele="PoeleOff.png";
-		$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_allume_id',"")));
-		if (is_object($cmd_Etat_Allume)){
-			if($cmd_Etat_Allume->execCmd())
-			{
-				$imagePoele="PoeleOn.png";
-				$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_boost_id',"")));
-				if (is_object($cmd_Etat_Boost)){
-					if($cmd_Etat_Boost->execCmd())
-					{
-						$imagePoele="PoeleOnBoost.png";
+			$imagePoele="PoeleOff.png";
+			$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_allume_id',"")));
+			if (is_object($cmd_Etat_Allume)){
+				if($cmd_Etat_Allume->execCmd())
+				{
+					$imagePoele="PoeleOn.png";
+					$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_boost_id',"")));
+					if (is_object($cmd_Etat_Boost)){
+						if($cmd_Etat_Boost->execCmd())
+						{
+							$imagePoele="PoeleOnBoost.png";
+						}
 					}
 				}
 			}
+			$replace['#img_poele#'] = $imagePoele;
+			if ($erreur){
+				$replace['#display_erreur#'] ="block";
+			}else{
+				$replace['#display_erreur#'] ="none";
+			}	
+			$html = template_replace($replace, getTemplate('core', $version, 'poele', 'planification'));
 		}
-		$replace['#img_poele#'] = $imagePoele;
+		
+		if ($this->getConfiguration("type","")== "PAC"){
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$this->getCmd(null, 'consigne_temperature'),"value");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$this->getCmd(null, 'consigne_temperature'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$this->getCmd(null, 'absent'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$this->getCmd(null, 'force'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$this->getCmd(null, 'set_consigne_temperature'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$this->getCmd(null, 'set_consigne_temperature'),"min");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$this->getCmd(null, 'set_consigne_temperature'),"max");
+			$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('temperature_id',"")));
+			if (is_object($cmd_temperature)){
+				$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
+				$replace['#temperature_id#'] = $cmd_temperature->getId();
+			}else{
+				$replace['#temperature#'] = "";
+				$replace['#temperature_id#']="";
+			}
+
+			$imagePoele="PACArret.png";
+			$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_allume_id',"")));
+			if (is_object($cmd_Etat_Allume)){
+				if($cmd_Etat_Allume->execCmd())
+				{
+					$imagePoele="PoeleOn.png";
+					$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_boost_id',"")));
+					if (is_object($cmd_Etat_Boost)){
+						if($cmd_Etat_Boost->execCmd())
+						{
+							$imagePoele="PoeleOnBoost.png";
+						}
+					}
+				}
+			}
+			$replace['#img_pac#'] = $imagePoele;
+			if ($erreur){
+				$replace['#display_erreur#'] ="block";
+			}else{
+				$replace['#display_erreur#'] ="none";
+			}	
+			$html = template_replace($replace, getTemplate('core', $version, 'PAC', 'planification'));
+		}
+		
+		
+		
+		
+
+
+
+
+
+
+
 
 		
 		if ($erreur){
@@ -578,7 +654,7 @@ class planification extends eqLogic {
 			$replace['#display_erreur#'] ="none";
 		}	
 
-		$html = template_replace($replace, getTemplate('core', $version, 'poele', 'planification'));
+		//$html = template_replace($replace, getTemplate('core', $version, 'poele', 'planification'));
 		cache::set('widgetHtml' . $version . $this->getId(), $html, 0);
 		return $html;
 	}
@@ -671,7 +747,7 @@ class planificationCmd extends cmd {
 			case 'set_planification':
 			
 				if (isset($_options["select"]) && !isset( $_options["Id_planification"])){
-					$planifications=$eqLogic->recup_planifications();
+					$planifications=$eqLogic->Recup_planifications();
 					foreach($planifications as $planification){
 						if($_options["select"]==$planification["nom_planification"]){	
 							$_options["Id_planification"]=$planification["Id"];

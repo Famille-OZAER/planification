@@ -28,7 +28,7 @@ try {
 
    
 
-    if (init('action') == 'enregistrer_planifications') {//OK
+    if (init('action') == 'Enregistrer_planifications') {//OK
 		$dossier = dirname(__FILE__) . '/../../planifications/';
         if (!is_dir($dossier)) mkdir($dossier, 0755, true);
         $nom_fichier_json=dirname(__FILE__) ."/../../planifications/" . init('id') . ".json";
@@ -38,12 +38,10 @@ try {
         }else{
             unlink ($nom_fichier_json) ;
         }
-        
-       // log::add('planification', 'debug', 'ajax enregistrer_planifications: '. $nom_fichier_json);
         ajax::success();
     }
 
-    if (init('action') == 'lire_json') {//OK
+    if (init('action') == 'Recup_planification') {//OK
 		$dossier = dirname(__FILE__) . '/../../planifications/';
         if (!is_dir($dossier)) mkdir($dossier, 0755, true);
         $nom_fichier=dirname(__FILE__) ."/../../planifications/" . init('id') . ".json";
@@ -51,28 +49,15 @@ try {
         if(file_exists ( $nom_fichier ) ){
             $res=file_get_contents ($nom_fichier);
         }
-       // log::add('planification', 'debug', 'ajax lire_json: '. $nom_fichier);
         ajax::success($res);
     }
-    if (init('action') == 'Recup_html') {//OK
-		$dossier = dirname(__FILE__) . '/../../desktop/js/';
-        if (!is_dir($dossier)) mkdir($dossier, 0755, true);
-        $nom_fichier=dirname(__FILE__) ."/../../desktop/js/planification.html" ;
-        $res="";
-        if(file_exists ( $nom_fichier ) ){
-            $res=file_get_contents ($nom_fichier);
-        }
-        //log::add('planification', 'debug', 'ajax lire_json: '. $nom_fichier);
-        ajax::success($res);
-    }
-
-   	
-	if (init('action') == 'importer_commandes_eqlogic') {
+      	
+	if (init('action') == 'Importer_commandes_eqlogic') {
 		$planification = planification::byId(init('id'));
 		if (!is_object($planification)) {
 			throw new Exception(__('Equipement planification introuvable : ', __FILE__) . init('id'));
 		}
-		$planification->importer_commandes_eqlogic(init('eqLogic_id'));
+		$planification->Importer_commandes_eqlogic(init('eqLogic_id'));
 		ajax::success();
 	}
   
@@ -92,7 +77,10 @@ try {
         $res=$eqLogic->Recup_liste_commandes_planification(init('eqLogic_id'));
         ajax::success($res);
     }
-  
+    if (init('action') == 'Ajout_equipement') {
+        $res=planification::Ajout_equipement(init('nom'),init('type'));
+        ajax::success( $res);
+    }
 	
 
 	
