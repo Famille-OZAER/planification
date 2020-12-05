@@ -24,7 +24,7 @@
 				
 				
 					<span class="cmd cmd-widget" data-cmd_id="#absent_id#" style="display:none;"></span>
-					<!--<span class="cmd cmd-widget" data-cmd_id="#hors_gel_id#" style="display:none;"></span>-->
+					<span class="cmd cmd-widget" data-cmd_id="#climatisation_id#" style="display:none;"></span>
 					<span class="cmd cmd-widget" data-cmd_id="#auto_id#" style="display:none;"></span>
 					<span class="cmd cmd-widget" data-cmd_id="#arret_id#" style="display:none;"></span>
 					<span class="cmd cmd-widget" data-cmd_id="#chauffage_id#" style="display:none;"></span>
@@ -34,8 +34,8 @@
 
 					<i class="fa fa-cog auto cursor tooltips" title="Mettre le planning en mode automatique" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
 					<i class="icon jeedom-mouvement absent cursor tooltips" title="Mettre le planning en mode absent" style="font-size: 1.9em;margin-left: 2px;color:#3498db!important"></i>
-					<!--<i class="icon nature-snowflake hors-gel cursor tooltips" title="Mettre le planning en mode hors-gel" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>-->
-					<i class="icon nature-weather1 force cursor tooltips" title="Mettre le planning en mode chauffe forcée" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
+					<i class="icon nature-snowflake climatisation cursor tooltips" title="Mettre le planning en mode climatisation forcée" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
+					<i class="icon nature-weather1 chauffage cursor tooltips" title="Mettre le planning en mode chauffe forcée" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
 					<i class="fa fa-times arret cursor tooltips" title="Arrêter le planning" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
 					<br/>
                   
@@ -47,20 +47,20 @@
 						$('.eqLogic[data-eqLogic_uid=#uid#] .absent').on('click', function () {
 							jeedom.cmd.execute({id: '#absent_id#'});
 						});
-						/*$('.eqLogic[data-eqLogic_uid=#uid#] .hors-gel').on('click', function () {
-							jeedom.cmd.execute({id: '#hors_gel_id#'});
-						});*/
+						$('.eqLogic[data-eqLogic_uid=#uid#] .climatisation').on('click', function () {
+							jeedom.cmd.execute({id: '#climatisation_id#'});
+						});
 						$('.eqLogic[data-eqLogic_uid=#uid#] .auto').on('click', function () {
 							jeedom.cmd.execute({id: '#auto_id#'});
 						});
-						$('.eqLogic[data-eqLogic_uid=#uid#] .force').on('click', function () {
+						$('.eqLogic[data-eqLogic_uid=#uid#] .chauffage').on('click', function () {
 							jeedom.cmd.execute({id: '#chauffage_id#'});
 						});
 						$('.eqLogic[data-eqLogic_uid=#uid#] .arret').on('click', function () {
 							jeedom.cmd.execute({id: '#arret_id#'});
 						});
 						
-						if ('#mode_fonctionnement#' == 'absent' || '#mode_fonctionnement#' == 'force') {
+						if ('#mode_fonctionnement#' == 'absent' || '#mode_fonctionnement#' == 'chauffage'|| '#mode_fonctionnement#' == 'climatisation') {
 							
 							$('.eqLogic[data-eqLogic_uid=#uid#] .#mode_fonctionnement#').css('color', 'white');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#mode_fonctionnement_name# <i class="fa fa-arrow-right"></i> #endtime#');

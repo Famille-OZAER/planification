@@ -69,7 +69,6 @@ class planification extends eqLogic {
 		$eqLogic->setIsVisible(0);
 		$eqLogic->setIsEnable(1);
 		$eqLogic->setConfiguration('type', $type);
-		$eqLogic->setConfiguration('protocole', $detail[0]);
 		$eqLogic->save();
 		return $eqLogic->getId();
 	}
@@ -249,15 +248,15 @@ class planification extends eqLogic {
 			}
 		}
 		if(count($cette_planification) == 0){return;}
-		log::add("planification","debug","numéro_jour:".$numéro_jour);
+		//log::add("planification","debug","numéro_jour:".$numéro_jour);
 		$numBoucle=0;				
 		for ($i = $numéro_jour; $i > $numéro_jour-7; $i--) {
 			$num=$i;
 			if($i<1){$num = 7-$i;}
-			log::add("planification","debug","num :" . $num);
+			//log::add("planification","debug","num :" . $num);
 				
 			if (isset($cette_planification[ $num-1]["periodes"])){
-				log::add("planification","debug",$cette_planification[ $num-1]["jour"]);
+				//log::add("planification","debug",$cette_planification[ $num-1]["jour"]);
 					
 				$periodes=$cette_planification[$num-1]["periodes"];
 				$action=[];
@@ -265,14 +264,14 @@ class planification extends eqLogic {
 				foreach($periodes as $periode){
 					//$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string($i-9 .' days'));
 					$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string(-$numBoucle.' days'));
-					log::add("planification","debug",implode("|",$periode));
-					log::add("planification","debug","date:".$date->format(' d-m-Y H:i'));
+					//log::add("planification","debug",implode("|",$periode));
+					//log::add("planification","debug","date:".$date->format(' d-m-Y H:i'));
 					if($date->getTimestamp() <= $timestamp_prochaine_action){
 						$trouve=true;
 						foreach ($CMD_LIST as $cmd) {
 							if($periode["Id"]==$cmd["Id"]){
-								log::add("planification","debug","id:".$cmd["Id"]);
-								log::add("planification","debug","nom:".$cmd["nom"]);
+								//log::add("planification","debug","id:".$cmd["Id"]);
+								//log::add("planification","debug","nom:".$cmd["nom"]);
 								
 								$action["datetime="]=$date->format(' d-m-Y H:i');
 								$action["nom"]=$cmd["nom"];
@@ -376,7 +375,7 @@ class planification extends eqLogic {
 		$this->Ajout_Commande('action_en_cours','Action en cours','info','string');
 		$this->Ajout_Commande('action_suivante','Action suivante','info','string');
 		$this->Ajout_Commande('planification_en_cours','Planification en cours','info','string');	
-		$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric',null,null,20);	
+			
 		$this->Ajout_Commande('duree_mode_manuel_par_defaut','Duree mode manuel par defaut (minutes)','info','numeric',null,null,60);	
 		
 		$cmd = $this->getCmd(null, "set_planification");
@@ -402,16 +401,19 @@ class planification extends eqLogic {
 			$this->Ajout_Commande('force','Forcé','action','other');
 			$this->Ajout_Commande('arret','Arrêt','action','other');
 			$this->Ajout_Commande('set_consigne_temperature','Set consigne température','action','slider',7,30);
-			$this->Ajout_Commande('consigne_temperature','Consigne Temperature','info','numeric',null,null,20,'°C');	
+			$this->Ajout_Commande('consigne_temperature','Consigne Temperature','info','numeric',null,null,20,'°C');
+			$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric',null,null,20);	
 		}
 			
-		if ($this->getConfiguration('type','') == 'pac'){
+		if ($this->getConfiguration('type','') == 'PAC'){
+			$this->Ajout_Commande('absent','Absent','action','message');
 			$this->Ajout_Commande('climatisation','Climatisation','action','other');
 			$this->Ajout_Commande('ventilation','Ventilation','action','other');
 			$this->Ajout_Commande('chauffage','Chauffage','action','other');
 			$this->Ajout_Commande('arret','Arrêt','action','other');
 			$this->Ajout_Commande('set_consigne_temperature','Set consigne température','action','slider',7,30);
-			$this->Ajout_Commande('consigne_temperature','Consigne Temperature','info','numeric',null,null,20,'°C');	
+			$this->Ajout_Commande('consigne_temperature','Consigne Temperature','info','numeric',null,null,20,'°C');
+			$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric',null,null,20);	
 			}
 	
 		if ($this->getConfiguration('type','') == 'chauffage'){
@@ -545,7 +547,7 @@ class planification extends eqLogic {
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement_name#',$this->getCmd(null, 'mode_fonctionnement'),'name');
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#refresh_id#',$this->getCmd(null, 'refresh'),"id");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#auto_id#',$this->getCmd(null, 'auto'),"id");
-		$this::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$this->getCmd(null, 'arret'),"id");
+		
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#endtime_change_id#',$this->getCmd(null, 'set_heure_fin'),"id");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#endtime#',$this->getCmd(null, 'heure_fin'),"value");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$this->getCmd(null, 'set_planification'),"id");
@@ -555,6 +557,7 @@ class planification extends eqLogic {
 		
 		
 		if ($this->getConfiguration("type","")== "Poele"){
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$this->getCmd(null, 'arret'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$this->getCmd(null, 'consigne_temperature'),"value");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$this->getCmd(null, 'consigne_temperature'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$this->getCmd(null, 'absent'),"id");
@@ -596,10 +599,13 @@ class planification extends eqLogic {
 		}
 		
 		if ($this->getConfiguration("type","")== "PAC"){
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$this->getCmd(null, 'arret'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$this->getCmd(null, 'consigne_temperature'),"value");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$this->getCmd(null, 'consigne_temperature'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$this->getCmd(null, 'absent'),"id");
-			$this::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$this->getCmd(null, 'force'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#climatisation_id#',$this->getCmd(null, 'climatisation'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#ventilation_id#',$this->getCmd(null, 'ventilation'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$this->getCmd(null, 'chauffage'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$this->getCmd(null, 'set_consigne_temperature'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$this->getCmd(null, 'set_consigne_temperature'),"min");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$this->getCmd(null, 'set_consigne_temperature'),"max");
@@ -612,22 +618,48 @@ class planification extends eqLogic {
 				$replace['#temperature_id#']="";
 			}
 
-			$imagePoele="PACArret.png";
-			$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_allume_id',"")));
-			if (is_object($cmd_Etat_Allume)){
-				if($cmd_Etat_Allume->execCmd())
-				{
-					$imagePoele="PoeleOn.png";
-					$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('etat_boost_id',"")));
-					if (is_object($cmd_Etat_Boost)){
-						if($cmd_Etat_Boost->execCmd())
-						{
-							$imagePoele="PoeleOnBoost.png";
+			$imagePAC="PACArret.png";
+			$cmd_Mode_fonctionnement=$this->getCmd(null, 'mode_fonctionnement');
+			if (is_object($cmd_Mode_fonctionnement)){
+				$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
+				
+				switch (strtolower($Mode_fonctionnement)) {
+					case "climatisation":
+						$imagePAC="PACClimatisation.png";
+					break;
+					case"chauffage";
+						$imagePAC="PACChauffage.png";
+					break;
+					case"ventilation":
+						$imagePAC="PACVentilation.png";
+						break;
+					case "arret":
+						$imagePAC="PACArret.png";
+						break;
+					case "auto";
+						$cmd_action_en_cours=$this->getCmd(null, 'action_en_cours');
+						if (is_object($cmd_action_en_cours)){
+							$action_en_cours=$cmd_action_en_cours->execCmd();
+							switch (strtolower($action_en_cours)) {
+								case "climatisation":
+									$imagePAC="PACClimatisation.png";
+								break;
+								case"chauffage";
+									$imagePAC="PACChauffage.png";
+								break;
+								case"ventilation":
+									$imagePAC="PACVentilation.png";
+									break;
+								case "arrêt":
+									$imagePAC="PACArret.png";
+									break;
+							}
+
 						}
-					}
+					break;
 				}
 			}
-			$replace['#img_pac#'] = $imagePoele;
+			$replace['#img_pac#'] = $imagePAC;
 			if ($erreur){
 				$replace['#display_erreur#'] ="block";
 			}else{
@@ -635,7 +667,69 @@ class planification extends eqLogic {
 			}	
 			$html = template_replace($replace, getTemplate('core', $version, 'PAC', 'planification'));
 		}
-		
+		if ($this->getConfiguration("type","")== "Volet"){
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$this->getCmd(null, 'consigne_temperature'),"value");
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$this->getCmd(null, 'consigne_temperature'),"id");
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$this->getCmd(null, 'absent'),"id");
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#climatisation_id#',$this->getCmd(null, 'climatisation'),"id");
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#ventilation_id#',$this->getCmd(null, 'ventilation'),"id");
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$this->getCmd(null, 'chauffage'),"id");
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$this->getCmd(null, 'set_consigne_temperature'),"id");
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$this->getCmd(null, 'set_consigne_temperature'),"min");
+			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$this->getCmd(null, 'set_consigne_temperature'),"max");
+			/*$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('temperature_id',"")));
+			if (is_object($cmd_temperature)){
+				$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
+				$replace['#temperature_id#'] = $cmd_temperature->getId();
+			}else{
+				$replace['#temperature#'] = "";
+				$replace['#temperature_id#']="";
+			}*/
+
+			$imageVolet="Volet-100.png";
+			$cmd_Mode_fonctionnement=$this->getCmd(null, 'mode_fonctionnement');
+			if (is_object($cmd_Mode_fonctionnement)){
+				$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
+				
+				switch (strtolower($Mode_fonctionnement)) {
+					case "ouvert":
+						$imagePAC="Volet-100.png";
+					break;
+					case "fermé";
+						$imagePAC="Volet-0.png";
+					break;
+					case"my":
+						$imagePAC="Volet-50.png";
+						break;
+					
+					case "auto";
+						$cmd_action_en_cours=$this->getCmd(null, 'action_en_cours');
+						if (is_object($cmd_action_en_cours)){
+							$action_en_cours=$cmd_action_en_cours->execCmd();
+							switch (strtolower($action_en_cours)) {
+								case "ouvert":
+									$imagePAC="Volet-100.png";
+								break;
+								case "fermé";
+									$imagePAC="Volet-0.png";
+								break;
+								case"my":
+									$imagePAC="Volet-50.png";
+									break;
+							}
+
+						}
+					break;
+				}
+			}
+			$replace['#img_volet#'] = $imageVolet;
+			if ($erreur){
+				$replace['#display_erreur#'] ="block";
+			}else{
+				$replace['#display_erreur#'] ="none";
+			}	
+			$html = template_replace($replace, getTemplate('core', $version, 'volet', 'planification'));
+		}
 		
 		
 		
@@ -691,6 +785,7 @@ class planificationCmd extends cmd {
 			case 'arret':
 			case 'hors_gel':
 			case 'chauffage':
+			case 'climatisation':
 			case 'absent':
 			case 'ventilation':
 				$eqLogic->checkAndUpdateCmd('mode_fonctionnement', $this->getLogicalId());

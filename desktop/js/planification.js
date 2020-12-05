@@ -130,7 +130,9 @@ $('#table_cmd_planification').off('click','.select-items div').on('click','.sele
 	this.classList.add("same-as-selected")
 	select.click();
 })
-
+$("#div_planifications").sortable({
+	axis: "y", cursor: "move", items: ".planification", handle: ".panel-heading", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true
+})
 function closeAllSelect(elmnt) {
 	var x, y, i, arrNo = [];
 	x = document.getElementsByClassName("select-items");
