@@ -167,8 +167,8 @@ class planification extends eqLogic {
 					$date=$cmd_date_prochaine_action->execCmd();
 					log::add('planification', 'debug', "date: #" . $date ."#");
 					
-					$datetime=date_create_from_format("d/m/y H:i",$date);
-					log::add('planification', 'debug', "datetime: " . $datetime->format('d/m/y H:i'));
+					$datetime=date_create_from_format("d-m-Y H:i",$date);
+					log::add('planification', 'debug', "datetime: " . $datetime->format('d-m-Y H:i'));
 					$cron->setOption(array('eqLogic_Id' => intval($this->getId())));
 					$cron->setLastRun(date('Y-m-d H:i:s'));
 					log::add('planification', 'debug', "Mode: " . $mode ." Replanification le " . $date ." => Auto");
@@ -819,7 +819,7 @@ class planificationCmd extends cmd {
 						$date_Fin=strtotime('+'.($duree_mode_manuel_par_defaut)." minute");
 						log::add('planification', 'info', "date_Fin" . date ("Y/m/d H:i", $date_Fin));
 
-						$arr=["message" => date ("Y/m/d H:i", $date_Fin)];
+						$arr=["message" => date ('d-m-Y H:i', $date_Fin)];
 						$cmd_set_heure_fin->execute( $arr) ;
 					}
 				}
@@ -831,7 +831,7 @@ class planificationCmd extends cmd {
 				if (strtotime("now") > strtotime($_options['message'])){
 					throw new Exception("Veuillez selectionner une date et heure supérieure à maintenant");
 				}
-				$eqLogic->checkAndUpdateCmd('heure_fin', date('d/m/y H:i',strtotime($_options['message'])));
+				$eqLogic->checkAndUpdateCmd('heure_fin', date('d-m-Y H:i',strtotime($_options['message'])));
 				$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
 				if (is_object($cmd_mode)){
 					$mode = $cmd_mode->execCmd();
