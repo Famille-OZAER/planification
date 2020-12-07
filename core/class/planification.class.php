@@ -157,6 +157,14 @@ class planification extends eqLogic {
 					$cron->setSchedule(date('i', $prochaine_action['datetime']) . ' ' . date('H', $prochaine_action['datetime']) . ' ' . date('d', $prochaine_action['datetime']) . ' ' . date('m', $prochaine_action['datetime']) . ' * ' . date('Y', $prochaine_action['datetime']));
 					$cron->save();
 				} else {
+					$cmd_action_suivante = $this->getCmd(null, "action_suivante");
+					if(is_object($cmd_action_suivante)){
+						$cmd_action_suivante->event("");
+					}
+					$cmd_heure_fin = $this->getCmd(null, "heure_fin");
+					if(is_object($cmd_heure_fin)){
+						$cmd_heure_fin->event("");
+					}
 					if (is_object($cron)) {
 						$cron->remove();
 					}
@@ -214,6 +222,7 @@ class planification extends eqLogic {
 								if(is_object($cmd_heure_fin)){
 									$cmd_heure_fin->event($date->format('d-m-Y H:i'));
 								}
+								log::add("planification","debug","action :" . implode('|',$action));
 								return $action;
 							}
 						}
@@ -223,7 +232,6 @@ class planification extends eqLogic {
 			$numéro_jour+=1;
 			
 		}
-
 		return;
 	}
 	public function Recup_action_actuelle(){
@@ -413,8 +421,10 @@ class planification extends eqLogic {
 			$this->Ajout_Commande('arret','Arrêt','action','other');
 			$this->Ajout_Commande('set_consigne_temperature','Set consigne température','action','slider',7,30);
 			$this->Ajout_Commande('consigne_temperature','Consigne Temperature','info','numeric',null,null,20,'°C');
-			$this->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric',null,null,20);	
-			}
+			$this->Ajout_Commande('boost','Boost','info','binary',null,null,0);
+			$this->Ajout_Commande('boost_on','Boost On','action','other');
+			$this->Ajout_Commande('boost_off','Boost Off','action','other');
+		}
 	
 		if ($this->getConfiguration('type','') == 'chauffage'){
 			$this->Ajout_Commande('confort','Confort','action','other');
@@ -465,14 +475,9 @@ class planification extends eqLogic {
 		if(!isset($arr["select"]) && count($planifications)!=0){$arr["select"]=$planifications[0]["nom_planification"];}
 		if(!isset($arr["Id_planification"]) && count($planifications)!=0){$arr["Id_planification"]=$planifications[0]["Id"];}
 		$cmd_set_planification->execute($arr);
-		/*$cmd_refresh = $this->getCmd(null, "refresh");
-		if(is_object($cmd_refresh)){
-			$cmd_refresh->execute();
-		}*/
-		//$this::Recup_action_actuelle();
     }
 	function replace_into_html(&$erreur,&$liste_erreur,&$replace,$parametre,$commande,$type){
-
+		
 		if (is_object($commande)){
 			switch ($type) {
 				case ("value"):
@@ -481,7 +486,8 @@ class planification extends eqLogic {
                 	if(strlen($valeur) != 0){
                       $replace[$parametre] = $valeur;
                     }else{
-                       $replace[$parametre] = "non renseigné";
+					   //$replace[$parametre] = "non renseigné";
+					    $replace[$parametre] = "";
                     }
 					
 					break;
@@ -540,8 +546,6 @@ class planification extends eqLogic {
 				}
 			}
 		}
-	
-
 
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement#',$this->getCmd(null, 'mode_fonctionnement'),"value");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement_name#',$this->getCmd(null, 'mode_fonctionnement'),'name');
@@ -602,6 +606,9 @@ class planification extends eqLogic {
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$this->getCmd(null, 'arret'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$this->getCmd(null, 'consigne_temperature'),"value");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$this->getCmd(null, 'consigne_temperature'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#boost_on_id#',$this->getCmd(null, 'boost_on'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#boost_off_id#',$this->getCmd(null, 'boost_off'),"id");
+			$this::replace_into_html($erreur,$liste_erreur,$replace,'#boost#',$this->getCmd(null, 'boost'),"value");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$this->getCmd(null, 'absent'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#climatisation_id#',$this->getCmd(null, 'climatisation'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#ventilation_id#',$this->getCmd(null, 'ventilation'),"id");
@@ -775,9 +782,11 @@ class planificationCmd extends cmd {
 				break;
 			case 'set_consigne_temperature':
 				$eqLogic->checkAndUpdateCmd('consigne_temperature',$_options["slider"]);
-				$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
-				if (is_object($cmd_mode)){
-					$mode = $cmd_mode->event("force");
+				if ($this->getConfiguration("type","")== "Poele"){
+					$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
+					if (is_object($cmd_mode)){
+						$mode = $cmd_mode->event("force");
+					}
 				}
 				break;
 			case 'auto':
@@ -793,11 +802,14 @@ class planificationCmd extends cmd {
 					$eqLogic->Recup_action_actuelle();
 					$eqLogic->set_cron();
 					$cmd_temperature_consigne_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'temperature_consigne_par_defaut');
-					$temperature_consigne_par_defaut=20;
-					if (is_object($cmd_temperature_consigne_par_defaut)){
-						$temperature_consigne_par_defaut=$cmd_temperature_consigne_par_defaut->execCmd();
+					if ($this->getConfiguration("type","")== "Poele"){
+						$temperature_consigne_par_defaut=20;
+						if (is_object($cmd_temperature_consigne_par_defaut)){
+							$temperature_consigne_par_defaut=$cmd_temperature_consigne_par_defaut->execCmd();
+						}
+
+						$eqLogic->checkAndUpdateCmd('consigne_temperature', $temperature_consigne_par_defaut);
 					}
-					$eqLogic->checkAndUpdateCmd('consigne_temperature', $temperature_consigne_par_defaut);
 				}else if ($this->getLogicalId() == "arret"){
 					$crons = cron::searchClassAndFunction('planification', 'pull');
 					foreach ($crons as $cron){
@@ -859,6 +871,23 @@ class planificationCmd extends cmd {
 					$cmd_refresh->execute();
 				}
 				break;
+				case 'boost_on':
+			
+					$eqLogic->checkAndUpdateCmd('boost', 1);
+					$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
+					if (is_object($cmd_refresh)){
+						$cmd_refresh->execute();
+					}
+					break;
+				case 'boost_off':
+		
+					$eqLogic->checkAndUpdateCmd('boost', 0);
+					$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
+					if (is_object($cmd_refresh)){
+						$cmd_refresh->execute();
+					}
+					break;
+					
 		}
 		
 		$eqLogic->refreshWidget() ;
