@@ -797,6 +797,7 @@ class planificationCmd extends cmd {
 					if (is_object($cmd_temperature_consigne_par_defaut)){
 						$temperature_consigne_par_defaut=$cmd_temperature_consigne_par_defaut->execCmd();
 					}
+					$eqLogic->checkAndUpdateCmd('consigne_temperature', $temperature_consigne_par_defaut);
 				}else if ($this->getLogicalId() == "arret"){
 					$crons = cron::searchClassAndFunction('planification', 'pull');
 					foreach ($crons as $cron){

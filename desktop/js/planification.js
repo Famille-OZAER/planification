@@ -1024,8 +1024,7 @@ function saveEqLogic(_eqLogic) {
 				return
 			}
 		}
-	})	 
-	console.log(_eqLogic.configuration.type)
+	})	
 	if(_eqLogic.configuration.type == 'Poele') {
 		_eqLogic.configuration.temperature_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_id]').val();
 		_eqLogic.configuration.etat_allume_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_allume_id]').val();
