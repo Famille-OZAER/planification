@@ -538,7 +538,6 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 	div = '<div class="Periode_jour input-group" style="width:100% !important; line-height:1.4px !important;display: inline-grid">'
 		div += '<div>'
 			div += '<input class="checkbox form-control input-sm cursor" type="checkbox" onchange="Maj_checkbox(this)">'
-			//div += '<input class="clock-timepicker form-control input-sm cursor" type="text"  value="'+time+'" style="width:60px;display:inline-block;position: relative" >'
 			div += '<input class="clock-timepicker form-control input-sm cursor" type="text"  value="'+time+'" style="width:60px;display:inline-block;position: relative" >'
 			
 			div += '<a class="btn btn-default bt_supprimer_perdiode btn-sm" style="vertical-align: bottom;right: 0px;position: absolute;" title="Supprimer cette période"><i class="fa fa-minus-circle"></i></a>'
@@ -552,9 +551,6 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 
     nouvelle_periode = $(div)
     if (time != '00:00'){
-		//nouvelle_periode.find('.clock-timepicker').clockTimePicker()
-		
-
 		nouvelle_periode.find('.clock-timepicker').TimePicker({
 			
 			date: false,
@@ -576,7 +572,6 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 			}
 			if (debut_periode_suivante!=""){
 				debut_periode_suivante=$(this).closest(".Periode_jour").next().find(".clock-timepicker").val()
-				console.log(debut_periode_suivante)
 				debut_periode_suivante_int = (parseInt(debut_periode_suivante.split(':')[0]) * 60) + parseInt(debut_periode_suivante.split(':')[1])-1
 				heures_suivante_str="0"+Math.trunc(debut_periode_suivante_int/60)
 				heures_suivante_str=heures_suivante_str.substr(heures_suivante_str.length -  2)
@@ -593,7 +588,6 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 			$(this).TimePicker('setMaxDate', heures_suivante_str + ":"  + minutes_suivante_str);
 			
 		});
-        //nouvelle_periode.find('.clock-timepicker').attr('style','display: inline')
     }else{
 		nouvelle_periode.find('.clock-timepicker').prop('readonly', true)
 	}
@@ -610,7 +604,6 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 	}
 	Div_jour.closest("th").find(".collapsible")[0].classList.remove("no-arrow")
 	Div_jour.closest("th").find(".collapsible")[0].classList.add("cursor")
-	//Div_jour.closest("th").find(".collapsible")[0].classList.add("active")
 	Div_jour.append(nouvelle_periode)
 }
 
@@ -699,47 +692,6 @@ function Recup_liste_commandes_planification(){
 	return COMMANDE_LIST;
 
 }
-
-function checkTimePicker(picker,newValue, oldValue){
-
-	console.log($(picker))
-	console.log("Nouvelle valeur:" + newValue)
-	console.log("Ancienne valeur:" + oldValue)
-	console.log("periode précedente:" + $(picker).closest(".Periode_jour").prev().find(".clock-timepicker").val())
-	console.log("periode suivante:" + $(picker).closest(".Periode_jour").next().find(".clock-timepicker").val())
-
-
-
-
-
-
-    Div_jour = $(picker).closest('.JourSemaine')
-    periode_jour = $(Div_jour).find('.Periode_jour')
-    if (periode_jour.length > 1){
-		heure_debut_selectionne = $(picker).val()
-		heure_debut_selectionne_int = (parseInt(heure_debut_selectionne.split(':')[0]) * 60) + parseInt(heure_debut_selectionne.split(':')[1])		
-		debut_periode_precedente=$(picker).closest(".Periode_jour").prev().find(".clock-timepicker").val()
-		debut_periode_precedente_int = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])
-		
-		console.log("heure_debut_selectionne_int : " + heure_debut_selectionne_int)
-		console.log("debut_periode_precedente_int : " + debut_periode_precedente_int)
-		if (heure_debut_selectionne_int <= debut_periode_precedente_int){
-			
-			console.log("toto : ")
-			debut_periode_precedente_int+=1
-			heures=Math.trunc(debut_periode_precedente_int/60)
-			heures_str="0"+heures
-			heures_str=heures_str.substr(heures_str.length -  2)
-			
-			minutes_str="0"+ (debut_periode_precedente_int - (heures * 60))
-			minutes_str=minutes_str.substr(minutes_str.length -  2)
-			console.log($(picker).val())
-			$(picker).val(oldValue)
-			console.log($(picker).val())
-		}        
-    }
-}
-
   
 $('.bt_showExpressionTest').off('click').on('click', function () {
   $('#md_modal').dialog({title: "{{Testeur d'expression}}"});

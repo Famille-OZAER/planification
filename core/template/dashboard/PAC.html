@@ -81,11 +81,7 @@
 							jeedom.cmd.execute({id: '#arret_id#'});
 						});
 						
-						if ('#mode_fonctionnement#' == 'absent' || '#mode_fonctionnement#' == 'chauffage'|| '#mode_fonctionnement#' == 'climatisation') {
-							
-							$('.eqLogic[data-eqLogic_uid=#uid#] .#mode_fonctionnement#').css('color', 'white');
-							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#mode_fonctionnement_name# <i class="fa fa-arrow-right"></i> #endtime#');
-						} else if ('#mode_fonctionnement#' == 'auto') {
+						if ('#mode_fonctionnement#' == 'auto') {
 							$('.eqLogic[data-eqLogic_uid=#uid#] .auto').css('color', 'white');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours#');
 							if('#prochaine_action#' != ""){
@@ -101,8 +97,8 @@
 							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('Arrêt');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').css('display', 'block');
 						} else {
-							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('INCONNU <i class="fa fa-arrow-right"></i> #endtime#');
-							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').css('display', 'block');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .#mode_fonctionnement#').css('color', 'white');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#mode_fonctionnement_name# <i class="fa fa-arrow-right"></i> #endtime#');
 						}
 					</script>
 				</div>

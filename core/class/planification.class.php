@@ -782,7 +782,7 @@ class planificationCmd extends cmd {
 				break;
 			case 'set_consigne_temperature':
 				$eqLogic->checkAndUpdateCmd('consigne_temperature',$_options["slider"]);
-				if ($this->getConfiguration("type","")== "Poele"){
+				if ($eqLogic->getConfiguration("type","")== "Poele"){
 					$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
 					if (is_object($cmd_mode)){
 						$mode = $cmd_mode->event("force");
