@@ -9,79 +9,67 @@
 			<span class="alert-danger cmd cmd-widget"  style="display:#display_erreur#;">Certaines commandes n'existent pas, veuillez sauvegarder votre équipement afin de résourdre le problème.</span>
 		</center>
         <div class="row" style="margin-top: -10px">
-           
-				<br/>
-				
-				<center>
-					<div class="modetemp">
-                        <span class="cmd cmd-widget" data-cmd_id="#ouvrir_id#" style="display:none;"></span>
-					    <span class="cmd cmd-widget" data-cmd_id="#fermer_id#" style="display:none;"></span>
-					    <span class="cmd cmd-widget" data-cmd_id="#my_id#" style="display:none;"></span>
-                        <div>
-						<center>
-							<img src="plugins/planification/core/template/dashboard/images/#img_volet#" style="height: 80px;"/> 
-                        </center>
-                        </div>
-                        <div>
-                            <center>
-                                <img class="ouvrir cursor" src='plugins/planification/core/template/dashboard/images/bouton_ouvrir.png#' style='width:30px' /> 
-                                <img class="my cursor" src='plugins/planification/core/template/dashboard/images/bouton_my.png'  style='width:30px' /> 
-                                <img class="fermer cursor" src='plugins/planification/core/template/dashboard/images/bouton_fermer.png' style='width:30px'/> 
-                            </center>
-                            </div>
+           <br/>
+            
+            <center>
+            <div class="modetemp">
+                <span class="cmd cmd-widget" data-cmd_id="#ouvrir_id#" style="display:none;"></span>
+                <span class="cmd cmd-widget" data-cmd_id="#fermer_id#" style="display:none;"></span>
+                <span class="cmd cmd-widget" data-cmd_id="#my_id#" style="display:none;"></span>
+                <div>
+                <center>
+                    <img src="plugins/planification/core/template/dashboard/images/#img_volet#" style="height: 80px;"/> 
+                </center>
+                </div>
+                <div>
+                    <center>
+                        <img class="ouvrir cursor" src='plugins/planification/core/template/dashboard/images/bouton_ouvrir.png#' style='width:30px' /> 
+                        <img class="my cursor" src='plugins/planification/core/template/dashboard/images/bouton_my.png'  style='width:30px' /> 
+                        <img class="fermer cursor" src='plugins/planification/core/template/dashboard/images/bouton_fermer.png' style='width:30px'/> 
+                    </center>
                     </div>
-                   
-				<div class="modeplan" style="display : none;margin-top : 10px">
-				
-				
-				
-                    <span class="cmd cmd-widget" data-cmd_id="#auto_id#" style="display:none;"></span>
-                    
-					<span class="cmd cmd-widget" data-cmd_id="#refresh_id#" style="display:none;"></span>
-					<span class="cmd cmd-widget" data-cmd_id="#endtime_change_id#" style="display:none;"></span>
-					<span class="cmd cmd-widget" data-cmd_id="#planning_change#" style="display:none;"></span>
+            </div>
+            
+            <div class="modeplan" style="display : none;margin-top : 10px">
+            
+            
+            
+                <span class="cmd cmd-widget" data-cmd_id="#auto_id#" style="display:none;"></span>
+                
+                <span class="cmd cmd-widget" data-cmd_id="#refresh_id#" style="display:none;"></span>
+                <span class="cmd cmd-widget" data-cmd_id="#endtime_change_id#" style="display:none;"></span>
+                <span class="cmd cmd-widget" data-cmd_id="#planning_change#" style="display:none;"></span>
 
-					<i class="fa fa-cog auto cursor tooltips" title="Mettre le volet en mode automatique" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
-					<!--<i class="icon jeedom-mouvement ouvrir cursor tooltips" title="Mettre le volet en position ouvert" style="font-size: 1.9em;margin-left: 2px;color:#3498db!important"></i>
-					<i class="icon nature-snowflake my cursor tooltips" title="Mettre le volet en position my" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
-					<i class="icon nature-weather1 fermer cursor tooltips" title="Mettre le volet en position fermé" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>-->
-					<br/>
-                  
-				
-				</div>
-			</center>
+                <i class="fa fa-cog auto cursor tooltips" title="Mettre le volet en mode automatique" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
+                <br/>
+                
+            
+            </div>
+            </center>
              
             
           
-				<div class="modeplan" style="display : none;margin-top : 10px">
-					<br/>
-					<center>
-						<select class="cmd form-control selectCalendar cursor tooltips" style="background-color:'#cmdColor#';width:70%;color:white;border-radius: 10px;" title="Choisir planification">
-								#calendar_selector#
-						</select>
-						<!--</br>-->
-					<div class='cmd input-group date datetimepicker'>
-						<span class="input-group-addon cursor tooltips" style="background-color:'#cmdColor#';width:70%;border-radius: 10px;" title="Choisir Fin">
-							<span class="fa fa-calendar" style="color:white"></span>
-						</span>
-                    </div>
-                    
-					<span class="action_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Action en cours"></span>
-                  	<span class="prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Prochaine action"></span>
-					<span class="heure_prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Heure prochaine action"></span>
-					<div>
-                        <span class="planification_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="planification en cours"></span></div>
-                    </div>
-                </center>
-				</div>
-                    
-                    
-               
-        
-           <div class="modeplan">
-				
-			
-        </div>
+            <div class="modeplan" style="display : none;margin-top : 10px">
+                <br/>
+                <center>
+                <select class="cmd form-control selectCalendar cursor tooltips" style="background-color:'#cmdColor#';width:70%;color:white;border-radius: 10px;" title="Choisir planification">
+                        #calendar_selector#
+                </select>
+                <div class='cmd input-group date datetimepicker'>
+                    <span class="input-group-addon cursor tooltips" style="background-color:'#cmdColor#';width:70%;border-radius: 10px;" title="Choisir Fin">
+                        <span class="fa fa-calendar" style="color:white"></span>
+                    </span>
+                </div>
+                
+                <span class="action_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Action en cours"></span>
+                <span class="prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Prochaine action"></span>
+                <span class="heure_prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Heure prochaine action"></span>
+                <div>
+                    <span class="planification_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="planification en cours"></span>
+                </div>
+            </div>
+            </center>
+		</div>
     </div>
     <script>
         $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function () {
@@ -89,12 +77,19 @@
         });
         $('.eqLogic[data-eqLogic_uid=#uid#] .ouvrir').on('click', function () {
             jeedom.cmd.execute({id: '#ouvrir_id#'});
+            jeedom.cmd.execute({id: '#manuel_id#'});
+            jeedom.cmd.execute({id: '#set_mode_fonctionnement_id#', value: {'message': 'ouvrir'}});
+
         });
         $('.eqLogic[data-eqLogic_uid=#uid#] .fermer').on('click', function () {
             jeedom.cmd.execute({id: '#fermer_id#'});
+            jeedom.cmd.execute({id: '#manuel_id#'});
+            jeedom.cmd.execute({id: '#set_mode_fonctionnement_id#', value: {'message': 'fermer'}});
         });
         $('.eqLogic[data-eqLogic_uid=#uid#] .my').on('click', function () {
             jeedom.cmd.execute({id: '#my_id#'});
+            jeedom.cmd.execute({id: '#manuel_id#'});
+            jeedom.cmd.execute({id: '#set_mode_fonctionnement_id#', value: {'message': 'my'}});
         });
                                 
      

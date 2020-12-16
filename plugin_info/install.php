@@ -19,8 +19,7 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function planification_install() {
-	//import-export:
-	$folderPath = dirname(__FILE__) . '/../../planification/programmations/';
+	$folderPath = dirname(__FILE__) . '/../../planification/planifications/';
 	if (!is_dir($folderPath)) mkdir($folderPath, 0755, true);
 }
 
@@ -30,9 +29,6 @@ function planification_update() {
 		$cron->remove();
 	}
 	
-	//import-export:
-	$folderPath = dirname(__FILE__) . '/../../planification/programmations/';
-	if (!is_dir($folderPath)) mkdir($folderPath, 0755, true);
 	
 	//resave eqs for new cmd:
 	try
