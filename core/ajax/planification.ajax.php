@@ -81,8 +81,11 @@ try {
         $res=planification::Ajout_equipement(init('nom'),init('type'));
         ajax::success( $res);
     }
-	
-
+    if (init('action') == 'Set_widget_cache') {
+        planification::Set_widget_cache(init('id'),init('page'));
+        ajax::success();
+    }
+   
 	
 	
 	

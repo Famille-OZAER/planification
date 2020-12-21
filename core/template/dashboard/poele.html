@@ -46,9 +46,6 @@
 						$('.eqLogic[data-eqLogic_uid=#uid#] .absent').on('click', function () {
 							jeedom.cmd.execute({id: '#absent_id#'});
 						});
-						/*$('.eqLogic[data-eqLogic_uid=#uid#] .hors-gel').on('click', function () {
-							jeedom.cmd.execute({id: '#hors_gel_id#'});
-						});*/
 						$('.eqLogic[data-eqLogic_uid=#uid#] .auto').on('click', function () {
 							jeedom.cmd.execute({id: '#auto_id#'});
 						});
@@ -144,6 +141,7 @@
 							//arr.push($(this).value())
 							//arr.push($(this)[0].options[$(this)[0].selectedIndex].id)
 							jeedom.cmd.execute({id: '#set_planification_id#', value: {'select': $(this).value(),Id_planification:$(this)[0].options[$(this)[0].selectedIndex].id}});
+							
 							//jeedom.cmd.execute({id: '#set_planification_id#', value: arr});
 						});
 						
@@ -165,7 +163,9 @@
 					<span class="action_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Action en cours"></span>
                   	<span class="prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Prochaine action"></span>
 					<span class="heure_prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="Heure prochaine action"></span>
-					<div><span class="planification_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="planification en cours"></span></div>
+					<div>
+						<span class="planification_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="planification en cours"></span>
+					</div>
 					
 					<!--<span class="calendar tooltips" style="cursor:default;font-size: 0.9em;position: relative;top: -2px;left: 5px;"  title="Calendrier en cours"></span>-->
              </center>

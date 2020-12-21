@@ -2,9 +2,14 @@
 require_once  '/var/www/html/core/php/core.inc.php';
 
 class planification extends eqLogic {
+	
 	public static $_widgetPossibility = array('custom' => true);
 	//debut fonctions ajax
-  	function Recup_planifications(){
+	public function Set_widget_cache($_id,$_page){
+		$eqlogic=eqLogic::byId($_id);
+		planification::add_log($eqlogic,"debug","test");
+	}
+  	public function Recup_planifications(){
 		$nom_fichier=dirname(__FILE__) ."/../../planifications/" . $this->getId() . ".json";
 		$planifications="";
 		if(file_exists ( $nom_fichier ) ){$planifications=file_get_contents ($nom_fichier);}
@@ -72,6 +77,14 @@ class planification extends eqLogic {
 		return $eqLogic->getId();
 	}
 //fin fonctions ajax
+static function add_log($_eqlogic,$level = 'debug',$Log){
+        if (is_array($Log)) $Log = json_encode($Log);
+        $function_name = debug_backtrace(false, 2)[1]['function'];
+        //$class_name = debug_backtrace(false, 2)[1]['class'];
+        $msg = '<'. $function_name .'> '.$Log;
+		log::add('planification'.  mb_convert_encoding (str_replace("[" , "_",str_replace("]" , "",$_eqlogic->getHumanName(false))), 'HTML-ENTITIES', 'UTF-8'), $level,$msg);
+					
+}
 	function pull($_option){
 		$crons = cron::searchClassAndFunction('planification', 'pull');
 		$cron_id="";
@@ -91,7 +104,7 @@ class planification extends eqLogic {
 		}
 		
 		$eqLogic = self::byId($_option['eqLogic_Id']);
-		log::add('planification', 'debug', "pull de : " . $eqLogic->getName() );
+		planification::add_log($eqlogic,"debug","pull de : " . $eqLogic->getName());
 		$commande_en_cours="";
 		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
 		if (!is_object($cmd_mode)) {return;	}
@@ -105,22 +118,23 @@ class planification extends eqLogic {
 				$cmd=cmd::byId(trim($cmd, "#"));
 				if(is_object($cmd)){
 					$eqLogic_cmd=eqLogic::byId($cmd->getEqLogic_id()) ;
-					log::add('planification', 'debug', 'execution action: #[' . $eqLogic_cmd->getObject()->getName()."][".$eqLogic_cmd->getName()."][".$cmd->getName()."]#");
+					planification::add_log($eqlogic,"debug",'execution action: #[' . $eqLogic_cmd->getObject()->getName()."][".$eqLogic_cmd->getName()."][".$cmd->getName()."]#");
 					$cmd->execCmd();
 				}
 			}else{
 				$options_str="";
 				if ($cmd=="variable"){$options_str=$options["name"] . "=>" .$options["value"];}
-				log::add('planification', 'debug', 'execution action: ' . $cmd . ":" .$options_str );
+				planification::add_log($eqlogic,"debug",'execution action: ' . $cmd . ":" .$options_str);
+					
 				scenarioExpression::createAndExec('action', $cmd, $options);
 			}
 		}catch (Exception $e) {
-			log::add('planification', 'error', __('Erreur lors de l\'éxecution de ', __FILE__) . $cmd['cmd'] . __('. Détails : ', __FILE__) . $e->getMessage());
+			planification::add_log($eqlogic,"error",'Erreur lors de l\'éxecution de ' . $cmd['cmd'] .'. Détails : '. $e->getMessage());
 		}
 		if ($cmd_mode->execCmd()=="auto"){
 			$eqLogic->set_cron();
 		}else{
-			log::add('planification', 'debug', "remise de l'équipement en mode auto");
+			planification::add_log($eqlogic,"debug", "remise de l'équipement en mode auto");
 			$cmd_auto=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'auto');
 			$cmd_auto->execute();
 		}
@@ -128,7 +142,7 @@ class planification extends eqLogic {
 
 	function set_cron(){
 		$Type_eqLogic=$this->getConfiguration("type","");
-		log::add("test","debug","type" . $Type_eqLogic);
+	
 		$crons = cron::searchClassAndFunction('planification', 'pull');
 		$cron_id="";
 		foreach ($crons as $cron){
@@ -147,7 +161,7 @@ class planification extends eqLogic {
 			if ($mode == "auto"){
 				$prochaine_action=$this::Recup_prochaine_action();
 				if ($prochaine_action['datetime'] != null) {					
-					log::add('planification', 'debug', "Mode: " . $mode . " Replanification le " . $prochaine_action['datetime'] ." => ". $prochaine_action['nom']);
+					planification::add_log($this,"debug","Mode: " . $mode . " Replanification le " . $prochaine_action['datetime'] ." => ". $prochaine_action['nom']);
 					$prochaine_action['datetime'] = strtotime($prochaine_action['datetime']);
 					if (!is_object($cron)) {
 						$cron = new cron();
@@ -185,10 +199,10 @@ class planification extends eqLogic {
 						$date="";
 						$date=$cmd_date_prochaine_action->execCmd();
 						if ($date !=""){
-							log::add('planification', 'debug', "date: #" . $date ."#");
-							
+							planification::add_log($this,"debug","date: #" . $date ."#");
+					
 							$datetime=date_create_from_format("d-m-Y H:i",$date);
-							log::add('planification', 'debug', "datetime: " . $datetime->format('d-m-Y H:i'));
+							planification::add_log($this,"debug","datetime: " . $datetime->format('d-m-Y H:i'));
 							if (!is_object($cron)) {
 								$cron = new cron();
 								$cron->setClass('planification');
@@ -196,7 +210,7 @@ class planification extends eqLogic {
 							}
 							$cron->setOption(array('eqLogic_Id' => intval($this->getId()),'eqLogic'=> mb_convert_encoding ($this->getHumanName(false), 'HTML-ENTITIES', 'UTF-8')));
 							$cron->setLastRun(date('Y-m-d H:i:s'));
-							log::add('planification', 'debug', "Mode: " . $mode ." Replanification le " . $date ." => Auto");
+							planification::add_log($this,"debug","Mode: " . $mode ." Replanification le " . $date ." => Auto");
 							$cron->setSchedule( $datetime->format("i") . ' ' .  $datetime->format("H") . ' ' .  $datetime->format("d") . ' ' . $datetime->format("m") . ' * ' .  $datetime->format("Y"));
 							$cron->save();	
 						}				
@@ -216,7 +230,7 @@ class planification extends eqLogic {
 		$cette_planification=[];
 		foreach($planifications as $planification){
 			if($planification["Id"]==$Id_planification_en_cours){
-				log::add("planification","debug","planification en cours: " . $planification["nom_planification"]);
+				planification::add_log($this,"debug","planification en cours: " . $planification["nom_planification"]);
 				$cette_planification=$planification["semaine"];
 			}
 		}
@@ -241,7 +255,7 @@ class planification extends eqLogic {
 								if(is_object($cmd_heure_fin)){
 									$cmd_heure_fin->event($date->format('d-m-Y H:i'));
 								}
-								log::add("planification","debug","action :" . implode('|',$action));
+								planification::add_log($this,"debug","action :" . implode('|',$action));
 								return $action;
 							}
 						}
@@ -254,6 +268,15 @@ class planification extends eqLogic {
 		return;
 	}
 	public function Recup_action_actuelle(){
+		$mode_fonctionnement="auto";
+		$cmd_mode_fonctionnement = cmd::byEqLogicIdAndLogicalId($this->getId(), "mode_fonctionnement");
+			if(is_object($cmd_mode_fonctionnement)){
+				$mode_fonctionnement=$cmd_mode_fonctionnement->execCmd();
+					
+			}	
+		if($mode_fonctionnement != "auto"){
+			return [];
+		}
 		$cmd=cmd::byEqLogicIdAndLogicalId($this->getId(),'heure_fin');
 		$timestamp_prochaine_action=time();
 		if (is_object($cmd)){
@@ -275,31 +298,27 @@ class planification extends eqLogic {
 			}
 		}
 		if(count($cette_planification) == 0){return;}
-		//log::add("planification","debug","numéro_jour:".$numéro_jour);
+		//planification::add_log($this,"debug","numéro_jour:".$numéro_jour);
 		$numBoucle=0;				
 		for ($i = $numéro_jour; $i > $numéro_jour-7; $i--) {
 			$num=$i;
 			if($i<1){$num = 7-$i;}
-			//log::add("planification","debug","num :" . $num);
-				
+			//planification::add_log($this,"debug","num :" . $num);	
 			if (isset($cette_planification[ $num-1]["periodes"])){
-				//log::add("planification","debug",$cette_planification[ $num-1]["jour"]);
-					
+				//planification::add_log($this,"debug",$cette_planification[ $num-1]["jour"]);	
 				$periodes=$cette_planification[$num-1]["periodes"];
 				$action=[];
 				$trouve=false;
 				foreach($periodes as $periode){
-					//$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string($i-9 .' days'));
 					$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string(-$numBoucle.' days'));
-					//log::add("planification","debug",implode("|",$periode));
-					//log::add("planification","debug","date:".$date->format(' d-m-Y H:i'));
+					//planification::add_log($this,"debug",implode("|",$periode));
+					//planification::add_log($this,"debug","date:".$date->format(' d-m-Y H:i'));
 					if($date->getTimestamp() <= $timestamp_prochaine_action){
 						$trouve=true;
 						foreach ($CMD_LIST as $cmd) {
 							if($periode["Id"]==$cmd["Id"]){
-								//log::add("planification","debug","id:".$cmd["Id"]);
-								//log::add("planification","debug","nom:".$cmd["nom"]);
-								
+								//planification::add_log($this,"debug","id:".$cmd["Id"]);
+								//planification::add_log($this,"debug","nom:".$cmd["nom"]);
 								$action["datetime="]=$date->format(' d-m-Y H:i');
 								$action["nom"]=$cmd["nom"];
 								$action["cmd"]=$cmd["cmd"];
@@ -316,9 +335,9 @@ class planification extends eqLogic {
 				
 			}
 			if($trouve){
-				$cmd_action_en_cours_fin = $this->getCmd(null, "action_en_cours");
-				if(is_object($cmd_action_en_cours_fin)){
-					$cmd_action_en_cours_fin->event($action["nom"]);
+				$cmd_action_en_cours = $this->getCmd(null, "action_en_cours");
+				if(is_object($cmd_action_en_cours)){
+					$cmd_action_en_cours->event($action["nom"]);
 				}
 				return $action;
 			}			
@@ -397,14 +416,15 @@ class planification extends eqLogic {
 		$this->Ajout_Commande('refresh','Rafraichir','action','other');
 		$this->Ajout_Commande('mode_fonctionnement','Mode fonctionnement','info','string',null,null,"auto");
 		$this->Ajout_Commande('auto','Auto','action','other');
+		$this->Ajout_Commande('manuel','Manuel','action','other');
 		$this->Ajout_Commande('set_heure_fin','Set heure fin','action','message');
 		$this->Ajout_Commande('heure_fin','Heure fin mode en cours','info','string');
 		$this->Ajout_Commande('action_en_cours','Action en cours','info','string');
 		$this->Ajout_Commande('action_suivante','Action suivante','info','string');
 		$this->Ajout_Commande('planification_en_cours','Planification en cours','info','string');	
-		$this->Ajout_Commande('manuel','Manuel','action','other');
-		$this->Ajout_Commande('duree_mode_manuel_par_defaut','Duree mode manuel par defaut (minutes)','info','numeric',null,null,60);	
 		
+			
+		//$this->Ajout_Commande('set_mode_fonctionnement','Set mode fonctionnement','action','other');
 		$cmd = $this->getCmd(null, "set_planification");
 		if (!is_object($cmd)) {
 			$cmd = new planificationCmd();
@@ -424,6 +444,7 @@ class planification extends eqLogic {
 		$cmd->setConfiguration("listValue",$liste);
 		$cmd->save();
 		if ($this->getConfiguration('type','') == 'Poele'){
+			$this->Ajout_Commande('duree_mode_manuel_par_defaut','Duree mode manuel par defaut (minutes)','info','numeric',null,null,60);
 			$this->Ajout_Commande('absent','Absent','action','message');
 			$this->Ajout_Commande('force','Forcé','action','other');
 			$this->Ajout_Commande('arret','Arrêt','action','other');
@@ -433,6 +454,7 @@ class planification extends eqLogic {
 		}
 			
 		if ($this->getConfiguration('type','') == 'PAC'){
+			$this->Ajout_Commande('duree_mode_manuel_par_defaut','Duree mode manuel par defaut (minutes)','info','numeric',null,null,60);
 			$this->Ajout_Commande('absent','Absent','action','message');
 			$this->Ajout_Commande('climatisation','Climatisation','action','other');
 			$this->Ajout_Commande('ventilation','Ventilation','action','other');
@@ -452,10 +474,12 @@ class planification extends eqLogic {
 			$this->Ajout_Commande('hors_gel','Hors gel','action','other');
 			$this->Ajout_Commande('absent','Absent','action','other');
 			$this->Ajout_Commande('arret','Arrêt','action','other');			
+			$this->Ajout_Commande('set_action_en_cours','Set action en cours','action','other');
 		}
 		
 		if ($this->getConfiguration('type','') == 'Volet'){
 			$this->Ajout_Commande('set_action_en_cours','Set action en cours','action','other');
+			
 			
 		}
 
@@ -463,7 +487,7 @@ class planification extends eqLogic {
 		if (!is_object($cmd_set_planification)){return;}
 		$planifications=[];
 		$planifications=$this::Recup_planifications();
-		log::add("planification","debug",gettype($planifications));
+		planification::add_log($this,"debug",gettype($planifications));
 		$arr=[];
 		switch (count($planifications)) {
 			case 0:
@@ -728,68 +752,36 @@ class planification extends eqLogic {
 			}
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_action_en_cours_id#',$this->getCmd(null, 'set_action_en_cours'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#manuel_id#',$this->getCmd(null, 'manuel'),"id");
-			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$this->getCmd(null, 'consigne_temperature'),"id");
-			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$this->getCmd(null, 'absent'),"id");
-			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#climatisation_id#',$this->getCmd(null, 'climatisation'),"id");
-			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#ventilation_id#',$this->getCmd(null, 'ventilation'),"id");
-			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$this->getCmd(null, 'chauffage'),"id");
-			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$this->getCmd(null, 'set_consigne_temperature'),"id");
-			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$this->getCmd(null, 'set_consigne_temperature'),"min");
-			//$this::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$this->getCmd(null, 'set_consigne_temperature'),"max");
-			/*$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $this->getConfiguration('temperature_id',"")));
-			if (is_object($cmd_temperature)){
-				$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
-				$replace['#temperature_id#'] = $cmd_temperature->getId();
-			}else{
-				$replace['#temperature#'] = "";
-				$replace['#temperature_id#']="";
-			}*/
-
+			
 			$imageVolet="Volet-100.png";
 			$cmd_Mode_fonctionnement=$this->getCmd(null, 'mode_fonctionnement');
 			if (is_object($cmd_Mode_fonctionnement)){
 
 				$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
-				log::add("test","debug",$Mode_fonctionnement);
-				switch (strtolower($Mode_fonctionnement)) {
-					
-					case "ouvert":
-					case "ouvrir":
-					case "monter":
-						$imagePAC="Volet-100.png";
-						break;
-					case "fermé";
-					case "fermer";
-					case "fermer";
-						$imagePAC="Volet-0.png";
-						break;
-					case "my":
-						$imagePAC="Volet-50.png";
-						break;
-					
-					case "auto";
-						$cmd_action_en_cours=$this->getCmd(null, 'action_en_cours');
-						if (is_object($cmd_action_en_cours)){
-							$action_en_cours=$cmd_action_en_cours->execCmd();
-							log::add("test","debug",$action_en_cours);
-							switch (strtolower($action_en_cours)) {
-								case "ouvert":
-								case "ouvrir":
-								case "monter":
-									$imagePAC="Volet-100.png";
-									break;
-								case "fermé";
-								case "fermer";
-								case "fermer";
-									$imagePAC="Volet-0.png";
-									break;
-								case "my":
-									$imagePAC="Volet-50.png";
-									break;
+				//planification::add_log($this,"debug","mode de fonctionnement" . $Mode_fonctionnement);
+				$replace['#img_auto_manu#'] = ucfirst($Mode_fonctionnement);
+				
+				$cmd_action_en_cours=$this->getCmd(null, 'action_en_cours');
+				if (is_object($cmd_action_en_cours)){
+					$action_en_cours=$cmd_action_en_cours->execCmd();
+					planification::add_log($this,"debug",'action_en_cours:' . $action_en_cours);
+					switch (strtolower($action_en_cours)) {
+						case "ouvert":
+						case "ouvrir":
+						case "monter":
+							$imageVolet="Volet-100.png";
+							break;
+						case "fermé";
+						case "fermer";
+						case "fermer";
+							$imageVolet="Volet-0.png";
+							break;
+						case "my":
+							$imageVolet="Volet-50.png";
+							break;
 
-							}
-						}	
 					}
+				}
 			}
 			$replace['#img_volet#'] = $imageVolet;
 			if ($erreur){
@@ -827,10 +819,9 @@ class planificationCmd extends cmd {
     }
 
     public function execute($_options = array()) {
-		log::add('planification', 'info', "execute: " . $this->getLogicalId());
+		
 		$eqLogic = $this->getEqLogic();
-		
-		
+		planification::add_log($eqLogic,"debug","execute: " . $this->getLogicalId());
 		switch ($this->getLogicalId()) {
 			case 'refresh':
 				$eqLogic->refresh();
@@ -857,7 +848,34 @@ class planificationCmd extends cmd {
 			case 'manuel':
 				$eqLogic->checkAndUpdateCmd('mode_fonctionnement', $this->getLogicalId());
 				if($this->getLogicalId() == "auto"){
+
 					$eqLogic->Recup_action_actuelle();
+					/*$action_en_cours=$eqLogic->Recup_action_actuelle();
+					try {
+						if (!isset($action_en_cours['cmd'])){return;}
+						$cmd =$action_en_cours['cmd'];
+						$options = array();
+						$options = $action_en_cours['options'];
+						if (is_numeric (trim($cmd, "#"))){
+							$cmd=cmd::byId(trim($cmd, "#"));
+							if(is_object($cmd)){
+								$eqLogic_cmd=eqLogic::byId($cmd->getEqLogic_id()) ;
+								planification::add_log($eqLogic,"debug",'execution action: #[' . $eqLogic_cmd->getObject()->getName()."][".$eqLogic_cmd->getName()."][".$cmd->getName()."]#");
+								$cmd->execCmd();
+							}
+						}else{
+							$options_str="";
+							if ($cmd=="variable"){$options_str=$options["name"] . "=>" .$options["value"];}
+							planification::add_log($eqLogic,"debug",'execution action: ' . $cmd . ":" .$options_str );
+							scenarioExpression::createAndExec('action', $cmd, $options);
+						}
+					}catch (Exception $e) {
+						planification::add_log($eqLogic,"error",'Erreur lors de l\'éxecution de ' . $cmd['cmd'] . Détails : ' . $e->getMessage());
+					}*/
+
+
+
+
 					$eqLogic->set_cron();
 					$cmd_temperature_consigne_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'temperature_consigne_par_defaut');
 					if ($this->getConfiguration("type","")== "Poele"){
@@ -884,20 +902,20 @@ class planificationCmd extends cmd {
 						if (is_object($cmd_duree_mode_manuel_par_defaut)){
 							$duree_mode_manuel_par_defaut=$cmd_duree_mode_manuel_par_defaut->execCmd();
 						}
-						log::add('planification', 'info', "Heure1: " . $duree_mode_manuel_par_defaut);
-
+						planification::add_log($eqLogic,"debug","Heure1: " . $duree_mode_manuel_par_defaut);
 						$date_Fin=strtotime('+'.($duree_mode_manuel_par_defaut)." minute");
-						log::add('planification', 'info', "date_Fin" . date ("Y/m/d H:i", $date_Fin));
-
+						planification::add_log($eqLogic,"debug","date_Fin" . date ("Y/m/d H:i", $date_Fin));
 						$arr=["message" => date ('d-m-Y H:i', $date_Fin)];
 						$cmd_set_heure_fin->execute( $arr) ;
 					}
 				}
-				$eqLogic->refresh();
+				$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
+				if (is_object($cmd_refresh)){
+					$cmd_refresh->execute();
+				}
 				break;
 			case 'set_heure_fin':
-				log::add('planification', 'info', "Heure: " . $_options['message']);
-		
+				planification::add_log($eqLogic,"debug","Heure: " . $_options['message']);
 				if (strtotime("now") > strtotime($_options['message'])){
 					throw new Exception("Veuillez selectionner une date et heure supérieure à maintenant");
 				}
@@ -930,7 +948,13 @@ class planificationCmd extends cmd {
 				}
 				break;
 			case 'set_action_en_cours':
+				planification::add_log($eqLogic,"debug",$_options["message"]);
 				$eqLogic->checkAndUpdateCmd('action_en_cours',$_options["message"]);
+				$cmd_action=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'action_en_cours');
+				if (is_object($cmd_action)){
+					$cmd_action_val=$cmd_action->execCmd();
+					planification::add_log($eqLogic,"debug","val:" . $cmd_action_val);
+				}
 				$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
 				if (is_object($cmd_refresh)){
 					$cmd_refresh->execute();
@@ -947,11 +971,9 @@ class planificationCmd extends cmd {
 					if (is_object($cmd_duree_mode_manuel_par_defaut)){
 						$duree_mode_manuel_par_defaut=$cmd_duree_mode_manuel_par_defaut->execCmd();
 					}
-					log::add('planification', 'info', "Heure1: " . $duree_mode_manuel_par_defaut);
-
+					planification::add_log($eqLogic,"debug","Heure1: " . $duree_mode_manuel_par_defaut);
 					$date_Fin=strtotime('+'.($duree_mode_manuel_par_defaut)." minute");
-					log::add('planification', 'info', "date_Fin" . date ("Y/m/d H:i", $date_Fin));
-
+					planification::add_log($eqLogic,"debug","date_Fin" . date ("Y/m/d H:i", $date_Fin));
 					$arr=["message" => date ('d-m-Y H:i', $date_Fin)];
 					$cmd_set_heure_fin->execute( $arr) ;
 				}
@@ -970,6 +992,10 @@ class planificationCmd extends cmd {
 				}
 				break;
 					
+		
+		
+		
+		
 		}
 		
 		$eqLogic->refreshWidget() ;
