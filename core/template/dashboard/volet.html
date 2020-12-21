@@ -12,7 +12,7 @@
            <br/>
             
             <center>
-            <div class="page_1">
+            <div class="page_1" style="display : #display_page_1#;">
                 <span class="cmd cmd-widget" data-cmd_id="#ouvrir_id#" style="display:none;"></span>
                 <span class="cmd cmd-widget" data-cmd_id="#fermer_id#" style="display:none;"></span>
                 <span class="cmd cmd-widget" data-cmd_id="#my_id#" style="display:none;"></span>
@@ -30,7 +30,7 @@
                     </div>
             </div>
             
-            <div class="page_2" style="display : none;margin: 10px">
+            <div class="page_2" style="display : #display_page_2#;margin: 15px">
                  <center>
 
                 <span class="cmd cmd-widget" data-cmd_id="#manuel_id#" style="display:none;"></span>
@@ -38,12 +38,10 @@
                 <span class="cmd cmd-widget" data-cmd_id="#refresh_id#" style="display:none;"></span>
                 <span class="cmd cmd-widget" data-cmd_id="#endtime_change_id#" style="display:none;"></span>
                 <span class="cmd cmd-widget" data-cmd_id="#planning_change#" style="display:none;"></span>
-               
+                <div>
                     <img class="auto_manu cursor" src="plugins/planification/core/template/dashboard/images/#img_auto_manu#.png" style="width: 80px;"/>
-                </center>
-            </div>
-            <div class="page_2" style="display : none;margin: 10px">
-                <center>
+                </div>
+           
                
                 <select class="cmd form-control selectCalendar cursor tooltips" style="background-color:'#cmdColor#';width:70%;color:white;border-radius: 10px;" title="Choisir planification">
                         #calendar_selector#
@@ -60,36 +58,13 @@
                 <div>
                     <span class="planification_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;"  title="planification en cours"></span>
                 </div>
-            </center>
+           
             </div>
             
 		</div>
     </div>
     <script>
-        $.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Get_widget_cache",
-                id: "#id#",
-            },
-            global: false,
-            error: function (request, status, error) {handleAjaxError(request, status, error)},
-            success: function (data) {
-                if (data.state != 'ok') {
-                    $('#div_alert').showAlert({
-                        message: data.result,
-                        level: 'danger'
-                    })
-                    return
-                }else{
-                    if (data.result == "page2"){
-                        $('.eqLogic[data-eqLogic_uid=#uid#] .page_1').toggle();
-                        $('.eqLogic[data-eqLogic_uid=#uid#] .page_2').toggle();
-                    }
-                }
-            }
-        })	
+      
         $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function () {
             jeedom.cmd.execute({id: '#refresh_id#'});
         });

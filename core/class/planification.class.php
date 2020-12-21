@@ -6,12 +6,8 @@ class planification extends eqLogic {
 	public static $_widgetPossibility = array('custom' => true);
 	//debut fonctions ajax
 	public function Set_widget_cache($_id,$_page){
-		$eqlogic=eqLogic::byId($_id);
-		$eqlogic->setCache('Page', $_page);
-	}
-	public function Get_widget_cache($_id){
-		$eqlogic=eqLogic::byId($_id);
-		return $eqlogic->getCache('Page');
+		$eqLogic=eqLogic::byId($_id);
+		$eqLogic->setCache('Page', $_page);
 	}
   	public function Recup_planifications(){
 		$nom_fichier=dirname(__FILE__) ."/../../planifications/" . $this->getId() . ".json";
@@ -81,12 +77,12 @@ class planification extends eqLogic {
 		return $eqLogic->getId();
 	}
 //fin fonctions ajax
-static function add_log($_eqlogic,$level = 'debug',$Log){
+static function add_log($_eqLogic,$level = 'debug',$Log){
         if (is_array($Log)) $Log = json_encode($Log);
         $function_name = debug_backtrace(false, 2)[1]['function'];
         //$class_name = debug_backtrace(false, 2)[1]['class'];
         $msg = '<'. $function_name .'> '.$Log;
-		log::add('planification'.  mb_convert_encoding (str_replace("[" , "_",str_replace("]" , "",$_eqlogic->getHumanName(false))), 'HTML-ENTITIES', 'UTF-8'), $level,$msg);
+		log::add('planification'.  mb_convert_encoding (str_replace("[" , "_",str_replace("]" , "",$_eqLogic->getHumanName(false))), 'HTML-ENTITIES', 'UTF-8'), $level,$msg);
 					
 }
 	function pull($_option){
@@ -108,7 +104,7 @@ static function add_log($_eqlogic,$level = 'debug',$Log){
 		}
 		
 		$eqLogic = self::byId($_option['eqLogic_Id']);
-		planification::add_log($eqlogic,"debug","pull de : " . $eqLogic->getName());
+		planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
 		$commande_en_cours="";
 		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
 		if (!is_object($cmd_mode)) {return;	}
@@ -122,23 +118,23 @@ static function add_log($_eqlogic,$level = 'debug',$Log){
 				$cmd=cmd::byId(trim($cmd, "#"));
 				if(is_object($cmd)){
 					$eqLogic_cmd=eqLogic::byId($cmd->getEqLogic_id()) ;
-					planification::add_log($eqlogic,"debug",'execution action: #[' . $eqLogic_cmd->getObject()->getName()."][".$eqLogic_cmd->getName()."][".$cmd->getName()."]#");
+					planification::add_log($eqLogic,"debug",'execution action: #[' . $eqLogic_cmd->getObject()->getName()."][".$eqLogic_cmd->getName()."][".$cmd->getName()."]#");
 					$cmd->execCmd();
 				}
 			}else{
 				$options_str="";
 				if ($cmd=="variable"){$options_str=$options["name"] . "=>" .$options["value"];}
-				planification::add_log($eqlogic,"debug",'execution action: ' . $cmd . ":" .$options_str);
+				planification::add_log($eqLogic,"debug",'execution action: ' . $cmd . ":" .$options_str);
 					
 				scenarioExpression::createAndExec('action', $cmd, $options);
 			}
 		}catch (Exception $e) {
-			planification::add_log($eqlogic,"error",'Erreur lors de l\'éxecution de ' . $cmd['cmd'] .'. Détails : '. $e->getMessage());
+			planification::add_log($eqLogic,"error",'Erreur lors de l\'éxecution de ' . $cmd['cmd'] .'. Détails : '. $e->getMessage());
 		}
 		if ($cmd_mode->execCmd()=="auto"){
 			$eqLogic->set_cron();
 		}else{
-			planification::add_log($eqlogic,"debug", "remise de l'équipement en mode auto");
+			planification::add_log($eqLogic,"debug", "remise de l'équipement en mode auto");
 			$cmd_auto=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'auto');
 			$cmd_auto->execute();
 		}
@@ -609,7 +605,15 @@ static function add_log($_eqlogic,$level = 'debug',$Log){
         $this::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$this->getCmd(null, 'action_en_cours'),"value");
 		$this::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$this->getCmd(null, 'action_suivante'),"value");
 		
-		
+		$page_active=$this->getCache('Page');
+		if($page_active =="" || $page_active=="page1"){
+			$replace['#display_page_1#']="block";
+			$replace['#display_page_2#']="none";
+		}else{
+			$replace['#display_page_1#']="none";
+			$replace['#display_page_2#']="block";
+		}
+
 		if ($this->getConfiguration("type","")== "Poele"){
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$this->getCmd(null, 'arret'),"id");
 			$this::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$this->getCmd(null, 'consigne_temperature'),"value");
