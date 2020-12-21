@@ -85,7 +85,10 @@ try {
         planification::Set_widget_cache(init('id'),init('page'));
         ajax::success();
     }
-   
+    if (init('action') == 'Get_widget_cache') {
+        $res=planification::Get_widget_cache(init('id'));
+        ajax::success($res);
+    }
 	
 	
 	

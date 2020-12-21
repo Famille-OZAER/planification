@@ -7,7 +7,11 @@ class planification extends eqLogic {
 	//debut fonctions ajax
 	public function Set_widget_cache($_id,$_page){
 		$eqlogic=eqLogic::byId($_id);
-		planification::add_log($eqlogic,"debug","test");
+		$eqlogic->setCache('Page', $_page);
+	}
+	public function Get_widget_cache($_id){
+		$eqlogic=eqLogic::byId($_id);
+		return $eqlogic->getCache('Page');
 	}
   	public function Recup_planifications(){
 		$nom_fichier=dirname(__FILE__) ."/../../planifications/" . $this->getId() . ".json";
@@ -304,11 +308,12 @@ static function add_log($_eqlogic,$level = 'debug',$Log){
 			$num=$i;
 			if($i<1){$num = 7-$i;}
 			//planification::add_log($this,"debug","num :" . $num);	
+			$trouve=false;
 			if (isset($cette_planification[ $num-1]["periodes"])){
 				//planification::add_log($this,"debug",$cette_planification[ $num-1]["jour"]);	
 				$periodes=$cette_planification[$num-1]["periodes"];
 				$action=[];
-				$trouve=false;
+				
 				foreach($periodes as $periode){
 					$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string(-$numBoucle.' days'));
 					//planification::add_log($this,"debug",implode("|",$periode));

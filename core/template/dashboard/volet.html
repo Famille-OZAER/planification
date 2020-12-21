@@ -62,7 +62,30 @@
 		</div>
     </div>
     <script>
-
+        $.ajax({
+            type: "POST",
+            url: "plugins/planification/core/ajax/planification.ajax.php",
+            data: {
+                action: "Get_widget_cache",
+                id: "#id#",
+            },
+            global: false,
+            error: function (request, status, error) {handleAjaxError(request, status, error)},
+            success: function (data) {
+                if (data.state != 'ok') {
+                    $('#div_alert').showAlert({
+                        message: data.result,
+                        level: 'danger'
+                    })
+                    return
+                }else{
+                    if (data.result == "page2"){
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .page_1').toggle();
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .page_2').toggle();
+                    }
+                }
+            }
+        })	
         $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function () {
             jeedom.cmd.execute({id: '#refresh_id#'});
         });
@@ -116,8 +139,8 @@
             $('.eqLogic[data-eqLogic_uid=#uid#] .page_1').toggle();
             $('.eqLogic[data-eqLogic_uid=#uid#] .page_2').toggle();
             var page="page1"
-            if ($('.eqLogic[data-eqLogic_uid=#uid#] .page_1').css('display') == 'block'){
-
+            if ($('.eqLogic[data-eqLogic_uid=#uid#] .page_2').css('display') == 'block'){
+                page="page2"
             }
             $.ajax({
                 type: "POST",
