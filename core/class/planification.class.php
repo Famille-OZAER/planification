@@ -783,6 +783,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 						case "fermé";
 						case "fermer";
 						case "fermer";
+						case "descendre";
 							$imageVolet="Volet-0.png";
 							break;
 						case "my":

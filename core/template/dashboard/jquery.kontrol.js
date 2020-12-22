@@ -704,8 +704,9 @@
                 2
             ) + 2;
 
-            this.o.displayInput
+           /* this.o.displayInput
                 && this.i.css({
+                        //'background-color':"transparent !important",
                         'width' : ((this.w / 2 + 4) >> 0) + 'px',
                         'height' : ((this.w / 3) >> 0) + 'px',
                         'position' : 'absolute',
@@ -713,16 +714,16 @@
                         'margin-top' : ((this.w / 3) >> 0) + 'px',
                         'margin-left' : '-' + ((this.w * 3 / 4 + 2) >> 0) + 'px',
                         'border' : 0,
-                        'background' : 'none',
                         'font' : this.o.fontWeight + ' ' + ((this.w / s) >> 0) + 'px ' + this.o.font,
                         'text-align' : 'center',
                         'color' : this.o.inputColor || this.o.fgColor,
+                        
                         'padding' : '0px',
                         '-webkit-appearance': 'none'
                         }) || this.i.css({
                             'width': '0px',
                             'visibility': 'hidden'
-                        });
+                        });*/
         };
 
         this.change = function (v) {
