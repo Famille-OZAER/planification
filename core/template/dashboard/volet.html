@@ -43,9 +43,9 @@
                 </div>
            
                
-                <select class="cmd form-control selectCalendar cursor tooltips" style="background-color:'#cmdColor#';width:70%;color:white;border-radius: 10px;" title="Choisir planification">
+                <!--<select class="cmd form-control selectCalendar cursor tooltips" style="background-color:'#cmdColor#';width:70%;color:white;border-radius: 10px;" title="Choisir planification">
                         #calendar_selector#
-                </select>
+                </select>-->
                 <div class='cmd input-group date datetimepicker'>
                     <span class="input-group-addon cursor tooltips" style="background-color:'#cmdColor#';width:70%;border-radius: 10px;" title="Choisir Fin">
                         <span class="fa fa-calendar" style="color:white"></span>
@@ -77,35 +77,35 @@
             
         });
         $('.eqLogic[data-eqLogic_uid=#uid#] .ouvrir').on('click', function () {
+            jeedom.cmd.execute({id: '#manuel_id#'});
             jeedom.cmd.execute({id: '#ouvrir_id#'});
             jeedom.cmd.execute({id: '#set_action_en_cours_id#', value: {'message': 'ouvrir'}});
 
         });
         $('.eqLogic[data-eqLogic_uid=#uid#] .fermer').on('click', function () {
+            jeedom.cmd.execute({id: '#manuel_id#'});
             jeedom.cmd.execute({id: '#fermer_id#'});
             jeedom.cmd.execute({id: '#set_action_en_cours_id#', value: {'message': 'fermer'}});
         });
         $('.eqLogic[data-eqLogic_uid=#uid#] .my').on('click', function () {
+            jeedom.cmd.execute({id: '#manuel_id#'});
             jeedom.cmd.execute({id: '#my_id#'});
             jeedom.cmd.execute({id: '#set_action_en_cours_id#', value: {'message': 'my'}});
         });
-      
-
-       if ('#mode_fonctionnement#' == 'auto') {
-            $('.eqLogic[data-eqLogic_uid=#uid#] .ouvrir').css('display', 'none');
-            $('.eqLogic[data-eqLogic_uid=#uid#] .my').css('display', 'none');
-            $('.eqLogic[data-eqLogic_uid=#uid#] .fermer').css('display', 'none');
+        if ('#mode_fonctionnement#' == 'auto') {
             $('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').css('display', 'none');
             $('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').css('display', 'none');
-            $('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours# ');
-            if('#prochaine_action#' != ""){
-                $('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('<i class="fa fa-arrow-right"></i>');
+            $('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours#');
+            $('.eqLogic[data-eqLogic_uid=#uid#] .fleche').append(' <i class="fa fa-arrow-right"></i>');
+            if('#prochaine_action#' == ""){
+                $('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append("Nouvel ordre");
+            }else{
+                $('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('#prochaine_action#');
             }
-            $('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('#prochaine_action#');
             $('.eqLogic[data-eqLogic_uid=#uid#] .heure_prochaine_action').append('#endtime#');
             $('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').append('#planification_en_cours#');
             $('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').css('display', 'block');
-        } else if ('#mode_fonctionnement#' != 'manuel') {
+        }else if ('#mode_fonctionnement#' != 'manuel') {
             $('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#mode_fonctionnement_name# ');
             if('#prochaine_action#' != ""){
                 $('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('<i class="fa fa-arrow-right"></i>');
@@ -140,9 +140,7 @@
                         return
                     }
                 }
-            })	
-        
-        
+            })
     });
     $('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').on('change', function() {
         jeedom.cmd.execute({id: '#set_planification_id#', value: {'select': $(this).value(),Id_planification:$(this)[0].options[$(this)[0].selectedIndex].id}});
