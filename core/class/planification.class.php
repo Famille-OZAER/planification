@@ -118,7 +118,6 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
 		$commande_en_cours="";
 		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
-		if (!is_object($cmd_mode)) {return;	}
 		$action_en_cours=$eqLogic->Recup_action_actuelle();
   		try {
 			if (!isset($action_en_cours['cmd'])){return;}
@@ -300,7 +299,20 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 
 
 
-		if($mode_fonctionnement != "auto" && $mode_fonctionnement != "manuel"){
+		if($mode_fonctionnement == "arret"){
+			$crons = cron::searchClassAndFunction('planification', 'pull');
+			$cron_id="";
+			foreach ($crons as $cron){
+				if($cron_id=="" ){
+					$options=$cron->getOption();
+					if($options["eqLogic_Id"]== intval($eqLogic->getId())){
+						$cron_id=$cron->getId();
+					}
+				}
+			}
+			$cron=cron::byId($cron_id);
+			$cron->remove();
+			$eqLogic->checkAndUpdateCmd('heure_fin', '');
 			return [];
 		}
 		$cmd=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'heure_fin');
@@ -633,8 +645,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#endtime#',$eqLogic->getCmd(null, 'heure_fin'),"value");
 		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$eqLogic->getCmd(null, 'set_planification'),"id");
 		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$eqLogic->getCmd(null, 'planification_en_cours'),"value");
-        $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
-		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
+       
 		
 		$page_active=$eqLogic->getCache('Page');
 		if($page_active =="" || $page_active=="page1"){
@@ -654,7 +665,10 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"id");
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"min");
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"max");
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
 			$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('temperature_id',"")));
+			
 			if (is_object($cmd_temperature)){
 				$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
 				$replace['#temperature_id#'] = $cmd_temperature->getId();
@@ -711,25 +725,40 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 				$replace['#temperature_id#']="";
 			}
 
+			
+			$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
+			if (is_object($cmd_action_en_cours)){
+				$action_en_cours=$cmd_action_en_cours->execCmd();
+			}
+			if($action_en_cours== "Allumé"){
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'mode_PAC'),"value");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
+			}else{
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
+
+			}
 			$imagePAC="PACArret.png";
 			$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
 			if (is_object($cmd_Mode_fonctionnement)){
 				$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
-				
-				switch (strtolower($Mode_fonctionnement)) {
-					case "climatisation":
-						$imagePAC="PACClimatisation.png";
+			}
+			switch (strtolower($Mode_fonctionnement)) {
+				case "climatisation":
+					$imagePAC="PACClimatisation.png";
+				break;
+				case"chauffage";
+					$imagePAC="PACChauffage.png";
+				break;
+				case"ventilation":
+					$imagePAC="PACVentilation.png";
 					break;
-					case"chauffage";
-						$imagePAC="PACChauffage.png";
+				case "arret":
+					$imagePAC="PACArret.png";
 					break;
-					case"ventilation":
-						$imagePAC="PACVentilation.png";
-						break;
-					case "arret":
-						$imagePAC="PACArret.png";
-						break;
-					case "auto";
+				case "auto";
+					
+					if($action_en_cours== "Allumé"){
 						$cmd_mode_PAC=$eqLogic->getCmd(null, 'mode_PAC');
 						if (is_object($cmd_mode_PAC)){
 							$mode_PAC=$cmd_mode_PAC->execCmd();
@@ -749,9 +778,15 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 							}
 
 						}
-					break;
-				}
+					}else{
+						$imagePAC="PACArret.png";
+					}
+					
+				break;
 			}
+
+				
+			
 			$replace['#img_pac#'] = $imagePAC;
 			if ($erreur){
 				$replace['#display_erreur#'] ="block";
@@ -793,7 +828,8 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			}
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_action_en_cours_id#',$eqLogic->getCmd(null, 'set_action_en_cours'),"id");
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#manuel_id#',$eqLogic->getCmd(null, 'manuel'),"id");
-			
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
 			$imageVolet="Volet-100.png";
 			$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
 			if (is_object($cmd_Mode_fonctionnement)){
@@ -846,6 +882,17 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
     public function postRemove() {
 		$eqLogic=$this;
 		$nom_fichier = dirname(__FILE__)."/../../planifications/" . $eqLogic->getId() . ".json";
+		planification::add_log($eqLogic,"debug","nom_fichier:".$nom_fichier);
+        if (file_exists($nom_fichier)) {
+            unlink($nom_fichier);
+        }
+	}
+	public function preRemove() {
+		
+		$eqLogic=$this;
+		
+		$nom_fichier = dirname(__FILE__)."/../../planifications/" . $eqLogic->getId() . ".json";
+		planification::add_log($eqLogic,"debug","nom_fichier:".$nom_fichier);
         if (file_exists($nom_fichier)) {
             unlink($nom_fichier);
         }
