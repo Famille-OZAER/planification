@@ -311,7 +311,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 				}
 			}
 			$cron=cron::byId($cron_id);
-			if (!is_object($cron)) {$cron->remove();}
+			if (is_object($cron)) {$cron->remove();}
 			$eqLogic->checkAndUpdateCmd('heure_fin', '');
 			return [];
 		}
