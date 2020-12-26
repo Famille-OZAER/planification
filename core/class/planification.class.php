@@ -118,7 +118,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
 		$commande_en_cours="";
 		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
-		$action_en_cours=$eqLogic->Recup_action_actuelle();
+		/*$action_en_cours=$eqLogic->Recup_action_actuelle();
   		try {
 			if (!isset($action_en_cours['cmd'])){return;}
 			$cmd =$action_en_cours['cmd'];
@@ -140,7 +140,8 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			}
 		}catch (Exception $e) {
 			planification::add_log($eqLogic,"error",'Erreur lors de l\'éxecution de ' . $cmd['cmd'] .'. Détails : '. $e->getMessage());
-		}
+		}*/
+		$eqLogic->Execute_action_actuelle();
 		if ($cmd_mode->execCmd()=="auto"){
 			$eqLogic->set_cron();
 		}else{
@@ -281,7 +282,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		}
 		return;
 	}
-	public function Recup_action_actuelle(){
+	public function Execute_action_actuelle(){
 		$mode_fonctionnement="auto";
 		$eqLogic=$this;
 		$cmd_mode_fonctionnement = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "mode_fonctionnement");
@@ -374,16 +375,41 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 				
 			}
 			if($trouve){
-				planification::add_log($eqLogic,"debug",$action["nom"]);
-				$cmd_action_en_cours = $eqLogic->getCmd(null, "action_en_cours");
+				
+				
 				if(is_object($cmd_action_en_cours)){
+					if ($action_en_cours != $action['nom']){
+						planification::add_log($eqLogic,"debug","action_actuelle:".$action["nom"]);
+						try {
+					
+							$cmd =$action['cmd'];
+							$options = array();
+							$options = $action['options'];
+							if (is_numeric (trim($cmd, "#"))){
+								$cmd=cmd::byId(trim($cmd, "#"));
+								if(is_object($cmd)){
+									$eqLogic_cmd=eqLogic::byId($cmd->getEqLogic_id()) ;
+									planification::add_log($eqLogic,"debug",'execution action: #[' . $eqLogic_cmd->getObject()->getName()."][".$eqLogic_cmd->getName()."][".$cmd->getName()."]#");
+									$cmd->execCmd();
+								}
+							}else if ($cmd !=""){
+								$options_str="";
+								if ($cmd=="variable"){$options_str=$options["name"] . "=>" .$options["value"];}
+								planification::add_log($eqLogic,"debug",'execution action: ' . $cmd . ":" .$options_str);
+									
+								scenarioExpression::createAndExec('action', $cmd, $options);
+							}
+						}catch (Exception $e) {
+							planification::add_log($eqLogic,"error",'Erreur lors de l\'éxecution de ' . $cmd['cmd'] .'. Détails : '. $e->getMessage());
+						}
+						
+					}
 					$cmd_action_en_cours->event($action["nom"]);
 				}
-				return $action;
-			}			
+				return;
+			}		
 			$numBoucle+=1;
 		}
-		return $action;
 	
 	}
 	public function Importer_commandes_eqlogic($_eqLogic_id) {
@@ -914,7 +940,7 @@ class planificationCmd extends cmd {
 		switch ($cmd->getLogicalId()) {
 			case 'refresh':
 				$eqLogic->refresh();
-				//$eqLogic->Recup_action_actuelle();
+				$eqLogic->Execute_action_actuelle();
 				$eqLogic->set_cron();
 				break;
 			case 'set_consigne_temperature':
@@ -945,6 +971,10 @@ class planificationCmd extends cmd {
 						}
 						$eqLogic->checkAndUpdateCmd('consigne_temperature', $temperature_consigne_par_defaut);
 					}
+					$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
+					if (is_object($cmd_refresh)){
+						$cmd_refresh->execute();
+					}
 				}else if ($cmd->getLogicalId() == "arret" || $cmd->getLogicalId() == "manuel" ){
 					$crons = cron::searchClassAndFunction('planification', 'pull');
 					foreach ($crons as $cron){
@@ -968,10 +998,7 @@ class planificationCmd extends cmd {
 						$cmd_set_heure_fin->execute( $arr) ;
 					}
 				}
-				$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
-				if (is_object($cmd_refresh)){
-					$cmd_refresh->execute();
-				}
+				
 				break;
 			case 'set_heure_fin':
 				//planification::add_log($eqLogic,"debug","Heure: " . $_options['message']);
@@ -1051,11 +1078,6 @@ class planificationCmd extends cmd {
 					$cmd_refresh->execute();
 				}
 				break;
-					
-		
-		
-		
-		
 		}
 		
 		$eqLogic->refreshWidget() ;
