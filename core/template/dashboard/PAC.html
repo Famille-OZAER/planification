@@ -83,9 +83,8 @@
 							jeedom.cmd.execute({id: '#arret_id#'});
 						});
 						$('.eqLogic[data-eqLogic_uid=#uid#] .ventilation').on('click', function () {
-							jeedom.cmd.execute({id: '#arret_id#'});
+							jeedom.cmd.execute({id: '#ventilation_id#'});
 						});
-						
 						if ('#mode_fonctionnement#' == 'auto') {
 							$('.eqLogic[data-eqLogic_uid=#uid#] .auto').css('color', 'white');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours#');

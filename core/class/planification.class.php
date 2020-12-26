@@ -207,10 +207,10 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 						$date="";
 						$date=$cmd_date_prochaine_action->execCmd();
 						if ($date !=""){
-							planification::add_log($eqLogic,"debug","date: #" . $date ."#");
+						//	planification::add_log($eqLogic,"debug","date: #" . $date ."#");
 					
 							$datetime=date_create_from_format("d-m-Y H:i",$date);
-							planification::add_log($eqLogic,"debug","datetime: " . $datetime->format('d-m-Y H:i'));
+							//planification::add_log($eqLogic,"debug","datetime: " . $datetime->format('d-m-Y H:i'));
 							if (!is_object($cron)) {
 								$cron = new cron();
 								$cron->setClass('planification');
@@ -244,7 +244,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		foreach($planifications as $planification){
 			if($planification["Id"]==$Id_planification_en_cours){
 				planification::add_log($eqLogic,"debug","planification en cours: " . $planification["nom_planification"]);
-				planification::add_log($eqLogic,"debug","action en cours: " . $action_en_cours);
+				//planification::add_log($eqLogic,"debug","action en cours: " . $action_en_cours);
 				$cette_planification=$planification["semaine"];
 			}
 		}
@@ -269,7 +269,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 								if(is_object($cmd_heure_fin)){
 									$cmd_heure_fin->event($date->format('d-m-Y H:i'));
 								}
-								planification::add_log($eqLogic,"debug","action :" . implode('|',$action));
+								//planification::add_log($eqLogic,"debug","action :" . implode('|',$action));
 								return $action;
 							}
 						}
@@ -703,7 +703,6 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		
 		if ($eqLogic->getConfiguration("type","")== "PAC"){
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$eqLogic->getCmd(null, 'arret'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#ventilation_id#',$eqLogic->getCmd(null, 'ventilation'),"id");
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$eqLogic->getCmd(null, 'consigne_temperature'),"value");
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$eqLogic->getCmd(null, 'consigne_temperature'),"id");
 			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost_on_id#',$eqLogic->getCmd(null, 'boost_on'),"id");
@@ -915,7 +914,7 @@ class planificationCmd extends cmd {
 		switch ($cmd->getLogicalId()) {
 			case 'refresh':
 				$eqLogic->refresh();
-				$eqLogic->Recup_action_actuelle();
+				//$eqLogic->Recup_action_actuelle();
 				$eqLogic->set_cron();
 				break;
 			case 'set_consigne_temperature':
@@ -975,7 +974,7 @@ class planificationCmd extends cmd {
 				}
 				break;
 			case 'set_heure_fin':
-				planification::add_log($eqLogic,"debug","Heure: " . $_options['message']);
+				//planification::add_log($eqLogic,"debug","Heure: " . $_options['message']);
 				if (strtotime("now") > strtotime($_options['message'])){
 					throw new Exception("Veuillez selectionner une date et heure supérieure à maintenant");
 				}
