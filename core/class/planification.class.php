@@ -948,7 +948,13 @@ class planificationCmd extends cmd {
 				if ($eqLogic->getConfiguration("type","")== "Poele"){
 					$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
 					if (is_object($cmd_mode)){
-						$mode = $cmd_mode->event("force");
+						if ($cmd_mode->execCmd() != 'force')
+						{							
+							$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'force');
+							if (is_object($cmd_mode)){
+								$cmd_mode->execute();
+							}
+						}
 					}
 				}
 				break;
