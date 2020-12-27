@@ -4,7 +4,7 @@
 //TEST OOZAER3
 //TEST OOZAERGITHUB
 require_once  '/var/www/html/core/php/core.inc.php';
-
+//toto
 class planification extends eqLogic {
 	
 	public static $_widgetPossibility = array('custom' => true);
