@@ -1,6 +1,7 @@
 <?php
 //TEST OOZAER
 //TEST OOZAER2
+//TEST OOZAERGITHUB
 require_once  '/var/www/html/core/php/core.inc.php';
 
 class planification extends eqLogic {
