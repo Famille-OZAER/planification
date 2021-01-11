@@ -554,40 +554,42 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 		nouvelle_periode.find('.clock-timepicker').TimePicker({
 			
 			date: false,
-				shortTime: false,
-				format: 'HH:mm',
-				switchOnClick : true,
+			shortTime: false,
+			format: 'HH:mm',
+			switchOnClick : true,
 			
-		}).on('open', function(e, date)
-		{
-			debut_periode_precedente=""
-			debut_periode_suivante=""
-			debut_periode_precedente=$(this).closest(".Periode_jour").prev().find(".clock-timepicker").val()
-			if (debut_periode_precedente != ""){
-				debut_periode_precedente_int = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])+1
-				heures_debut_str="0"+Math.trunc(debut_periode_precedente_int/60)
-				heures_debut_str=heures_debut_str.substr(heures_debut_str.length -  2)
-				minutes_debut_str="0"+ (debut_periode_precedente_int - (Math.trunc(debut_periode_precedente_int/60)* 60))
-				minutes_debut_str=minutes_debut_str.substr(minutes_debut_str.length -  2)
-			}
-			if (debut_periode_suivante!=""){
-				debut_periode_suivante=$(this).closest(".Periode_jour").next().find(".clock-timepicker").val()
-				debut_periode_suivante_int = (parseInt(debut_periode_suivante.split(':')[0]) * 60) + parseInt(debut_periode_suivante.split(':')[1])-1
-				heures_suivante_str="0"+Math.trunc(debut_periode_suivante_int/60)
-				heures_suivante_str=heures_suivante_str.substr(heures_suivante_str.length -  2)
-				minutes_suivante_str="0"+ (debut_periode_suivante - (Math.trunc(debut_periode_suivante/60)* 60))
-				minutes_suivante_str=minutes_suivante_str.substr(minutes_suivante_str.length -  2)
-			}else{
-				heures_suivante_str="23"
-				minutes_suivante_str="59"
-			}
-			
-			
-
-			$(this).TimePicker('setMinDate', heures_debut_str + ":"  + minutes_debut_str );
-			$(this).TimePicker('setMaxDate', heures_suivante_str + ":"  + minutes_suivante_str);
-			
-		});
+		})
+			.on('open', function(e, date){
+				debut_periode_precedente=""
+				debut_periode_suivante=""
+				debut_periode_precedente=$(this).closest(".Periode_jour").prev().find(".clock-timepicker").val()
+				if (debut_periode_precedente != ""){
+					debut_periode_precedente_int = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])+1
+					heures_debut_str="0"+Math.trunc(debut_periode_precedente_int/60)
+					heures_debut_str=heures_debut_str.substr(heures_debut_str.length -  2)
+					minutes_debut_str="0"+ (debut_periode_precedente_int - (Math.trunc(debut_periode_precedente_int/60)* 60))
+					minutes_debut_str=minutes_debut_str.substr(minutes_debut_str.length -  2)
+				}
+				if (debut_periode_suivante!=""){
+					debut_periode_suivante=$(this).closest(".Periode_jour").next().find(".clock-timepicker").val()
+					debut_periode_suivante_int = (parseInt(debut_periode_suivante.split(':')[0]) * 60) + parseInt(debut_periode_suivante.split(':')[1])-1
+					heures_suivante_str="0"+Math.trunc(debut_periode_suivante_int/60)
+					heures_suivante_str=heures_suivante_str.substr(heures_suivante_str.length -  2)
+					minutes_suivante_str="0"+ (debut_periode_suivante - (Math.trunc(debut_periode_suivante/60)* 60))
+					minutes_suivante_str=minutes_suivante_str.substr(minutes_suivante_str.length -  2)
+				}else{
+					heures_suivante_str="23"
+					minutes_suivante_str="59"
+				}
+				
+				$(this).TimePicker('setMinDate', heures_debut_str + ":"  + minutes_debut_str );
+				$(this).TimePicker('setMaxDate', heures_suivante_str + ":"  + minutes_suivante_str);
+				
+			})
+			.on("change",function(e){
+				MAJ_Graphique_jour($(this).closest('.JourSemaine'));
+			})
+		
     }else{
 		nouvelle_periode.find('.clock-timepicker').prop('readonly', true)
 	}
@@ -623,11 +625,12 @@ function MAJ_Graphique_jour(Div_jour){
 			width = (delta*100) / 1440
 			class_periode = ""
 			mode = "Aucun"
-			nouveau_graph = '<div style="width:'+width+'%; height:20px; display:inline-block;" title="'+mode+'"></div>'
+			nouveau_graph = '<div style="width:'+width+'%; height:20px; display:inline-block;" title="'+ debut_periode +" - 23:59<br>" +mode+'"></div>'
 			graphDiv.append(nouveau_graph)
 		}
 		if (isLast){
-            heure_fin = 1439
+			heure_fin = 1439
+			fin_periode="23:59"
         }else{
             fin_periode = $(Periode_jour[i+1]).find('.clock-timepicker').val()
 			heure_fin = (parseInt(fin_periode.split(':')[0]) * 60) + parseInt(fin_periode.split(':')[1])
@@ -636,8 +639,13 @@ function MAJ_Graphique_jour(Div_jour){
         width = (delta*100) / 1440
 		class_periode=recup_class_couleur($(periode).find('.select-selected').attr('class').split(' ')) 
 		mode = $(periode).find('.select-selected').text()
-        nouveau_graph = '<div class="'+class_periode+'" style="width:'+width+'%; height:20px; display:inline-block;" title="'+mode+'"></div>'
-        graphDiv.append(nouveau_graph)
+        //nouveau_graph = '<div class="'+class_periode+'" style="width:'+width+'%; height:20px; display:inline-block;" title="'+debut_periode +" - " +fin_periode+  "<br>" +mode+'"></div>'
+		nouveau_graph = '<div class="graph '+class_periode+'" style="width:'+width+'%; height:20px; display:inline-block;">'
+		 //title="'+debut_periode +" - " +fin_periode+  "<br>" +mode+'">
+		 nouveau_graph +='<span class="tooltiptext  '+class_periode+'">'+debut_periode +" - " +fin_periode+  "<br>" +mode+'</span>'
+		 nouveau_graph +='</div>'
+        
+		graphDiv.append(nouveau_graph)
     }
 }
 

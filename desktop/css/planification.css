@@ -1,35 +1,51 @@
-div.couleur-bleu{
+.couleur-bleu{
   background-color:Dodgerblue!important;
 }
-
-div.couleur-orange{
+.tooltiptext.couleur-bleu::after{
+  border-color: Dodgerblue transparent transparent transparent;
+}
+.couleur-orange{
   background-color:Darkorange!important;  
 }
-
-div.couleur-rouge{
+.tooltiptext.couleur-orange::after{
+  border-color: Darkorange transparent transparent transparent;
+}
+.couleur-rouge{
   background-color:Firebrick!important;  
 }
-
-div.couleur-magenta{
+.tooltiptext.couleur-rouge::after{
+  border-color: Firebrick transparent transparent transparent;
+}
+.couleur-magenta{
   background-color:Plum!important;  
 }
-
-div.couleur-jaune{
+.tooltiptext.couleur-magenta::after{
+  border-color: Plum transparent transparent transparent;
+}
+.couleur-jaune{
   background-color:Goldenrod!important;  
 }
-
-div.couleur-vert{
+.tooltiptext.couleur-jaune::after{
+  border-color: Goldenrod transparent transparent transparent;
+}
+.couleur-vert{
   background-color:Forestgreen!important;  
 }
-
-div.couleur-marron{
+.tooltiptext.couleur-vert::after{
+  border-color: Forestgreen transparent transparent transparent;
+}
+.couleur-marron{
   background-color:Maroon!important;  
 }
-
-div.couleur-violet{
+.tooltiptext.couleur-marron::after{
+  border-color: Maroon transparent transparent transparent;
+}
+.couleur-violet{
   background-color:Darkslateblue!important;  
 }
-
+.tooltiptext.couleur-violet::after{
+  border-color: Darkslateblue transparent transparent transparent;
+}
 div.commande{
   color:transparent!important;
 }
@@ -124,7 +140,57 @@ top:0px;
   border-color:  #C3C3C3  transparent transparent transparent!important;
 }
 
+.graph {
+  position: relative;
+  display: inline-block;
+  cursor:pointer;
+}
 
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 120%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+
+
+.tooltiptext:after, .tooltiptext:before {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.tooltiptext:after {
+	border-width: 5px;
+	margin-left: -5px;
+}
+.tooltiptext:before {
+	border-top-color: #555;
+	border-width: 7px;
+	margin-left: -7px;
+}
+
+.graph:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  border: 2px solid #555
+}
 
 
 .planification-body {
