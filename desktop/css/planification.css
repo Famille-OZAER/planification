@@ -121,14 +121,14 @@ top:0px;
   top: -10px!important;
 }
 
-.programmation_collapsible.active:after {
+.planification_collapsible.active:after {
 
   border-color: transparent transparent #C3C3C3 transparent!important;
   top: -7px!important;
 }
 
 
-.programmation_collapsible:after {
+.planification_collapsible:after {
   cursor: pointer;
   position: relative!important;
   content: ""!important;

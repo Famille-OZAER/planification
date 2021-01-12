@@ -87,13 +87,14 @@ $('.ajouter_eqlogic').on('click', function () {
 $('#div_planifications').off('click','.select-selected').on('click','.select-selected',  function (e) {
 	/* When the select box is clicked, close any other select boxes,
 	and open/close the current select box: */
+	modifyWithoutSave = true;
 	e.stopPropagation();
 	closeAllSelect(this);
 	this.nextSibling.classList.toggle("select-hide");
 	this.classList.toggle("select-arrow-active");
 });
 $('#div_planifications').off('click','.select-items div').on('click','.select-items div',  function () {
-	
+	modifyWithoutSave = true;
 	select = this.parentNode.previousSibling;
 	select.innerHTML = this.innerHTML;
 	select.classList.remove(recup_class_couleur(select.classList))
@@ -111,13 +112,14 @@ $('#div_planifications').off('click','.select-items div').on('click','.select-it
 $('#table_cmd_planification').off('click','.select-selected').on('click','.select-selected',  function (e) {
 	/* When the select box is clicked, close any other select boxes,
 	and open/close the current select box: */
+	modifyWithoutSave = true;
 	e.stopPropagation();
 	closeAllSelect(this);
 	this.nextSibling.classList.toggle("select-hide");
 	this.classList.toggle("select-arrow-active");
 });
 $('#table_cmd_planification').off('click','.select-items div').on('click','.select-items div',  function () {
-	
+	modifyWithoutSave = true;
 	select = this.parentNode.previousSibling;
 	select.innerHTML = this.innerHTML;
 	select.classList.remove(recup_class_couleur(select.classList))
@@ -194,6 +196,7 @@ $('#bt_ajouter_planification').off('click').on('click', function () {
         },
         callback: function (resultat) {
             if (resultat!== null && resultat != '') {
+				modifyWithoutSave = true;
                Ajoutplanification({nom: resultat})
             }
         }
@@ -216,6 +219,7 @@ $("#div_planifications").off('click','.bt_supprimer_planification').on('click', 
         },
         callback: function (result) {
             if (result === true) {
+				modifyWithoutSave = true;
                 Ce_progamme.remove()
             }
         }
@@ -232,6 +236,7 @@ $('#div_planifications').off('click','.bt_dupliquer_planification').on('click','
         },
         callback: function (resultat) {
             if (resultat!== null && resultat != '') {
+				modifyWithoutSave = true;
 				var random = Math.floor((Math.random() * 1000000) + 1)
 				planification.find('a[data-toggle=collapse]').attr('href', '#collapse' + random)
 				planification.find('.panel-collapse.collapse').attr('id', 'collapse' + random)
@@ -276,6 +281,7 @@ $('#div_planifications').off('click','.bt_renommer_planification').on('click','.
         },
         callback: function (resultat) {
             if (resultat !== null && resultat != '') {
+				modifyWithoutSave = true;
                el.closest('.panel.panel-default').find('span.nom_planification').text(resultat)
             }
         }
@@ -285,11 +291,13 @@ $('#div_planifications').off('click','.bt_renommer_planification').on('click','.
 								   
 $("body").off('click', '.bt_supprimer_perdiode').on( 'click', '.bt_supprimer_perdiode',function () {
     Divjour = $(this).closest('.JourSemaine')
-    $(this).closest('.Periode_jour').remove()
+	$(this).closest('.Periode_jour').remove()
+	modifyWithoutSave = true;
     MAJ_Graphique_jour(Divjour)
 });
 
 $('body').off('click','.bt_ajout_periode').on('click','.bt_ajout_periode',  function () {
+	modifyWithoutSave = true;
 	$(this).closest("th").find(".collapsible")[0].classList.add("active")
 	$(this).closest("th").find(".collapsible")[0].classList.add("cursor")
 	$(this).closest("th").find(".collapsible")[0].classList.remove("no-arrow")
@@ -332,7 +340,7 @@ $('body').off('click','.bt_copier_jour').on('click','.bt_copier_jour',  function
 
 $('body').off('click','.bt_coller_jour').on('click','.bt_coller_jour',  function () {
 	if (JSONCLIPBOARD == null) return
-	
+	modifyWithoutSave = true;
 	Divjour = $(this).closest('th').find('.JourSemaine')
 	Divjour.find('.Periode_jour').each(function  () {
         $(this).remove()
@@ -357,6 +365,7 @@ $('body').off('click','.bt_coller_jour').on('click','.bt_coller_jour',  function
 	MAJ_Graphique_jour(Divjour)
 })
 $('body').off('click','.bt_vider_jour').on('click','.bt_vider_jour',  function () {
+	modifyWithoutSave = true;
 	$(this).closest("th").find(".collapsible")[0].classList.remove("active")
 	$(this).closest("th").find(".collapsible")[0].classList.remove("cursor")
 	$(this).closest("th").find(".collapsible")[0].classList.add("no-arrow")
@@ -422,7 +431,7 @@ $('body').off('click','.planification_collapsible').on('click','.planification_c
 })
 
 function Ajoutplanification(_planification) {
-
+	modifyWithoutSave = true;
 	if (init(_planification.nom) == '') return
 	if (init(_planification.Id) == '') {_planification.Id=uniqId();}
 	var random = Math.floor((Math.random() * 1000000) + 1)
@@ -498,6 +507,7 @@ function Ajoutplanification(_planification) {
 }
 
 function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null){
+	modifyWithoutSave = true;
 	Periode_jours = $(Div_jour).find('.Periode_jour')
 	prochain_debut="00:00"
     if (Periode_jours.length > 0){
@@ -781,6 +791,7 @@ $("body").delegate(".listCmdEtatBoost", 'click', function () {
 });
 
 $("body").delegate('.bt_Suppression_commande_planification', 'click', function() {
+
 	var progs = [];
 
 	var cmd_id=$(this).closest('div tr').getValues('.expressionAttr')[0]['Id']
@@ -816,11 +827,13 @@ $("body").delegate('.bt_Suppression_commande_planification', 'click', function()
 			},
 			callback: function (result) {
 				if(result){
+					modifyWithoutSave = true;
 					div.remove();
 				}
 			}
 		});
 	}else{
+		modifyWithoutSave = true;
 		$(this).closest('div tr').remove();
 	}
 })
