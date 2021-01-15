@@ -8,6 +8,7 @@ class planification extends eqLogic {
 	public function Set_widget_cache($_id,$_page){
 		$eqLogic=eqLogic::byId($_id);
 		$eqLogic->setCache('Page', $_page);
+		//$eqLogic->setCache('timestamp', strtotime("now"));
 	}
   	public function Recup_planifications(){
 		$eqLogic=$this;
@@ -117,7 +118,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			$prochain_cron=time();
 		}else{
 			$maintenant=time();
-			if(date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp()>$maintenant+59){
+			if(date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp()+59>$maintenant){
 				planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
 				planification::add_log($eqLogic,"debug","arrêt du pull date execution suppérieure à maintenant : " .date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp() . '>' . $maintenant);
 				return;
@@ -127,31 +128,8 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		
 		planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
 		$commande_en_cours="";
-		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
-		/*$action_en_cours=$eqLogic->Recup_action_actuelle();
-  		try {
-			if (!isset($action_en_cours['cmd'])){return;}
-			$cmd =$action_en_cours['cmd'];
-			$options = array();
-			$options = $action_en_cours['options'];
-			if (is_numeric (trim($cmd, "#"))){
-				$cmd=cmd::byId(trim($cmd, "#"));
-				if(is_object($cmd)){
-					$eqLogic_cmd=eqLogic::byId($cmd->getEqLogic_id()) ;
-					planification::add_log($eqLogic,"debug",'execution action: #[' . $eqLogic_cmd->getObject()->getName()."][".$eqLogic_cmd->getName()."][".$cmd->getName()."]#");
-					$cmd->execCmd();
-				}
-			}else{
-				$options_str="";
-				if ($cmd=="variable"){$options_str=$options["name"] . "=>" .$options["value"];}
-				planification::add_log($eqLogic,"debug",'execution action: ' . $cmd . ":" .$options_str);
-					
-				scenarioExpression::createAndExec('action', $cmd, $options);
-			}
-		}catch (Exception $e) {
-			planification::add_log($eqLogic,"error",'Erreur lors de l\'éxecution de ' . $cmd['cmd'] .'. Détails : '. $e->getMessage());
-		}*/
 		$eqLogic->Execute_action_actuelle();
+		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
 		if ($cmd_mode->execCmd()=="auto"){
 			$eqLogic->set_cron();
 		}else{
@@ -395,14 +373,14 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 					
 				}
 				if($trouve){
-					planification::add_log($eqLogic,"debug","trouvé");
+					//planification::add_log($eqLogic,"debug","trouvé");
 					
 					if(is_object($cmd_action_en_cours)){
-						planification::add_log($eqLogic,"debug","action en cours ok");
-						planification::add_log($eqLogic,"debug",$action_en_cours ."|". $action['nom']);
+						//planification::add_log($eqLogic,"debug","action en cours ok");
+						//planification::add_log($eqLogic,"debug",$action_en_cours ."|". $action['nom']);
 						if ($action_en_cours != $action['nom']){
 
-							planification::add_log($eqLogic,"debug","action_actuelle:".$action["nom"]);
+							//planification::add_log($eqLogic,"debug","action_actuelle:".$action["nom"]);
 							try {
 						
 								$cmd =$action['cmd'];
@@ -430,7 +408,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 						}
 						$cmd_action_en_cours->event($action["nom"]);
 					}
-					planification::add_log($eqLogic,"debug","Fin de la fonction");
+					//planification::add_log($eqLogic,"debug","Fin de la fonction");
 					return;
 				}		
 				$numBoucle+=1;

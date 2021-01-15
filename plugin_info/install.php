@@ -31,16 +31,13 @@ function planification_update() {
 	
 	
 	//resave eqs for new cmd:
-	try
-	{
+	try{
 		$eqs = eqLogic::byType('planification');
-		foreach ($eqs as $eq)
-		{
+		foreach ($eqs as $eq){
 			$eq->save();
 		}
 	}
-	catch (Exception $e)
-	{
+	catch (Exception $e){
 		$e = print_r($e, 1);
 		log::add('planification', 'error', 'planification_update ERREUR: '.$e);
 	}
@@ -49,7 +46,10 @@ function planification_update() {
 
 
 function planification_remove() {
-
+	$cron = cron::byClassAndFunction('planification', 'pull');
+	if (is_object($cron)) {
+		$cron->remove();
+	}
 }
 
 ?>

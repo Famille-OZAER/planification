@@ -140,42 +140,47 @@
                         </div>
                     </div>
                     <script>
-					
-						$.include(['plugins/planification/core/template/dashboard/jquery.kontrol.js'], function () {
-						$(".eqLogic[data-eqLogic_uid=#uid#] .cmd[data-cmd_id=#set_consigne_temperature_id#] .dial").dial({
-							bgColor: "#3498db",
-							fgColor: '#FFFFFF',
-							noScroll: true,
-							draw: function() {
-								//$(this.i).css('font-weight', 'normal').css('font-size', '14pt');
-								//$(this.i).css('background', 'transparent!important');
-							},
-							release: function (temp) {
-								jeedom.cmd.execute({id: '#set_consigne_temperature_id#', value: {slider: temp}});
-							}
-						})
-						$(".eqLogic[data-eqLogic_uid=#uid#] .cmd[data-cmd_id=#set_consigne_temperature_id#] .dial").css('background', 'transparent!important');
-						if (parseInt('#consigne_temperature#') > 21) {
-							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-chaud"></"></i>');
-							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'red');
-						} else if (parseInt('#consigne_temperature#') > 18) {
-							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-moyen"></i>');
-							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'orange');
-						} else if (parseInt('#consigne_temperature#') > 16) {
-							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-froid"></i>');
-							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'green');
-						} else {
-							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-froid"></i>');
-							$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'blue');
-						}
 						
-					});
+						$.include(['plugins/planification/core/template/dashboard/jquery.kontrol.js'], function () {
+							$(".eqLogic[data-eqLogic_uid=#uid#] .cmd[data-cmd_id=#set_consigne_temperature_id#] .dial").dial({
+								bgColor: "#3498db",
+								fgColor: '#FFFFFF',
+								noScroll: true,
+								draw: function() {
+									//$(this.i).css('font-weight', 'normal').css('font-size', '14pt');
+									//$(this.i).css('background', 'transparent!important');
+								},
+								release: function (temp) {
+									jeedom.cmd.execute({id: '#set_consigne_temperature_id#', value: {slider: temp}});
+								}
+							})
+							$(".eqLogic[data-eqLogic_uid=#uid#] .cmd[data-cmd_id=#set_consigne_temperature_id#] .dial").css('background', 'transparent!important');
+							if (parseInt('#consigne_temperature#') > 21) {
+								$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-chaud"></"></i>');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'red');
+							} else if (parseInt('#consigne_temperature#') > 18) {
+								$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-moyen"></i>');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'orange');
+							} else if (parseInt('#consigne_temperature#') > 16) {
+								$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-froid"></i>');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'green');
+							} else {
+								$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').append('<i class="icon jeedom-thermo-froid"></i>');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .iconCmd#set_consigne_temperature_id#').css('color', 'blue');
+							}
+						
+						});
+
+
+
+						reset_page()
 						$('.eqLogic[data-eqLogic_uid=#uid#] .changecmd').on('click', function () {
 							$('.eqLogic[data-eqLogic_uid=#uid#] .page_1').toggle();
 							$('.eqLogic[data-eqLogic_uid=#uid#] .page_2').toggle();
 							var page="page1"
 							if ($('.eqLogic[data-eqLogic_uid=#uid#] .page_2').css('display') == 'block'){
 								page="page2"
+								reset_page()
 							}
 							$.ajax({
 								type: "POST",
@@ -195,16 +200,51 @@
 										})
 										return
 									}
+									
 								}
 							})	
 							
 						});
+						
 						$('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').on('change', function() {
 							jeedom.cmd.execute({id: '#set_planification_id#', value: {'select': $(this).value(),Id_planification:$(this)[0].options[$(this)[0].selectedIndex].id}});
-							
-							
 						});
-						
+
+
+
+
+						function reset_page(){
+							if ($('.eqLogic[data-eqLogic_uid=#uid#] .page_2').css('display') == 'block'){
+								setTimeout(function(){ 
+									$.ajax({
+										type: "POST",
+										url: "plugins/planification/core/ajax/planification.ajax.php",
+										data: {
+											action: "Set_widget_cache",
+											id: "#id#",
+											page :"page1",
+										},
+										global: false,
+										error: function (request, status, error) {handleAjaxError(request, status, error)},
+										success: function (data) {
+											if (data.state != 'ok') {
+												$('#div_alert').showAlert({
+													message: data.result,
+													level: 'danger'
+												})
+												return
+											}
+										}
+									})
+									$('.eqLogic[data-eqLogic_uid=#uid#] .page_1').toggle();
+									$('.eqLogic[data-eqLogic_uid=#uid#] .page_2').toggle();	 
+								},3000);
+							}
+						}
+
+
+
+
 						$(function () {
 							$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').datetimepicker({
 								locale: 'fr',
