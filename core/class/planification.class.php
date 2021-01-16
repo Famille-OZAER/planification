@@ -104,11 +104,13 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		$eqLogic = self::byId($_option['eqLogic_Id']);
 		$crons = cron::searchClassAndFunction('planification', 'pull');
 		$cron_id="";
+		$next_run=$_option['Prochaine_execution'];
 		foreach ($crons as $cron){
 			if($cron_id=="" ){
 				$options_cron=$cron->getOption();
 				if($options_cron["eqLogic_Id"]== ($_option['eqLogic_Id'])){
 					$cron_id=$cron->getId();
+					
 				}
 			}
 		}
@@ -118,11 +120,12 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			$prochain_cron=time();
 		}else{
 			$maintenant=time();
-			if(date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp()>$maintenant+59){
+		
+			if (date_create_from_format("Y-m-d H:i:s",$next_run)->getTimestamp() - $maintenant>59){
 				planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
-				planification::add_log($eqLogic,"debug","arrêt du pull date execution suppérieure à maintenant : " .date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp() . '>' . $maintenant+59);
+				planification::add_log($eqLogic,"debug","arrêt du pull date execution suppérieure à maintenant : " .date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp() . '>' . $maintenant);
 				return;
-			}
+			}	
 		}
 		
 		
@@ -130,6 +133,11 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 		$commande_en_cours="";
 		$eqLogic->Execute_action_actuelle();
 		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
+		$type_eqLogic=$eqLogic->getConfiguration("type","");
+		if ($type_eqLogic=="PAC" && $cmd_mode->execCmd()=="boost_on"){
+			$cmd_boost_off=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'boost_off');
+			$cmd_boost_off->execute();
+		}
 		if ($cmd_mode->execCmd()=="auto"){
 			$eqLogic->set_cron();
 		}else{
@@ -166,9 +174,12 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 						$cron->setClass('planification');
 						$cron->setFunction('pull');
 					}
-					$cron->setOption(array('eqLogic_Id' => intval($eqLogic->getId()),'eqLogic'=> mb_convert_encoding ($eqLogic->getHumanName(false), 'HTML-ENTITIES', 'UTF-8')));
+					$cron->setOption(array('eqLogic_Id' => intval($eqLogic->getId()),
+					'eqLogic'=> mb_convert_encoding ($eqLogic->getHumanName(false), 'HTML-ENTITIES', 'UTF-8'),
+					'Prochaine_execution'=> date('Y-m-d H:i:s', $prochaine_action['datetime'])
+					));
 					$cron->setLastRun(date('Y-m-d H:i:s'));
-					$cron->setSchedule(date('i', $prochaine_action['datetime']) . ' ' . date('H', $prochaine_action['datetime']) . ' ' . date('d', $prochaine_action['datetime']) . ' ' . date('m', $prochaine_action['datetime']) . ' * ' . date('Y', $prochaine_action['datetime']));
+					$cron->setSchedule(date('i', $prochaine_action['datetime']) . ' ' . date('H', $prochaine_action['datetime']) . ' ' . date('d', $prochaine_action['datetime']) . ' ' . date('m', $prochaine_action['datetime']) . ' *');
 					$cron->save();
 				} else {
 					$cmd_action_suivante = $eqLogic->getCmd(null, "action_suivante");
@@ -205,10 +216,13 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 								$cron->setClass('planification');
 								$cron->setFunction('pull');
 							}
-							$cron->setOption(array('eqLogic_Id' => intval($eqLogic->getId()),'eqLogic'=> mb_convert_encoding ($eqLogic->getHumanName(false), 'HTML-ENTITIES', 'UTF-8')));
+							$cron->setOption(array('eqLogic_Id' => intval($eqLogic->getId()),
+							'eqLogic'=> mb_convert_encoding ($eqLogic->getHumanName(false), 'HTML-ENTITIES', 'UTF-8'),
+							'Prochaine_execution'=> $datetime->format('Y-m-d H:i:s')
+						));
 							$cron->setLastRun(date('Y-m-d H:i:s'));
 							planification::add_log($eqLogic,"debug","Mode: " . $mode ." Replanification le " . $date ." => Auto");
-							$cron->setSchedule( $datetime->format("i") . ' ' .  $datetime->format("H") . ' ' .  $datetime->format("d") . ' ' . $datetime->format("m") . ' * ' .  $datetime->format("Y"));
+							$cron->setSchedule( $datetime->format("i") . ' ' .  $datetime->format("H") . ' ' .  $datetime->format("d") . ' ' . $datetime->format("m") . ' *');
 							$cron->save();	
 						}				
 					}
@@ -581,6 +595,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			}else{
 				$liste .= ";" .$planification["nom_planification"] ."|" . $planification["nom_planification"];
 			}
+			break;
 		}
 		
 		$cmd_set_planification->setConfiguration("listValue",$liste);
@@ -1049,11 +1064,12 @@ class planificationCmd extends cmd {
 				}
 				break;
 			case 'set_planification':
-		
+				
 				if (isset($_options["select"]) && !isset( $_options["Id_planification"])){
 					$planifications=$eqLogic->Recup_planifications();
 					foreach($planifications as $planification){
-						if($_options["select"]==$planification["nom_planification"]){	
+						if($_options["select"]==$planification["nom_planification"]){
+							planification::add_log($eqLogic,"debug","nom_planification: " . $planification["nom_planification"]);	
 							$_options["Id_planification"]=$planification["Id"];
 							break;
 						}
