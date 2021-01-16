@@ -118,9 +118,9 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			$prochain_cron=time();
 		}else{
 			$maintenant=time();
-			if(date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp()-59>$maintenant){
+			if(date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp()>$maintenant+59){
 				planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
-				planification::add_log($eqLogic,"debug","arrêt du pull date execution suppérieure à maintenant : " .date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp() . '>' . $maintenant);
+				planification::add_log($eqLogic,"debug","arrêt du pull date execution suppérieure à maintenant : " .date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp() . '>' . $maintenant+59);
 				return;
 			}
 		}
