@@ -569,6 +569,12 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
         $cmd_set_planification = $eqLogic->getCmd(null, "set_planification");
 		if (!is_object($cmd_set_planification)){return;}
 		$planifications=[];
+
+
+
+
+
+
 		$planifications=$eqLogic::Recup_planifications();
 		$arr=[];
 		switch (count($planifications)) {
@@ -595,14 +601,21 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			}else{
 				$liste .= ";" .$planification["nom_planification"] ."|" . $planification["nom_planification"];
 			}
-			break;
 		}
 		
 		$cmd_set_planification->setConfiguration("listValue",$liste);
 		$cmd_set_planification->save();
-		if(!isset($arr["select"]) && count($planifications)!=0){$arr["select"]=$planifications[0]["nom_planification"];}
-		if(!isset($arr["Id_planification"]) && count($planifications)!=0){$arr["Id_planification"]=$planifications[0]["Id"];}
-		$cmd_set_planification->execute($arr);
+		$set_new_planification=false;
+		if(!isset($arr["select"]) && count($planifications)!=0){
+			$arr["select"]=$planifications[0]["nom_planification"];
+			$set_new_planification=true;
+		}
+		if(!isset($arr["Id_planification"]) && count($planifications)!=0){
+			$arr["Id_planification"]=$planifications[0]["Id"];
+			$set_new_planification=true;
+		}
+		if($set_new_planification){$cmd_set_planification->execute($arr);}
+		
 
 		$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
 		if (is_object($cmd_refresh)){
@@ -814,24 +827,27 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 				case "climatisation":
 					$imagePAC="PACClimatisation.png";
 				break;
-				case"chauffage";
+				case "chauffage";
 					$imagePAC="PACChauffage.png";
 				break;
-				case"ventilation":
+				case "ventilation":
 					$imagePAC="PACVentilation.png";
 					break;
 				case "arret":
 					$imagePAC="PACArret.png";
 					break;
+				case "boost_on";
 				case "auto";
 					switch (strtolower($action_en_cours)) {
 						case "climatisation":
+						//case "climatisation boost";
 							$imagePAC="PACClimatisation.png";
 						break;
-						case"chauffage";
+						case "chauffage";
+						//case "chauffage boost";
 							$imagePAC="PACChauffage.png";
 						break;
-						case"ventilation":
+						case "ventilation":
 							$imagePAC="PACVentilation.png";
 							break;
 						case "arrêt":
@@ -1054,12 +1070,11 @@ class planificationCmd extends cmd {
 				break;
 			case 'set_planification':
 				
-				if (isset($_options["select"]) && !isset( $_options["Id_planification"])){
+				if (isset($_options["select"]) && isset( $_options["Id_planification"])){
 					$planifications=$eqLogic->Recup_planifications();
 					foreach($planifications as $planification){
 						if($_options["select"]==$planification["nom_planification"]){
 							planification::add_log($eqLogic,"debug","nom_planification: " . $planification["nom_planification"]);	
-							$_options["Id_planification"]=$planification["Id"];
 							break;
 						}
 					}
@@ -1088,7 +1103,7 @@ class planificationCmd extends cmd {
 			case 'boost_on':
 		
 				$eqLogic->checkAndUpdateCmd('boost', 1);
-				$eqLogic->checkAndUpdateCmd('mode_fonctionnement', $cmd->getLogicalId());
+				$eqLogic->checkAndUpdateCmd('mode_fonctionnement', 'boost_on');
 				$cmd_set_heure_fin=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'set_heure_fin');
 				if (is_object($cmd_set_heure_fin)){
 					$cmd_duree_mode_manuel_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'duree_mode_manuel_par_defaut');

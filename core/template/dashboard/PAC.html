@@ -20,30 +20,14 @@
 							<img src="plugins/planification/core/template/dashboard/images/#img_pac#" style="height: 80px;"/> 
 							<span class="cmd cmd-widget" data-cmd_id="#boost_on_id#" style="display:none;"></span>
 							<span class="cmd cmd-widget" data-cmd_id="#boost_off_id#" style="display:none;"></span>
-							<i class="fa fa-fire boost_on cursor tooltips" title="Mettre en mode boost" style="display:none;font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
-							<i class="fa fa-fire boost_off cursor tooltips" title="Arrêter le mode boost" style="display:none;font-size: 1.9em;margin-left: 5px;color:red!important"></i>
-					
-							<script>
-								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').on('click', function () {
-									jeedom.cmd.execute({id: '#boost_on_id#'});
-								});
-								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off').on('click', function () {
-									jeedom.cmd.execute({id: '#boost_off_id#'});
-								});
-								if ('#boost#' == '0' ) {
-									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'inline-block');
-									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off').css('display', 'none');
-								}else{
-									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'none');
-									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off').css('display', 'inline-block');
-									
-								}
-							</script>
+
+							<i class="fa fa-fire boost_on cursor tooltips" title="Mettre en mode boost" style="display:none;font-size: 1.9em;margin-left: 5px;color:white!important"></i>
+							<i class="fa fa-fire boost_off_chauffage cursor tooltips" title="Arrêter le mode boost" style="display:none;font-size: 1.9em;margin-left: 5px;color:red!important"></i>
+							<i class="fa fa-fire boost_off_climatisation cursor tooltips" title="Arrêter le mode boost" style="display:none;font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
+						
 						</center>
 					</div>
 				<div class="page_2" style="display:#display_page_2#;margin : 15px">
-				
-				
 					<span class="cmd cmd-widget" data-cmd_id="#absent_id#" style="display:none;"></span>
 					<span class="cmd cmd-widget" data-cmd_id="#climatisation_id#" style="display:none;"></span>
 					<span class="cmd cmd-widget" data-cmd_id="#auto_id#" style="display:none;"></span>
@@ -85,16 +69,53 @@
 						$('.eqLogic[data-eqLogic_uid=#uid#] .ventilation').on('click', function () {
 							jeedom.cmd.execute({id: '#ventilation_id#'});
 						});
+						$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').on('click', function () {
+							jeedom.cmd.execute({id: '#boost_on_id#'});
+						});
+						$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_chauffage').on('click', function () {
+							jeedom.cmd.execute({id: '#boost_off_id#'});
+						});
+						$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_climatisation').on('click', function () {
+							jeedom.cmd.execute({id: '#boost_off_id#'});
+						});
+
+
+						/*if ('#boost#' == '0' ) {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'inline-block');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_climatisation').css('display', 'none');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_chauffage').css('display', 'none');
+						}else{
+							$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'none');
+							$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off').css('display', 'inline-block');
+							
+						}*/
+
+
 						if ('#mode_fonctionnement#' == 'auto') {
 							$('.eqLogic[data-eqLogic_uid=#uid#] .auto').css('color', 'white');
-							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours#');
+							
+							if ('#boost#' == '1' ) {
+								if ('#action_en_cours#' == "Chauffage"){
+									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_chauffage').css('display', 'inline-block');
+								}else if ('#action_en_cours#' == "Climatisation"){
+									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_climatisation').css('display', 'inline-block');
+								}
+								$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours# Boost');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'none');
+							}else{
+								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'inline-block');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours#');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'inline-block');
+								
+							}
 							$('.eqLogic[data-eqLogic_uid=#uid#] .fleche').append(' <i class="fa fa-arrow-right"></i>');
 							if('#prochaine_action#' == ""){
 								$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append("Nouvel ordre");
 							}else{
 								$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('#prochaine_action#');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .heure_prochaine_action').append('#endtime#');
 							}
-							$('.eqLogic[data-eqLogic_uid=#uid#] .heure_prochaine_action').append('#endtime#');
+							
 							$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').append('#planification_en_cours#');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').css('display', 'block');
 						} else if ('#mode_fonctionnement#' == 'arret') {
@@ -102,15 +123,29 @@
 							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('Arrêt');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').css('display', 'block');
 						} else {
+
+
 							$('.eqLogic[data-eqLogic_uid=#uid#] .#mode_fonctionnement#').css('color', 'white');
-							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#mode_fonctionnement_name# (manuel)');
+							//console.log('#action_en_cours#' )
+							if('#mode_fonctionnement_name#' == "Boost On"){
+								if ('#action_en_cours#' == "Chauffage"){
+									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_chauffage').css('display', 'inline-block');
+								}else if ('#action_en_cours#' == "Climatisation"){
+									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_climatisation').css('display', 'inline-block');
+								}
+								$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours# Boost (manuel)');
+							}else{
+								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'inline-block');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append(' #mode_fonctionnement_name# (manuel)');
+							}
+							//$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours# #mode_fonctionnement_name# (manuel)');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .fleche').append('<i class="fa fa-arrow-right"></i>');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('Auto');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .heure_prochaine_action').append('#endtime#');
 						}
 					</script>
 				</div>
-			</center>
+				</center>
              
             </div>
 			
@@ -118,13 +153,13 @@
 				<div class="page_2" style="display : #display_page_2#;margin-top : 10px">
 					<br/>
 					<center>
-						<select class="cmd form-control selectCalendar cursor tooltips" style="background-color:'#cmdColor#';width:70%;color:white;border-radius: 10px;" title="Choisir planification">
+						<select class="cmd form-control selectCalendar cursor tooltips" style="background-color:'#cmdColor#';width:70%;color:white!important;border-radius: 10px;" title="Choisir planification">
 								#calendar_selector#
 						</select>
 						<!--</br>-->
 					<div class='cmd input-group date datetimepicker'>
 						<span class="input-group-addon cursor tooltips" style="background-color:'#cmdColor#';width:70%;border-radius: 10px;" title="Choisir Fin">
-							<span class="fa fa-calendar" style="color:white"></span>
+							<span class="fa fa-calendar" style="color:white!important"></span>
 						</span>
 					</div>
 					</center>
@@ -133,9 +168,9 @@
                     <span class="pull-left iconCmd#set_consigne_temperature_id#" style="position : relative;font-size: 6em;height:100px;"></span>
                     <div>
                         <div style="margin-top : 20px;" >
-                            <input type="text" class="dial #consigne_history# tooltips noRefresh" style="background-color: transparent !important; width: 59px; height: 36px; position: absolute; vertical-align: middle; margin-top: 36px; margin-left: -84px; font: bold 27px Arial; text-align: center; color: rgb(255, 255, 255);  appearance: none;" data-cmd_id="#consigne_temperature_id#" value="#consigne_temperature#" data-min="#set_consigne_temperature_min#" data-max="#set_consigne_temperature_max#" data-step="1" data-width="110" data-height="110"  title="Consigne température" />
+                            <input type="text" class="dial #consigne_history# tooltips noRefresh" style="background-color: transparent !important; width: 59px; height: 36px; position: absolute; vertical-align: middle; margin-top: 36px; margin-left: -84px; font: bold 27px Arial; text-align: center; color: rgb(255, 255, 255)!important;  appearance: none;" data-cmd_id="#consigne_temperature_id#" value="#consigne_temperature#" data-min="#set_consigne_temperature_min#" data-max="#set_consigne_temperature_max#" data-step="1" data-width="110" data-height="110"  title="Consigne température" />
 						</div>
-                        <div style="cursor : default;position: relative; top: -70px; left : 105px;color: rgb(255, 255, 255);">
+                        <div style="cursor : default;position: relative; top: -70px; left : 105px;color: rgb(255, 255, 255)!important;">
                             °C
                         </div>
                     </div>
@@ -242,9 +277,6 @@
 							}
 						}
 
-
-
-
 						$(function () {
 							$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').datetimepicker({
 								locale: 'fr',
@@ -260,12 +292,12 @@
             </div>
            <div class="col-xs-12 page_1"style="display : #display_page_1#">
 				<center>
-				<span class="action_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white"  title="Action en cours"></span>
-				<span class="fleche" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white"></span>
-				<span class="prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white"  title="Prochaine action"></span>
-				<span class="heure_prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white"  title="Heure prochaine action"></span>
+				<span class="action_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white!important"  title="Action en cours"></span>
+				<span class="fleche" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white!important"></span>
+				<span class="prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white!important"  title="Prochaine action"></span>
+				<span class="heure_prochaine_action tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white!important"  title="Heure prochaine action"></span>
 				<div>
-					<span class="planification_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white"  title="planification en cours"></span>
+					<span class="planification_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white!important"  title="planification en cours"></span>
 				</div>
 					
 			

@@ -64,8 +64,9 @@
 								$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append("Nouvel ordre");
 							}else{
 								$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('#prochaine_action#');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .heure_prochaine_action').append('#endtime#');
 							}
-							$('.eqLogic[data-eqLogic_uid=#uid#] .heure_prochaine_action').append('#endtime#');
+							
 							$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').append('#planification_en_cours#');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').css('display', 'block');
 						} else if ('#mode_fonctionnement#' == 'arret') {
