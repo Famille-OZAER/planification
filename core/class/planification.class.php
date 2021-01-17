@@ -548,7 +548,7 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			$eqLogic->Ajout_Commande('boost','Boost','info','binary',null,null,0);
 			$eqLogic->Ajout_Commande('boost_on','Boost On','action','other');
 			$eqLogic->Ajout_Commande('boost_off','Boost Off','action','other');
-			$eqLogic->Ajout_Commande('mode_PAC','Mode_PAC','info','string');
+			//$eqLogic->Ajout_Commande('mode_PAC','Mode_PAC','info','string');
 		}
 	
 		if ($eqLogic->getConfiguration('type','') == 'chauffage'){
@@ -797,14 +797,14 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 			if (is_object($cmd_action_en_cours)){
 				$action_en_cours=$cmd_action_en_cours->execCmd();
 			}
-			if($action_en_cours== "Allumé"){
-				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'mode_PAC'),"value");
-				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
-			}else{
+			//if($action_en_cours== "Allumé"){
+			//	$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'mode_PAC'),"value");
+			//	$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
+			//}else{
 				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
 				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
 
-			}
+			//}
 			$imagePAC="PACArret.png";
 			$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
 			if (is_object($cmd_Mode_fonctionnement)){
@@ -824,31 +824,20 @@ static function add_log($_eqLogic,$level = 'debug',$Log){
 					$imagePAC="PACArret.png";
 					break;
 				case "auto";
-					
-					if($action_en_cours== "Allumé"){
-						$cmd_mode_PAC=$eqLogic->getCmd(null, 'mode_PAC');
-						if (is_object($cmd_mode_PAC)){
-							$mode_PAC=$cmd_mode_PAC->execCmd();
-							switch (strtolower($mode_PAC)) {
-								case "climatisation":
-									$imagePAC="PACClimatisation.png";
-								break;
-								case"chauffage";
-									$imagePAC="PACChauffage.png";
-								break;
-								case"ventilation":
-									$imagePAC="PACVentilation.png";
-									break;
-								case "arrêt":
-									$imagePAC="PACArret.png";
-									break;
-							}
-
-						}
-					}else{
-						$imagePAC="PACArret.png";
+					switch (strtolower($action_en_cours)) {
+						case "climatisation":
+							$imagePAC="PACClimatisation.png";
+						break;
+						case"chauffage";
+							$imagePAC="PACChauffage.png";
+						break;
+						case"ventilation":
+							$imagePAC="PACVentilation.png";
+							break;
+						case "arrêt":
+							$imagePAC="PACArret.png";
+							break;
 					}
-					
 				break;
 			}
 
