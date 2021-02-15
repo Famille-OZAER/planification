@@ -814,295 +814,300 @@ class planification extends eqLogic {
 	}
 		
 	function toHtml($_version = 'dashboard') {
-		$eqLogic=$this;
-		$replace = $eqLogic->preToHtml($_version);
-		if (!is_array($replace)) {
-			return $replace;
-		}
-		$version = jeedom::versionAlias($_version);
-		if ($eqLogic->getDisplay('hideOn' . $version) == 1) {
-			return '';
-		}
-		$erreur=false;
-		$liste_erreur=[];
-
-		
-		$commande = $eqLogic->getCmd(null, 'planification_en_cours');
-		//$planification_en_cours=$commande->execCmd();
-		if (is_object($commande)){
-			$liste_planifications = $eqLogic::Recup_planifications();
-			$Id_planification_en_cours=$eqLogic->getConfiguration("Id_planification_en_cours","");
+		try {
+			$eqLogic=$this;
+			$replace = $eqLogic->preToHtml($_version);
+			if (!is_array($replace)) {
+				return $replace;
+			}
+			$version = jeedom::versionAlias($_version);
+			if ($eqLogic->getDisplay('hideOn' . $version) == 1) {
+				return '';
+			}
+			$erreur=false;
+			$liste_erreur=[];
 
 			
-			foreach($liste_planifications as $planification){
-
-				if($planification["Id"]==$Id_planification_en_cours){
-					$valuecalendar = '"'.$planification["nom_planification"]. '" selected';
-				}else{
-					$valuecalendar = '"'.$planification["nom_planification"].'"';
-				}
-				if (!isset($replace['#calendar_selector#'])) {
-					$replace['#calendar_selector#'] = '<option id=' .$planification["Id"]. ' value=' .$valuecalendar . '>' . $planification["nom_planification"] . '</option>';
-				} else {
-					$replace['#calendar_selector#'] .= '<option id=' .$planification["Id"]. ' value=' . $valuecalendar . '>' . $planification["nom_planification"]. '</option>';
-				}
-			}
-		}
-
-		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement#',$eqLogic->getCmd(null, 'mode_fonctionnement'),"value");
-		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement_name#',$eqLogic->getCmd(null, 'mode_fonctionnement'),'name');
-		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#refresh_id#',$eqLogic->getCmd(null, 'refresh'),"id");
-		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#auto_id#',$eqLogic->getCmd(null, 'auto'),"id");
-		
-		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#endtime_change_id#',$eqLogic->getCmd(null, 'set_heure_fin'),"id");
-		//$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#endtime#',$eqLogic->getCmd(null, 'heure_fin'),"value");
-
-
-		$cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
-		if(is_object($cmd_heure_fin)){
-			$heure_fin=strtotime($cmd_heure_fin->execCmd());
-			$maintenant=strtotime("now");
-			$jour_fin=date('d',$heure_fin);
-			$mois_fin=date('m',$heure_fin);
-			$année_fin=date('Y',$heure_fin);
-			$jour_maintenant=date('d',$maintenant);
-			$mois_maintenant=date('m',$maintenant);
-			$année_maintenant=date('Y',$maintenant);
-			if($jour_fin==$jour_maintenant && $mois_fin==$mois_maintenant && $année_fin==$année_maintenant){
-				$replace['#endtime#'] =date('H:i',$heure_fin);
-			}else{
-				$replace['#endtime#'] =date('d-m-Y H:i',$heure_fin);
-			}
-		}
-		
-		
-
-
-
-		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$eqLogic->getCmd(null, 'set_planification'),"id");
-		$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$eqLogic->getCmd(null, 'planification_en_cours'),"value");
-       
-		
-		$page_active=$eqLogic->getCache('Page');
-		if($page_active =="" || $page_active=="page1"){
-			$replace['#display_page_1#']="block";
-			$replace['#display_page_2#']="none";
-		}else{
-			$replace['#display_page_1#']="none";
-			$replace['#display_page_2#']="block";
-		}
-
-		if ($eqLogic->getConfiguration("type","")== "Poele"){
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$eqLogic->getCmd(null, 'arret'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$eqLogic->getCmd(null, 'consigne_temperature'),"value");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$eqLogic->getCmd(null, 'consigne_temperature'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$eqLogic->getCmd(null, 'absent'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$eqLogic->getCmd(null, 'force'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"min");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"max");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
-			$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('temperature_id',"")));
-			
-			if (is_object($cmd_temperature)){
-				$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
-				$replace['#temperature_id#'] = $cmd_temperature->getId();
-			}else{
-				$replace['#temperature#'] = "";
-				$replace['#temperature_id#']="";
-			}
-
-			$imagePoele="PoeleOff.png";
-			$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_allume_id',"")));
-			if (is_object($cmd_Etat_Allume)){
-				if($cmd_Etat_Allume->execCmd())
-				{
-					$imagePoele="PoeleOn.png";
-					$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_boost_id',"")));
-					if (is_object($cmd_Etat_Boost)){
-						if($cmd_Etat_Boost->execCmd())
-						{
-							$imagePoele="PoeleOnBoost.png";
-						}
-					}
-				}
-			}
-			$replace['#img_poele#'] = $imagePoele;
-			if ($erreur){
-				$replace['#display_erreur#'] ="block";
-			}else{
-				$replace['#display_erreur#'] ="none";
-			}	
-			$html = template_replace($replace, getTemplate('core', $version, 'poele', 'planification'));
-		}
-		
-		if ($eqLogic->getConfiguration("type","")== "PAC"){
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$eqLogic->getCmd(null, 'arret'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$eqLogic->getCmd(null, 'consigne_temperature'),"value");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$eqLogic->getCmd(null, 'consigne_temperature'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost_on_id#',$eqLogic->getCmd(null, 'boost_on'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost_off_id#',$eqLogic->getCmd(null, 'boost_off'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost#',$eqLogic->getCmd(null, 'boost'),"value");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$eqLogic->getCmd(null, 'absent'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#climatisation_id#',$eqLogic->getCmd(null, 'climatisation'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#ventilation_id#',$eqLogic->getCmd(null, 'ventilation'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$eqLogic->getCmd(null, 'chauffage'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"min");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"max");
-			$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('temperature_id',"")));
-			if (is_object($cmd_temperature)){
-				$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
-				$replace['#temperature_id#'] = $cmd_temperature->getId();
-			}else{
-				$replace['#temperature#'] = "";
-				$replace['#temperature_id#']="";
-			}
-
-			
-			$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
-			if (is_object($cmd_action_en_cours)){
-				$action_en_cours=$cmd_action_en_cours->execCmd();
-			}
-			//if($action_en_cours== "Allumé"){
-			//	$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'mode_PAC'),"value");
-			//	$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
-			//}else{
-				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
-				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
-
-			//}
-			$imagePAC="PACArret.png";
-			$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
-			if (is_object($cmd_Mode_fonctionnement)){
-				$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
-			}
-			switch (strtolower($Mode_fonctionnement)) {
-				case "climatisation":
-					$imagePAC="PACClimatisation.png";
-				break;
-				case "chauffage";
-					$imagePAC="PACChauffage.png";
-				break;
-				case "ventilation":
-					$imagePAC="PACVentilation.png";
-					break;
-				case "arret":
-					$imagePAC="PACArret.png";
-					break;
-				case "boost_on";
-				case "auto";
-					switch (strtolower($action_en_cours)) {
-						case "climatisation":
-						//case "climatisation boost";
-							$imagePAC="PACClimatisation.png";
-						break;
-						case "chauffage";
-						//case "chauffage boost";
-							$imagePAC="PACChauffage.png";
-						break;
-						case "ventilation":
-							$imagePAC="PACVentilation.png";
-							break;
-						case "arrêt":
-							$imagePAC="PACArret.png";
-							break;
-					}
-				break;
-			}
+			$commande = $eqLogic->getCmd(null, 'planification_en_cours');
+			//$planification_en_cours=$commande->execCmd();
+			if (is_object($commande)){
+				$liste_planifications = $eqLogic::Recup_planifications();
+				$Id_planification_en_cours=$eqLogic->getConfiguration("Id_planification_en_cours","");
 
 				
-			
-			$replace['#img_pac#'] = $imagePAC;
-			if ($erreur){
-				$replace['#display_erreur#'] ="block";
-			}else{
-				$replace['#display_erreur#'] ="none";
-			}	
-			$html = template_replace($replace, getTemplate('core', $version, 'PAC', 'planification'));
-		}
-		if ($eqLogic->getConfiguration("type","")== "Volet"){
-			$CMD_LIST=$eqLogic::Recup_liste_commandes_planification($eqLogic->getId());
-			foreach ($CMD_LIST as $CMD) {
-				switch (strtolower($CMD["nom"])) {
-					case 'monter':
-					case 'lever':
-					case 'ouvrir':
-					case 'ouvert':
-					case 'ouverture':
-						if (is_numeric(str_replace ("#" ,"" ,  $CMD["cmd"]))){
-							$replace['#ouvrir_id#'] =str_replace ("#" ,"" ,  $CMD["cmd"]);
-						}						
-						break;
-					case 'descendre':
-					case 'fermer':
-					case 'fermeture':
-					case 'fermé':
-						if (is_numeric(str_replace ("#" ,"" ,  $CMD["cmd"]))){
-							$replace['#fermer_id#'] =str_replace ("#" ,"" ,  $CMD["cmd"]);
-						}
-						break;
-					case 'stop my':
-					case 'stop':
-					case 'my':
-						if (is_numeric(str_replace ("#" ,"" ,  $CMD["cmd"]))){
-							$replace['#my_id#'] =str_replace ("#" ,"" ,  $CMD["cmd"]);
-						}
-						break;
-					
+				foreach($liste_planifications as $planification){
+
+					if($planification["Id"]==$Id_planification_en_cours){
+						$valuecalendar = '"'.$planification["nom_planification"]. '" selected';
+					}else{
+						$valuecalendar = '"'.$planification["nom_planification"].'"';
+					}
+					if (!isset($replace['#calendar_selector#'])) {
+						$replace['#calendar_selector#'] = '<option id=' .$planification["Id"]. ' value=' .$valuecalendar . '>' . $planification["nom_planification"] . '</option>';
+					} else {
+						$replace['#calendar_selector#'] .= '<option id=' .$planification["Id"]. ' value=' . $valuecalendar . '>' . $planification["nom_planification"]. '</option>';
+					}
 				}
 			}
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_action_en_cours_id#',$eqLogic->getCmd(null, 'set_action_en_cours'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#manuel_id#',$eqLogic->getCmd(null, 'manuel'),"id");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
-			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
-			$imageVolet="Volet-100.png";
-			$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
-			if (is_object($cmd_Mode_fonctionnement)){
 
-				$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
-				//planification::add_log($eqLogic,"debug","mode de fonctionnement" . $Mode_fonctionnement);
-				$replace['#img_auto_manu#'] = ucfirst($Mode_fonctionnement);
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement#',$eqLogic->getCmd(null, 'mode_fonctionnement'),"value");
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#mode_fonctionnement_name#',$eqLogic->getCmd(null, 'mode_fonctionnement'),'name');
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#refresh_id#',$eqLogic->getCmd(null, 'refresh'),"id");
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#auto_id#',$eqLogic->getCmd(null, 'auto'),"id");
+			
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#endtime_change_id#',$eqLogic->getCmd(null, 'set_heure_fin'),"id");
+			//$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#endtime#',$eqLogic->getCmd(null, 'heure_fin'),"value");
+
+
+			$cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
+			if(is_object($cmd_heure_fin)){
+				$heure_fin=strtotime($cmd_heure_fin->execCmd());
+				$maintenant=strtotime("now");
+				$jour_fin=date('d',$heure_fin);
+				$mois_fin=date('m',$heure_fin);
+				$année_fin=date('Y',$heure_fin);
+				$jour_maintenant=date('d',$maintenant);
+				$mois_maintenant=date('m',$maintenant);
+				$année_maintenant=date('Y',$maintenant);
+				if($jour_fin==$jour_maintenant && $mois_fin==$mois_maintenant && $année_fin==$année_maintenant){
+					$replace['#endtime#'] =date('H:i',$heure_fin);
+				}else{
+					$replace['#endtime#'] =date('d-m-Y H:i',$heure_fin);
+				}
+			}
+			
+			
+
+
+
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$eqLogic->getCmd(null, 'set_planification'),"id");
+			$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$eqLogic->getCmd(null, 'planification_en_cours'),"value");
+		
+			
+			$page_active=$eqLogic->getCache('Page');
+			if($page_active =="" || $page_active=="page1"){
+				$replace['#display_page_1#']="block";
+				$replace['#display_page_2#']="none";
+			}else{
+				$replace['#display_page_1#']="none";
+				$replace['#display_page_2#']="block";
+			}
+
+			if ($eqLogic->getConfiguration("type","")== "Poele"){
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$eqLogic->getCmd(null, 'arret'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$eqLogic->getCmd(null, 'consigne_temperature'),"value");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$eqLogic->getCmd(null, 'consigne_temperature'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$eqLogic->getCmd(null, 'absent'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$eqLogic->getCmd(null, 'force'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"min");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"max");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
+				$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('temperature_id',"")));
+				
+				if (is_object($cmd_temperature)){
+					$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
+					$replace['#temperature_id#'] = $cmd_temperature->getId();
+				}else{
+					$replace['#temperature#'] = "";
+					$replace['#temperature_id#']="";
+				}
+
+				$imagePoele="PoeleOff.png";
+				$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_allume_id',"")));
+				if (is_object($cmd_Etat_Allume)){
+					if($cmd_Etat_Allume->execCmd())
+					{
+						$imagePoele="PoeleOn.png";
+						$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_boost_id',"")));
+						if (is_object($cmd_Etat_Boost)){
+							if($cmd_Etat_Boost->execCmd())
+							{
+								$imagePoele="PoeleOnBoost.png";
+							}
+						}
+					}
+				}
+				$replace['#img_poele#'] = $imagePoele;
+				if ($erreur){
+					$replace['#display_erreur#'] ="block";
+				}else{
+					$replace['#display_erreur#'] ="none";
+				}	
+				$html = template_replace($replace, getTemplate('core', $version, 'poele', 'planification'));
+			}
+			
+			if ($eqLogic->getConfiguration("type","")== "PAC"){
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$eqLogic->getCmd(null, 'arret'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature#',$eqLogic->getCmd(null, 'consigne_temperature'),"value");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne_temperature_id#',$eqLogic->getCmd(null, 'consigne_temperature'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost_on_id#',$eqLogic->getCmd(null, 'boost_on'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost_off_id#',$eqLogic->getCmd(null, 'boost_off'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost#',$eqLogic->getCmd(null, 'boost'),"value");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$eqLogic->getCmd(null, 'absent'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#climatisation_id#',$eqLogic->getCmd(null, 'climatisation'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#ventilation_id#',$eqLogic->getCmd(null, 'ventilation'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$eqLogic->getCmd(null, 'chauffage'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_id#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_min#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"min");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_consigne_temperature_max#',$eqLogic->getCmd(null, 'set_consigne_temperature'),"max");
+				$cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('temperature_id',"")));
+				if (is_object($cmd_temperature)){
+					$replace['#temperature#'] = $cmd_temperature->execCmd() . " °C";
+					$replace['#temperature_id#'] = $cmd_temperature->getId();
+				}else{
+					$replace['#temperature#'] = "";
+					$replace['#temperature_id#']="";
+				}
+
 				
 				$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
 				if (is_object($cmd_action_en_cours)){
 					$action_en_cours=$cmd_action_en_cours->execCmd();
-					planification::add_log($eqLogic,"debug",'action_en_cours:' . $action_en_cours);
-					switch (strtolower($action_en_cours)) {
-						case "ouvert":
-						case "ouvrir":
-						case "monter":
-							$imageVolet="Volet-100.png";
-							break;
-						case "fermé";
-						case "fermer";
-						case "fermer";
-						case "descendre";
-							$imageVolet="Volet-0.png";
-							break;
-						case "my":
-							$imageVolet="Volet-50.png";
-							break;
+				}
+				//if($action_en_cours== "Allumé"){
+				//	$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'mode_PAC'),"value");
+				//	$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
+				//}else{
+					$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
+					$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
 
+				//}
+				$imagePAC="PACArret.png";
+				$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
+				if (is_object($cmd_Mode_fonctionnement)){
+					$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
+				}
+				switch (strtolower($Mode_fonctionnement)) {
+					case "climatisation":
+						$imagePAC="PACClimatisation.png";
+					break;
+					case "chauffage";
+						$imagePAC="PACChauffage.png";
+					break;
+					case "ventilation":
+						$imagePAC="PACVentilation.png";
+						break;
+					case "arret":
+						$imagePAC="PACArret.png";
+						break;
+					case "boost_on";
+					case "auto";
+						switch (strtolower($action_en_cours)) {
+							case "climatisation":
+							//case "climatisation boost";
+								$imagePAC="PACClimatisation.png";
+							break;
+							case "chauffage";
+							//case "chauffage boost";
+								$imagePAC="PACChauffage.png";
+							break;
+							case "ventilation":
+								$imagePAC="PACVentilation.png";
+								break;
+							case "arrêt":
+								$imagePAC="PACArret.png";
+								break;
+						}
+					break;
+				}
+
+					
+				
+				$replace['#img_pac#'] = $imagePAC;
+				if ($erreur){
+					$replace['#display_erreur#'] ="block";
+				}else{
+					$replace['#display_erreur#'] ="none";
+				}	
+				$html = template_replace($replace, getTemplate('core', $version, 'PAC', 'planification'));
+			}
+			if ($eqLogic->getConfiguration("type","")== "Volet"){
+				$CMD_LIST=$eqLogic::Recup_liste_commandes_planification($eqLogic->getId());
+				foreach ($CMD_LIST as $CMD) {
+					switch (strtolower($CMD["nom"])) {
+						case 'monter':
+						case 'lever':
+						case 'ouvrir':
+						case 'ouvert':
+						case 'ouverture':
+							if (is_numeric(str_replace ("#" ,"" ,  $CMD["cmd"]))){
+								$replace['#ouvrir_id#'] =str_replace ("#" ,"" ,  $CMD["cmd"]);
+							}						
+							break;
+						case 'descendre':
+						case 'fermer':
+						case 'fermeture':
+						case 'fermé':
+							if (is_numeric(str_replace ("#" ,"" ,  $CMD["cmd"]))){
+								$replace['#fermer_id#'] =str_replace ("#" ,"" ,  $CMD["cmd"]);
+							}
+							break;
+						case 'stop my':
+						case 'stop':
+						case 'my':
+							if (is_numeric(str_replace ("#" ,"" ,  $CMD["cmd"]))){
+								$replace['#my_id#'] =str_replace ("#" ,"" ,  $CMD["cmd"]);
+							}
+							break;
+						
 					}
 				}
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_action_en_cours_id#',$eqLogic->getCmd(null, 'set_action_en_cours'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#manuel_id#',$eqLogic->getCmd(null, 'manuel'),"id");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
+				$imageVolet="Volet-100.png";
+				$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
+				if (is_object($cmd_Mode_fonctionnement)){
+
+					$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
+					//planification::add_log($eqLogic,"debug","mode de fonctionnement" . $Mode_fonctionnement);
+					$replace['#img_auto_manu#'] = ucfirst($Mode_fonctionnement);
+					
+					$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
+					if (is_object($cmd_action_en_cours)){
+						$action_en_cours=$cmd_action_en_cours->execCmd();
+						planification::add_log($eqLogic,"debug",'action_en_cours:' . $action_en_cours);
+						switch (strtolower($action_en_cours)) {
+							case "ouvert":
+							case "ouvrir":
+							case "monter":
+								$imageVolet="Volet-100.png";
+								break;
+							case "fermé";
+							case "fermer";
+							case "fermer";
+							case "descendre";
+								$imageVolet="Volet-0.png";
+								break;
+							case "my":
+								$imageVolet="Volet-50.png";
+								break;
+
+						}
+					}
+				}
+				$replace['#img_volet#'] = $imageVolet;
+				if ($erreur){
+					$replace['#display_erreur#'] ="block";
+				}else{
+					$replace['#display_erreur#'] ="none";
+				}	
+				$html = template_replace($replace, getTemplate('core', $version, 'volet', 'planification'));
 			}
-			$replace['#img_volet#'] = $imageVolet;
+			
 			if ($erreur){
 				$replace['#display_erreur#'] ="block";
 			}else{
 				$replace['#display_erreur#'] ="none";
-			}	
-			$html = template_replace($replace, getTemplate('core', $version, 'volet', 'planification'));
-		}
+			}
 		
-		if ($erreur){
-			$replace['#display_erreur#'] ="block";
-		}else{
-			$replace['#display_erreur#'] ="none";
+			cache::set('widgetHtml' . $version . $eqLogic->getId(), $html, 0);
+		} catch (Exception $e) {
+			planification::add_log($eqLogic,"error",'Erreur lors de la création du widget Détails : '. $e->getMessage());
 		}
-		cache::set('widgetHtml' . $version . $eqLogic->getId(), $html, 0);
 		return $html;
 	}
 
