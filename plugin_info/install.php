@@ -33,13 +33,16 @@ function planification_update() {
 		$eqLogics = eqLogic::byType('planification');
 		foreach ($eqLogics as $eqLogic){
 			$cmd_duree_mode_manuel_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'duree_mode_manuel_par_defaut');
-			$duree_mode_manuel_par_defaut=60;
+			
 			if (is_object($cmd_duree_mode_manuel_par_defaut)){
+				$duree_mode_manuel_par_defaut=60;
 				$duree_mode_manuel_par_defaut=$cmd_duree_mode_manuel_par_defaut->execCmd();
 				$cmd_duree_mode_manuel_par_defaut->remove();
+				$eqLogic->setConfiguration("Duree_mode_manuel_par_defaut",$duree_mode_manuel_par_defaut);
+				
 			}
-			$eqLogic->setConfiguration("Duree_mode_manuel_par_defaut",$duree_mode_manuel_par_defaut);
 			$eqLogic->save();
+			
 		}
 	}
 	catch (Exception $e){

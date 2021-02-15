@@ -246,6 +246,7 @@ class planification extends eqLogic {
 	function pull($_option){
 		
 		$eqLogic = self::byId($_option['eqLogic_Id']);
+		planification::add_log($eqLogic,"debug","pull");
 		planification::Verification_log($eqLogic);
 		$crons = cron::searchClassAndFunction('planification', 'pull');
 		$cron_id="";
@@ -267,14 +268,13 @@ class planification extends eqLogic {
 			$maintenant=time();
 		
 			if (date_create_from_format("Y-m-d H:i:s",$next_run)->getTimestamp() - $maintenant>59){
-				planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
 				planification::add_log($eqLogic,"debug","arrêt du pull date execution suppérieure à maintenant : " .date_create_from_format("Y-m-d H:i:s",$cron->getNextRunDate())->getTimestamp() . '>' . $maintenant);
 				return;
 			}	
 		}
 		
 		
-		planification::add_log($eqLogic,"debug","pull de : " . $eqLogic->getName());
+		
 		//$commande_en_cours="";
 		$eqLogic->Execute_action_actuelle();
 		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
@@ -479,6 +479,10 @@ class planification extends eqLogic {
 				}
 			}
 			$numéro_jour=date('N');
+			if(count($cette_planification) == 0){
+				planification::add_log($eqLogic,"debug","Aucune planification enregistrée dans l'eqLogic-> fin de la fonction");
+				return;
+			}
 			$Id_planification_en_cours=$eqLogic->getConfiguration("Id_planification_en_cours","");
 			if($Id_planification_en_cours==""){
 				planification::add_log($eqLogic,"debug","Aucun Id de planification enregistré");
@@ -494,10 +498,7 @@ class planification extends eqLogic {
 					break;
 				}
 			}
-			if(count($cette_planification) == 0){
-				planification::add_log($eqLogic,"debug","Aucune planification enregistrée dans l'eqLogic-> fin de la fonction");
-				return;
-			}
+			
 			$numBoucle=0;				
 			for ($i = $numéro_jour; $i > $numéro_jour-7; $i--) {
 				$num=$i;
@@ -604,8 +605,6 @@ class planification extends eqLogic {
 	
 	}
 	function Verification_log($eqLogic){
-		
-		
 	}
 	function Ajout_Commande($logical_id,$name,$type,$sous_type,$min=null,$max=null,$valeur_par_defaut=null,$unite=null){
 		$eqLogic=$this;
@@ -966,14 +965,10 @@ class planification extends eqLogic {
 				if (is_object($cmd_action_en_cours)){
 					$action_en_cours=$cmd_action_en_cours->execCmd();
 				}
-				//if($action_en_cours== "Allumé"){
-				//	$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'mode_PAC'),"value");
-				//	$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
-				//}else{
-					$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
-					$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
+			
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_en_cours#',$eqLogic->getCmd(null, 'action_en_cours'),"value");
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#prochaine_action#',$eqLogic->getCmd(null, 'action_suivante'),"value");
 
-				//}
 				$imagePAC="PACArret.png";
 				$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
 				if (is_object($cmd_Mode_fonctionnement)){
@@ -996,11 +991,9 @@ class planification extends eqLogic {
 					case "auto";
 						switch (strtolower($action_en_cours)) {
 							case "climatisation":
-							//case "climatisation boost";
 								$imagePAC="PACClimatisation.png";
 							break;
 							case "chauffage";
-							//case "chauffage boost";
 								$imagePAC="PACChauffage.png";
 							break;
 							case "ventilation":
