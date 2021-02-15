@@ -318,6 +318,10 @@ class planification extends eqLogic {
 						$cron->setClass('planification');
 						$cron->setFunction('pull');
 					}
+					$cmd_heure_fin = $eqLogic->getCmd(null, "heure_fin");
+					if(is_object($cmd_heure_fin)){
+						$cmd_heure_fin->event(date('d-m-Y H:i',$prochaine_action['datetime']));
+					}
 					$cron->setOption(array('eqLogic_Id' => intval($eqLogic->getId()),'eqLogic'=> mb_convert_encoding ($eqLogic->getHumanName(false), 'HTML-ENTITIES', 'UTF-8'),'Prochaine_execution'=> date('Y-m-d H:i:s', $prochaine_action['datetime'])));
 					$cron->setLastRun(date('Y-m-d H:i:s'));
 					$cron->setSchedule(date('i', $prochaine_action['datetime']) . ' ' . date('H', $prochaine_action['datetime']) . ' ' . date('d', $prochaine_action['datetime']) . ' ' . date('m', $prochaine_action['datetime']) . ' *');
