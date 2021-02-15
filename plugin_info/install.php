@@ -38,7 +38,7 @@ function planification_update() {
 				$duree_mode_manuel_par_defaut=$cmd_duree_mode_manuel_par_defaut->execCmd();
 				$cmd_duree_mode_manuel_par_defaut->remove();
 			}
-			$eqLogic->setConfiguration($duree_mode_manuel_par_defaut);
+			$eqLogic->setConfiguration("Duree_mode_manuel_par_defaut",$duree_mode_manuel_par_defaut);
 			$eqLogic->save();
 		}
 	}
