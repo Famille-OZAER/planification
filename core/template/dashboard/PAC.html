@@ -100,6 +100,7 @@
 								}else if ('#action_en_cours#' == "Climatisation"){
 									$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_climatisation').css('display', 'inline-block');
 								}
+								
 								$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours# Boost');
 								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'none');
 							}else{
@@ -108,13 +109,22 @@
 								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'inline-block');
 								
 							}
-							$('.eqLogic[data-eqLogic_uid=#uid#] .fleche').append(' <i class="fa fa-arrow-right"></i>');
-							if('#prochaine_action#' == ""){
-								$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append("Nouvel ordre");
-							}else{
+							if ('#action_en_cours#' == "Ventilation"){
+								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_on').css('display', 'none');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_chauffage').css('display', 'none');
+								$('.eqLogic[data-eqLogic_uid=#uid#] .boost_off_climatisation').css('display', 'none');
+							}
+							
+
+
+							if('#prochaine_action#' != ""){
+							
+								$('.eqLogic[data-eqLogic_uid=#uid#] .fleche').append(' <i class="fa fa-arrow-right"></i>');
 								$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('#prochaine_action#');
 								$('.eqLogic[data-eqLogic_uid=#uid#] .heure_prochaine_action').append('#endtime#');
-							}
+							}//else{
+							//	$('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append("Nouvel ordre");
+							//}
 							
 							$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').append('#planification_en_cours#');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').css('display', 'block');
@@ -249,32 +259,34 @@
 
 
 						function reset_page(){
-							if ($('.eqLogic[data-eqLogic_uid=#uid#] .page_2').css('display') == 'block'){
+							
 								setTimeout(function(){ 
-									$.ajax({
-										type: "POST",
-										url: "plugins/planification/core/ajax/planification.ajax.php",
-										data: {
-											action: "Set_widget_cache",
-											id: "#id#",
-											page :"page1",
-										},
-										global: false,
-										error: function (request, status, error) {handleAjaxError(request, status, error)},
-										success: function (data) {
-											if (data.state != 'ok') {
-												$('#div_alert').showAlert({
-													message: data.result,
-													level: 'danger'
-												})
-												return
+									if ($('.eqLogic[data-eqLogic_uid=#uid#] .page_2').css('display') == 'block'){
+										$.ajax({
+											type: "POST",
+											url: "plugins/planification/core/ajax/planification.ajax.php",
+											data: {
+												action: "Set_widget_cache",
+												id: "#id#",
+												page :"page1",
+											},
+											global: false,
+											error: function (request, status, error) {handleAjaxError(request, status, error)},
+											success: function (data) {
+												if (data.state != 'ok') {
+													$('#div_alert').showAlert({
+														message: data.result,
+														level: 'danger'
+													})
+													return
+												}
 											}
-										}
-									})
-									$('.eqLogic[data-eqLogic_uid=#uid#] .page_1').toggle();
-									$('.eqLogic[data-eqLogic_uid=#uid#] .page_2').toggle();	 
+										})
+										$('.eqLogic[data-eqLogic_uid=#uid#] .page_1').toggle();
+										$('.eqLogic[data-eqLogic_uid=#uid#] .page_2').toggle();
+									}
 								},60000);
-							}
+							
 						}
 
 						$(function () {

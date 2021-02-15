@@ -28,13 +28,18 @@ function planification_update() {
 	if (is_object($cron)) {
 		$cron->remove();
 	}
-	
-	
 	//resave eqs for new cmd:
 	try{
-		$eqs = eqLogic::byType('planification');
-		foreach ($eqs as $eq){
-			$eq->save();
+		$eqLogics = eqLogic::byType('planification');
+		foreach ($eqLogics as $eqLogic){
+			$cmd_duree_mode_manuel_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'duree_mode_manuel_par_defaut');
+			$duree_mode_manuel_par_defaut=60;
+			if (is_object($cmd_duree_mode_manuel_par_defaut)){
+				$duree_mode_manuel_par_defaut=$cmd_duree_mode_manuel_par_defaut->execCmd();
+				$cmd_duree_mode_manuel_par_defaut->remove();
+			}
+			$eqLogic->setConfiguration($duree_mode_manuel_par_defaut);
+			$eqLogic->save();
 		}
 	}
 	catch (Exception $e){
