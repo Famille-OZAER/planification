@@ -674,7 +674,7 @@ class planification extends eqLogic {
 			$eqLogic->Ajout_Commande('arret','Arrêt','action','other');
 			$eqLogic->Ajout_Commande('set_consigne_temperature','Set consigne température','action','slider',7,30);
 			$eqLogic->Ajout_Commande('consigne_temperature','Consigne Temperature','info','numeric',null,null,20,'°C');
-			$eqLogic->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric',null,null,20);	
+			//$eqLogic->Ajout_Commande('temperature_consigne_par_defaut','Température consigne par defaut','info','numeric',null,null,20);	
 		}
 			
 		if ($eqLogic->getConfiguration('type','') == 'PAC'){
@@ -1197,11 +1197,7 @@ class planificationCmd extends cmd {
 						case 'absent':
 							$eqLogic->checkAndUpdateCmd('mode_fonctionnement', $cmd->getLogicalId());
 							if($cmd->getLogicalId() == "auto"){
-								$cmd_temperature_consigne_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'temperature_consigne_par_defaut');
-								$temperature_consigne_par_defaut=20;
-								if (is_object($cmd_temperature_consigne_par_defaut)){
-									$temperature_consigne_par_defaut=$cmd_temperature_consigne_par_defaut->execCmd();
-								}
+								$temperature_consigne_par_defaut=$eqLogic->getConfiguration("temperature_consigne_par_defaut",20);
 								$eqLogic->checkAndUpdateCmd('consigne_temperature', $temperature_consigne_par_defaut);
 								$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
 								if (is_object($cmd_refresh)){

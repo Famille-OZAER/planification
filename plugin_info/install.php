@@ -41,6 +41,14 @@ function planification_update() {
 				$eqLogic->setConfiguration("Duree_mode_manuel_par_defaut",$duree_mode_manuel_par_defaut);
 				
 			}
+			$cmd_temperature_consigne_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'temperature_consigne_par_defaut');
+			if (is_object($cmd_temperature_consigne_par_defaut)){
+				$temperature_consigne_par_defaut=20;
+				$temperature_consigne_par_defaut=$cmd_temperature_consigne_par_defaut->execCmd();
+				$temperature_consigne_par_defaut->remove();
+				$eqLogic->setConfiguration("temperature_consigne_par_defaut",$temperature_consigne_par_defaut);
+			}	
+				
 			$eqLogic->save();
 			
 		}

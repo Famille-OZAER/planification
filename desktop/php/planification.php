@@ -133,13 +133,20 @@
 							<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="type" />
 							</div>
 						</div>
+
 						<div class="form-group" style="display : block;" >
-							<label class="col-sm-3 control-label">{{Durée mode manuel par defaut en minutes)}}</label>
+							<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 							<div class="col-sm-3">
-							<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Duree_mode_manuel_par_defaut" title="Laisser vide pour réactivation manuelle" />
-							</div>
+							<input type="number" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle"/>
+						</div>
 						</div>
 						<div class="poele" style="display:none">
+							<div class="form-group" style="display : block;" >
+								<label class="col-sm-3 control-label">{{Température par défaut}}</label>
+								<div class="col-sm-3">
+								<input type="number" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="temperature_consigne_par_defaut"/>
+							</div>
+							</div>
 							<div class="form-group">
 								<label class="col-sm-3 control-label">{{Commande de température}}</label>
 								<div class="col-sm-6 input-group">
