@@ -55,8 +55,9 @@
 						$('.eqLogic[data-eqLogic_uid=#uid#] .arret').on('click', function () {
 							jeedom.cmd.execute({id: '#arret_id#'});
 						});
-						
+						$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').css('display', 'block');
 						if ('#mode_fonctionnement#' == 'auto') {
+							$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').css('display', 'none');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .auto').css('color', 'white');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours#');
 							$('.eqLogic[data-eqLogic_uid=#uid#] .fleche').append(' <i class="fa fa-arrow-right"></i>');

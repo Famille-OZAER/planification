@@ -293,6 +293,7 @@ class planification extends eqLogic {
 	}
 
 	function set_cron(){
+		
 		$eqLogic=$this;
 		$crons = cron::searchClassAndFunction('planification', 'pull');
 		$cron_id="";
@@ -304,8 +305,10 @@ class planification extends eqLogic {
 				}
 			}
 		}
-		$cron=cron::byId($cron_id);		
+		$cron=cron::byId($cron_id);	
+
 		$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
+		
 		if (is_object($cmd_mode)){
 			$mode = $cmd_mode->execCmd();
 			if ($mode == "auto"){
@@ -326,7 +329,7 @@ class planification extends eqLogic {
 					$cron->setLastRun(date('Y-m-d H:i:s'));
 					$cron->setSchedule(date('i', $prochaine_action['datetime']) . ' ' . date('H', $prochaine_action['datetime']) . ' ' . date('d', $prochaine_action['datetime']) . ' ' . date('m', $prochaine_action['datetime']) . ' *');
 					$cron->save();
-				} else {
+				}else{
 					$cmd_action_suivante = $eqLogic->getCmd(null, "action_suivante");
 					if(is_object($cmd_action_suivante)){
 						$cmd_action_suivante->event("");
@@ -335,11 +338,15 @@ class planification extends eqLogic {
 					if(is_object($cmd_heure_fin)){
 						$cmd_heure_fin->event("");
 					}
+					planification::add_log($eqLogic,"debug","Suppression du cron");
 					if (is_object($cron)) {
+						planification::add_log($eqLogic,"debug","Suppression du cron");
+					
 						$cron->remove();
 					}
 				}
 			}else{
+				
 				if($eqLogic->getConfiguration("type","")=="Volet" && $mode == "manuel" ){
 					if (is_object($cron)) {
 						$cron->remove();
@@ -440,8 +447,10 @@ class planification extends eqLogic {
 		return;
 	}
 	function Execute_action_actuelle(){
+		
 		$mode_fonctionnement="auto";
 		$eqLogic=$this;
+		planification::add_log($eqLogic,"debug","Execute_action_actuelle");
 		$infos_lever_coucher_soleil=self::Recup_infos_lever_coucher_soleil($eqLogic->getId());			
 		$cmd_mode_fonctionnement = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "mode_fonctionnement");
 		if(is_object($cmd_mode_fonctionnement)){
@@ -452,7 +461,7 @@ class planification extends eqLogic {
 		if(is_object($cmd_action_en_cours)){
 			$action_en_cours=$cmd_action_en_cours->execCmd();
 		}
-		if($mode_fonctionnement == "arret"){
+		/*if($mode_fonctionnement == "arret"){
 			$crons = cron::searchClassAndFunction('planification', 'pull');
 			$cron_id="";
 			foreach ($crons as $cron){
@@ -468,7 +477,7 @@ class planification extends eqLogic {
 				$eqLogic->checkAndUpdateCmd('heure_fin', '');
 				planification::add_log($eqLogic,"debug","arret fin de la fonction");
 			return [];
-		}
+		}*/
 		if($mode_fonctionnement == "auto"){
 			$cmd=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'heure_fin');
 			$timestamp_prochaine_action=time();
@@ -479,10 +488,7 @@ class planification extends eqLogic {
 				}
 			}
 			$numéro_jour=date('N');
-			if(count($cette_planification) == 0){
-				planification::add_log($eqLogic,"debug","Aucune planification enregistrée dans l'eqLogic-> fin de la fonction");
-				return;
-			}
+			
 			$Id_planification_en_cours=$eqLogic->getConfiguration("Id_planification_en_cours","");
 			if($Id_planification_en_cours==""){
 				planification::add_log($eqLogic,"debug","Aucun Id de planification enregistré");
@@ -498,7 +504,10 @@ class planification extends eqLogic {
 					break;
 				}
 			}
-			
+			if(count($cette_planification) == 0){
+				planification::add_log($eqLogic,"debug","Aucune planification enregistrée dans l'eqLogic-> fin de la fonction");
+				return;
+			}
 			$numBoucle=0;				
 			for ($i = $numéro_jour; $i > $numéro_jour-7; $i--) {
 				$num=$i;
@@ -860,18 +869,22 @@ class planification extends eqLogic {
 
 			$cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
 			if(is_object($cmd_heure_fin)){
-				$heure_fin=strtotime($cmd_heure_fin->execCmd());
-				$maintenant=strtotime("now");
-				$jour_fin=date('d',$heure_fin);
-				$mois_fin=date('m',$heure_fin);
-				$année_fin=date('Y',$heure_fin);
-				$jour_maintenant=date('d',$maintenant);
-				$mois_maintenant=date('m',$maintenant);
-				$année_maintenant=date('Y',$maintenant);
-				if($jour_fin==$jour_maintenant && $mois_fin==$mois_maintenant && $année_fin==$année_maintenant){
-					$replace['#endtime#'] =date('H:i',$heure_fin);
+				if($cmd_heure_fin->execCmd() != ""){
+					$heure_fin=strtotime($cmd_heure_fin->execCmd());
+					$maintenant=strtotime("now");
+					$jour_fin=date('d',$heure_fin);
+					$mois_fin=date('m',$heure_fin);
+					$année_fin=date('Y',$heure_fin);
+					$jour_maintenant=date('d',$maintenant);
+					$mois_maintenant=date('m',$maintenant);
+					$année_maintenant=date('Y',$maintenant);
+					if($jour_fin==$jour_maintenant && $mois_fin==$mois_maintenant && $année_fin==$année_maintenant){
+						$replace['#endtime#'] =date('H:i',$heure_fin);
+					}else{
+						$replace['#endtime#'] =date('d-m-Y H:i',$heure_fin);
+					}
 				}else{
-					$replace['#endtime#'] =date('d-m-Y H:i',$heure_fin);
+					$replace['#endtime#'] ="";
 				}
 			}
 			
@@ -1139,7 +1152,6 @@ class planificationCmd extends cmd {
 		planification::add_log($eqLogic,"debug","execute: " . $cmd->getLogicalId());
 		switch ($cmd->getLogicalId()) {
 			case 'refresh':
-				$eqLogic->Verification_log($eqLogic);
 				$eqLogic->refresh();
 				$eqLogic->Execute_action_actuelle();
 				$eqLogic->set_cron();
@@ -1219,7 +1231,11 @@ class planificationCmd extends cmd {
 									if (is_object($cmd_duree_mode_manuel_par_defaut)){
 										$duree_mode_manuel_par_defaut=$cmd_duree_mode_manuel_par_defaut->execCmd();
 									}*/
-									$duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",60);
+									$duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",0);
+									if($duree_mode_manuel_par_defaut ==0 ){
+										planification::add_log($eqLogic,"debug","Réactivation manuelle");
+										return;
+									}
 									planification::add_log($eqLogic,"debug","Heure1: " . $duree_mode_manuel_par_defaut);
 									$date_Fin=strtotime('+'.($duree_mode_manuel_par_defaut)." minute");
 									planification::add_log($eqLogic,"debug","date_Fin" . date ("Y/m/d H:i", $date_Fin));
@@ -1249,6 +1265,14 @@ class planificationCmd extends cmd {
 									$cmd_refresh->execute();
 								}
 							}else if ($cmd->getLogicalId() == "arret"){
+								$cmd_heure_fin = $eqLogic->getCmd(null, "heure_fin");
+								if(is_object($cmd_heure_fin)){
+									$cmd_heure_fin->event("");
+								}
+								$cmd_action_suivante = $eqLogic->getCmd(null, "action_suivante");
+								if(is_object($cmd_action_suivante)){
+									$cmd_action_suivante->event("");
+								}
 								$crons = cron::searchClassAndFunction('planification', 'pull');
 								foreach ($crons as $cron){
 									$options_cron=$cron->getOption();
@@ -1259,8 +1283,30 @@ class planificationCmd extends cmd {
 							}else{
 								$cmd_set_heure_fin=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'set_heure_fin');
 								if (is_object($cmd_set_heure_fin)){
-									$duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",60);
-									planification::add_log($eqLogic,"debug","Heure1: " . $duree_mode_manuel_par_defaut);
+									$duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",0);
+									if($duree_mode_manuel_par_defaut ==0 ){
+										$crons = cron::searchClassAndFunction('planification', 'pull');
+										foreach ($crons as $cron){
+											$options_cron=$cron->getOption();
+											if($options_cron["eqLogic_Id"]== $eqLogic->getId()){
+												$cron->remove();
+											}
+										}					
+										$cmd_heure_fin = $eqLogic->getCmd(null, "heure_fin");
+										if(is_object($cmd_heure_fin)){
+											$cmd_heure_fin->event("");
+										}
+										$cmd_action_suivante = $eqLogic->getCmd(null, "action_suivante");
+										if(is_object($cmd_action_suivante)){
+											$cmd_action_suivante->event("");
+										}
+
+										planification::add_log($eqLogic,"debug","Réactivation manuelle");
+										$eqLogic->refresh();
+										$eqLogic->Execute_action_actuelle();
+										$eqLogic->refreshWidget() ;
+										return;
+									}
 									$date_Fin=strtotime('+'.($duree_mode_manuel_par_defaut)." minute");
 									planification::add_log($eqLogic,"debug","date_Fin" . date ("Y/m/d H:i", $date_Fin));
 									$arr=["message" => date ('d-m-Y H:i', $date_Fin)];
@@ -1273,7 +1319,11 @@ class planificationCmd extends cmd {
 							$eqLogic->checkAndUpdateCmd('mode_fonctionnement', 'boost_on');
 							$cmd_set_heure_fin=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'set_heure_fin');
 							if (is_object($cmd_set_heure_fin)){
-								$duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",60);
+								$duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",0);
+								if($duree_mode_manuel_par_defaut ==0 ){
+									planification::add_log($eqLogic,"debug","Réactivation manuelle");
+									return;
+								}
 								//planification::add_log($eqLogic,"debug","Heure1: " . $duree_mode_manuel_par_defaut);
 								$date_Fin=strtotime('+'.($duree_mode_manuel_par_defaut)." minute");
 								planification::add_log($eqLogic,"debug","date_Fin: " . date ("Y/m/d H:i", $date_Fin));
@@ -1281,10 +1331,10 @@ class planificationCmd extends cmd {
 								$cmd_set_heure_fin->execute( $arr) ;
 							}
 							$eqLogic->refresh();
-							/*$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
+							$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
 							if (is_object($cmd_refresh)){
 								$cmd_refresh->execute();
-							}*/
+							}
 							break;
 		
 						case 'boost_off':
@@ -1292,10 +1342,10 @@ class planificationCmd extends cmd {
 							$eqLogic->checkAndUpdateCmd('boost', 0);
 							$eqLogic->checkAndUpdateCmd('mode_fonctionnement', 'auto');
 							$eqLogic->refresh();
-							/*$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
+							$cmd_refresh=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'refresh');
 							if (is_object($cmd_refresh)){
 								$cmd_refresh->execute();
-							}*/
+							}
 							break;
 						default:
 					}
@@ -1337,7 +1387,11 @@ class planificationCmd extends cmd {
 							}else{
 								$cmd_set_heure_fin=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'set_heure_fin');
 								if (is_object($cmd_set_heure_fin)){
-									$duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",60);
+									$duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",0);
+									if($duree_mode_manuel_par_defaut ==0 ){
+										planification::add_log($eqLogic,"debug","Réactivation manuelle");
+										return;
+									}
 									planification::add_log($eqLogic,"debug","Heure1: " . $duree_mode_manuel_par_defaut);
 									$date_Fin=strtotime('+'.($duree_mode_manuel_par_defaut)." minute");
 									planification::add_log($eqLogic,"debug","date_Fin" . date ("Y/m/d H:i", $date_Fin));
