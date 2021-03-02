@@ -1549,6 +1549,8 @@ function addCmdToTable(_cmd) {
 					if(_cmd.configuration.Couleur == "<span>#VALUE#<\/span>"){
 						couleur="orange"
 					}
+				}else{
+					couleur="orange"
 				}
 				$('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#","couleur-"+couleur)
 				$('#table_actions tbody tr:last .select-items ').find("."+"couleur-" + couleur)[0].classList.add("same-as-selected")
