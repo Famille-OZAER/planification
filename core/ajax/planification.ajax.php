@@ -84,7 +84,6 @@ try {
             $div .=  '<div class ="commande couleur-magenta" value="magenta">magenta</div>';
             $div .=  '<div class ="commande couleur-marron" value="marron">marron</div>';
             $div .=  '<div class ="commande couleur-violet" value="violet">violet</div>';	
-            
             $div .='</div>';
             
         }

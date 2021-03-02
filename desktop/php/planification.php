@@ -11,6 +11,7 @@
 	include_file('3rdparty', 'TimePicker', 'js', 'planification');
 ?>
 
+
 <div class="row row-overflow">
 	<div class="col-xs-12 eqLogicThumbnailDisplay">
 		<legend><i class="fa fa-cog"></i>  {{Gestion}}</legend>
