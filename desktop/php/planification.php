@@ -68,7 +68,6 @@
 		<ul class="nav nav-tabs" role="tablist" style="display:inline-block">
 			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
 			<li role="presentation" class="active"><a href="#tab_eqlogic" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
-			<li role="presentation"><a href="#tab_commandes_planification" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Commandes planification}}</a></li>
 			<li role="presentation" id ="menu_tab_planifications"><a href="#tab_planifications" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Planifications}}</a></li>
 			<li role="presentation" id ="menu_tab_gestion"><a href="#tab_gestion" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Gestion Lever/Coucher soleil}}</a></li>
 			<li role="presentation"><a href="#tab_commandes" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes équipement}}</a></li>
@@ -76,7 +75,7 @@
 		
 			
 		
-		<div class="tab-content" style="height:calc(100% - 100px);overflow:auto;overflow-x: hidden;">
+		<div class="tab-content" style="overflow:auto;overflow-x: hidden;">
 
 
 			<div role="tabpanel" class="tab-pane active" id="tab_eqlogic">
@@ -185,15 +184,6 @@
 									</span>
 								</div>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l'état de la pompe à chaleur}}</label>
-								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_PAC" data-l2key="etat_pac_id"/>
-									<span class="input-group-btn">
-										<a class="btn btn-success btn-sm listCmdInfoPAC"><i class="fa fa-tasks"></i></a>
-									</span>
-								</div>
-							</div>
 						</div>
 					</fieldset>
 				</form>
@@ -211,39 +201,15 @@
 
 			<!--planifications Tab-->
 			<div role="tabpanel" class="tab-pane" id="tab_planifications">
-			<span class="info_commandes_planification label label-danger" style="display:none">Pour ajouter une planification, veuillez enregistrer une ou plusieurs commandes dans l'onglet "Commandes planification"</span>
-					<a class="btn btn-sm btn-success pull-right bt_ajouter_planification" style="margin-top: 5px;"><i class="fa fa-plus-circle"></i> {{Ajouter planification}}</a>
-					<br/><br/>
+				<a class="btn btn-sm btn-success pull-right bt_ajouter_planification" style="margin-top: 5px;"><i class="fa fa-plus-circle"></i> {{Ajouter planification}}</a>
+				<br/><br/>
 				<div id="div_planifications" class="panel-group"></div>
 			</div>
-			<!--fin planifications Tab-->    
 
-			<div role="tabpanel" class="tab-pane" id="tab_commandes_planification">
-		       	<div class="input-group pull-right" style="display:inline-flex">
-				    <a class="btn btn-default btn-sm bt_Importer_Commandes_EqLogic" style="margin-top:5px;"><i class="fas fa-sign-in-alt" style=" transform:rotate(90deg)"></i> {{Importer équipement}}</a>
-					<a class="btn btn-default btn-sm  pull-right bt_Ajout_commande_planification" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une commande}}</a>
-                   
-                </div> 
-					
-		
-				<div class="col-sm-12">
-					<table id="table_cmd_planification" class="table table-bordered table-condensed">
-						<thead>
-							<tr>
-								<th class="col-sm-2" style="display:none">{{ID}}</th>
-								<th class="col-sm-2">{{Nom}}</th>
-								<th class="col-sm-6">{{Commande}}</th>
-								<th class="col-sm-1" >{{Couleur}}</th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>
-			</div>
 			<!--Gestion-->
 			<div role="tabpanel" class="tab-pane" id="tab_gestion">
 			
-			<div class="col-sm-12">
+				<div class="col-sm-12">
 				<label class="col-sm-3 control-label">{{Jour à configurer}}</label>
 				
 				<select class="selection_jour col-sm-3">
@@ -839,7 +805,7 @@
 				<table id="table_infos" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th width="65%">{{Nom}}</th><th width="25%" align="center">{{Options}}</th><th width="10%" align="right">{{Action}}</th>
+							<th width="20%">{{Nom}}</th><th width="55%" align="center">{{}}</th><th width="15%" align="right">{{Options}}</th><th width="20%" align="right"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -849,7 +815,7 @@
 				<table id="table_actions" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th width="65%">{{Nom}}</th><th width="25%" align="center">{{Options}}</th><th width="10%" align="right">{{Action}}</th>
+							<th width="20%">{{Nom}}</th><th width="55%" align="center">{{Commande}}</th><th width="15%" align="right">{{Couleur}}</th><th width="20%" align="right"></th>
 						</tr>
 					</thead>
 					<tbody>

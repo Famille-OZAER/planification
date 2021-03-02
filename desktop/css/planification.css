@@ -289,7 +289,7 @@ width:auto}
 	background-color:red !important;
 	-moz-animation: mymove 1s ease infinite;
     -webkit-animation: mymove 1s ease infinite;
-	position: relative;}
+}
 
 /* Simple Animation */
 @-webkit-keyframes mymove {

@@ -32,25 +32,38 @@ function planification_update() {
 	try{
 		$eqLogics = eqLogic::byType('planification');
 		foreach ($eqLogics as $eqLogic){
-			$cmd_duree_mode_manuel_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'duree_mode_manuel_par_defaut');
 			
-			if (is_object($cmd_duree_mode_manuel_par_defaut)){
-				$duree_mode_manuel_par_defaut=60;
-				$duree_mode_manuel_par_defaut=$cmd_duree_mode_manuel_par_defaut->execCmd();
-				$cmd_duree_mode_manuel_par_defaut->remove();
-				$eqLogic->setConfiguration("Duree_mode_manuel_par_defaut",$duree_mode_manuel_par_defaut);
-				
+			$commandes=$eqLogic->getConfiguration("commandes_planification","");
+			if (is_array($commandes)){
+				$nom_fichier=dirname(__FILE__) ."/../../planifications/" . init('id') . ".json";
+				if(file_exists ( $nom_fichier ) ){
+					$json=file_get_contents ($nom_fichier);
+				}
+						
+				$nouvelles_cmds=[];
+				if (is_array($commandes)){
+					foreach ($commandes as $commande){
+						$id=$commande["Id"];
+						$nom=$commande["nom"];
+						$commande['Id']=$commande["nom"];
+						$json=str_replace($id,$nom,$json);
+						array_push($nouvelles_cmds,$commande);
+					}
+				}
+				$fichier = fopen( $nom_fichier, 'w');
+				fwrite($fichier, $json);
+				$eqLogic->setConfiguration("commandes_planification", "");
 			}
+
+
 			$cmd_temperature_consigne_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'temperature_consigne_par_defaut');
 			if (is_object($cmd_temperature_consigne_par_defaut)){
 				$temperature_consigne_par_defaut=20;
 				$temperature_consigne_par_defaut=$cmd_temperature_consigne_par_defaut->execCmd();
 				$temperature_consigne_par_defaut->remove();
 				$eqLogic->setConfiguration("temperature_consigne_par_defaut",$temperature_consigne_par_defaut);
-			}	
-				
+			}
 			$eqLogic->save();
-			
 		}
 	}
 	catch (Exception $e){

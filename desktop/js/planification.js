@@ -1,5 +1,4 @@
 JSONCLIPBOARD = null
-//JOURREF = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 document.addEventListener("click", closeAllSelect);
 
 $('.ajouter_eqlogic').on('click', function () {
@@ -135,7 +134,59 @@ $('#tab_eqlogic').on('click','.listCmdEtatBoost',  function () {
 		el.value(result.human);
 	});
 });
-  //commandes planification
+//commandes
+$('#tab_commandes').on('click','.select-selected',  function (e) {
+	modifyWithoutSave = true;
+	e.stopPropagation();
+	closeAllSelect(this);
+	this.nextSibling.classList.toggle("select-hide");
+	this.classList.toggle("select-arrow-active");
+});
+$('#tab_commandes').on('click','.select-items div',  function () {
+	modifyWithoutSave = true;
+	select = this.parentNode.previousSibling;
+	select.innerHTML = this.innerHTML;
+	select.classList.remove(recup_class_couleur(select.classList))
+	select.classList.add(recup_class_couleur(this.classList))
+	select.setAttribute("Id",this.getAttribute("Id"))
+	y = this.parentNode.getElementsByClassName("same-as-selected");
+	for (k = 0; k < y.length; k++) {
+		y[k].classList.remove("same-as-selected")
+	}
+	this.classList.add("same-as-selected")
+	select.click();
+})
+$('#tab_commandes').on('click','.listCmdAction',  function () {
+	//$("body").delegate(".listCmdAction", 'click', function() {
+		var el = $(this).closest('div div').find('.cmdAttr[data-l2key=commande]');
+		jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function(result) {
+			el.value(result.human);
+			jeedom.cmd.displayActionOption(el.value(), '', function(html) {
+				el.closest('div td').find('.actionOptions').html(html);
+			});
+		});
+});
+$('#tab_commandes').on('click','.listAction',  function () {
+		var el = $(this).closest('div div').find('.cmdAttr[data-l2key=commande]');
+		jeedom.getSelectActionModal({}, function (result) {
+			el.value(result.human);
+			jeedom.cmd.displayActionOption(el.value(), '', function (html) {
+				el.closest('div td').find('.actionOptions').html(html);
+				taAutosize();
+			});
+		});
+});
+$('#tab_commandes').on('focusout','.cmdAction',  function () {
+	var el = $(this);
+	var expression = el.closest('td').getValues('.expressionAttr');
+	jeedom.cmd.displayActionOption(el.value(), expression[0].options, function (html) {
+		el.closest('div td').find('.actionOptions').html(html);
+		taAutosize();
+	});
+});
+$("#tab_commandes #table_actions").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true})
+$("#tab_commandes #table_infos").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true})
+ /* //commandes planification
 $('#tab_commandes_planification').on('click','.select-selected',  function (e) {
 	modifyWithoutSave = true;
 	e.stopPropagation();
@@ -157,47 +208,28 @@ $('#tab_commandes_planification').on('click','.select-items div',  function () {
 	this.classList.add("same-as-selected")
 	select.click();
 })
-$('#tab_commandes_planification').on('click','.bt_Importer_Commandes_EqLogic',  function () {
-  
-	jeedom.eqLogic.getSelectModal({}, function (result) {
-	  $.ajax({
+$('#tab_commandes_planification').on('click','.bt_Ajout_commande_planification',  function () {
+	//addCmdPlanificationToTable({});
+	//modifyWithoutSave = true;
+	$.ajax({
 		type: "POST",
 		url: "plugins/planification/core/ajax/planification.ajax.php",
 		data: {
-		  action: "Importer_commandes_eqlogic",
-		  eqLogic_id: result.id,
-		  id: $('.eqLogicAttr[data-l1key=id]').value()
+			action: "MAJ",
+			id: 916
 		},
-		dataType: 'json',
 		global: false,
-		error: function (request, status, error) {
-		  handleAjaxError(request, status, error);
-		},
+		error: function (request, status, error) {handleAjaxError(request, status, error)},
 		success: function (data) {
-		  if (data.state != 'ok') {
-			$('#div_alert').showAlert({message: data.result, level: 'danger'});
-			return;
-		  }
-		  
-		  if (typeof(data.result) == 'object'){
-			  data.result.forEach(function (r) {
-				  addCmdPlanificationToTable(r)
-				  EqId=this['eqId']
-				  console.log(this)
-			  })
-			  //saveEqLogic(EqId)
-			  //jeedom.eqLogic.save({eqLogics: EqId , type:"planification"})
-			  $('.eqLogicAction[data-action=save]').click()
-		  }
+			if (data.state != 'ok') {
+				$('#div_alert').showAlert({
+					message: data.result,
+					level: 'danger'
+				})
+				return
+			}
 		}
-		
-	  });
-	});
-	
-  });
-$('#tab_commandes_planification').on('click','.bt_Ajout_commande_planification',  function () {
-	addCmdPlanificationToTable({});
-	modifyWithoutSave = true;
+	})	
 });
 $('#tab_commandes_planification').on('click','.listCmdAction',  function () {
 //$("body").delegate(".listCmdAction", 'click', function() {
@@ -271,7 +303,7 @@ $('#tab_commandes_planification').on('focusout','.cmdAction',  function () {
 		el.closest('div td').find('.actionOptions').html(html);
 		taAutosize();
 	});
-});
+}); */
 //planifications:
 $("#tab_planifications #div_planifications").sortable({
 	axis: "y", cursor: "move", items: ".planification", handle: ".panel-heading", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true
@@ -388,13 +420,13 @@ $('#tab_planifications').on('click','.bt_ajout_periode',  function () {
 	Divjour=$(this).closest('th').find('.JourSemaine')
 
 	
-	var SELECT_LIST= Recup_select("planification")
+	var SELECT_LIST= Recup_select("planifications")
 	var CMD_LIST=Recup_liste_commandes_planification()
 	Couleur="erreur"
 	Nom=""
-	Couleur="couleur-" + CMD_LIST[0]["couleur"]
-	Nom=CMD_LIST[0]["nom"]
-	Id=CMD_LIST[0]["Id"]
+	Couleur="couleur-" + CMD_LIST[0].couleur
+	Nom=CMD_LIST[0].Id
+	Id=CMD_LIST[0].Id
 	var element = SELECT_LIST.replace("#COULEUR#",Couleur);
 	element=element.replace("#VALUE#",Nom)
 	element=element.replace("#ID#",Id)
@@ -435,13 +467,13 @@ $('#tab_planifications').on('click','.bt_coller_jour',  function () {
 	Divjour.find('.Periode_jour').each(function  () {
         $(this).remove()
 	})
-	var SELECT_LIST= Recup_select("planification")
+	var SELECT_LIST= Recup_select("planifications")
     JSONCLIPBOARD.data.forEach(function(periode) {
 		
 		Type_periode=periode["type_periode"]
 
 		Couleur=periode["Couleur"]
-		Nom=periode["Nom"]
+		Nom=periode["Id"]
 		Id=periode["Id"]
 		var element = SELECT_LIST.replace("#COULEUR#",Couleur);
 		element=element.replace("#VALUE#",Nom)
@@ -480,7 +512,6 @@ $('#tab_planifications').on('click','.collapsible',  function () {
 		Divjour.css("overflow","visible")
 		Divjour.css("max-height","fit-content")
 	}
-//$(this).closest('form').find('.JourSemaine.' + $(this)[0].innerText).toggle();
 })
 $('#tab_planifications').on('click','.planification_collapsible',  function () {
 	this.classList.toggle("active");
@@ -998,7 +1029,6 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 		div += '</div>'
 	div += '</div>'
 	
-
     nouvelle_periode = $(div)
 	if(Mode_periode!=null){
 		
@@ -1251,28 +1281,10 @@ function printEqLogic(_eqLogic) {
 
 	})	
 	nom_planification_erreur=[]	
-	if (isset(_eqLogic.configuration.commandes_planification)) {
-		for (var i in _eqLogic.configuration.commandes_planification) {
-			actionOptions = [];
-			addCmdPlanificationToTable(_eqLogic.configuration.commandes_planification[i]);
-			jeedom.cmd.displayActionsOption({
-				params : actionOptions,
-				async : false,
-				error: function (error) {
-					$('#div_alert').showAlert({message: error.message, level: 'danger'});
-				},
-				success : function(data){
-					for(var i in data){
-						$('#'+data[i].id).append(data[i].html.html);
-					}
-					taAutosize();
-				}
-			});	
-		}
-	}
 	
 	
-	var SELECT_LIST= Recup_select("planification")
+	
+	var SELECT_LIST= Recup_select("planifications")
 	var CMD_LIST=Recup_liste_commandes_planification()
 		$.ajax({
 			type: "POST",
@@ -1281,7 +1293,7 @@ function printEqLogic(_eqLogic) {
 				action: "Recup_planification",
 				id: _eqLogic["id"]
 			},
-			dataType: 'json',
+			//dataType: 'json',
 			global: false,
 			async:false,
 			error: function (request, status, error) {handleAjaxError(request, status, error)},
@@ -1308,11 +1320,13 @@ function printEqLogic(_eqLogic) {
 									jour.periodes.forEach(function(periode){
 										Couleur="erreur"
 										Nom=""
+										Id=""
 										CMD_LIST.forEach(function(cmd){
-											if(periode.Id == cmd["Id"] ){
-												Couleur="couleur-" + cmd["couleur"]
-												Nom=cmd["nom"]
-												Id=cmd["Id"]
+											
+											if(periode.Id == cmd.Id ){
+												Couleur="couleur-" + cmd.couleur
+												Nom=cmd.Id
+												Id=cmd.Id
 											}
 										});
 										var element = SELECT_LIST.replace("#COULEUR#",Couleur);
@@ -1331,19 +1345,13 @@ function printEqLogic(_eqLogic) {
 				})
 			}
 		})
-		if ($('#table_cmd_planification .row_cmd_planification').length == 0){
-			$('.info_commandes_planification').css("display","block")
-			$('.bt_ajouter_planification').css("display","none")
-		}else{
-			$('.info_commandes_planification').css("display","none")
-			$('.bt_ajouter_planification').css("display","block")
-		}
 }
 function saveEqLogic(_eqLogic) {
     if (!isset(_eqLogic.configuration)) {
         _eqLogic.configuration = {}
     }
 	_eqLogic.configuration.commandes_planification = []
+	
 	var planifications = [];
 	var erreur=false
 	
@@ -1404,6 +1412,9 @@ function saveEqLogic(_eqLogic) {
 			}
 		}
 	})	
+
+
+
 	if(_eqLogic.configuration.type == 'Poele') {
 		_eqLogic.configuration.temperature_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_id]').val();
 		_eqLogic.configuration.etat_allume_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_allume_id]').val();
@@ -1417,27 +1428,57 @@ function saveEqLogic(_eqLogic) {
 	$('#table_cmd_planification tbody tr').each(function(){
 		_eqLogic.configuration.commandes_planification.push($(this).getValues('.expressionAttr')[0])
 	})
+
+
+	_eqLogic.cmd.forEach(function(_cmd){
+		
+		if(_cmd.type == "action" && _cmd.name != "Auto" && _cmd.name != "Absent"){
+			$('#table_actions tbody tr').each(function(){
+				
+				if (_cmd.name == $(this).getValues('.cmdAttr[data-l1key=name]')[0].name){
+					if( _cmd.name != "Absent"){_cmd.configuration.Type="Planification"}
+					if(typeof($(this).getValues('.expressionAttr')[0].options) != "undefined"){
+						_cmd.configuration.options=($(this).getValues('.expressionAttr')[0].options)
+					}else{
+						_cmd.configuration.options=''
+					}
+				}
+			})
+		}
+	})
 	return _eqLogic
 }
 function addCmdToTable(_cmd) {
-  
+	if(_cmd.logicalId == "set_heure_fin" || _cmd.logicalId == "set_consigne_temperature" || _cmd.logicalId == "set_action_en_cours" || _cmd.logicalId == "manuel" || _cmd.logicalId == "refresh" || _cmd.logicalId == "boost_on" || _cmd.logicalId == "boost_off"){
+		return
+	}
+	if (_cmd.logicalId == 'set_planification'){
+		set_planification_Id = _cmd.id
+		return
+	} 
     if (!isset(_cmd)) var _cmd = {configuration:{}}
     if (!isset(_cmd.configuration)) _cmd.configuration = {}
 	
 	
-		var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
+		
+
+		if (_cmd.type == 'info'){
+			var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
 			tr += '<td>'
-			tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none">'
+			tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
 			tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
 			tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
-			tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" style="width : 60%" placeholder="{{Nom}}"></td>'
-			tr += '<input class="cmdAttr form-control type input-sm" data-l1key="type" value="info" disabled style="display : none" />'
+			tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" disabled placeholder="{{Nom}} "</td>'
 			tr += '</td>'
-			
+			tr += '<td>'
+				
+				
+			tr += '</td>'
 			tr += '<td>'
 			if (_cmd.subType == "numeric" || _cmd.subType == "binary") {
 				tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span> '
 			}
+			
 			tr += '</td>'
 			
 			tr += '<td>'
@@ -1447,101 +1488,73 @@ function addCmdToTable(_cmd) {
 			}
 			tr += '</td>'
 		tr += '</tr>'
-
-		if (_cmd.type == 'info'){
 			$('#table_infos tbody').append(tr)
 			$('#table_infos tbody tr:last').setValues(_cmd, '.cmdAttr')
 			if (isset(_cmd.type)) $('#table_infos tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type))
 			jeedom.cmd.changeType($('#table_infos tbody tr:last'), init(_cmd.subType))
-		}else{
-			$('#table_actions tbody').append(tr)
-			$('#table_actions tbody tr:last').setValues(_cmd, '.cmdAttr')
-			if (isset(_cmd.type)) $('#table_actions tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type))
-			jeedom.cmd.changeType($('#table_actions tbody tr:last'), init(_cmd.subType))
-		}
-		
-		if (_cmd.logicalId == 'set_planification'){
-			set_planification_Id = _cmd.id
-		} 
-		
-}
-function addCmdPlanificationToTable(_action) {
-	if (!isset(_action)) {
-		_action = {};
-    }
-    if (!isset(_action.options)) {
-        _action.options = {};
-	}
-	var Id = "";
-	if (isset(_action['Id'])){
-		Id=_action['Id']
-	}else{
-		Id = uniqId()
-	}
-	var actionOption_id = uniqId();
-	actionOptions = [];
-	var SELECT_LIST=Recup_select("commande");
-	//var CMD_LIST=Recup_liste_commandes_planification();
-	var tr = '';
-			tr += '<tr class="row_cmd_planification">';
-			tr += '<td style="display : none">';
-					tr += '<div class="row">';
-						tr += '<div class="col-sm-6" style="width:100%;">';
-							tr += '<input class="expressionAttr form-control input-sm" data-l1key="Id" style="display : none" value="' + Id+ '" disabled>';
-						tr += '</div>';
-					tr += '</div>';
-				tr += '</td>';
-				tr += '<td>';
-					tr += '<div class="row">';
-						
-						tr += '<div class="col-sm-6" style="width:100%;">';
-							tr += '<input class="expressionAttr form-control input-sm" data-l1key="nom">';
-						tr += '</div>';
-					tr += '</div>';
-				tr += '</td>';
+		}else if (_cmd.type == 'action'){
+			
+			var SELECT_LIST=Recup_select("commandes");
+			var tr = ''
+			tr += '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
+				tr += '<td>'
+				tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
+				tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
+				tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
+				tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" disabled  placeholder="{{Nom}} "</td>'
+				tr += '</td>'
 				
-				tr += '<td>';
-					tr += '<div class="input-group" style=" width:100%;">';
-						tr += '<input class="expressionAttr form-control input-sm cmdAction" data-l1key="cmd"/>';
+				tr += '<td>'
+				if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent"){
+						tr += '<div class="input-group" style=" width:100%;">';
+						tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
 						tr += '<span class="input-group-btn">';
 							tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
 							tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
-							tr += '<a class="btn btn-default bt_Suppression_commande_planification btn-sm"><i class="fa fa-minus-circle"></i></a>';
 						tr += '</span>';
 						
 					tr += '</div>';
-					tr += '<div class="actionOptions" id="'+actionOption_id+'">';
-					tr += '</div>';						
-				tr += '</td>';
-				
-				//n'est pas affiché mais dois rester
-					
-			
-				tr += '<td>';
-					
+					tr += '<div class="actionOptions">';
+					tr += '</div>';			
+				}
+				tr += '</td>'
+				tr += '<td>'
+				if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent"){
 					tr += '<div class="custom-select">'
 						tr += SELECT_LIST
 						
 					tr += '</div>'
+				}				
+				tr += '</td>'
+				
+				tr += '<td>'
+					if (is_numeric(_cmd.id)){
+						tr += '<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a> '
+						tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>'
+					}
+				tr += '</td>'
+			tr += '</tr>'
 
-				tr += '</td>';
-			tr+= '</tr>';
-			
-			$('#table_cmd_planification tbody').append(tr);
-			$('#table_cmd_planification tbody tr:last').setValues(_action, '.expressionAttr');
-			if(Object.keys( _action ).length>1){
-			  $('#table_cmd_planification tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#","couleur-" + $('#table_cmd_planification tbody tr:last td:last').find(".select-selected")[0].innerHTML);
-			  $('#table_cmd_planification tbody tr:last .select-items ').find("."+"couleur-" + $('#table_cmd_planification tbody tr:last td:last').find(".select-selected")[0].innerHTML)[0].classList.add("same-as-selected")
-			}else{
-				$('#table_cmd_planification tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#","couleur-orange");
-				$('#table_cmd_planification tbody tr:last').find(".select-selected")[0].innerHTML="orange"
-				$('#table_cmd_planification tbody tr:last .select-items ').find("."+"couleur-orange")[0].classList.add("same-as-selected")
-				  
+
+
+			$('#table_actions tbody').append(tr)
+			$('#table_actions tbody tr:last').setValues(_cmd, '.cmdAttr')
+			if (isset(_cmd.type)) $('#table_actions tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type))
+			jeedom.cmd.changeType($('#table_actions tbody tr:last'), init(_cmd.subType))
+			$('#table_actions tbody tr:last').find(".actionOptions").append(jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options)))
+				
+			if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent"){
+				if (isset(_cmd.configuration.Couleur)){
+					couleur=_cmd.configuration.Couleur
+					if(_cmd.configuration.Couleur == "<span>#VALUE#<\/span>"){
+						couleur="orange"
+					}
+				}
+				$('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#","couleur-"+couleur)
+				$('#table_actions tbody tr:last .select-items ').find("."+"couleur-" + couleur)[0].classList.add("same-as-selected")
+				$('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML=couleur
+				
 			}
-    actionOptions.push({
-        expression : init(_action.cmd, ''),
-        options : _action.options,
-        id : actionOption_id
-    });
-
+			
+		}	
 }
