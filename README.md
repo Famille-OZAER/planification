@@ -4,7 +4,7 @@
 
 planification
 
-*[Documentation](https://kiboost.github.io/jeedom_docs/plugins/planification/fr_FR/)*
+*[Documentation](docs/changelog.md)*
 
 *[changelog](https://kiboost.github.io/jeedom_docs/plugins/planification/fr_FR/changelog.html)*
 
