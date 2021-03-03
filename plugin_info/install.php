@@ -39,6 +39,8 @@ function planification_update() {
 				if(file_exists ( $nom_fichier ) ){
 					$json=file_get_contents ($nom_fichier);
 				}
+				$fichier = fopen( $nom_fichier.".bak", 'w');
+				fwrite($fichier, $json);
 				log::add('planification', 'debug', 'fichier json: '.$nom_fichier);
 				log::add('planification', 'debug', 'json debut: '.$json);	
 				$nouvelles_cmds=[];
