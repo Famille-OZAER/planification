@@ -35,7 +35,7 @@ function planification_update() {
 			
 			$commandes=$eqLogic->getConfiguration("commandes_planification","");
 			if (is_array($commandes)){
-				$nom_fichier="/../../../" . $eqLogic->getId() . ".json";
+				$nom_fichier=dirname(__FILE__) ."/../../../" . $eqLogic->getId() . ".json";
 				if(file_exists ( $nom_fichier ) ){
 					$json=file_get_contents ($nom_fichier);
 				}
