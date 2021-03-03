@@ -51,8 +51,8 @@ function planification_update() {
 						array_push($nouvelles_cmds,$commande);
 					}
 				}
-				//$fichier = fopen( $nom_fichier, 'w');
-				//fwrite($fichier, $json);
+				$fichier = fopen( $nom_fichier, 'w');
+				fwrite($fichier, $json);
 				log::add('planification', 'debug', 'json fin: '.$json);
 				//$eqLogic->setConfiguration("commandes_planification", "");
 			}
