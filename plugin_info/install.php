@@ -35,12 +35,12 @@ function planification_update() {
 			
 			$commandes=$eqLogic->getConfiguration("commandes_planification","");
 			if (is_array($commandes)){
-				$nom_fichier=dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . ".json";
+				$nom_fichier="/../../../" . $eqLogic->getId() . ".json";
 				if(file_exists ( $nom_fichier ) ){
 					$json=file_get_contents ($nom_fichier);
 				}
 				log::add('planification', 'debug', 'fichier json: '.$nom_fichier);
-				log::add('planification', 'debug', 'json fin: '.$json);	
+				log::add('planification', 'debug', 'json debut: '.$json);	
 				$nouvelles_cmds=[];
 				if (is_array($commandes)){
 					foreach ($commandes as $commande){
