@@ -39,7 +39,8 @@ function planification_update() {
 				if(file_exists ( $nom_fichier ) ){
 					$json=file_get_contents ($nom_fichier);
 				}
-				log::add('planification', 'debug', 'json debut: '.$json);	
+				log::add('planification', 'debug', 'fichier json: '.$nom_fichier);
+				log::add('planification', 'debug', 'json fin: '.$json);	
 				$nouvelles_cmds=[];
 				if (is_array($commandes)){
 					foreach ($commandes as $commande){
