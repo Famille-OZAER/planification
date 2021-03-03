@@ -422,6 +422,7 @@ $('#tab_planifications').on('click','.bt_ajout_periode',  function () {
 	
 	var SELECT_LIST= Recup_select("planifications")
 	var CMD_LIST=Recup_liste_commandes_planification()
+	console.log(CMD_LIST)
 	Couleur="erreur"
 	Nom=""
 	Couleur="couleur-" + CMD_LIST[0].couleur

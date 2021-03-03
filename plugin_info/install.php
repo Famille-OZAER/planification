@@ -39,7 +39,7 @@ function planification_update() {
 				if(file_exists ( $nom_fichier ) ){
 					$json=file_get_contents ($nom_fichier);
 				}
-						
+				log::add('planification', 'debug', 'json debut: '.$json);	
 				$nouvelles_cmds=[];
 				if (is_array($commandes)){
 					foreach ($commandes as $commande){
@@ -50,9 +50,10 @@ function planification_update() {
 						array_push($nouvelles_cmds,$commande);
 					}
 				}
-				$fichier = fopen( $nom_fichier, 'w');
-				fwrite($fichier, $json);
-				$eqLogic->setConfiguration("commandes_planification", "");
+				//$fichier = fopen( $nom_fichier, 'w');
+				//fwrite($fichier, $json);
+				log::add('planification', 'debug', 'json fin: '.$json);
+				//$eqLogic->setConfiguration("commandes_planification", "");
 			}
 
 

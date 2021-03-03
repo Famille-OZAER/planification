@@ -97,7 +97,7 @@ try {
         }
         //$res=$eqLogic->getConfiguration("commandes_planification","");
         
-        $cmds=$eqLogic-> searchCmdByConfiguration("Type");
+        $cmds=$eqLogic->searchCmdByConfiguration("Type");
         $res=[];
         
         if ($cmds !=""){
