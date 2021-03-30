@@ -18,7 +18,7 @@
 				<center>
 					<div class="page_1" style="display : #display_page_1#;">
 						<center>
-							<img src="plugins/planification/core/template/dashboard/images/poele/#img_poele#" style="height: 80px;"/> 
+							<img src="plugins/planification/core/template/dashboard/images/poele/#img#" style="height: 80px;"/> 
 						</center>
 					</div>
 					<div class="page_2" style="display : #display_page_2#;margin-top : 10px">
@@ -46,7 +46,8 @@
 								jeedom.cmd.execute({id: '#arret_id#'});
 							});
 							$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').css('display', 'block');
-							if ('#mode_fonctionnement#' == 'auto') {
+							if ('#mode#' == 'Auto') {
+								
 								$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').css('display', 'none');
 								$('.eqLogic[data-eqLogic_uid=#uid#] .auto').css('color', 'white');
 								$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('#action_en_cours#');
@@ -60,7 +61,7 @@
 								
 								$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').append('#planification_en_cours#');
 								$('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').css('display', 'block');
-							} else if ('#mode_fonctionnement#' == 'arret') {
+							} else if ('#mode#' == 'arret') {
 								$('.eqLogic[data-eqLogic_uid=#uid#] .arret').css('color', 'white');
 								$('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').append('Arrêt');
 								$('.eqLogic[data-eqLogic_uid=#uid#]  .droite .page_1').css('display', 'none');

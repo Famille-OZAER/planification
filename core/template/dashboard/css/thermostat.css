@@ -44,7 +44,7 @@
 
 .Thermostat {
 	position:relative;
-	background-image: url(plugins/planification/core/template/dashboard/images/thermostat/fond.png);
+	background-image: url(images/thermostat/fond.png);
 	background-repeat: no-repeat;
 	width: 300px;
 	height: 300px;

@@ -53,7 +53,7 @@
 			?>
 		</div>
 	</div>
-
+	
 	<!--Equipement page-->
 	<div class="col-xs-12 eqLogic" style="display: none;">
 		
