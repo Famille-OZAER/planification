@@ -1300,14 +1300,25 @@ function saveEqLogic(_eqLogic) {
 				if (!isset(_cmd.configuration)) {
 					_cmd.configuration = {}
 				}
-				if (_cmd.name == $(this).getValues('.cmdAttr[data-l1key=name]')[0].name){
-					if( _cmd.name != "Absent"){_cmd.configuration.Type="Planification"}
+				if(_eqLogic.configuration.type != 'Poele') {
+					if( _cmd.name != "Absent" && _cmd.name != "Arrêt"){_cmd.configuration.Type="Planification"}
 					if(typeof($(this).getValues('.expressionAttr')[0].options) != "undefined"){
 						_cmd.configuration.options=($(this).getValues('.expressionAttr')[0].options)
 					}else{
 						_cmd.configuration.options=''
 					}
+				}else{
+					if (_cmd.name == $(this).getValues('.cmdAttr[data-l1key=name]')[0].name){
+
+						if( _cmd.name != "Absent"){_cmd.configuration.Type="Planification"}
+						if(typeof($(this).getValues('.expressionAttr')[0].options) != "undefined"){
+							_cmd.configuration.options=($(this).getValues('.expressionAttr')[0].options)
+						}else{
+							_cmd.configuration.options=''
+						}
+					}
 				}
+				
 			})
 		}
 	})
