@@ -1,5 +1,6 @@
 
 <div class="eqLogic eqLogic-widget allowResize allowReorderCmd #custom_layout# #class#" data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" style="min-width:100px!important;width: #width#;height: #height#;#style#"> 
+	
 	<center class="object_name" style="overflow: hidden;padding-right:22px;padding-left:12px;font-weight:300;word-break: break-all;max-height:45px;font-size:16px;background-color: rgba(0,0,0,0.6);font-family:Arial;font-weight:normal;">
 		<span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#">
 			<i class="fas fa-sync"></i>
@@ -13,6 +14,7 @@
 		</span>
 		<a href="#eqLink#" class="reportModeHidden">#name_display#</a>
 	</center>
+
 	<i class="fa fa-retweet cursor tooltips changecmd noRefresh" title="Changer commandes" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
 
 	<div class="tuile">
@@ -20,7 +22,7 @@
 			<br/>
 			
 			<div style="height: 80px;">
-				<img class="cmd cmd-widget auto"  data-type="info" src='plugins/planification/core/template/dashboard/images/Volet/#img#' style='width:80px'/>
+				<img class="cmd cmd-widget img"  data-type="info" src='plugins/planification/core/template/dashboard/images/Volet/#img#' style='width:80px'/>
 				<span class="nom_eqLogic" style="display:none;position: relative;top: -35px;color: black;font-weight: 300;font-size: 16px;">#name_display#</span>
 			</div>
 			
@@ -49,7 +51,9 @@
             
 		
 	</div>
+	<script src="plugins/planification/core/template/dashboard/js/widget.js" type="text/javascript"></script>
     <script>
+		
 		if($('.eqLogic[data-eqLogic_uid=#uid#] .object_name').css("display") == "block"){
 			var taille = parseInt($('.eqLogic[data-eqLogic_uid=#uid#] .object_name').css('height').replace(/px/i, ''))
 			if($('.eqLogic[data-eqLogic_uid=#uid#] .widget-name').css("display") == "block"){
@@ -73,7 +77,7 @@
         $('.eqLogic[data-eqLogic_uid=#uid#] .my').on('click', function () {
             jeedom.cmd.execute({id: '#my_id#'});
         });
-		$('.eqLogic[data-eqLogic_uid=#uid#] .auto').on('click', function () {
+		$('.eqLogic[data-eqLogic_uid=#uid#] .img').on('click', function () {
 			if('#mode#' == "Manuel"){ jeedom.cmd.execute({id: '#auto_id#'});}
         });
         $('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').on('click', function () {
@@ -94,8 +98,10 @@
 				
                 break
 			case "Manuel":
-				$('.eqLogic[data-eqLogic_uid=#uid#] .auto').addClass("cursor")
+				$('.eqLogic[data-eqLogic_uid=#uid#] .img').addClass("cursor")
+				$('.eqLogic[data-eqLogic_uid=#uid#] .img').attr("title","Cliquez pour remettre le volet en auto.")
 				$('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').addClass("cursor")
+				$('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').attr("title","Cliquez pour remettre le volet en auto.")
                 if('#endtime#' != ""){
                     if('#endtime#'.length == 5){
                         $('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('Remise en auto à #endtime#')
@@ -170,58 +176,9 @@
 			
 		});
 			
-		function reset_page(id,uid,page,action_en_cours){
-			if (page == 'page1'){
-				$('.eqLogic[data-eqLogic_uid='+uid+'] .page_1').css('display', 'block')
-				$('.eqLogic[data-eqLogic_uid='+uid+'] .page_2').css('display', 'none')
-				if (action_en_cours=="Arrêt"){
-					$('.eqLogic[data-eqLogic_uid='+uid+'] .droite').find(".page_1").css('display', 'none')
-				}else if (action_en_cours=="Absent"){
-					$('.eqLogic[data-eqLogic_uid='+uid+'] .droite').find(".page_1").css('display', 'none')
-				}else if (action_en_cours=="Ventilation"){
-					$('.eqLogic[data-eqLogic_uid='+uid+'] .droite').find(".page_1").css('display', 'none')
-				}else{
-					$('.eqLogic[data-eqLogic_uid='+uid+'] .droite').find(".page_1").css('display', 'block')
-				}
-			}
-			if (page == 'page2'){
-				$('.eqLogic[data-eqLogic_uid='+uid+'] .page_2').css('display', 'block')
-				$('.eqLogic[data-eqLogic_uid='+uid+'] .page_1').css('display', 'none')
-				setTimeout(function(){ 
-					$.ajax({
-						type: "POST",
-						url: "plugins/planification/core/ajax/planification.ajax.php",
-						data: {
-							action: "Set_widget_cache",
-							id: id,
-							page :"page1",
-						},
-						global: false,
-						error: function (request, status, error) {handleAjaxError(request, status, error)},
-						success: function (data) {
-							if (data.state != 'ok') {
-								$('#div_alert').showAlert({
-									message: data.result,
-									level: 'danger'
-								})
-								return
-							}
-						}
-					})
-					reset_page(id,uid,"page1",action_en_cours)
-
-		
-					
-				
-				},60000);
-			}
-			
-		}
-		
 		$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').val('#datetimepicker#');
 		jQuery.datetimepicker.setLocale('fr');
 		$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').on('click', function () {
-			
 			$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').datetimepicker({
 				minDate : '0d',
 				step: 15,

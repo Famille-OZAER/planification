@@ -72,7 +72,7 @@
 		$(_this).attr('mouseDown',"ok")
 	}
 	function drag_move(_this,e){
-		if ( $(_this).attr('mouseDown') == "ok"){
+		if ($(_this).attr('mouseDown') == "ok"){
 			Modifie_temperature($(_this),e)
 		}
 	}
@@ -82,9 +82,7 @@
 			$(_this).removeAttr('mouseDown',"");
 		}
 	}
-    function reset_page(id,uid,page,action_en_cours){
-        console.log("ok")
-		
+    function reset_page(id,uid,page,action_en_cours){		
         if (page == 'page1'){
             $('.eqLogic[data-eqLogic_uid='+uid+'] .page_1').css('display', 'block')
             $('.eqLogic[data-eqLogic_uid='+uid+'] .page_2').css('display', 'none')

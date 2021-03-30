@@ -996,7 +996,9 @@ function MAJ_Graphique_jour(Div_jour){
 			width = (delta*100) / 1440
 			class_periode = ""
 			mode = "Aucun"
-			nouveau_graph = '<div style="width:'+width+'%; height:20px; display:inline-block;" title="'+ debut_periode +" - 23:59<br>" +mode+'"></div>'
+			nouveau_graph = '<div class="graph '+class_periode+'" style="width:'+width+'%; height:20px; display:inline-block;">'
+			nouveau_graph +='<span class="tooltiptext  '+class_periode+'">'+debut_periode +" - 23:59<br>" +mode+'</span>'
+			nouveau_graph +='</div>'
 			graphDiv.append(nouveau_graph)
 		}
 		if (isLast){
