@@ -178,7 +178,7 @@
 							</div>
 						</div>
 						<div class="PAC" style="display:none">
-						<div class="form-group" style="display : block;" >
+							<div class="form-group" style="display : block;" >
 								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 								<div class="col-sm-3">
 									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle"/>

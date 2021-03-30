@@ -1297,7 +1297,9 @@ function saveEqLogic(_eqLogic) {
 		
 		if(_cmd.type == "action" && _cmd.name != "Auto" && _cmd.name != "Absent"){
 			$('#table_actions tbody tr').each(function(){
-				
+				if (!isset(_cmd.configuration)) {
+					_cmd.configuration = {}
+				}
 				if (_cmd.name == $(this).getValues('.cmdAttr[data-l1key=name]')[0].name){
 					if( _cmd.name != "Absent"){_cmd.configuration.Type="Planification"}
 					if(typeof($(this).getValues('.expressionAttr')[0].options) != "undefined"){
