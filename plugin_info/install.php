@@ -41,22 +41,19 @@ function planification_update() {
 				}
 				$fichier = fopen( $nom_fichier.".bak", 'w');
 				fwrite($fichier, $json);
-				log::add('planification', 'debug', 'fichier json: '.$nom_fichier);
-				log::add('planification', 'debug', 'json debut: '.$json);	
-				$nouvelles_cmds=[];
 				if (is_array($commandes)){
 					foreach ($commandes as $commande){
 						$id=$commande["Id"];
 						$nom=$commande["nom"];
 						$commande['Id']=$commande["nom"];
 						$json=str_replace($id,$nom,$json);
-						array_push($nouvelles_cmds,$commande);
+						
 					}
 				}
 				$fichier = fopen( $nom_fichier, 'w');
 				fwrite($fichier, $json);
 				log::add('planification', 'debug', 'json fin: '.$json);
-				//$eqLogic->setConfiguration("commandes_planification", "");
+				$eqLogic->setConfiguration("commandes_planification", "");
 			}
 
 

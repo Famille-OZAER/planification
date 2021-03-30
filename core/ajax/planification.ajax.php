@@ -51,7 +51,6 @@ try {
         }
         ajax::success($res);
     }
-    
     if (init('action') == 'Recup_select') {
         $eqLogic = planification::byId(init('eqLogic_id'));
         if (!is_object($eqLogic)) {
@@ -94,9 +93,7 @@ try {
         $eqLogic = planification::byId(init('eqLogic_id'));
         if (!is_object($eqLogic)) {
             throw new Exception(__('Equipement planification introuvable : ', __FILE__) . init('id'));
-        }
-        //$res=$eqLogic->getConfiguration("commandes_planification","");
-        
+        }        
         $cmds=$eqLogic->searchCmdByConfiguration("Type");
         $res=[];
         
@@ -131,13 +128,11 @@ try {
         $res=planification::Recup_infos_lever_coucher_soleil(init('id'));
         ajax::success($res);
     }
-    
     if (init('action') == 'Save_EqLogic') {
         $eqLogic = planification::byId(init('eqLogic_id'));
         $eqLogic->save(false);
         ajax::success();
     }
-    
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */
 } catch (Exception $e) {

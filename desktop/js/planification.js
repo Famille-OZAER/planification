@@ -184,126 +184,10 @@ $('#tab_commandes').on('focusout','.cmdAction',  function () {
 		taAutosize();
 	});
 });
-$("#tab_commandes #table_actions").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true})
-$("#tab_commandes #table_infos").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true})
- /* //commandes planification
-$('#tab_commandes_planification').on('click','.select-selected',  function (e) {
-	modifyWithoutSave = true;
-	e.stopPropagation();
-	closeAllSelect(this);
-	this.nextSibling.classList.toggle("select-hide");
-	this.classList.toggle("select-arrow-active");
-});
-$('#tab_commandes_planification').on('click','.select-items div',  function () {
-	modifyWithoutSave = true;
-	select = this.parentNode.previousSibling;
-	select.innerHTML = this.innerHTML;
-	select.classList.remove(recup_class_couleur(select.classList))
-	select.classList.add(recup_class_couleur(this.classList))
-	select.setAttribute("Id",this.getAttribute("Id"))
-	y = this.parentNode.getElementsByClassName("same-as-selected");
-	for (k = 0; k < y.length; k++) {
-		y[k].classList.remove("same-as-selected")
-	}
-	this.classList.add("same-as-selected")
-	select.click();
-})
-$('#tab_commandes_planification').on('click','.bt_Ajout_commande_planification',  function () {
-	//addCmdPlanificationToTable({});
-	//modifyWithoutSave = true;
-	$.ajax({
-		type: "POST",
-		url: "plugins/planification/core/ajax/planification.ajax.php",
-		data: {
-			action: "MAJ",
-			id: 916
-		},
-		global: false,
-		error: function (request, status, error) {handleAjaxError(request, status, error)},
-		success: function (data) {
-			if (data.state != 'ok') {
-				$('#div_alert').showAlert({
-					message: data.result,
-					level: 'danger'
-				})
-				return
-			}
-		}
-	})	
-});
-$('#tab_commandes_planification').on('click','.listCmdAction',  function () {
-//$("body").delegate(".listCmdAction", 'click', function() {
-    var el = $(this).closest('div div').find('.expressionAttr[data-l1key=cmd]');
-    jeedom.cmd.getSelectModal({cmd: {type: 'action'}}, function(result) {
-        el.value(result.human);
-        jeedom.cmd.displayActionOption(el.value(), '', function(html) {
-            el.closest('div td').find('.actionOptions').html(html);
-        });
-    });
-});
-$('#tab_commandes_planification').on('click','.listAction',  function () {
-	var el = $(this).closest('div div').find('.expressionAttr[data-l1key=cmd]');
-	jeedom.getSelectActionModal({}, function (result) {
-		el.value(result.human);
-		jeedom.cmd.displayActionOption(el.value(), '', function (html) {
-			el.closest('div td').find('.actionOptions').html(html);
-			taAutosize();
-		});
-	});
-});
-$('#tab_commandes_planification').on('click','.bt_Suppression_commande_planification',  function () {
-	var progs = [];
-	var cmd_id=$(this).closest('div tr').getValues('.expressionAttr')[0]['Id']
-	$('#div_planifications').find('.select-selected').each(function () {
-		if($(this)[0].getAttribute("id")==cmd_id){
-			if (!progs.includes($(this).closest('div .planification').find(".nom_planification")[0].innerHTML)){
-				progs.push($(this).closest('div .planification').find(".nom_planification")[0].innerHTML);
-			}					
-		}
-	})
-	var div=$(this).closest('div tr')
-	if (progs.length >0){
-		if (progs.length >1){
-			message ="Êtes-vous certain de vouloir supprimer cette commande ?<br>Celle-ci est utilisée dans les planifications suivante:<br>" 
-			progs.forEach(element => message+= "- " + element + "<br>");
-			message+= "Ces planifications ne fonctionneront plus correctement..." 
-		}else{
-			message ="Êtes-vous certain de vouloir supprimer cette commande ?<br>Celle-ci est utilisée dans la planification suivante:<br> - " + progs + '<br>' + "Cette planification ne fonctionnera plus correctement..." 
-			
-		}
-		bootbox.confirm({
-			
-			message: message,
-			buttons: {
-				confirm: {
-					label: 'Oui',
-					className: 'btn-success'
-				},
-				cancel: {
-					label: 'Non',
-					className: 'btn-danger'
-				}
-			},
-			callback: function (result) {
-				if(result){
-					modifyWithoutSave = true;
-					div.remove();
-				}
-			}
-		});
-	}else{
-		modifyWithoutSave = true;
-		$(this).closest('div tr').remove();
-	}
-})
-$('#tab_commandes_planification').on('focusout','.cmdAction',  function () {
-	var el = $(this);
-	var expression = el.closest('td').getValues('.expressionAttr');
-	jeedom.cmd.displayActionOption(el.value(), expression[0].options, function (html) {
-		el.closest('div td').find('.actionOptions').html(html);
-		taAutosize();
-	});
-}); */
+
+$("#tab_commandes #table_actions").sortable({axis: "y", cursor: "move", items: ".cmd",distance:30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true})
+$("#tab_commandes #table_infos").sortable({axis: "y", cursor: "move", items: ".cmd",distance:30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true})
+ 
 //planifications:
 $("#tab_planifications #div_planifications").sortable({
 	axis: "y", cursor: "move", items: ".planification", handle: ".panel-heading", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true
@@ -422,7 +306,6 @@ $('#tab_planifications').on('click','.bt_ajout_periode',  function () {
 	
 	var SELECT_LIST= Recup_select("planifications")
 	var CMD_LIST=Recup_liste_commandes_planification()
-	console.log(CMD_LIST)
 	Couleur="erreur"
 	Nom=""
 	Couleur="couleur-" + CMD_LIST[0].couleur
@@ -432,7 +315,7 @@ $('#tab_planifications').on('click','.bt_ajout_periode',  function () {
 	element=element.replace("#VALUE#",Nom)
 	element=element.replace("#ID#",Id)
 	Ajout_Periode(element, Divjour)
-	set_time_picker($(Divjour))
+
 	MAJ_Graphique_jour(Divjour)
 	Divjour.css("max-height","fit-content")
 	Divjour.css("overflow","visible")
@@ -480,7 +363,7 @@ $('#tab_planifications').on('click','.bt_coller_jour',  function () {
 		element=element.replace("#VALUE#",Nom)
 		element=element.replace("#ID#",Id)
 		Ajout_Periode(element,Divjour, periode.debut_periode,null,Type_periode)
-		set_time_picker($(Divjour))
+	
 	})
 	Divjour.css("overflow","visible")
 	Divjour.css("max-height","fit-content")
@@ -788,6 +671,27 @@ var time='00:00'
 	triage_jour(Divjour)
 	MAJ_Graphique_jour(Divjour)
 });
+$('#tab_planifications').on('click','.clock-timepicker',  function () {
+	Divjour = $(this).closest('.JourSemaine ')
+	$(this).datetimepicker({
+		step: 5,
+		theme:'dark',
+		datepicker:false,
+		format: 'H:i',
+		onClose:function(dp,$input){
+			$('.clock-timepicker').datetimepicker('destroy')
+		},
+		onSelectTime:function(dp,$input){
+			modifyWithoutSave = true;
+			time=$input.val()
+			$($input).attr("time_int",(parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
+			$($input).attr("value",time)
+			triage_jour($(Divjour))
+			MAJ_Graphique_jour($(Divjour).closest('.JourSemaine'));
+		}
+	});
+	$(this).datetimepicker('show');
+	});
 //gestion lever coucher de soleil
 $('#tab_gestion').on("change",".selection_jour", function() { 
 	$('#tab_gestion ').find('.Lundi').css("display","none")
@@ -950,11 +854,13 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 			time_int=parseInt(parseInt(dernier_debut.split(':')[0] * 60) + parseInt(dernier_debut.split(':')[1]))
 			
 			if(time_int==1439){
-				return;
+				time=""
 			}else if(time_int>=1425){
 				time = 23 + ':' + 59
+			}else if(dernier_debut==""){
+				return
 			}else{
-				time_int+=15
+				/*time_int+=15
 				heures=parseInt(time_int/60)
 			
 				minutes=time_int-(heures*60)
@@ -965,7 +871,8 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 				minutes_str="0"+ (time_int - (heures * 60))
 				minutes_str=minutes_str.substr(minutes_str.length -  2)
 				prochain_debut=heures_str +":"+minutes_str
-				time = prochain_debut
+				time = prochain_debut*/
+				time=""
 			}
 			
         }else if (Mode_periode == null){
@@ -1070,57 +977,8 @@ function triage_jour(Div_jour){
 			return this.el;
 		}).appendTo($(Div_jour));
 }
-function set_time_picker(Div_jour){
-	$(Div_jour).find(".clock-timepicker").each(function () {
-		if($(this).val() !="00:00"){
-			$(this).TimePicker({
-				date: false,
-				shortTime: false,
-				format: 'HH:mm',
-				switchOnClick : true,
-			})
-				.on('open', function(e, date){
-					debut_periode_precedente=""
-					debut_periode_suivante=""
-					debut_periode_precedente=$(this).closest(".Periode_jour").prev().find(".clock-timepicker").val()
-					if (typeof( debut_periode_precedente) !=  "undefined") {
-						debut_periode_precedente_int = (parseInt(debut_periode_precedente.split(':')[0]) * 60) + parseInt(debut_periode_precedente.split(':')[1])+1
-						heures_debut_str="0"+Math.trunc(debut_periode_precedente_int/60)
-						heures_debut_str=heures_debut_str.substr(heures_debut_str.length -  2)
-						minutes_debut_str="0"+ (debut_periode_precedente_int - (Math.trunc(debut_periode_precedente_int/60)* 60))
-						minutes_debut_str=minutes_debut_str.substr(minutes_debut_str.length -  2)
-					}
-					debut_periode_suivante=$(this).closest(".Periode_jour").next().find(".clock-timepicker").val()
-					if (typeof( debut_periode_suivante) !=  "undefined") {
-					
-						console.log("debut suivant :  " +debut_periode_suivante)
-						
-						debut_periode_suivante_int = (parseInt(debut_periode_suivante.split(':')[0]) * 60) + parseInt(debut_periode_suivante.split(':')[1])-1
-						heures_suivante_str="0"+Math.trunc(debut_periode_suivante_int/60)
-						heures_suivante_str=heures_suivante_str.substr(heures_suivante_str.length -  2)
-						minutes_suivante_str="0"+ (debut_periode_suivante_int - (Math.trunc(debut_periode_suivante_int/60)* 60))
-						minutes_suivante_str=minutes_suivante_str.substr(minutes_suivante_str.length -  2)
-					}else{
-						heures_suivante_str="23"
-						minutes_suivante_str="59"
-					}
-					$(this).TimePicker('setMinDate', heures_debut_str + ":"  + minutes_debut_str );
-					$(this).TimePicker('setMaxDate', heures_suivante_str + ":"  + minutes_suivante_str);
-					
-				})
-				.on("change",function(e){
-					modifyWithoutSave = true;
-					time=e.target.value
-					$(e.target).attr("time_int",(parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
-					$(e.target).attr("value",time)
-					MAJ_Graphique_jour($(this).closest('.JourSemaine'));
-				})
-		}else{
-			$(this).css("pointer-events","none")
-		}
-	})
-	return;	
-}
+
+
 function MAJ_Graphique_jour(Div_jour){
 	graphDiv = $(Div_jour).closest('.planification-body').find(".graphJours").find('.graphique_jour_' + $(Div_jour).attr("class").split(' ')[1])
 	graphDiv.empty()
@@ -1131,7 +989,6 @@ function MAJ_Graphique_jour(Div_jour){
 		var periode = Periode_jour[i]
         var debut_periode =$(periode).find('.clock-timepicker').attr("value")
 		var heure_debut = (parseInt(debut_periode.split(':')[0]) * 60) + parseInt(debut_periode.split(':')[1])
-		
 		var delta, class_periode, mode,nouveau_graph,heure_fin,width,fin_periode,fin_periode
 		if(isFirst && heure_debut != 0){
 			heure_fin = heure_debut
@@ -1218,10 +1075,11 @@ function printEqLogic(_eqLogic) {
 		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id )
 		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_allume_id]').val(_eqLogic.configuration.etat_allume_id)
 		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_boost_id]').val(_eqLogic.configuration.etat_boost_id)
+		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
 	}
 	if(_eqLogic.configuration.type == 'PAC') {
 		$('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id )
-		$('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=etat_pac_id]').val(_eqLogic.configuration.etat_PAC_id)
+		$('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
 	}
 	$.ajax({
 		type: "POST",
@@ -1339,7 +1197,7 @@ function printEqLogic(_eqLogic) {
 							}
 						})
 						triage_jour($('#div_planifications .planification:last .JourSemaine.' + jour_en_cours))
-						set_time_picker($('#div_planifications .planification:last .JourSemaine.' + jour_en_cours))
+						
 						MAJ_Graphique_jour($('#div_planifications .planification:last .JourSemaine.' + jour_en_cours))
 					})
 					
@@ -1351,8 +1209,6 @@ function saveEqLogic(_eqLogic) {
     if (!isset(_eqLogic.configuration)) {
         _eqLogic.configuration = {}
     }
-	_eqLogic.configuration.commandes_planification = []
-	
 	var planifications = [];
 	var erreur=false
 	
@@ -1380,6 +1236,11 @@ function saveEqLogic(_eqLogic) {
 					erreur=true
 					$(this).find('.select-selected')[0].classList.add("erreur")
 				}
+				
+				if(type_periode == "heure_fixe" && debut_periode ==""){
+					erreur=true
+					$(this).find('.select-selected')[0].classList.add("erreur")
+				}
 				periodes.push({'Type_periode':type_periode,'Debut_periode':debut_periode, 'Id':Id})
 			})
 			jour.periodes = periodes
@@ -1391,7 +1252,7 @@ function saveEqLogic(_eqLogic) {
 	})
 	if (erreur){
 		alert("Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.")
-		return ;
+		return false ;
 	}
 	$.ajax({
 		type: "POST",
@@ -1420,16 +1281,15 @@ function saveEqLogic(_eqLogic) {
 		_eqLogic.configuration.temperature_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_id]').val();
 		_eqLogic.configuration.etat_allume_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_allume_id]').val();
 		_eqLogic.configuration.etat_boost_id = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_boost_id]').val();
+		_eqLogic.configuration.temperature_consigne_par_defaut = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val();
+		_eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .poele .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
 	}								   	
 	if(_eqLogic.configuration.type == 'PAC') {
 		_eqLogic.configuration.temperature_id = $('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=temperature_id]').val();
-		_eqLogic.configuration.etat_PAC_id = $('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=etat_pac_id]').val();
+		_eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
 	}	
 
-	$('#table_cmd_planification tbody tr').each(function(){
-		_eqLogic.configuration.commandes_planification.push($(this).getValues('.expressionAttr')[0])
-	})
-
+	
 
 	_eqLogic.cmd.forEach(function(_cmd){
 		
@@ -1476,10 +1336,9 @@ function addCmdToTable(_cmd) {
 				
 			tr += '</td>'
 			tr += '<td>'
-			if (_cmd.subType == "numeric" || _cmd.subType == "binary") {
-				tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span> '
-			}
 			
+			tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span> '
+		
 			tr += '</td>'
 			
 			tr += '<td>'
@@ -1506,12 +1365,12 @@ function addCmdToTable(_cmd) {
 				tr += '</td>'
 				
 				tr += '<td>'
-				if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent"){
+				if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent" && _cmd.logicalId != "force"){
 						tr += '<div class="input-group" style=" width:100%;">';
 						tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
 						tr += '<span class="input-group-btn">';
-							tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
 							tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
+							tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
 						tr += '</span>';
 						
 					tr += '</div>';
@@ -1520,7 +1379,7 @@ function addCmdToTable(_cmd) {
 				}
 				tr += '</td>'
 				tr += '<td>'
-				if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent"){
+				if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent" && _cmd.logicalId != "force"){
 					tr += '<div class="custom-select">'
 						tr += SELECT_LIST
 						
@@ -1532,6 +1391,7 @@ function addCmdToTable(_cmd) {
 					if (is_numeric(_cmd.id)){
 						tr += '<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a> '
 						tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>'
+					
 					}
 				tr += '</td>'
 			tr += '</tr>'
@@ -1544,7 +1404,7 @@ function addCmdToTable(_cmd) {
 			jeedom.cmd.changeType($('#table_actions tbody tr:last'), init(_cmd.subType))
 			$('#table_actions tbody tr:last').find(".actionOptions").append(jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options)))
 				
-			if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent"){
+			if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent" && _cmd.logicalId != "force"){
 				if (isset(_cmd.configuration.Couleur)){
 					couleur=_cmd.configuration.Couleur
 					if(_cmd.configuration.Couleur == "<span>#VALUE#<\/span>"){

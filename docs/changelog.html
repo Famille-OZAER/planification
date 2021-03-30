@@ -15,22 +15,61 @@
         <header class="inner">
             <img align="right" src="../plugin_info/planification_icon.png" width="120">
             <h1 id="project_title">Plugin Planification</h1>
-            <h2 id="project_tagline">Journalisation des modifications du plugin</h2>
-            
-        </header>
-    </div>
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-        <section id="main_content" class="inner">
-            
-           
             <h2>Changelog</h2>
             <blockquote>
                 <p><em>Remarque : en cas de mise à jour non listée ici, c'est que celle-ci ne comporte que des changements mineurs du type documentation ou corrections de bugs mineurs.</em></p>
             </blockquote>
             <ul>
-                
+        </header>
+    </div>
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+        
+            <h3>A venir</h3>
+            <ul>
+                <li>Ajout d'un bouton dupliquer un équipement.</li>
+                <li>Modification du bouton tester sur les commandes de planifications.</li>
+                <li>Ajout du widget pour les chauffages avec fils pilotes.</li>
+                <li>Ajout du widget pour les prises.</li>
             </ul>
+            <h3>30/03/2021</h3>
+            <ul>
+                <li>Changement du modèle de thermostat pour la PAC</li>
+            </ul>
+            
+            <h3>24/03/2021</h3>
+            <ul>
+                <li>Optimisation de la vitesse d'affichage des widgets: création et destruction du datetimepicker à la volée.</li>
+                <li>Optimisation de la vitesse d'affichage des eqLogics: création et destruction du timepicker à la volée.</li>
+            </ul>
+            <h3>21/03/2021</h3>
+            <ul>
+                <li>Modification du timepicker dans l'onglet planification.</li>
+                <li>Ajout de la possibilité d'ajouter une période entre les autres dans l'onglet planification.</li>
+                <li>Mise en français des datetimepicker.</li>
+                <li>Correction des datetimepickers: Création du cron uniquement lors de la selection de l'heure. Jusqu'alors un cron était créé lors de la selection de la date puis il était modifié lors de la selection de l'heure.</li>
+            </ul>
+            <h3>14/03/2021</h3>
+            <ul>
+                <li>Amélioration du widget pour les volets roulants: ajout d'une tuile avec le nom de l'objet si celui-ci est affiché en mode design.</li>
+            </ul>
+
+            <h3>07/03/2021</h3>
+            <ul>
+                <li>Suppression du bouton dupliquer dans la gestion des équipements, celui-ci ne duplique pas totalement un équipement.</li>
+                <li>Ajout de la gestion des chauffages avec fils pilotes.</li>
+                 
+                <li>Execution de la commande associée à la commande en cours.</li>
+            </ul>
+
+            <h3>05/03/2021</h3>
+            <ul>
+                <li>Ajout de la gestion des volets roulants.</li>
+                <li>Ajout du widget pour les volets roulants.</li>
+                <li>Execution de la commande associée à la commande en cours.</li>
+            </ul>
+
             <h3>02/03/2021</h3>
             <ul>
                 <li>Mise en place du ChangeLog.</li>
@@ -42,14 +81,10 @@
                     <ul class="bloc">
                         <li>Désormais l'onglet "commandes planifications" a disparu. les commandes sont donc maintenant des commandes de l'eqLogic (ne pas oublier de remettre les diifferents couleurs lors de cette mise à jour).</li>
                         <li>Lorsque l'on utilisait plusieurs eqlogics avec le même type, ceux-ci ne fonctionnaient pas correctement.</li>
-                        <li>Lorsque l'on met le widget en mode absent, le mode arrêt est prioritaire.</li>
-                        <li>Lorsque l'on met le widget en mode autre que auto, le selection sur le widget n'est plus possible.</li>
-                        <li>Impossibilité de cliquer plusieurs fois sur le même mode.</li>
-                        <li>La selection sur le widget du même mode que celui en cours n'est plus possible.</li>
+                        <li>Lorsque l'on met le widget en mode absent, l'action arrêt est effectuée.</li>
+                        <li>La selection sur le widget du même mode que celui en cours n'est plus possible ce qui évite d'effectuer plusieur fois la même commande.</li>
                         <li>Masquage de la selection de la température, de la planification ou de l'heure de fin en fonction des différents modes.</li>
                     </ul>
-                    
-                    
                 </li>
                 <li>Mise à jour des widgets lors du pull de l'équipement.</li>
             </ul>

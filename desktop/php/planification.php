@@ -7,10 +7,10 @@
 	sendVarToJS('eqType', $plugin->getId());
 	$eqLogics = eqLogic::byType($plugin->getId());
 	
-	include_file('3rdparty', 'Moment', 'js', 'planification');
-	include_file('3rdparty', 'TimePicker', 'js', 'planification');
+	//include_file('3rdparty', 'Moment', 'js', 'planification');
+	//include_file('3rdparty', 'TimePicker', 'js', 'planification');3
+	
 ?>
-
 
 <div class="row row-overflow">
 	<div class="col-xs-12 eqLogicThumbnailDisplay">
@@ -59,7 +59,7 @@
 		
 		<div class="input-group pull-right" style="display:inline-flex">
 			<span class="input-group-btn">
-				<a class="btn btn-default btn-sm eqLogicAction" data-action="copy"><i class="fas fa-copy"></i> {{Dupliquer}}</a>
+				<!--<a class="btn btn-default btn-sm eqLogicAction" data-action="copy"><i class="fas fa-copy"></i> {{Dupliquer}}</a>-->
 				<a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fa fa-cogs"></i> {{Configuration avancée}}</a>
 				<a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fa fa-check-circle"></i> {{Sauvegarder}}</a>
 				<a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
@@ -134,17 +134,19 @@
 							</div>
 						</div>
 
-						<div class="form-group" style="display : block;" >
-							<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
-							<div class="col-sm-3">
-							<input type="number" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle"/>
-						</div>
-						</div>
+						
+						
 						<div class="poele" style="display:none">
+							<div class="form-group" style="display : block;" >
+								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
+								<div class="col-sm-3">
+									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_poele" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle"/>
+								</div>
+							</div>
 							<div class="form-group" style="display : block;" >
 								<label class="col-sm-3 control-label">{{Température par défaut}}</label>
 								<div class="col-sm-3">
-								<input type="number" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="temperature_consigne_par_defaut"/>
+								<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_poele" data-l2key="temperature_consigne_par_defaut"/>
 							</div>
 							</div>
 							<div class="form-group">
@@ -176,6 +178,12 @@
 							</div>
 						</div>
 						<div class="PAC" style="display:none">
+						<div class="form-group" style="display : block;" >
+								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
+								<div class="col-sm-3">
+									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle"/>
+								</div>
+							</div>
 							<div class="form-group">
 								<label class="col-sm-3 control-label">{{Commande de température}}</label>
 								<div class="col-sm-6 input-group">
@@ -830,7 +838,7 @@
 	
 	include_file('desktop', 'planification', 'js', 'planification');
 	include_file('desktop', 'planification', 'css', 'planification');
-	include_file('3rdparty', 'TimePicker', 'css', 'planification');
+	//include_file('3rdparty', 'TimePicker', 'css', 'planification');
 	include_file('core', 'plugin.template', 'js');
 	
 ?>

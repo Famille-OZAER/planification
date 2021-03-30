@@ -1,3 +1,10 @@
+.highlight {
+  border: 1px solid red;
+  font-weight: bold;
+  font-size: 45px;
+  background-color: #333333;
+}
+
 .couleur-bleu{
   background-color:Dodgerblue!important;
 }
@@ -285,12 +292,13 @@ top:0px;
 }*/
 #table_cmd_planification.table{
 width:auto}
+
+
 .erreur{
 	background-color:red !important;
 	-moz-animation: mymove 1s ease infinite;
     -webkit-animation: mymove 1s ease infinite;
 }
-
 /* Simple Animation */
 @-webkit-keyframes mymove {
 	0% {opacity: 1.0;
