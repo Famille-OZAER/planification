@@ -1077,6 +1077,7 @@ function printEqLogic(_eqLogic) {
 		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id )
 		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_allume_id]').val(_eqLogic.configuration.etat_allume_id)
 		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=etat_boost_id]').val(_eqLogic.configuration.etat_boost_id)
+		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val(_eqLogic.configuration.temperature_consigne_par_defaut);
 		$('#tab_eqlogic .poele .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
 	}
 	if(_eqLogic.configuration.type == 'PAC') {
@@ -1328,6 +1329,8 @@ function addCmdToTable(_cmd) {
 	if(_cmd.logicalId == "set_heure_fin" || _cmd.logicalId == "set_consigne_temperature" || _cmd.logicalId == "set_action_en_cours" || _cmd.logicalId == "manuel" || _cmd.logicalId == "refresh" || _cmd.logicalId == "boost_on" || _cmd.logicalId == "boost_off"){
 		return
 	}
+	
+	
 	if (_cmd.logicalId == 'set_planification'){
 		set_planification_Id = _cmd.id
 		return

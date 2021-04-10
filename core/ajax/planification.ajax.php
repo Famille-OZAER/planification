@@ -133,6 +133,12 @@ try {
         $eqLogic->save(false);
         ajax::success();
     }
+    if (init('action') == 'old_recup_eq_type') {
+        $eqLogic = planification::byId(init('id'));
+        
+        ajax::success( $eqLogic->getConfiguration("type","inconnu"));
+    }
+    
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */
 } catch (Exception $e) {
