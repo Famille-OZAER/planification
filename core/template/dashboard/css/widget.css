@@ -269,23 +269,3 @@
 .colorBar.active{
 	opacity:1;
 }
-.xdsoft_datetimepicker .xdsoft_scroller_box{transform: scale(1, -1);}
-.xdsoft_datetimepicker .xdsoft_time_variant{transform: scale(1, -1);}
-.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_prev {
-   	background-position: -40px -15px;
-    margin-bottom: 7px;
-    margin-top: 0;
-    top: 180px;
-}
-
-.xdsoft_datetimepicker .xdsoft_timepicker .xdsoft_next {
-    float: none;
-    background-position: -40px 0px;
-    height: 15px;
-    width: 30px;
-    display: block;
-    margin-left: 14px;
-    margin-top: 7px;
-    position: relative;
-    top: -180px;
-}			

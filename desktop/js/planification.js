@@ -19,9 +19,7 @@ $('.ajouter_eqlogic').on('click', function () {
 	'<div class="radio"> <label > ' +
 	'<input type="radio" name="type" id="Prise" value="Prise"> {{Prise}}</label> ' +
 	'</div> ' +
-	'<div class="radio"> <label > ' +
-	'<input type="radio" name="type" id="Autre" value="Autre" placeholder="Nom de l\'équipement"> {{Autre}}</label> ' +
-	'</div> <br>' +
+	'<br>' +
 	'<div class="input">' +
 	'<input class="col-sm-8" type="text" placeholder="Nom de l\'équipement" name="nom" id="nom" >  ' +
 	

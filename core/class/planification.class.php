@@ -1269,8 +1269,6 @@ class planificationCmd extends cmd {
 								break;
 							case 'set_consigne_temperature':
 								$eqLogic->checkAndUpdateCmd('consigne_temperature',$_options["slider"]);
-								planification::add_log($eqLogic,"debug","execute1:");
-								planification::add_log($eqLogic,"debug",$_options["slider"]);
 								$cmd_mode=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement');
 								if (is_object($cmd_mode)){
 									if ($cmd_mode->execCmd() != 'force'){							
@@ -1419,7 +1417,9 @@ class planificationCmd extends cmd {
 								break;
 							
 							case 'set_consigne_temperature':
+								planification::add_log($eqLogic,"debug","nouvelle consigne: " . $_options["slider"]);
 								$eqLogic->checkAndUpdateCmd('consigne_temperature',$_options["slider"]);
+								$eqLogic->Execute_action_actuelle();
 								$eqLogic->refresh();
 								$eqLogic->refreshWidget() ;
 								break;
