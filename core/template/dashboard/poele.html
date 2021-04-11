@@ -19,20 +19,6 @@
 			</div>
 			<div class="col-xs-6 droite" style="padding: 0px!important;">
 				<div class="Thermostat">
-					<div class="cercle_ext">
-						<div class="cercle_int">
-							<div class="barres" lastAngle=0 min="#consigne_min#" max="#consigne_max#">
-								<i class ="plus fa fa-plus-circle cursor"style="position: absolute;font-size: 72px;left: calc(50% - 40px);display:none"> </i>
-								<i class ="moins fa fa-minus-circle cursor"style="	position: absolute;	font-size: 72px;left: calc(50% - 40px);top: 135px;display:none"> </i>
-								<div class="Nom_Temperature_consigne">Consigne</div>
-								
-								<div class="Temperature_consigne" consigne="#consigne#" ></div>
-								<div class="Nom_Temperature_actuelle">Température actuelle</div>
-								
-								<div class="Temperature_actuelle" temp="#temperature#"></div>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -92,56 +78,9 @@
  
 	<script>
  
-		var rad2deg = 180/Math.PI;
-		var deg = 0;
-		for(var i=-20;i<81;i++){
-			deg = i*3;
-			mytop =(-Math.sin(deg/rad2deg)*95+100);
-			myleft = Math.cos((180 - deg)/rad2deg)*95+100;
-			$('<div class="colorBar" style="-webkit-transform: rotate(' + deg + 'deg) scale(1.25, 0.5); -moz-transform: rotate(' + deg + 'deg) scale(1.25, 0.5); -ms-transform: rotate(' + deg + 'deg) scale(1.25, 0.5);transform: rotate('+ deg +'deg) scale(1.25, 0.5);top: '+ mytop + 'px; left: ' + myleft+ 'px" >')
-			.appendTo($('.eqLogic[data-eqLogic_uid=#uid#] .barres'));
-		}
-	
-			
 		
-	
 
-		majWidget($('.Thermostat'))
-		
-		$( ".eqLogic[data-eqLogic_uid=#uid#] .cercle_int" ).mousedown( function(e) {
-			drag_start(this,e)
-		} );
-		$( ".eqLogic[data-eqLogic_uid=#uid#] .cercle_int" ).mouseup( function(e) {
-			drag_stop(this,e)
-			var temp=$(this).find('.Temperature_consigne').attr("consigne")
-			//jeedom.cmd.execute({id: '#set_consigne_temperature_id#', value: {slider:temp}});
-	
-			
-		} );
-		$( ".eqLogic[data-eqLogic_uid=#uid#] .cercle_int" ).mouseleave( function(e) {
-			drag_stop(this,e)
-		} );
-		$( ".eqLogic[data-eqLogic_uid=#uid#] .cercle_int" ).mousemove(function(e) {
-			drag_move(this,e)
-		} );
-		$( ".eqLogic[data-eqLogic_uid=#uid#] .cercle_int" ).bind('touchstart', function(e){
-			drag_start(this,e)
-		})
-	
-		$( ".eqLogic[data-eqLogic_uid=#uid#] .cercle_int" ).bind('touchend', function(e){
-			drag_stop(this,e)
-			var temp=$(this).find('.Temperature_consigne').attr("consigne")
-			//jeedom.cmd.execute({id: '#set_consigne_temperature_id#', value: {slider:temp}});
-		})
-		$( ".eqLogic[data-eqLogic_uid=#uid#] .cercle_int" ).bind( "touchmove", function(e){
-			drag_move(this,e)
-    	
-		});
-		
-		$("body").on("touchmove", false);
-
-	
-		
+ 		SetWidget_Thermostat($('.eqLogic[data-eqLogic_uid=#uid#]'),'#set_consigne_temperature_id#','#consigne_min#','#consigne_max#','#consigne#','#temperature#')
 		
 	
 		$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').val('#datetimepicker#');

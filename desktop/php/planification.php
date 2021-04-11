@@ -140,7 +140,7 @@
 							<div class="form-group" style="display : block;" >
 								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 								<div class="col-sm-3">
-									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_poele" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle"/>
+									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_poele" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle."/>
 								</div>
 							</div>
 							<div class="form-group" style="display : block;" >
@@ -154,7 +154,7 @@
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="temperature_id"/>
 									<span class="input-group-btn">
-										<a class="btn btn-success btn-sm listCmdTemperature"><i class="fa fa-tasks"></i></a>
+										<a class="btn btn-success btn-sm list_Cmd_info_numeric"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
@@ -163,7 +163,7 @@
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_allume_id"/>
 									<span class="input-group-btn">
-										<a class="btn btn-success btn-sm listCmdEtat"><i class="fa fa-tasks"></i></a>
+										<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
@@ -172,7 +172,7 @@
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_boost_id"/>
 									<span class="input-group-btn">
-										<a class="btn btn-success btn-sm listCmdEtatBoost"><i class="fa fa-tasks"></i></a>
+										<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
@@ -181,7 +181,7 @@
 							<div class="form-group" style="display : block;" >
 								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 								<div class="col-sm-3">
-									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle"/>
+									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle."/>
 								</div>
 							</div>
 							<div class="form-group">
@@ -189,7 +189,40 @@
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_PAC" data-l2key="temperature_id"/>
 									<span class="input-group-btn">
-										<a class="btn btn-success btn-sm listCmdTemperature"><i class="fa fa-tasks"></i></a>
+										<a class="btn btn-success btn-sm list_Cmd_info_numeric"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="Volet" style="display:none">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Commande de l'état du volet}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_volet" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm list_Cmd_info_string"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="Prise" style="display:none">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Commande de l'état de la prise}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_prise" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="Chauffage" style="display:none">
+							<div class="form-group">
+								<label class="col-sm-3 control-label">{{Commande de l'état du chauffage}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_chauffage" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm list_Cmd_info_string"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>

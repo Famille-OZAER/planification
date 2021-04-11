@@ -78,22 +78,37 @@ $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('ch
 	var img="plugins/planification/core/img/autre.png"
    if ($(this).value() == "PAC"){
 		$(".poele").hide()
+		$(".Volet").hide()
+		$(".Chauffage").hide()
+		$(".Prise").hide()
 		$(".PAC").show()
 		img='plugins/planification/core/img/pac.png'
    }else if ($(this).value() == "Volet"){
 		$(".poele").hide()
+		$(".Volet").show()
+		$(".Chauffage").hide()
+		$(".Prise").hide()
 		$(".PAC").hide()
 		img="plugins/planification/core/img/volet.png"
    }else if ($(this).value() == "Chauffage"){
 		$(".poele").hide()
+		$(".Volet").hide()
+		$(".Chauffage").show()
+		$(".Prise").hide()
 		$(".PAC").hide()
 		img="plugins/planification/core/img/chauffage.png"
    }else if ($(this).value() == "Poele"){
 		$(".poele").show()
+		$(".Volet").hide()
+		$(".Chauffage").hide()
+		$(".Prise").hide()
 		$(".PAC").hide()
 		img="plugins/planification/core/img/poele.png"
    	}else if ($(this).value() == "Prise"){
 		$(".poele").hide()
+		$(".Volet").hide()
+		$(".Chauffage").hide()
+		$(".Prise").show()
 		$(".PAC").hide()
 		img="plugins/planification/core/img/prise.png"
 	}
@@ -106,32 +121,28 @@ $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('ch
 		}
 	});
 })
-$('#tab_eqlogic').on('click','.listCmdTemperature',  function () {
-//$("body").delegate(".listCmdTemperature", 'click', function () {
-	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=temperature_id]');
+$('#tab_eqlogic').on('click','.list_Cmd_info_numeric',  function () {
+	//var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=temperature_id]');
+	var el=$(this).closest('div').find('input')
 	jeedom.cmd.getSelectModal({cmd: {type: 'info',subType:"numeric"}}, function (result) {
 		el.value(result.human);
 	});
 });
-$('#tab_eqlogic').on('click','.listCmdEtat',  function () {
-//$("body").delegate(".listCmdEtat", 'click', function () {
-	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_allume_id]');
+$('#tab_eqlogic').on('click','.list_Cmd_info_binary',  function () {
+	//var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_allume_id]');
+	var el=$(this).closest('div').find('input')
 	jeedom.cmd.getSelectModal({cmd: {type: 'info',subType:"binary"}}, function (result) {
 		el.value(result.human);
 	});
 });
-$('#tab_eqlogic').on('click','.listCmdInfoPAC',  function () {
-	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_pac_id]');
-	jeedom.cmd.getSelectModal({cmd: {type: 'info'}}, function (result) {
+$('#tab_eqlogic').on('click','.list_Cmd_info_string',  function () {
+	var el=$(this).closest('div').find('input')
+	
+	jeedom.cmd.getSelectModal({cmd: {type: 'info',subType:"string"}}, function (result) {
 		el.value(result.human);
 	});
 });
-$('#tab_eqlogic').on('click','.listCmdEtatBoost',  function () {
-	var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_boost_id]');
-	jeedom.cmd.getSelectModal({cmd: {type: 'info',subType:"binary"}}, function (result) {
-		el.value(result.human);
-	});
-});
+
 //commandes
 $('#tab_commandes').on('click','.select-selected',  function (e) {
 	modifyWithoutSave = true;
@@ -975,8 +986,6 @@ function triage_jour(Div_jour){
 			return this.el;
 		}).appendTo($(Div_jour));
 }
-
-
 function MAJ_Graphique_jour(Div_jour){
 	graphDiv = $(Div_jour).closest('.planification-body').find(".graphJours").find('.graphique_jour_' + $(Div_jour).attr("class").split(' ')[1])
 	graphDiv.empty()
@@ -1081,6 +1090,15 @@ function printEqLogic(_eqLogic) {
 	if(_eqLogic.configuration.type == 'PAC') {
 		$('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id )
 		$('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
+	}
+	if(_eqLogic.configuration.type == 'Volet') {
+		$('#tab_eqlogic .Volet .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
+	}
+	if(_eqLogic.configuration.type == 'Prise') {
+		$('#tab_eqlogic .Prise .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
+	}
+	if(_eqLogic.configuration.type == 'Chauffage') {
+		$('#tab_eqlogic .Chauffage .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
 	}
 	$.ajax({
 		type: "POST",
@@ -1289,37 +1307,33 @@ function saveEqLogic(_eqLogic) {
 		_eqLogic.configuration.temperature_id = $('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=temperature_id]').val();
 		_eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
 	}	
+	if(_eqLogic.configuration.type == 'Volet') {
+		_eqLogic.configuration.etat_id = $('#tab_eqlogic .Volet .eqLogicAttr[data-l2key=etat_id]').val();
+	}	
+	if(_eqLogic.configuration.type == 'Prise') {
+		_eqLogic.configuration.etat_id = $('#tab_eqlogic .Prise .eqLogicAttr[data-l2key=etat_id]').val();
+	}	
+	if(_eqLogic.configuration.type == 'Chauffage') {
+		_eqLogic.configuration.etat_id = $('#tab_eqlogic .Chauffage .eqLogicAttr[data-l2key=etat_id]').val();
+		
+	}	
 
 	
 
 	_eqLogic.cmd.forEach(function(_cmd){
-		
-		if(_cmd.type == "action" && _cmd.name != "Auto" && _cmd.name != "Absent"){
 			$('#table_actions tbody tr').each(function(){
 				if (!isset(_cmd.configuration)) {
 					_cmd.configuration = {}
 				}
-				if(_eqLogic.configuration.type != 'Poele') {
-					if( _cmd.name != "Absent" && _cmd.name != "Arrêt"){_cmd.configuration.Type="Planification"}
+			
+				if(_cmd.configuration.Type == 'Planification') {
 					if(typeof($(this).getValues('.expressionAttr')[0].options) != "undefined"){
 						_cmd.configuration.options=($(this).getValues('.expressionAttr')[0].options)
 					}else{
 						_cmd.configuration.options=''
 					}
-				}else{
-					if (_cmd.name == $(this).getValues('.cmdAttr[data-l1key=name]')[0].name){
-
-						if( _cmd.name != "Absent"){_cmd.configuration.Type="Planification"}
-						if(typeof($(this).getValues('.expressionAttr')[0].options) != "undefined"){
-							_cmd.configuration.options=($(this).getValues('.expressionAttr')[0].options)
-						}else{
-							_cmd.configuration.options=''
-						}
-					}
 				}
-				
 			})
-		}
 	})
 	return _eqLogic
 }
@@ -1327,8 +1341,7 @@ function addCmdToTable(_cmd) {
 	if(_cmd.logicalId == "set_heure_fin" || _cmd.logicalId == "set_consigne_temperature" || _cmd.logicalId == "set_action_en_cours" || _cmd.logicalId == "manuel" || _cmd.logicalId == "refresh" || _cmd.logicalId == "boost_on" || _cmd.logicalId == "boost_off"){
 		return
 	}
-	
-	
+	var type_eqlogic=$('#tab_eqlogic .eqLogicAttr[data-l2key=type]').value()
 	if (_cmd.logicalId == 'set_planification'){
 		set_planification_Id = _cmd.id
 		return
@@ -1381,27 +1394,91 @@ function addCmdToTable(_cmd) {
 				tr += '</td>'
 				
 				tr += '<td>'
-				if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent" && _cmd.logicalId != "force"){
+				if (type_eqlogic == "Poele"){
+					if (_cmd.logicalId == 'allume' || _cmd.logicalId == "eteint"){
 						tr += '<div class="input-group" style=" width:100%;">';
 						tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
 						tr += '<span class="input-group-btn">';
-							tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
-							tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
+						tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
+						tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
+						tr += '</span>';
+						tr += '</div>';
+						tr += '<div class="actionOptions">';
+						tr += '</div>';	
+						tr += '</td>'
+						tr += '<td>'
+						tr += '<div class="custom-select">'
+							tr += SELECT_LIST
+							
+						tr += '</div>'
+						tr += '</td>'
+					}else{
+						tr += '</td>'
+						tr += '<td>'
+						tr += '</td>'
+					}
+
+				}
+				if (type_eqlogic == "PAC"){
+					if (_cmd.logicalId == 'climatisation' || _cmd.logicalId == "arret" || _cmd.logicalId == "chauffage" || _cmd.logicalId == "chauffage ECO" || _cmd.logicalId == "ventilation"){
+						tr += '<div class="input-group" style=" width:100%;">';
+						tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
+						tr += '<span class="input-group-btn">';
+						tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
+						tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
 						tr += '</span>';
 						
-					tr += '</div>';
-					tr += '<div class="actionOptions">';
-					tr += '</div>';			
+						tr += '</div>';
+						tr += '<div class="actionOptions">';
+						tr += '</div>';	
+						tr += '</td>'
+						tr += '<td>'
+						tr += '<div class="custom-select">'
+							tr += SELECT_LIST
+							
+						tr += '</div>'
+						tr += '</td>'
+					}else{
+						tr += '</td>'
+						tr += '<td>'
+						tr += '</td>'
+					}
 				}
-				tr += '</td>'
-				tr += '<td>'
-				if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent" && _cmd.logicalId != "force"){
-					tr += '<div class="custom-select">'
-						tr += SELECT_LIST
+				if (type_eqlogic == "Volet"){
+					if (_cmd.logicalId == 'ouverture' || _cmd.logicalId == "fermeture" || _cmd.logicalId == "my"){
+						tr += '<div class="input-group" style=" width:100%;">';
+						tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
+						tr += '<span class="input-group-btn">';
+						tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
+						tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
+						tr += '</span>';
 						
-					tr += '</div>'
-				}				
-				tr += '</td>'
+						tr += '</div>';
+						tr += '<div class="actionOptions">';
+						tr += '</div>';	
+						tr += '</td>'
+						tr += '<td>'
+						tr += '<div class="custom-select">'
+							tr += SELECT_LIST
+							
+						tr += '</div>'
+						tr += '</td>'
+					}else{
+						tr += '</td>'
+						tr += '<td>'
+						tr += '</td>'
+					}
+				}
+				if (type_eqlogic == "Chauffage"){
+					
+				}
+				if (type_eqlogic == "Prise"){
+					
+				}
+				
+				
+						
+			
 				
 				tr += '<td>'
 					if (is_numeric(_cmd.id)){
@@ -1419,21 +1496,57 @@ function addCmdToTable(_cmd) {
 			if (isset(_cmd.type)) $('#table_actions tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type))
 			jeedom.cmd.changeType($('#table_actions tbody tr:last'), init(_cmd.subType))
 			$('#table_actions tbody tr:last').find(".actionOptions").append(jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options)))
-				
-			if (_cmd.logicalId != 'auto' && _cmd.logicalId != "absent" && _cmd.logicalId != "force"){
-				if (isset(_cmd.configuration.Couleur)){
-					couleur=_cmd.configuration.Couleur
-					if(_cmd.configuration.Couleur == "<span>#VALUE#<\/span>"){
+			if (type_eqlogic == "Poele"){
+				if (_cmd.logicalId == 'allume' || _cmd.logicalId == "eteint"){
+					if (isset(_cmd.configuration.Couleur)){
+						couleur=_cmd.configuration.Couleur
+						if(_cmd.configuration.Couleur == "<span>#VALUE#<\/span>"){
+							couleur="orange"
+						}
+					}else{
 						couleur="orange"
 					}
-				}else{
-					couleur="orange"
+					$('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#","couleur-"+couleur)
+					$('#table_actions tbody tr:last .select-items ').find("."+"couleur-" + couleur)[0].classList.add("same-as-selected")
+					$('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML=couleur
+					
 				}
-				$('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#","couleur-"+couleur)
-				$('#table_actions tbody tr:last .select-items ').find("."+"couleur-" + couleur)[0].classList.add("same-as-selected")
-				$('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML=couleur
-				
 			}
+			if (type_eqlogic == "PAC"){
+				if (_cmd.logicalId == 'climatisation' || _cmd.logicalId == "arret" || _cmd.logicalId == "chauffage" || _cmd.logicalId == "chauffage ECO" || _cmd.logicalId == "ventilation"){
+					if (isset(_cmd.configuration.Couleur)){
+						couleur=_cmd.configuration.Couleur
+						if(_cmd.configuration.Couleur == "<span>#VALUE#<\/span>"){
+							couleur="orange"
+						}
+					}else{
+						couleur="orange"
+					}
+					$('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#","couleur-"+couleur)
+					$('#table_actions tbody tr:last .select-items ').find("."+"couleur-" + couleur)[0].classList.add("same-as-selected")
+					$('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML=couleur
+					
+				}
+			}
+			if (type_eqlogic == "Volet"){
+				if (_cmd.logicalId == 'ouverture' || _cmd.logicalId == "fermeture" || _cmd.logicalId == "my"){
+					if (isset(_cmd.configuration.Couleur)){
+						couleur=_cmd.configuration.Couleur
+						if(_cmd.configuration.Couleur == "<span>#VALUE#<\/span>"){
+							couleur="orange"
+						}
+					}else{
+						couleur="orange"
+					}
+					$('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#","couleur-"+couleur)
+					$('#table_actions tbody tr:last .select-items ').find("."+"couleur-" + couleur)[0].classList.add("same-as-selected")
+					$('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML=couleur
+					
+				}
+			}
+			if (type_eqlogic == "Prise"){}
+			if (type_eqlogic == "Chauffage"){}
+			
 			
 		}	
 }

@@ -30,50 +30,18 @@ function SetWidget_Thermostat(_this,set_consigne_temperature_id,consigne_min,con
 	$( '.eqLogic[data-eqLogic_uid='+$(_this).attr("data-eqlogic_uid")+'] .monter_temperature' ).click( function() {
 		monter_temperature($( '.eqLogic[data-eqLogic_uid='+$(_this).attr("data-eqlogic_uid")+'] .cercle_int' ),set_consigne_temperature_id)
 	});
+	//$( '.eqLogic[data-eqLogic_uid='+$(_this).attr("data-eqlogic_uid")+'] .monter_temperature' ).touchstart( function() {
+	//	monter_temperature($( '.eqLogic[data-eqLogic_uid='+$(_this).attr("data-eqlogic_uid")+'] .cercle_int' ),set_consigne_temperature_id)
+	//});
 	$( '.eqLogic[data-eqLogic_uid='+$(_this).attr("data-eqlogic_uid")+'] .descendre_temperature' ).click( function() {
 		descendre_temperature($( '.eqLogic[data-eqLogic_uid='+$(_this).attr("data-eqlogic_uid")+'] .cercle_int' ),set_consigne_temperature_id)
 	});
+	//$( '.eqLogic[data-eqLogic_uid='+$(_this).attr("data-eqlogic_uid")+'] .descendre_temperature' ).touchend( function() {
+	//	descendre_temperature($( '.eqLogic[data-eqLogic_uid='+$(_this).attr("data-eqlogic_uid")+'] .cercle_int' ),set_consigne_temperature_id)
+	//});
 }
 
-	/*function Modifie_temperature(_this,e) {
-		var temp_consigne=$(_this).find('.Temperature_consigne').attr("consigne")
-		var temperatureMax=$(_this).find('.barres').attr("max")
-		var temperatureMin=$(_this).find('.barres').attr("min")
-		var lastAngle=$(_this).find('.barres').attr("lastAngle")
-		var offset = $(_this).offset();
-		var width=$(_this).width();
-		var height=$(_this).height();
-		var center_x = (offset.left) + (width/2);
-		var center_y = (offset.top) + (height/2);
-		var mouse_x = e.pageX; 
-		var mouse_y = e.pageY;
-		var temp_consigne=Math.round(temp_consigne*10)/10;
-		var radians = Math.atan2(mouse_x - center_x, mouse_y - center_y);
-		
-		degree = (radians * (180 / Math.PI) * -1) + 180; 
-		if ( degree - lastAngle > 0){
-			temp_consigne+=0.5;
-		}else{
-		   temp_consigne-=0.5;
-		}
-		
-		if (Math.round(temp_consigne) > temperatureMax){
-			temp_consigne=temperatureMax
-		}
-		if (Math.round(temp_consigne) < temperatureMin){
-			temp_consigne=temperatureMin
-		}
-		
-		$(_this).find('.Temperature_consigne').attr("consigne",temp_consigne)
-		$(_this).find('.barres').attr("lastAngle",degree)
-		majWidget($(_this).parents('.Thermostat'),true)
-		 
-		 
-		 
-	};*/
 function monter_temperature(_this,set_consigne_temperature_id){
-	//console.log(_this.parents('.eqLogic-widget').attr("data-eqlogic_uid"))
-
 	var temp_consigne=parseInt($(_this).find('.Temperature_consigne').attr("consigne"))
 	var temperatureMax=parseInt($(_this).find('.barres').attr("max"))
 	var temperatureMin=parseInt($(_this).find('.barres').attr("min"))
@@ -157,21 +125,7 @@ function majWidget(_this,click){
 
 }
 
-	/*function drag_start(_this,e){
-		$(_this).attr('mouseDown',"ok")
-	}
-	function drag_move(_this,e){
-		if ($(_this).attr('mouseDown') == "ok"){
-			Modifie_temperature($(_this),e)
-		}
-	}
-	function drag_stop(_this,e){
-		if ($(_this).attr('mouseDown') == "ok"){
-			$(_this).find(".Temperature_consigne").attr('consigne',Math.round($(_this).find(".Temperature_consigne").attr('consigne')));
-			$(_this).removeAttr('mouseDown',"");
-			$(_this).find('.colorBar').removeClass('active');
-		}
-	}*/
+
     function reset_page(id,uid,page,action_en_cours){		
         if (page == 'page1'){
 			$('.eqLogic[data-eqLogic_uid='+uid+'] .page_1').css('display', 'block')

@@ -639,13 +639,35 @@ class planification extends eqLogic {
 		
 		
 		}
-		if($logical_id == "force" || $logical_id == "allume"|| $logical_id == "eteint"|| $logical_id == "arret" || $logical_id == "climatisation" || $logical_id == "ventilation" || $logical_id == "chauffage" || $logical_id == "chauffage ECO" ){
-			
-			if($eqLogic->getconfiguration("type","")==""){
+		
+		if($eqLogic->getconfiguration("type","")=="Poele"){
+			if($cmd->getLogicalId() == "allume"|| $cmd->getLogicalId()== "eteint"){
 				$cmd->setConfiguration('Type',"Planification");
+				if ($cmd->getConfiguration('Couleur',"")== ""){
+					$cmd->setConfiguration('Couleur',"orange");
+				}
 				$cmd->save();
 			}
 		}
+		if($eqLogic->getconfiguration("type","")=="PAC"){
+			if($cmd->getLogicalId() == "arret" || $cmd->getLogicalId() == "climatisation" || $cmd->getLogicalId() == "ventilation" || $cmd->getLogicalId() == "chauffage" || $cmd->getLogicalId()== "chauffage ECO"){
+				$cmd->setConfiguration('Type',"Planification");
+				if ($cmd->getConfiguration('Couleur',"")== ""){
+					$cmd->setConfiguration('Couleur',"orange");
+				}
+				$cmd->save();
+			}
+		}
+		if($eqLogic->getconfiguration("type","")=="Volet"){
+			if($cmd->getLogicalId() == "ouverture" || $cmd->getLogicalId() == "fermeture" || $cmd->getLogicalId() == "my"){
+				$cmd->setConfiguration('Type',"Planification");
+				if ($cmd->getConfiguration('Couleur',"")== ""){
+					$cmd->setConfiguration('Couleur',"orange");
+				}
+				$cmd->save();
+			}
+		}
+		
 	}
 	function preSave() {
 		
@@ -908,7 +930,7 @@ class planification extends eqLogic {
 				$replace['#display_page_1#']="none";
 				$replace['#display_page_2#']="block";
 			}
-
+			$replace['#type_eqlogic#'] = $eqLogic->getConfiguration("type","");
 			if ($eqLogic->getConfiguration("type","")== "Poele"){
 				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$eqLogic->getCmd(null, 'arret'),"id");
 				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne#',$eqLogic->getCmd(null, 'consigne_temperature'),"value");
@@ -927,22 +949,46 @@ class planification extends eqLogic {
 					$replace['#temperature#'] = "";
 					$replace['#temperature_id#']="";
 				}
-
 				$imagePoele="Off.png";
-				$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_allume_id',"")));
-				if (is_object($cmd_Etat_Allume)){
-					if($cmd_Etat_Allume->execCmd())
-					{
-						$imagePoele="On.png";
-						$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_boost_id',"")));
-						if (is_object($cmd_Etat_Boost)){
-							if($cmd_Etat_Boost->execCmd())
-							{
-								$imagePoele="OnBoost.png";
+				
+
+					$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
+					//planification::add_log($eqLogic,"debug","mode de fonctionnement" . $Mode_fonctionnement);
+					
+					$cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_allume_id',"")));
+					if (is_object($cmd_Etat_Allume)){
+						if($cmd_Etat_Allume->execCmd() == 1){
+							$imagePoele="On.png";
+							$cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_boost_id',"")));
+							if (is_object($cmd_Etat_Boost)){
+								if($cmd_Etat_Boost->execCmd())
+								{
+									$imagePoele="OnBoost.png";
+								}
 							}
 						}
+						
+					}else{
+						$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
+						if (is_object($cmd_action_en_cours)){
+							$action_en_cours=$cmd_action_en_cours->execCmd();
+							switch (strtolower($action_en_cours)){
+								case "allumé":
+									$imagePoele="On.png";								
+									break;	
+								case "forcé";
+									$imagePoele="On.png";
+									break;			
+								case "eteint";
+									$imagePoele="Off.png";
+									break;
+							}
+						}
+						
 					}
-				}
+				
+				
+				
 				$replace['#img#'] = $imagePoele;
 				if ($erreur){
 					$replace['#display_erreur#'] ="block";
@@ -1011,44 +1057,73 @@ class planification extends eqLogic {
 				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#ouvrir_id#',$eqLogic->getCmd(null, 'ouverture'),"id");		
 				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#fermer_id#',$eqLogic->getCmd(null, 'fermeture'),"id");		
 				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#my_id#',$eqLogic->getCmd(null, 'my'),"id");		
-				$imageVolet="100.png";
+				//$imageVolet="100.png";
 				$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
 				if (is_object($cmd_Mode_fonctionnement)){
 
 					$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
 					//planification::add_log($eqLogic,"debug","mode de fonctionnement" . $Mode_fonctionnement);
-					//$replace['#img_auto_manu#'] = ucfirst($Mode_fonctionnement);
 					
-					$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
-					if (is_object($cmd_action_en_cours)){
-						$action_en_cours=$cmd_action_en_cours->execCmd();
-						
-						switch (strtolower($action_en_cours)) {
-							case "ouverture":
-								if ($Mode_fonctionnement == "Auto"){
-									$imageVolet="100-auto.png";
-								}else{
-									$imageVolet="100-manu.png";
-								}
-								
-								break;				
-							case "fermeture";
-								if ($Mode_fonctionnement == "Auto"){
-									$imageVolet="0-auto.png";
-								}else{
-									$imageVolet="0-manu.png";
-								}
-								break;
-							case "my":
-								if ($Mode_fonctionnement == "Auto"){
-									$imageVolet="50-auto.png";
-								}else{
-									$imageVolet="50-manu.png";
-								}
-								break;
+					$cmd_Etat=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
+					if (is_object($cmd_Etat)){
+						$etat=$cmd_Etat->execCmd();
+						if(strtolower($etat) == "ouvert"){
+							if ($Mode_fonctionnement == "Auto"){
+								$imageVolet="100-auto.png";
+							}else{
+								$imageVolet="100-manu.png";
+							}
+							
+						}
+						if(strtolower($etat) == "fermé"){
+							if ($Mode_fonctionnement == "Auto"){
+								$imageVolet="0-auto.png";
+							}else{
+								$imageVolet="0-manu.png";
+							}
+							
+						}
+						if(strtolower($etat) == "my"){
+							if ($Mode_fonctionnement == "Auto"){
+								$imageVolet="50-auto.png";
+							}else{
+								$imageVolet="50-manu.png";
+							}
+							
+						}
+					}else{
+						$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
+						if (is_object($cmd_action_en_cours)){
+							$action_en_cours=$cmd_action_en_cours->execCmd();
+							
+							switch (strtolower($action_en_cours)) {
+								case "ouverture":
+									if ($Mode_fonctionnement == "Auto"){
+										$imageVolet="100-auto.png";
+									}else{
+										$imageVolet="100-manu.png";
+									}
+									
+									break;				
+								case "fermeture";
+									if ($Mode_fonctionnement == "Auto"){
+										$imageVolet="0-auto.png";
+									}else{
+										$imageVolet="0-manu.png";
+									}
+									break;
+								case "my":
+									if ($Mode_fonctionnement == "Auto"){
+										$imageVolet="50-auto.png";
+									}else{
+										$imageVolet="50-manu.png";
+									}
+									break;
 
+							}
 						}
 					}
+					
 				}
 				$replace['#img#'] = $imageVolet;
 				if ($erreur){
