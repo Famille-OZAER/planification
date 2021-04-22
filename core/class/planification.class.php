@@ -700,7 +700,9 @@ class planification extends eqLogic {
 		$nom_equipement=$eqLogic->getLogicalId();
 		$ancien_fichier_log=planification::supp_accents("planification_".$nom_object."_".$nom_equipement);
 		rename("/var/www/html/log/".$ancien_fichier_log, "/var/www/html/log/".$nouveau_fichier_log );
-
+		if(file_exists ( "/var/www/html/log/".$ancien_fichier_log )){
+			rename("/var/www/html/log/".$ancien_fichier_log, "/var/www/html/log/".$nouveau_fichier_log );
+		}
 		$eqLogic->setConfiguration("numero_objet",$eqLogic->getObject_id());
 		$eqLogic->setLogicalId(planification::supp_accents($eqLogic->getName()));
     }
