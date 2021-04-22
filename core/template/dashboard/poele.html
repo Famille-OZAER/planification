@@ -1,23 +1,26 @@
-<div class="eqLogic eqLogic-widget allowResize allowReorderCmd #custom_layout# #class#" data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" style="width: #width#;height: #height#;#style#"> 
- 
-	<div>
-		<div class='center' style="height:20px;">
-            <span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#">
-                <i class="fas fa-sync"></i>
-            </span>
-           
-            <a class="widget-name cursor"href="#eqLink#" style="font-size : 1.3em;#hideEqLogicName#">#name_display#</a>
-            
-                <span class="alert-danger cmd cmd-widget"  style="display:#display_erreur#;">Certaines commandes n'existent pas, veuillez sauvegarder votre équipement afin de résourdre le problème.</span>
-           
-        </div> 
-		<i class="fa fa-retweet cursor tooltips changecmd noRefresh" title="Changer commandes" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
+<div class="eqLogic eqLogic-widget allowResize allowReorderCmd #custom_layout# #class#" data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" data-translate-category="#translate_category#" data-category="#category#" data-tags="#tags#" style="min-height:150px!important;min-width:370px!important;width: #width#;height: #height#;#style#"> 
+	<center class="object_name" style="overflow: hidden;padding-right:22px;padding-left:12px;font-weight:300;word-break: break-all;max-height:45px;font-size:16px;background-color: rgba(0,0,0,0.6);font-family:Arial;font-weight:normal;">
+		<span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#">
+			<i class="fas fa-sync"></i>
+		</span>
+		<a href="#eqLink#" class="reportModeHidden">#object_name#</a>
+		
+	</center>
+	<center class="widget-name" style="margin-bottom: 0px;max-height:22px;">
+		<span class="cmd refresh pull-right cursor" data-cmd_id="#refresh_id#">
+			<i class="fas fa-sync"></i>
+		</span>
+		<a href="#eqLink#" class="reportModeHidden">#name_display#</a>
+	</center>
 
-		<div class="row page_1" style="padding-top: 10px;margin: 0px;display : #display_page_1#;">
-			<div class="col-xs-6 gauche">
-				<img src="plugins/planification/core/template/dashboard/images/poele/#img#" style="float: right;height: 80px;"/> 
+	<i class="fa fa-retweet cursor tooltips changecmd noRefresh" title="Changer commandes" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
+
+	<div class="tuile">
+		<div class="row page_1" style="height:80px;padding-top: 10px;margin: 0px;display : #display_page_1#;">
+			<div class="col-xs-6 gauche" style="height: 100%;">
+				<img src="plugins/planification/core/template/dashboard/images/poele/#img#" style="position:relative;top:calc(50% - 40px);float: right;height: 80px;"/> 
 			</div>
-			<div class="col-xs-6 droite" style="padding: 0px!important;">
+			<div class="col-xs-6 droite" style="height: 100%;padding: 0px!important;">
 				<div class="Thermostat">
 				</div>
 			</div>
@@ -33,32 +36,42 @@
 				</div>
 			</div>
 		</div>
-		<div class="row page_2" style="padding-top: 10px;margin: 0px;display : #display_page_2#;">
-			<div class="col-xs-6 gauche" style="padding: 0px!important;display: inline-grid;">
-				<div>
-					<i class="icon jeedom-mouvement Absent cursor tooltips pull-right" title="Mettre la planification en mode absent" style="font-size: 1.9em;margin-left: 2px;color:#3498db!important"></i>
+		<div class="row page_2" style="height:50%;padding-top: 10px;margin: 0px;display : #display_page_2#;">
+			<div class="col-xs-5 gauche" style="height:100%;padding: 0px!important;">
+				<div style="height: 50%;">
+					<i class="icon jeedom-mouvement Absent cursor tooltips pull-right" title="Mettre la planification en mode absent" style="position: relative;top: calc(100% - 27px);font-size: 1.9em;margin-left: 2px;color:#3498db!important"></i>
 				
-					<i class="fa fa-cog Auto cursor tooltips pull-right" title="Mettre la planification en mode automatique" style="font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
+					<i class="fa fa-cog Auto cursor tooltips pull-right" title="Mettre la planification en mode automatique" style="position: relative;	top: calc(100% - 27px);font-size: 1.9em;margin-left: 5px;color:#3498db!important"></i>
 				</div>
-				<div>
-					<i class="fa fa-times Arret cursor tooltips pull-right" title="Arrêter la planification" style="font-size: 1.9em;margin-right: 7px;color:#3498db!important"></i>
+				<div style="height: 50%;">
+					<i class="fa fa-times Arret cursor tooltips pull-right" title="Arrêter la planification" style="position: relative;top: 0px;font-size: 1.9em;margin-right: 7px;color:#3498db!important"></i>
 				
-					<i class="icon nature-weather1 Force cursor tooltips pull-right" title="Mettre la planification en mode chauffe forcée" style="font-size: 1.9em;margin-right: 10px;color:#3498db!important"></i>
+					<i class="icon nature-weather1 Force cursor tooltips pull-right" title="Mettre la planification en mode chauffe forcée" style="position: relative;top: 0px;font-size: 1.9em;margin-right: 10px;color:#3498db!important"></i>
 				</div>
 				
 			</div>
-			<div class="col-xs-6 droite" style="padding: 0px!important;">
-				<div style="position:relative;">
-					<select class="cmd selectCalendar cursor tooltips" style="width:70%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
-							#calendar_selector#
+			<div class="col-xs-7 droite" style="height:100%;padding: 0px!important;">
+				<div style="height:50%;">
+					<select class="cmd selectCalendar cursor tooltips" style="top: calc(100% - 27px);position: relative;width:60%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
+						#calendar_selector#
 					</select>
 				</div>
-				<div class='input-group-addon cursor tooltips date datetimepicker'style="padding: 6px 12px!important;display:block;width:70%;color:white!important;border-radius: 10px!important;position:relative;top: 50px;" title="Selectionner heure de fin">
-					<span class="center fa fa-calendar" style="color:white"></span>
+				<div style="height:50%">
+					<div class='input-group-addon cursor tooltips date datetimepicker'style="top:0px;background-color: var(--form-bg-color) !important;padding: 6px 12px!important;display:block;width:60%;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
+						<span class="center fa fa-calendar" style="color:white"></span>
+					</div>
 				</div>
 				
+				
+			</div>
+			
+
+		</div>
+		<div class="row page_2 center" style="padding-bottom:20px;height:50%;margin: 0px;display : #display_page_2#;">
+			<div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.9em;color:white!important" >
 			</div>
 		</div>
+
 	</div>
 
 
@@ -77,7 +90,19 @@
  
  
 	<script>
- 
+		
+		var taille = parseInt($('.eqLogic[data-eqLogic_uid=#uid#] .object_name').css('height').replace(/px/i, ''))
+		$('.eqLogic[data-eqLogic_uid=#uid#] .tuile').css("height","calc(100% - "+taille+"px)")
+ 		if($('.eqLogic[data-eqLogic_uid=#uid#] .object_name').css("display") == "block"){
+			//var taille = parseInt($('.eqLogic[data-eqLogic_uid=#uid#] .object_name').css('height').replace(/px/i, ''))
+			if($('.eqLogic[data-eqLogic_uid=#uid#] .widget-name').css("display") == "block"){
+				$('.eqLogic[data-eqLogic_uid=#uid#] .widget-name').css("display","none")
+				$('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').css("display","block")
+			}			
+			//$('.eqLogic[data-eqLogic_uid=#uid#] .tuile').css("height","calc(100% - "+taille+"px)")
+			$('.eqLogic[data-eqLogic_uid=#uid#] .tuile').css("background-color","rgba(0,0,0,0.5)")
+			$('.eqLogic[data-eqLogic_uid=#uid#]').css('box-shadow','0px 0px 3px 0.5px rgba(255,255,255,1)')
+		}
 		
 
  		SetWidget_Thermostat($('.eqLogic[data-eqLogic_uid=#uid#]'),'#set_consigne_temperature_id#','#consigne_min#','#consigne_max#','#consigne#','#temperature#')
@@ -204,7 +229,17 @@
 		$('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').on('change', function() {
 			jeedom.cmd.execute({id: '#set_planification_id#', value: {'select': $(this).value(),Id_planification:$(this)[0].options[$(this)[0].selectedIndex].id}});
 		});
-		
+		if ($('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar option').length <= 1){
+			$('.eqLogic[data-eqLogic_uid=#uid#]  .selectCalendar').css('display', 'none');
+            
+		}
+		if($('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').css('display') == 'block'){
+			$('.eqLogic[data-eqLogic_uid=#uid#]  .changecmd').css('display', 'block');
+		}
+		if('#info_widget#' != ""){
+			$('.eqLogic[data-eqLogic_uid=#uid#] .info_widget').append('#info_widget#')
+			$('.eqLogic[data-eqLogic_uid=#uid#]  .changecmd').css('display', 'block');
+		}
 			  
 		
 		$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').val('#datetimepicker#');

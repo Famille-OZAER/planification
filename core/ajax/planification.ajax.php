@@ -133,6 +133,16 @@ try {
         $eqLogic->save(false);
         ajax::success();
     }
+    if (init('action') == 'Copy_JSON') {
+        $nom_fichier_source = dirname(__FILE__) ."/../../planifications/" . init('id_source') . ".json"; 
+        $nom_fichier_cible =  dirname(__FILE__) ."/../../planifications/" . init('id_cible') . ".json"; 
+        if(file_exists ( $nom_fichier_source ) ){
+            copy( $nom_fichier_source , $nom_fichier_cible);
+        }
+       
+       
+        ajax::success();
+    }
        
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */

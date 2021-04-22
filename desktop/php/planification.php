@@ -7,9 +7,6 @@
 	sendVarToJS('eqType', $plugin->getId());
 	$eqLogics = eqLogic::byType($plugin->getId());
 	
-	//include_file('3rdparty', 'Moment', 'js', 'planification');
-	//include_file('3rdparty', 'TimePicker', 'js', 'planification');3
-	
 ?>
 
 <div class="row row-overflow">
@@ -33,7 +30,7 @@
 			<?php
 				foreach ($eqLogics as $eqLogic) {
 					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-					echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+					echo '<div style="height: 180px !important;" class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
 
 					$imgPath = 'plugins/planification/core/img/autre.png';
 					if ($eqLogic->getConfiguration('type', 'Autre') == 'Chauffage') $imgPath = 'plugins/planification/core/img/chauffage.png';
@@ -47,7 +44,7 @@
 					echo '<img src="' . $imgPath . '"/>';
 
 					echo '<br>';
-					echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+					echo '<span class="name">' . $eqLogic->getHumanName(true, true) . "(" . $eqLogic->getId() .")" .'</span>';
 					echo '</div>';
 				}
 			?>
@@ -59,7 +56,7 @@
 		
 		<div class="input-group pull-right" style="display:inline-flex">
 			<span class="input-group-btn">
-				<!--<a class="btn btn-default btn-sm eqLogicAction" data-action="copy"><i class="fas fa-copy"></i> {{Dupliquer}}</a>-->
+				<a class="btn btn-default btn-sm dupliquer_equipement"><i class="fas fa-copy"></i> {{Dupliquer}}</a>
 				<a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fa fa-cogs"></i> {{Configuration avancée}}</a>
 				<a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fa fa-check-circle"></i> {{Sauvegarder}}</a>
 				<a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
@@ -133,10 +130,16 @@
 							<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="type" />
 							</div>
 						</div>
-
-						
-						
-						<div class="poele" style="display:none">
+						<div class="form-group">
+							<label class="col-sm-3 control-label"></label>
+							<div class="col-sm-9">
+								<label class="checkbox-inline">
+									<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="affichage_heure"/>Afficher uniquement l'heure sur le widget tant que l'heure de la prochaine action est inferieure à 24 heures
+								</label>
+							</div>
+							
+						</div>
+						<div class="option Poele" style="display:none">
 							<div class="form-group" style="display : block;" >
 								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 								<div class="col-sm-3">
@@ -161,7 +164,7 @@
 							<div class="form-group">
 								<label class="col-sm-3 control-label">{{Commande de l'état du poêle}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_allume_id"/>
+									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_id"/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
 									</span>
@@ -177,7 +180,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="PAC" style="display:none">
+						<div class="option PAC" style="display:none">
 							<div class="form-group" style="display : block;" >
 								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 								<div class="col-sm-3">
@@ -194,7 +197,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="Volet" style="display:none">
+						<div class="option Volet" style="display:none">
 							<div class="form-group">
 								<label class="col-sm-3 control-label">{{Commande de l'état du volet}}</label>
 								<div class="col-sm-6 input-group">
@@ -205,7 +208,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="Prise" style="display:none">
+						<div class="option Prise" style="display:none">
 							<div class="form-group">
 								<label class="col-sm-3 control-label">{{Commande de l'état de la prise}}</label>
 								<div class="col-sm-6 input-group">
@@ -216,7 +219,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="Chauffage" style="display:none">
+						<div class="option Chauffage" style="display:none">
 							<div class="form-group">
 								<label class="col-sm-3 control-label">{{Commande de l'état du chauffage}}</label>
 								<div class="col-sm-6 input-group">
@@ -224,6 +227,24 @@
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info_string"><i class="fa fa-tasks"></i></a>
 									</span>
+								</div>
+							</div>
+							<div class="form-group alias" style="display:none">
+								<label class="col-sm-3 control-label">{{Alias du mode Auto:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Auto"/>
+								</div>
+								<label class="col-sm-3 control-label">{{Alias du mode ECO:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Eco"/>
+								</div>
+								<label class="col-sm-3 control-label">{{Alias du mode Hors-gel:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Hg"/>
+								</div>
+								<label class="col-sm-3 control-label">{{Alias du mode Arrêt:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_arret"/>
 								</div>
 							</div>
 						</div>
@@ -871,7 +892,6 @@
 	
 	include_file('desktop', 'planification', 'js', 'planification');
 	include_file('desktop', 'planification', 'css', 'planification');
-	//include_file('3rdparty', 'TimePicker', 'css', 'planification');
 	include_file('core', 'plugin.template', 'js');
 	
 ?>

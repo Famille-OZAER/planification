@@ -48,8 +48,9 @@
 	background-repeat: no-repeat;
 	width: 300px;
 	height: 300px;
-	zoom:0.3;
-
+	transform: scale(0.3) !important;
+    transform-origin: top left;
+	top: calc(50% - 45px);
 	/* Permet de replir la totalité de la zone */
 	background-size:cover;
 	/* Permet de ne pas pouvoir être sélectionné */
