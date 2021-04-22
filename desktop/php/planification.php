@@ -30,7 +30,7 @@
 			<?php
 				foreach ($eqLogics as $eqLogic) {
 					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-					echo '<div style="height: 180px !important;" class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+					echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
 
 					$imgPath = 'plugins/planification/core/img/autre.png';
 					if ($eqLogic->getConfiguration('type', 'Autre') == 'Chauffage') $imgPath = 'plugins/planification/core/img/chauffage.png';
@@ -44,7 +44,7 @@
 					echo '<img src="' . $imgPath . '"/>';
 
 					echo '<br>';
-					echo '<span class="name">' . $eqLogic->getHumanName(true, true) . "(" . $eqLogic->getId() .")" .'</span>';
+					echo '<span class="name">' . $eqLogic->getHumanName(true, true) .'</span>';
 					echo '</div>';
 				}
 			?>
