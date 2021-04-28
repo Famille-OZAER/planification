@@ -6,6 +6,6 @@ planification
 
 *[Documentation](docs/changelog.md)*
 
-*[changelog](https://kiboost.github.io/jeedom_docs/plugins/planification/fr_FR/changelog.html)*
+*[changelog](https://raw.githack.com/Famille-OZAER/planification/master/docs/changelog.html)*
 
 
