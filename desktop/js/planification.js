@@ -937,7 +937,6 @@ function Ajoutplanification(_planification) {
 						div += '</div>'
 					div += '</form>'
 				div += '</div>'
-			// += '</div>'
 		div += '</div>'
 
 	$('#div_planifications').append(div)
@@ -967,18 +966,6 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time=null, Mode_periode=null
 			}else if(dernier_debut==""){
 				return
 			}else{
-				/*time_int+=15
-				heures=parseInt(time_int/60)
-			
-				minutes=time_int-(heures*60)
-				//=parseInt(heure_debut.split(':')[0])*60 + parseInt(heure_debut.split(':')[1])+1
-				heures=Math.trunc(time_int/60)
-				heures_str="0"+heures
-				heures_str=heures_str.substr(heures_str.length -  2)
-				minutes_str="0"+ (time_int - (heures * 60))
-				minutes_str=minutes_str.substr(minutes_str.length -  2)
-				prochain_debut=heures_str +":"+minutes_str
-				time = prochain_debut*/
 				time=""
 			}
 			

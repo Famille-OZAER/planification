@@ -119,14 +119,14 @@
                         $('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('Remise en auto le #endtime#')
                     }
                 }
-				switch('#action_en_cours#') {
+				switch('#action_en_cours#') {					
 					case "Ouverture":
 						$('.eqLogic[data-eqLogic_uid=#uid#] .ouvrir').css('pointer-events', 'none')
                         break
                     case "My":
 						$('.eqLogic[data-eqLogic_uid=#uid#] .my').css('pointer-events', 'none')
 						break
-                    case "Fermeture":
+					case "Fermeture":
 						$('.eqLogic[data-eqLogic_uid=#uid#] .fermer').css('pointer-events', 'none')
 						break
 				}
@@ -201,7 +201,6 @@
 				step: 15,
 				theme:'dark',
 				onClose:function(dp,$input){
-					console.log("close")
 					$('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').datetimepicker('destroy')
 				},
 				onSelectTime:function(dp,$input){

@@ -36,7 +36,7 @@
 				</div>
 			</div>
 				
-			<div class="page_2" style="display : #display_page_2# ;padding-top: 10px;height:80%;margin: 0px">
+			<div class="page_2" style="display : #display_page_2# ;padding-top: 10px;height:70%;margin: 0px">
 				<div class="col-xs-6 gauche" style="height:100%;padding: 0px!important;">
 					<div style="height: 50%;">
 						<i class="pull-right icon nature-snowflake Climatisation cursor tooltips" title="Mettre le planning en mode climatisation forcée" style="position: relative;top: calc(100% - 27px);font-size: 30px;margin-left: 2px;color:#3498db!important"></i>
@@ -63,8 +63,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-12 page_2 center" style="padding-bottom:20px;height:20%;margin: 0px;">
-					<div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.9em;color:white!important" >
+				<div class="col-xs-12 page_2 center" style="height:30%;margin: 0px;">
+					<div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.7em;color:white!important" >
 					</div>
 				</div>
 			</div>
@@ -89,6 +89,10 @@
 			
 			$('.eqLogic[data-eqLogic_uid=#uid#] .tuile').css("background-color","rgba(0,0,0,0.5)")
 			$('.eqLogic[data-eqLogic_uid=#uid#]').css('box-shadow','0px 0px 3px 0.5px rgba(255,255,255,1)')
+		}
+		if('#info_widget#' != ""){
+			$('.eqLogic[data-eqLogic_uid=#uid#] .info_widget').append('#info_widget#')
+			$('.eqLogic[data-eqLogic_uid=#uid#]  .changecmd').css('display', 'block');
 		}
 		SetWidget_Thermostat($('.eqLogic[data-eqLogic_uid=#uid#]'),'#set_consigne_temperature_id#','#consigne_min#','#consigne_max#','#consigne#','#temperature#')
 		
@@ -243,7 +247,7 @@
 				break
 			case "Manuel":
 				switch('#action_en_cours#') {
-					
+				
 					case "Arrêt":
 						$('.eqLogic[data-eqLogic_uid=#uid#] .Arret').css('pointer-events', 'none')
 						$('.eqLogic[data-eqLogic_uid=#uid#] .Arret').css('color', 'white')
