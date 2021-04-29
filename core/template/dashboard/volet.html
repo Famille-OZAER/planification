@@ -56,8 +56,6 @@
     </div>
     <script src="plugins/planification/core/template/dashboard/js/widget.js" type="text/javascript"></script>
     <script>
-        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#')
-
         if ($('.eqLogic[data-eqLogic_uid=#uid#] .my').css("display") == "none") {
             $('.eqLogic[data-eqLogic_uid=#uid#] .ouvrir').css("left", "3px")
             $('.eqLogic[data-eqLogic_uid=#uid#] .fermer').css('right', "3px")
@@ -139,6 +137,7 @@
 
 
         }
+        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#')
     </script>
 
 </div>

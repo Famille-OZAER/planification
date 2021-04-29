@@ -80,7 +80,7 @@
 
     <script>
         SetWidget_Thermostat($('.eqLogic[data-eqLogic_uid=#uid#]'), '#set_consigne_temperature_id#', '#consigne_min#', '#consigne_max#', '#consigne#', '#temperature#')
-        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#')
+
 
 
         $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function() {
@@ -179,9 +179,7 @@
         })
 
 
-        if ('#calendar_selector#' == "") {
-            $('.eqLogic[data-eqLogic_uid=#uid#]  .selectCalendar').css('display', 'none');
-        }
+
         switch ('#mode#') {
             case "Auto":
                 $('.eqLogic[data-eqLogic_uid=#uid#] .Auto').css('pointer-events', 'none')
@@ -373,5 +371,6 @@
                 }
                 break
         }
+        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#')
     </script>
 </div>

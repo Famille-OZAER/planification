@@ -26,9 +26,9 @@
             </div>
 
             <div>
-                <img class="cmd cmd-widget allumer cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/prise/bouton_allumer.png' style='position: relative;left: 5px;width:30px' />
+                <img class="cmd cmd-widget on cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/prise/power_off.png' style='width:30px' title="Allumer la prise" />
 
-                <img class="cmd cmd-widget eteindre cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/prise/bouton_eteindre.png' style='position: relative;right: 5px;width:30px' />
+                <img class="cmd cmd-widget off cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/prise/power_on.png' style='width:30px' title="Eteindre la prise" />
             </div>
             <div class="prochaine_action tooltips" style="font-size: 0.9em;margin: 5px;color:white!important">
                 <span style="cursor:default;"></span>
@@ -38,12 +38,12 @@
         <div class="page_2 center" style="display : #display_page_2# ;height:100%;margin-top : 0px">
 
             <div style="height:25%;">
-                <select class="cmd selectCalendar cursor tooltips" style="top: calc(100% - 26px);position: relative;width:70%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
+                <select class="cmd selectCalendar cursor tooltips" style="display:none;top: calc(100% - 26px);position: relative;width:70%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
 					#calendar_selector#
 				</select>
             </div>
             <div style="height:25%">
-                <div class='input-group-addon cursor tooltips date datetimepicker' style="top: 2px;margin: auto;padding: 5px 12px!important;display:block;width:70%;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
+                <div class='input-group-addon cursor tooltips date datetimepicker' style="display:none;top: 2px;margin: auto;padding: 5px 12px!important;display:block;width:70%;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
                     <span class="center fa fa-calendar" style="color:white"></span>
                 </div>
             </div>
@@ -60,22 +60,19 @@
     </div>
     <script src="plugins/planification/core/template/dashboard/js/widget.js" type="text/javascript"></script>
     <script>
-        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#')
-
-
         $('.eqLogic[data-eqLogic_uid=#uid#] .refresh').on('click', function() {
             jeedom.cmd.execute({
                 id: '#refresh_id#'
             });
         });
-        $('.eqLogic[data-eqLogic_uid=#uid#] .allumer').on('click', function() {
+        $('.eqLogic[data-eqLogic_uid=#uid#] .on').on('click', function() {
             jeedom.cmd.execute({
-                id: '#allumer_id#'
+                id: '#on_id#'
             });
         });
-        $('.eqLogic[data-eqLogic_uid=#uid#] .eteindre').on('click', function() {
+        $('.eqLogic[data-eqLogic_uid=#uid#] .off').on('click', function() {
             jeedom.cmd.execute({
-                id: '#eteindre_id#'
+                id: '#off_id#'
             });
         });
 
@@ -105,7 +102,17 @@
                     }
                 }
                 $('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').prop('title', 'Planification en cours: #planification_en_cours#');
+                switch ('#action_en_cours#') {
+                    case "On":
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .on').css('display', 'none')
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .off').css('display', 'inline-block')
+                        break
 
+                    case "Off":
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .on').css('display', 'inline-block')
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .off').css('display', 'none')
+                        break
+                }
                 break
             case "Manuel":
                 $('.eqLogic[data-eqLogic_uid=#uid#] .img').addClass("cursor")
@@ -120,14 +127,14 @@
                     }
                 }
                 switch ('#action_en_cours#') {
-                    case "Ouverture":
-                        $('.eqLogic[data-eqLogic_uid=#uid#] .ouvrir').css('pointer-events', 'none')
+                    case "On":
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .on').css('display', 'none')
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .off').css('display', 'inline-block')
                         break
-                    case "My":
-                        $('.eqLogic[data-eqLogic_uid=#uid#] .my').css('pointer-events', 'none')
-                        break
-                    case "Fermeture":
-                        $('.eqLogic[data-eqLogic_uid=#uid#] .fermer').css('pointer-events', 'none')
+
+                    case "Off":
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .on').css('display', 'inline-block')
+                        $('.eqLogic[data-eqLogic_uid=#uid#] .off').css('display', 'none')
                         break
                 }
                 break
@@ -135,6 +142,7 @@
 
 
         }
+        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#', '#calendar_selector#')
     </script>
 
 </div>

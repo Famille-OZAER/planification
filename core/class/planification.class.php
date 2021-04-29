@@ -677,7 +677,7 @@ class planification extends eqLogic {
 			}
 		}
 		if($eqLogic->getconfiguration("type","")=="Prise"){
-			if($cmd->getLogicalId() == "allumer" || $cmd->getLogicalId() == "eteindre"){
+			if($cmd->getLogicalId() == "on" || $cmd->getLogicalId() == "off"){
 				$cmd->setConfiguration('Type',"Planification");
 				if ($cmd->getConfiguration('Couleur',"")== ""){
 					$cmd->setConfiguration('Couleur',"orange");
@@ -773,8 +773,8 @@ class planification extends eqLogic {
 			$eqLogic->Ajout_Commande('fermeture','Fermeture','action','other');			
 		}
 		if ($eqLogic->getConfiguration('type','') == 'Prise'){
-			$eqLogic->Ajout_Commande('allumer','Allumer','action','other');
-			$eqLogic->Ajout_Commande('eteindre','Eteindre','action','other');
+			$eqLogic->Ajout_Commande('on','On','action','other');
+			$eqLogic->Ajout_Commande('off','Off','action','other');
 			
 		}
         
@@ -890,7 +890,7 @@ class planification extends eqLogic {
 				}
 			
 		}else{
-						$replace[$parametre] = "";
+			$replace[$parametre] = "";
 		}
 	}
 		
@@ -1220,12 +1220,14 @@ class planification extends eqLogic {
 						$mode="auto";
 					}
 					$cmd_Etat=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
-					$alias_confort=strtolower($eqLogic->getConfiguration('Alias_confort',""));
-					$alias_eco=strtolower($eqLogic->getConfiguration('Alias_eco',""));
-					$alias_hg=strtolower($eqLogic->getConfiguration('Alias_hg',""));
-					$alias_arret=strtolower($eqLogic->getConfiguration('Alias_arret',""));
+					
 					if (is_object($cmd_Etat)){
 						$etat=$cmd_Etat->execCmd();
+						$alias_confort=strtolower($eqLogic->getConfiguration('Alias_confort',""));
+						$alias_eco=strtolower($eqLogic->getConfiguration('Alias_eco',""));
+						$alias_hg=strtolower($eqLogic->getConfiguration('Alias_hg',""));
+						$alias_arret=strtolower($eqLogic->getConfiguration('Alias_arret',""));
+						
 						if(strtolower($etat) == $alias_confort){$etat = "confort";}
 						if(strtolower($etat) == $alias_eco){$etat ="eco";}
 						if(strtolower($etat) == $alias_hg){$etat = "hors gel";}
@@ -1284,6 +1286,74 @@ class planification extends eqLogic {
 				
 				
 				$html = template_replace($replace, getTemplate('core', $version, 'chauffage', 'planification'));
+			}
+			if ($eqLogic->getConfiguration("type","")== "Prise"){
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#on_id#',$eqLogic->getCmd(null, 'on'),"id",false);		
+				$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#off_id#',$eqLogic->getCmd(null, 'off'),"id",false);	
+				
+					
+				
+				$cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
+
+				if (is_object($cmd_Mode_fonctionnement)){
+
+					$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
+					$mode="manu";
+					if ($Mode_fonctionnement == "Auto"){
+						$mode="auto";
+					}
+					$cmd_Etat=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
+					if (is_object($cmd_Etat)){
+						$etat=$cmd_Etat->execCmd();
+						
+						$alias_on=strtolower($eqLogic->getConfiguration('Alias_On',""));
+						$alias_off=strtolower($eqLogic->getConfiguration('Alias_Off',""));
+						if(strtolower($etat) == $alias_on){$etat = "on";}
+						if(strtolower($etat) == $alias_off){$etat ="off";}
+
+						
+						//planification::add_log($eqLogic,"debug","etat" . $etat);
+						if(strtolower($etat) == "on"){
+							$image="on_". $mode .".png";
+						}
+						if(strtolower($etat) == "off"){
+							$image="off_". $mode .".png";
+							
+						}
+						
+					}else{
+						$image="off_". $mode .".png";
+						$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
+						if (is_object($cmd_action_en_cours)){
+							$action_en_cours=$cmd_action_en_cours->execCmd();
+							
+							switch (strtolower($action_en_cours)) {
+								case "on":
+									$image="on_". $mode .".png";
+									
+									break;				
+								case "off";
+									$image="off_". $mode .".png";
+									break;
+							}
+						}
+					}
+					
+				}
+				$replace['#img#'] = $image;
+				if ($erreur){
+					$replace['#display_erreur#'] ="block";
+				}else{
+					$replace['#display_erreur#'] ="none";
+				}	
+				if(debug_backtrace(false, 2)[1]['class'] == "plan"){
+					//$version="plan";
+					//log::add("test","debug",$version);
+				};
+				
+				
+				
+				$html = template_replace($replace, getTemplate('core', $version, 'prise', 'planification'));
 			}
 			if ($erreur){
 				$replace['#display_erreur#'] ="block";
@@ -1852,8 +1922,8 @@ class planificationCmd extends cmd {
 									$cmd_refresh->execute();
 								}
 								break;
-							case 'allumer':
-							case 'eteindre':
+							case 'on':
+							case 'off':
 								$eqLogic->checkAndUpdateCmd('action_en_cours',ucwords($cmd->getName()));
 								if(!isset($_options["mode"])){
 									$eqLogic->checkAndUpdateCmd('mode_fonctionnement', "Manuel");

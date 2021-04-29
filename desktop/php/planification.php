@@ -218,6 +218,17 @@
 									</span>
 								</div>
 							</div>
+							<div class="form-group alias" style="display:none">
+								<label class="col-sm-3 control-label">{{Alias du mode Allumé:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_prise" data-l2key="Alias_On"/>
+								</div>
+								<label class="col-sm-3 control-label">{{Alias du mode Eteint:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_prise" data-l2key="Alias_Off"/>
+								</div>
+								
+							</div>
 						</div>
 						<div class="option Chauffage" style="display:none">
 							<div class="form-group">
