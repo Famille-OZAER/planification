@@ -266,7 +266,7 @@ function Commun_widget(id, uid, info_widget, action_en_cours, set_planification_
     if ($('.eqLogic[data-eqLogic_uid=' + uid + '] .selectCalendar option').length > 1) {
         $('.eqLogic[data-eqLogic_uid=' + uid + '] .selectCalendar').css('display', 'inline');
         $('.eqLogic[data-eqLogic_uid=' + uid + '] .changecmd').css('display', 'block');
-        console.log("1")
+
     }
 
     if (calendar_selector == "" || calendar_selector == " ") {
@@ -275,14 +275,14 @@ function Commun_widget(id, uid, info_widget, action_en_cours, set_planification_
     }
     if ($('.eqLogic[data-eqLogic_uid=' + uid + '] .datetimepicker').css('display') == 'block') {
         $('.eqLogic[data-eqLogic_uid=' + uid + '] .changecmd').css('display', 'block');
-        console.log("2")
+
     }
     if ($('.eqLogic[data-eqLogic_uid=' + uid + '] .selectCalendar option').length <= 1) {
         $('.eqLogic[data-eqLogic_uid=' + uid + '] .selectCalendar').css('display', 'none');
-        console.log("3")
+
     }
 
-    console.log(uid)
+
     if (info_widget != " ") {
         $('.eqLogic[data-eqLogic_uid=' + uid + '] .info_widget').append(info_widget)
         $('.eqLogic[data-eqLogic_uid=' + uid + '] .changecmd').css('display', 'block');
