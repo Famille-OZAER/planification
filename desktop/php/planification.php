@@ -23,32 +23,118 @@
 			</div>
 		</div>
 
-		<legend><i class="fa fa-table"></i> {{Mes Equipements}}</legend>
 		<input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
-		<div class="eqLogicThumbnailContainer">
-
+		
+		
+		<div class="eqLogicThumbnailContainer Chauffages">
+			<legend><i class="fa jeedom-pilote-conf"></i> {{Mes chauffages}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-					echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
-
-					$imgPath = 'plugins/planification/core/img/autre.png';
-					if ($eqLogic->getConfiguration('type', 'Autre') == 'Chauffage') $imgPath = 'plugins/planification/core/img/chauffage.png';
-					if ($eqLogic->getConfiguration('type', 'Autre') == 'PAC') $imgPath = 'plugins/planification/core/img/pac.png';
-					if ($eqLogic->getConfiguration('type', 'Autre') == 'Volet') $imgPath = 'plugins/planification/core/img/volet.png';
-					if ($eqLogic->getConfiguration('type', 'Autre') == 'Prise') $imgPath = 'plugins/planification/core/img/prise.png';
-					if ($eqLogic->getConfiguration('type', 'Autre') == 'Poele') $imgPath = 'plugins/planification/core/img/poele.png';
-					if (!file_exists ( $imgPath )){
-						$imgPath = 'plugins/planification/core/img/autre.png';
+					if ($eqLogic->getConfiguration('type') == 'Chauffage') {	
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						$imgPath = 'plugins/planification/core/img/chauffage.png';
+						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="' . $imgPath . '"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) .'</span>';
+						echo '</div>';
 					}
-					echo '<img src="' . $imgPath . '"/>';
-
-					echo '<br>';
-					echo '<span class="name">' . $eqLogic->getHumanName(true, true) .'</span>';
-					echo '</div>';
 				}
 			?>
 		</div>
+		
+		
+		<div class="eqLogicThumbnailContainer PAC">
+			<legend><i class="fa jeedom-feu"></i> {{Mes pompes à chaleur}}</legend>
+			<?php
+				foreach ($eqLogics as $eqLogic) {
+					if ($eqLogic->getConfiguration('type') == 'PAC') {	
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						$imgPath = 'plugins/planification/core/img/pac.png';
+						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="' . $imgPath . '"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) .'</span>';
+						echo '</div>';
+					}
+				}
+			?>
+		</div>
+		
+		<div class="eqLogicThumbnailContainer Poele">
+			<legend><i class="fa jeedom-feu"></i> {{Mes poêles à granules}}</legend>
+			<?php
+				foreach ($eqLogics as $eqLogic) {
+					if ($eqLogic->getConfiguration('type') == 'Poele') {	
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						$imgPath = 'plugins/planification/core/img/poele.png';
+						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="' . $imgPath . '"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) .'</span>';
+						echo '</div>';
+					}
+				}
+			?>
+		</div>
+		
+		<div class="eqLogicThumbnailContainer Volets">
+			<legend><i class="fa jeedom-volet-ferme"></i> {{Mes Volets}}</legend>
+			<?php
+				foreach ($eqLogics as $eqLogic) {
+					if ($eqLogic->getConfiguration('type') == 'Volet') {	
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						$imgPath = 'plugins/planification/core/img/volet.png';
+						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="' . $imgPath . '"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) .'</span>';
+						echo '</div>';
+					}
+				}
+			?>
+		</div>
+		
+		<div class="eqLogicThumbnailContainer Prises">
+			<legend><i class="fa jeedom-prise"></i> {{Mes Prises}}</legend>
+			<?php
+				foreach ($eqLogics as $eqLogic) {
+					if ($eqLogic->getConfiguration('type') == 'Prise') {	
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						$imgPath = 'plugins/planification/core/img/prise.png';
+						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="' . $imgPath . '"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) .'</span>';
+						echo '</div>';
+					}
+				}
+			?>
+		</div>
+		<script>
+			if ($('div .Chauffages .eqLogicDisplayCard').length == 0){
+				$('.Chauffages').hide();
+				 
+			}
+			if ($('div .PAC .eqLogicDisplayCard').length == 0){
+				$('.PAC').hide();
+				 
+			}
+			if ($('div .Poele .eqLogicDisplayCard').length == 0){
+				$('.Poele').hide();
+				 
+			}
+			if ($('div .Volets .eqLogicDisplayCard').length == 0){
+				$('.Volets').hide();
+				 
+			}
+			if ($('div .Prises .eqLogicDisplayCard').length == 0){
+				$('.Prises').hide();
+				 
+			}
+			
+			</script>
+		
 	</div>
 	
 	<!--Equipement page-->
@@ -203,7 +289,7 @@
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_volet" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
-										<a class="btn btn-success btn-sm list_Cmd_info_string"><i class="fa fa-tasks"></i></a>
+										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
@@ -214,7 +300,7 @@
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_prise" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
-										<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
+										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
@@ -236,7 +322,7 @@
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_chauffage" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
-										<a class="btn btn-success btn-sm list_Cmd_info_string"><i class="fa fa-tasks"></i></a>
+										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>

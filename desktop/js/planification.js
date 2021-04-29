@@ -200,11 +200,12 @@ $('#tab_eqlogic').on('click', '.list_Cmd_info_binary', function() {
         el.value(result.human);
     });
 });
-$('#tab_eqlogic').on('click', '.list_Cmd_info_string', function() {
+
+$('#tab_eqlogic').on('click', '.list_Cmd_info', function() {
     var div_alias = $(this).closest('.option').find(".alias")
     var el = $(this).closest('div').find('input')
 
-    jeedom.cmd.getSelectModal({ cmd: { type: 'info', subType: "string" } }, function(result) {
+    jeedom.cmd.getSelectModal({ cmd: { type: 'info', } }, function(result) {
         el.value(result.human);
         div_alias.show()
     });
@@ -233,6 +234,7 @@ $('#tab_eqlogic').on('focusout', '.cmdAction', function() {
                     $('#tab_eqlogic .' + type_eq + ' .eqLogicAttr[data-l2key=etat_id]').value("")
                     div_alias.hide()
                 }
+                div_alias.show()
             }
         });
 
@@ -1176,6 +1178,8 @@ function Recup_liste_commandes_planification() {
 }
 
 function printEqLogic(_eqLogic) {
+
+
     $('#div_planifications').empty()
     $('#table_cmd_planification tbody').empty()
     if (_eqLogic.configuration.type == 'Poele') {
@@ -1193,6 +1197,12 @@ function printEqLogic(_eqLogic) {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
     }
     if (_eqLogic.configuration.type == 'Prise') {
+        if (_eqLogic.configuration.etat_id != "") {
+            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
+
+        } else {
+            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
+        }
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_On]').val(_eqLogic.configuration.Alias_On)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Off]').val(_eqLogic.configuration.Alias_Off)
