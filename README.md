@@ -4,8 +4,8 @@
 
 planification
 
-*[Documentation](docs/changelog.md)*
+*[Documentation](https://raw.githack.com/Famille-OZAER/planification/master/docs/documentation.html)*
 
-*[changelog](https://kiboost.github.io/jeedom_docs/plugins/planification/fr_FR/changelog.html)*
+*[changelog](https://raw.githack.com/Famille-OZAER/planification/master/docs/changelog.html)*
 
 

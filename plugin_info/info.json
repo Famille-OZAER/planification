@@ -1,15 +1,15 @@
 {
-	"id" : "planification",
-	"name" : "Planification",
-	"description" : "Planification sous forme de semaine avec gestion lever/coucher de soleil",
-	"licence" : "AGPL",
-	"author" : "OZAER Michaël",
-	"require" : "4.0",
-	"category" : "wellness",
-	"hasDependency" : false,
-	"hasOwnDeamon" : false,
-	"maxDependancyInstallTime" : 0,
-	"changelog" : "https://raw.githack.com/Famille-OZAER/planification/master/docs/changelog.html",
-	"documentation" : "https://raw.githack.com/Famille-OZAER/planification/master/docs/doc.html" ,	
-	"compatibility" : ["smart","rpi","docker","diy","v4"]
+    "id": "planification",
+    "name": "Planification",
+    "description": "Planification sous forme de semaine avec gestion lever/coucher de soleil",
+    "licence": "AGPL",
+    "author": "OZAER Michaël",
+    "require": "4.0",
+    "category": "wellness",
+    "hasDependency": false,
+    "hasOwnDeamon": false,
+    "maxDependancyInstallTime": 0,
+    "changelog": "https://raw.githack.com/Famille-OZAER/planification/master/docs/changelog.html",
+    "documentation": "https://raw.githack.com/Famille-OZAER/planification/master/docs/documentation.html",
+    "compatibility": ["smart", "rpi", "docker", "diy", "v4"]
 }
