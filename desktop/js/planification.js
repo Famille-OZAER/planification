@@ -73,6 +73,10 @@ $('.ajouter_eqlogic').on('click', function() {
         },
     })
 })
+$('.sante').on('click', function() {
+    $('#md_modal').dialog({ title: "{{Santé Planification}}" });
+    $('#md_modal').load('index.php?v=d&plugin=planification&modal=health').dialog('open');
+});
 $('.dupliquer_equipement').off('click').on('click', function() {
         if ($('.eqLogicAttr[data-l1key=id]').value() != undefined && $('.eqLogicAttr[data-l1key=id]').value() != '') {
             bootbox.prompt({
@@ -141,39 +145,39 @@ $('.dupliquer_equipement').off('click').on('click', function() {
 $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function() {
     var img = "plugins/planification/core/img/autre.png"
     if ($(this).value() == "PAC") {
-        $(".poele").hide()
-        $(".Volet").hide()
-        $(".Chauffage").hide()
-        $(".Prise").hide()
-        $(".PAC").show()
+        $(".option.poele").hide()
+        $(".option.Volet").hide()
+        $(".option.Chauffage").hide()
+        $(".option.Prise").hide()
+        $(".option.PAC").show()
         img = 'plugins/planification/core/img/pac.png'
     } else if ($(this).value() == "Volet") {
-        $(".poele").hide()
-        $(".Volet").show()
-        $(".Chauffage").hide()
-        $(".Prise").hide()
-        $(".PAC").hide()
+        $(".option.poele").hide()
+        $(".option.Volet").show()
+        $(".option.Chauffage").hide()
+        $(".option.Prise").hide()
+        $(".option.PAC").hide()
         img = "plugins/planification/core/img/volet.png"
     } else if ($(this).value() == "Chauffage") {
-        $(".poele").hide()
-        $(".Volet").hide()
-        $(".Chauffage").show()
-        $(".Prise").hide()
-        $(".PAC").hide()
+        $(".option.poele").hide()
+        $(".option.Volet").hide()
+        $(".option.Chauffage").show()
+        $(".option.Prise").hide()
+        $(".option.PAC").hide()
         img = "plugins/planification/core/img/chauffage.png"
     } else if ($(this).value() == "Poele") {
-        $(".poele").show()
-        $(".Volet").hide()
-        $(".Chauffage").hide()
-        $(".Prise").hide()
-        $(".PAC").hide()
+        $(".option.poele").show()
+        $(".option.Volet").hide()
+        $(".option.Chauffage").hide()
+        $(".option.Prise").hide()
+        $(".option.PAC").hide()
         img = "plugins/planification/core/img/poele.png"
     } else if ($(this).value() == "Prise") {
-        $(".poele").hide()
-        $(".Volet").hide()
-        $(".Chauffage").hide()
-        $(".Prise").show()
-        $(".PAC").hide()
+        $(".option.poele").hide()
+        $(".option.Volet").hide()
+        $(".option.Chauffage").hide()
+        $(".option.Prise").show()
+        $(".option.PAC").hide()
         img = "plugins/planification/core/img/prise.png"
     }
     $.ajax({
@@ -1186,7 +1190,7 @@ function printEqLogic(_eqLogic) {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_allume_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_boost_id]').val(_eqLogic.configuration.etat_boost_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val(_eqLogic.configuration.temperature_consigne_par_defaut);
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-2key=temperature_consigne_par_defaut]').val(_eqLogic.configuration.temperature_consigne_par_defaut);
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
     }
     if (_eqLogic.configuration.type == 'PAC') {
@@ -1195,9 +1199,18 @@ function printEqLogic(_eqLogic) {
     }
     if (_eqLogic.configuration.type == 'Volet') {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
+        if (_eqLogic.configuration.etat_id != "") {
+            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
+
+        } else {
+            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
+        }
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val(_eqLogic.configuration.Alias_Ouvert)
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val(_eqLogic.configuration.Alias_My)
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val(_eqLogic.configuration.Alias_Ferme)
     }
     if (_eqLogic.configuration.type == 'Prise') {
-        if (_eqLogic.configuration.etat_id != "") {
+        if (_eqLogic.configuration.etat_id != "" && _eqLogic.configuration.etat_id != undefined) {
             $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
 
         } else {
@@ -1220,6 +1233,7 @@ function printEqLogic(_eqLogic) {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Eco]').val(_eqLogic.configuration.Alias_Eco)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Hg]').val(_eqLogic.configuration.Alias_Hg)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Arret]').val(_eqLogic.configuration.Alias_Arret)
+
     }
     $.ajax({
         type: "POST",
@@ -1431,6 +1445,9 @@ function saveEqLogic(_eqLogic) {
     }
     if (_eqLogic.configuration.type == 'Volet') {
         _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
+        _eqLogic.configuration.Alias_Ouvert = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val();
+        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val();
+        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
     }
     if (_eqLogic.configuration.type == 'Prise') {
         _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();

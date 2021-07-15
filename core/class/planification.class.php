@@ -1126,35 +1126,38 @@ class planification extends eqLogic {
 
 					$Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
 					//planification::add_log($eqLogic,"debug","mode de fonctionnement" . $Mode_fonctionnement);
-					
+					$mode="manu";
+					if ($Mode_fonctionnement == "Auto"){
+						$mode="auto";
+					}
+                  
 					$cmd_Etat=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
 					if (is_object($cmd_Etat)){
 						$etat=$cmd_Etat->execCmd();
-						//planification::add_log($eqLogic,"debug","etat" . $etat);
-						if(strtolower($etat) == "ouvert"){
-							if ($Mode_fonctionnement == "Auto"){
-								$image="100-auto.png";
-							}else{
-								$image="100-manu.png";
-							}
+						$alias_ouverture=strtolower($eqLogic->getConfiguration('Alias_Ouvert',""));
+						$alias_fermeture=strtolower($eqLogic->getConfiguration('Alias_Ferme',""));
+						$alias_my=strtolower($eqLogic->getConfiguration('Alias_My',""));
+						
+						if(strtolower($etat) == $alias_ouverture){$etat = "ouvert";}
+						if(strtolower($etat) == $alias_fermeture){$etat ="fermé";}
+						if(strtolower($etat) == $alias_my){$etat = "my";}
+						
+						switch (strtolower($etat)) {
+							case "ouverture":
+                          case "ouvert":
+								$image="100-". $mode .".png";
+								break;
+							case "fermeture":
+                          case "fermé":
+								$image="0-". $mode .".png";
+								break;
+							case "my":
+								$image="50-". $mode .".png";
+								break;
 							
 						}
-						if(strtolower($etat) == "fermé"){
-							if ($Mode_fonctionnement == "Auto"){
-								$image="0-auto.png";
-							}else{
-								$image="0-manu.png";
-							}
 							
-						}
-						if(strtolower($etat) == "my"){
-							if ($Mode_fonctionnement == "Auto"){
-								$image="50-auto.png";
-							}else{
-								$image="50-manu.png";
-							}
-							
-						}
+						
 					}else{
 						$cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
 						if (is_object($cmd_action_en_cours)){
@@ -1195,10 +1198,10 @@ class planification extends eqLogic {
 				}else{
 					$replace['#display_erreur#'] ="none";
 				}	
-				if(debug_backtrace(false, 2)[1]['class'] == "plan"){
+				//if(debug_backtrace(false, 2)[1]['class'] == "plan"){
 					//$version="plan";
 					//log::add("test","debug",$version);
-				};
+				//};
 				
 				
 				
@@ -1223,11 +1226,10 @@ class planification extends eqLogic {
 					
 					if (is_object($cmd_Etat)){
 						$etat=$cmd_Etat->execCmd();
-						$alias_confort=strtolower($eqLogic->getConfiguration('Alias_confort',""));
-						$alias_eco=strtolower($eqLogic->getConfiguration('Alias_eco',""));
-						$alias_hg=strtolower($eqLogic->getConfiguration('Alias_hg',""));
-						$alias_arret=strtolower($eqLogic->getConfiguration('Alias_arret',""));
-						
+						$alias_confort=strtolower($eqLogic->getConfiguration('Alias_Confort',""));
+						$alias_eco=strtolower($eqLogic->getConfiguration('Alias_Eco',""));
+						$alias_hg=strtolower($eqLogic->getConfiguration('Alias_Hg',""));
+						$alias_arret=strtolower($eqLogic->getConfiguration('Alias_Arret',""));
 						if(strtolower($etat) == $alias_confort){$etat = "confort";}
 						if(strtolower($etat) == $alias_eco){$etat ="eco";}
 						if(strtolower($etat) == $alias_hg){$etat = "hors gel";}

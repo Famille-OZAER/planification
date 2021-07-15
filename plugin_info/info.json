@@ -5,7 +5,7 @@
     "licence": "AGPL",
     "author": "OZAER Michaël",
     "require": "4.0",
-    "category": "wellness",
+    "category": "programming",
     "hasDependency": false,
     "hasOwnDeamon": false,
     "maxDependancyInstallTime": 0,
