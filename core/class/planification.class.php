@@ -208,6 +208,7 @@ class planification extends eqLogic {
 		return $retour;
 	}
 	function execute_action($eqLogic,$eqLogic_cmd,$cmd){
+		var_dump($eqLogic_cmd);
 		if(is_object($eqLogic_cmd)){
 			
 			
@@ -472,13 +473,13 @@ class planification extends eqLogic {
 				foreach($periodes as $periode){
 					$date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Debut_periode"]), date_interval_create_from_date_string($i-1 .' days'));
 					if($date->getTimestamp() > $maintenant->getTimestamp()){
-						planification::add_log($eqLogic,"debug","periode:".implode("//",$periode));
+					
 						foreach ($CMD_LIST as $cmd) {
 							//planification::add_log($eqLogic,"debug","cmd:".$action_en_cours);
 							//planification::add_log($eqLogic,"debug","cmd:".$cmd["Id"]);
 							if($periode["Id"]==$cmd["Id"] && $cmd["Nom"] != $action_en_cours){
 								$action["datetime"]=$date->format('d-m-Y H:i');
-								$action["nom"]=$cmd["Id"];
+								$action["nom"]=$cmd["Nom"];
 														
 								$cmd_action_suivante = $eqLogic->getCmd(null, "action_suivante");
 								if(is_object($cmd_action_suivante)){
@@ -579,15 +580,17 @@ class planification extends eqLogic {
 							$trouve=true;
 							//$action["datetime"]=$date->format('d-m-Y H:i');
 							$action["Id"]=$periode["Id"];
-						
+							$action["Nom"] = "";
+							if (is_object($cmd->byId($periode["Id"]))){
+								$action["Nom"]=$cmd->byId($periode["Id"])->getName();
+							}
+							
 						}
 					} 
 				}
 				if($trouve ){
 					
-					//planification::add_log($eqLogic,"debug",'Heure de début de l\'action actuelle: '.$action["datetime"]);
-					
-					if($action["Id"] == $action_en_cours){	
+					if($action["Nom"] == $action_en_cours){	
 						planification::add_log($eqLogic,"debug",'Action identique fin de la fonction.');
 						return;
 					}
@@ -595,11 +598,6 @@ class planification extends eqLogic {
 						$eqLogic_cmd=$cmd->byId($action["Id"]);
 						planification::add_log($eqLogic,"debug",'else à supprimer');
 					
-					}else{
-						planification::add_log($eqLogic,"debug",'Nom de l\'action actuelle: '.$action["Id"]);						
-				
-						$eqLogic_cmd=$eqLogic->getCmd(null,$action["Id"]);
-						
 					}
 					planification::add_log($eqLogic,"debug",'Nom de l\'action actuelle: '.$eqLogic_cmd->getName());	
 					if(is_object($eqLogic_cmd)){
