@@ -1268,7 +1268,7 @@ function printEqLogic(_eqLogic) {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_allume_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_boost_id]').val(_eqLogic.configuration.etat_boost_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val(_eqLogic.configuration.temperature_consigne_par_defaut);
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-2key=temperature_consigne_par_defaut]').val(_eqLogic.configuration.temperature_consigne_par_defaut);
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
     }
     if (_eqLogic.configuration.type == 'PAC') {
@@ -1282,6 +1282,28 @@ function printEqLogic(_eqLogic) {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val(_eqLogic.configuration.Alias_My)
     }
     if (_eqLogic.configuration.type == 'Prise') {
+
+
+        if (_eqLogic.configuration.etat_id != "") {
+            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
+
+        } else {
+            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
+        }
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val(_eqLogic.configuration.Alias_Ouvert)
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val(_eqLogic.configuration.Alias_My)
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val(_eqLogic.configuration.Alias_Ferme)
+    }
+    if (_eqLogic.configuration.type == 'Prise') {
+        if (_eqLogic.configuration.etat_id != "" && _eqLogic.configuration.etat_id != undefined) {
+            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
+
+        } else {
+            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
+        }
+
+
+        c22e8ad751c33229211c4cd036d7f271b3afcdb1
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_On]').val(_eqLogic.configuration.Alias_On)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Off]').val(_eqLogic.configuration.Alias_Off)
@@ -1293,6 +1315,7 @@ function printEqLogic(_eqLogic) {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Eco]').val(_eqLogic.configuration.Alias_Eco)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Hg]').val(_eqLogic.configuration.Alias_Hg)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Arret]').val(_eqLogic.configuration.Alias_Arret)
+
     }
     if (_eqLogic.configuration.type == 'Perso') {}
     $.ajax({
@@ -1599,6 +1622,9 @@ function saveEqLogic(_eqLogic) {
         _eqLogic.configuration.Alias_Ouvert = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val();
         _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
         _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val();
+        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val();
+        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
+
     }
     if (_eqLogic.configuration.type == 'Prise') {
         _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();

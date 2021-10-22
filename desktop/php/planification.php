@@ -303,12 +303,15 @@
 							<label class="col-sm-3 control-label">{{Type équipement}}</label>
 							<div class="col-sm-3">
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="type" />
+<<<<<<< HEAD
 							</div>
 						</div>
 						<div class="form-group" style="display : block;" >
 							<label class="col-sm-3 control-label">{{Chemin de l'image}}</label>
 							<div class="col-sm-9">
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="chemin_image" />
+=======
+>>>>>>> c22e8ad751c33229211c4cd036d7f271b3afcdb1
 							</div>
 						</div>
 						<div class="form-group">
@@ -389,6 +392,7 @@
 								</div>
 							</div>
 							<div class="form-group alias" style="display:none">
+<<<<<<< HEAD
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Alias du mode Ouvert:}}</label>
 									<div class="col-sm-6 input-group">
@@ -406,6 +410,19 @@
 									<div class="col-sm-6 input-group">
 										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_volet" data-l2key="Alias_Ferme"/>
 									</div>
+=======
+								<label class="col-sm-3 control-label">{{Alias du mode Ouvert:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_volet" data-l2key="Alias_Ouvert"/>
+								</div>
+								<label class="col-sm-3 control-label">{{Alias du mode My:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_volet" data-l2key="Alias_My"/>
+								</div>
+								<label class="col-sm-3 control-label">{{Alias du mode Fermé:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_volet" data-l2key="Alias_Ferme"/>
+>>>>>>> c22e8ad751c33229211c4cd036d7f271b3afcdb1
 								</div>
 
 							</div>
@@ -464,11 +481,17 @@
 										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Hg"/>
 									</div>
 								</div>
+<<<<<<< HEAD
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Alias du mode Arrêt:}}</label>
 									<div class="col-sm-6 input-group">
 										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Arret"/>
 									</div>
+=======
+								<label class="col-sm-3 control-label">{{Alias du mode Arrêt:}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Arret"/>
+>>>>>>> c22e8ad751c33229211c4cd036d7f271b3afcdb1
 								</div>
 							</div>
 						</div>
@@ -499,7 +522,11 @@
 			<div role="tabpanel" class="tab-pane" id="tab_gestion">
 
 				<div class="col-sm-12">
+<<<<<<< HEAD
 					<label class="col-sm-3 control-label" style="height: 31px;margin: 0px;top: 5px;">{{Jour à configurer}}</label>
+=======
+					<label class="col-sm-3 control-label">{{Jour à configurer}}</label>
+>>>>>>> c22e8ad751c33229211c4cd036d7f271b3afcdb1
 
 					<select class="selection_jour col-sm-3">
 						<option value="Lundi" selected>{{Lundi}}  </option>
@@ -1075,12 +1102,20 @@
 		</div>
 	</div>
 <script>
+<<<<<<< HEAD
 
 	if ($('div .Chauffages .eqLogicDisplayCard').length == 0){
 		$('.Chauffages').hide();
 	}
 	if ($('div .PAC .eqLogicDisplayCard').length == 0){
 		$('.PAC').hide();
+=======
+	if ($('div .Chauffages .eqLogicDisplayCard').length == 0){
+		$('.Chauffages').hide();
+	}
+	if ($('div .PACs .eqLogicDisplayCard').length == 0){
+		$('.PACs').hide();
+>>>>>>> c22e8ad751c33229211c4cd036d7f271b3afcdb1
 	}
 	if ($('div .Poeles .eqLogicDisplayCard').length == 0){
 		$('.Poeles').hide();
@@ -1091,10 +1126,84 @@
 	if ($('div .Prises .eqLogicDisplayCard').length == 0){
 		$('.Prises').hide();
 	}
+<<<<<<< HEAD
 	if ($('div .Persos .eqLogicDisplayCard').length == 0){
 		$('.Persos').hide();
 	}
 	
+=======
+	
+	$(".li_eqLogic").on('click', function (event) {
+
+		if (event.ctrlKey) {
+			var type = $('body').attr('data-page')
+			var url = '/index.php?v=d&m='+type+'&p='+type+'&id='+$(this).attr('data-eqlogic_id')
+			window.open(url).focus()
+		} else {
+			jeedom.eqLogic.cache.getCmd = Array();
+			if ($('.eqLogicThumbnailDisplay').html() != undefined) {
+				$('.eqLogicThumbnailDisplay').hide();
+			}
+			$('.eqLogic').hide();
+			if ('function' == typeof (prePrintEqLogic)) {
+				prePrintEqLogic($(this).attr('data-eqLogic_id'));
+			}
+			if (isset($(this).attr('data-eqLogic_type')) && isset($('.' + $(this).attr('data-eqLogic_type')))) {
+				$('.' + $(this).attr('data-eqLogic_type')).show();
+			} else {
+				$('.eqLogic').show();
+			}
+			if($('.li_eqLogic').length != 0){
+				$('.li_eqLogic').removeClass('active');
+			}
+			$(this).addClass('active');
+			if($('.li_eqLogic[data-eqLogic_id='+$(this).attr('data-eqLogic_id')+']').html() != undefined){
+				$('.li_eqLogic[data-eqLogic_id='+$(this).attr('data-eqLogic_id')+']').addClass('active');
+			}
+
+			$('.nav-tabs a:not(.eqLogicAction)').first().click()
+			$.showLoading()
+			jeedom.eqLogic.print({
+				type: isset($(this).attr('data-eqLogic_type')) ? $(this).attr('data-eqLogic_type') : eqType,
+				id: $(this).attr('data-eqLogic_id'),
+				status : 1,
+				error: function (error) {
+					$.hideLoading();
+					$('#div_alert').showAlert({message: error.message, level: 'danger'});
+				},
+				success: function (data) {
+					$('body .eqLogicAttr').value('');
+					if(isset(data) && isset(data.timeout) && data.timeout == 0){
+						data.timeout = '';
+					}
+					$('body').setValues(data, '.eqLogicAttr');
+					if ('function' == typeof (printEqLogic)) {
+						printEqLogic(data);
+					}
+					if ('function' == typeof (addCmdToTable)) {
+						$('.cmd').remove();
+						for (var i in data.cmd) {
+							addCmdToTable(data.cmd[i]);
+						}
+					}
+					$('body').delegate('.cmd .cmdAttr[data-l1key=type]', 'change', function () {
+						jeedom.cmd.changeType($(this).closest('.cmd'));
+					});
+					$('body').delegate('.cmd .cmdAttr[data-l1key=subType]', 'change', function () {
+						jeedom.cmd.changeSubType($(this).closest('.cmd'));
+					});
+					addOrUpdateUrl('id',data.id);
+					$.hideLoading();
+					modifyWithoutSave = false;
+					setTimeout(function(){
+						modifyWithoutSave = false;
+					},1000)
+				}
+			});
+		}
+		return false;
+	});
+>>>>>>> c22e8ad751c33229211c4cd036d7f271b3afcdb1
 </script>
 </div>
 
