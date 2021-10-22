@@ -107,15 +107,11 @@
         })
 
         $('.eqLogic[data-eqLogic_uid=#uid#] .Auto').on('click', function() {
-            if ('#boost#' == 1) {
-                jeedom.cmd.execute({
-                    id: '#boost_off_id#'
-                })
-            }
             jeedom.cmd.execute({
                 id: '#auto_id#'
             })
         })
+
 
         $('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').on('click', function() {
             jeedom.cmd.execute({
@@ -124,11 +120,6 @@
         })
 
         $('.eqLogic[data-eqLogic_uid=#uid#] .Arret').on('click', function() {
-            if ('#boost#' == 1) {
-                jeedom.cmd.execute({
-                    id: '#boost_off_id#'
-                })
-            }
             jeedom.cmd.execute({
                 id: '#arret_id#'
             })

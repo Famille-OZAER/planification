@@ -1,0 +1,132 @@
+<html lang="fr-FR">
+
+<head>
+    <meta charset="utf-8">
+
+
+
+    <title>Documentation planification</title>
+
+</head>
+<link rel="stylesheet" type="text/css" media="screen" href="style.css">
+
+<body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+            <img align="right" src="../plugin_info/planification_icon.png" width="120">
+            <h1 id="project_title">Plugin Planification</h1>
+            <h2 id="project_tagline">Documentation</h2>
+        </header>
+    </div>
+    <!-- MAIN CONTENT -->
+
+    <div id="main_content_wrap" class="outer">
+        <section id="main_content" class="inner">
+            <h1 id="jeelog---plugin-pour-jeedom">Panification - Plugin pour Jeedom</h1>
+            <!--<p><em><a href="https://www.jeedom.com/market/index.php?v=d&amp;p=market&amp;type=plugin&amp;plugin_id=3362">Lien market</a></em></p>-->
+            <p>Plugin de planification sous forme de semaine avec gestion lever/coucher de soleil.</p>
+            <p>Permet de gerer une pompe à chaleur, un poele à granules, des chauffages avec fils pilotes, des prises électirques connectées, des volets roulants.</p>
+            <p>Pour que le plugin fonctionne correctement, vous aurez besoin naturelement d'une passerelle entre jeedom et vos équipements.</p>
+            <p><a target="_blank" href="https://raw.githack.com/Famille-OZAER/planification/master/docs/changelog.html">Changelog</a><br></p>
+
+            <h2>Configuration du plugin Planification</h2>
+            <p>Après installation du plugin, il vous suffit de l’activer. Il apparaîtra alors dans le menu <em>Plugins &gt; Confort</em></p>
+
+            <h2>Ajouter un équipement</h2>
+            <p>Cliquez simplement sur <em>Ajouter</em>,selectionnez votre type d'équipement puis nommez-le.</p>
+
+            <img src="https://raw.githack.com/Famille-OZAER/planification/master/docs/images/ajout.jpg" alt="Equipement" style="max-width:90%;width:550px;display: block;margin: 0 auto;">
+            <p>Le plugin crée votre équipement puis l'affiche automatiquement.</p>
+
+            <h3>Onglet <em>équipement</em></h3>
+
+            <ul>
+                Vous retrouvez dans le premier onglet toute la configuration de votre équipement :
+            </ul>
+            <ul class="bloc ">
+                <li>
+                    Nom de l’équipement : nom de votre équipement.
+                </li>
+                <li>
+                    Objet parent : indique l’objet parent auquel appartient l’équipement.
+                </li>
+                <li>
+                    Catégorie : permet de choisir la catégorie de votre équipement.
+                </li>
+                <li>
+                    Activer : permet de rendre votre équipement actif.
+                </li>
+                <li>
+                    Visible : rend votre équipement visible sur le dashboard.
+                </li>
+                <li>
+                    Afficher uniquement l'heure sur le widget tant que l'heure de la prochaine action est inferieure à 24 heures.
+                </li>
+                <h4 id="onglet-volet">pour les volets roulants: </h4>
+                <li>
+                    Commande de l'état du volet: permet d'afficher l'état réel de votre équipement, si ce n'est pas renseigné,le widget affichera l'état de la planification. Si la commande est rensignée, posibilité de mettre un alias pour:
+                    <ul class="bloc ">
+                        <p>
+                            Si vous ne rensignez pas le valeurs suivantes et que les différents états réels de l'équipement ne correspondent pas aux valeurs des commandes de planification,
+                            </br> le widget ne fonctionnera pas correctement.
+                        </p>
+                        <blockquote>
+                            <li>
+                                Alias du mode Ouvert: valeur réelle de l'état ouvert du volet
+                            </li>
+                            <li>
+                                Alias du mode My: valeur réelle de l'état my du volet
+                            </li>
+                            <li>
+                                Alias du mode Fermé: valeur réelle de l'état fermé du volet
+                            </li>
+                        </blockquote>
+                    </ul>
+                    <img src="https://raw.githack.com/Famille-OZAER/planification/master/docs/images/volet.jpg" alt="Equipement" style="max-width:90%;width:550px;display: block;margin: 0 auto;">
+
+                </li>
+                <h4 id="onglet-chauffage">pour les chauffages: </h4>
+                <li>
+                    Commande de l'état du volet: permet d'afficher l'état réel de votre équipement, si ce n'est pas renseigné,le widget affichera l'état de la planification. Si la commande est rensignée, posibilité de mettre un alias pour:
+                    <ul class="bloc">
+                        <p>
+                            Si vous ne rensignez pas le valeurs suivantes et que les différents états réels de l'équipement ne correspondent pas aux valeurs des commandes de planification,
+                            </br> le widget ne fonctionnera pas correctement.
+                        </p>
+                        <blockquote>
+                            <p>
+                                <li>
+                                    Alias du mode Confort: valeur réelle de l'état Confort du chauffage
+                                </li>
+                                <li>
+                                    Alias du mode Eco: valeur réelle de l'état Eco du chauffage
+                                </li>
+                                <li>
+                                    Alias du mode Hors-gel: valeur réelle de l'état Hors-gel du chauffage
+                                </li>
+                                <li>
+                                    Alias du mode Arrêt: valeur réelle de l'état Arrêt du chauffage
+                                </li>
+                            </p>
+                        </blockquote>
+
+                    </ul>
+                    <img src="https://raw.githack.com/Famille-OZAER/planification/master/docs/images/chauffage.jpg" alt="Equipement" style="max-width:90%;width:550px;display: block;margin: 0 auto;">
+
+                </li>
+            </ul>
+
+
+            <h2 id="changelog">Changelog</h2>
+            <p>
+                <a target="_blank" href="https://raw.githack.com/Famille-OZAER/planification/master/docs/changelog.html">Voir la page dédiée.</a>
+            </p>
+
+        </section>
+    </div>
+
+</body>
+
+</html>

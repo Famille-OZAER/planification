@@ -32,38 +32,6 @@ function planification_update() {
 	try{
 		$eqLogics = eqLogic::byType('planification');
 		foreach ($eqLogics as $eqLogic){
-			
-			$commandes=$eqLogic->getConfiguration("commandes_planification","");
-			if (is_array($commandes)){
-				$nom_fichier=dirname(__FILE__) ."/../planifications/" . $eqLogic->getId() . ".json";
-				if(file_exists ( $nom_fichier ) ){
-					$json=file_get_contents ($nom_fichier);
-				}
-				$fichier = fopen( $nom_fichier.".bak", 'w');
-				fwrite($fichier, $json);
-				if (is_array($commandes)){
-					foreach ($commandes as $commande){
-						$id=$commande["Id"];
-						$nom=$commande["nom"];
-						$commande['Id']=$commande["nom"];
-						$json=str_replace($id,$nom,$json);
-						
-					}
-				}
-				$fichier = fopen( $nom_fichier, 'w');
-				fwrite($fichier, $json);
-				log::add('planification', 'debug', 'json fin: '.$json);
-				$eqLogic->setConfiguration("commandes_planification", "");
-			}
-
-
-			$cmd_temperature_consigne_par_defaut=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'temperature_consigne_par_defaut');
-			if (is_object($cmd_temperature_consigne_par_defaut)){
-				$temperature_consigne_par_defaut=20;
-				$temperature_consigne_par_defaut=$cmd_temperature_consigne_par_defaut->execCmd();
-				$temperature_consigne_par_defaut->remove();
-				$eqLogic->setConfiguration("temperature_consigne_par_defaut",$temperature_consigne_par_defaut);
-			}
 			$eqLogic->save();
 		}
 	}

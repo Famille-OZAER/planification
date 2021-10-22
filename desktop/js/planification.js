@@ -1,6 +1,75 @@
 JSONCLIPBOARD = null
 document.addEventListener("click", closeAllSelect);
+$(".li_eqLogic").on('click', function(event) {
 
+    if (event.ctrlKey) {
+        var type = $('body').attr('data-page')
+        var url = '/index.php?v=d&m=' + type + '&p=' + type + '&id=' + $(this).attr('data-eqlogic_id')
+        window.open(url).focus()
+    } else {
+        jeedom.eqLogic.cache.getCmd = Array();
+        if ($('.eqLogicThumbnailDisplay').html() != undefined) {
+            $('.eqLogicThumbnailDisplay').hide();
+        }
+        $('.eqLogic').hide();
+        if ('function' == typeof(prePrintEqLogic)) {
+            prePrintEqLogic($(this).attr('data-eqLogic_id'));
+        }
+        if (isset($(this).attr('data-eqLogic_type')) && isset($('.' + $(this).attr('data-eqLogic_type')))) {
+            $('.' + $(this).attr('data-eqLogic_type')).show();
+        } else {
+            $('.eqLogic').show();
+        }
+        if ($('.li_eqLogic').length != 0) {
+            $('.li_eqLogic').removeClass('active');
+        }
+        $(this).addClass('active');
+        if ($('.li_eqLogic[data-eqLogic_id=' + $(this).attr('data-eqLogic_id') + ']').html() != undefined) {
+            $('.li_eqLogic[data-eqLogic_id=' + $(this).attr('data-eqLogic_id') + ']').addClass('active');
+        }
+
+        $('.nav-tabs a:not(.eqLogicAction)').first().click()
+        $.showLoading()
+        jeedom.eqLogic.print({
+            type: isset($(this).attr('data-eqLogic_type')) ? $(this).attr('data-eqLogic_type') : eqType,
+            id: $(this).attr('data-eqLogic_id'),
+            status: 1,
+            error: function(error) {
+                $.hideLoading();
+                $('#div_alert').showAlert({ message: error.message, level: 'danger' });
+            },
+            success: function(data) {
+                $('body .eqLogicAttr').value('');
+                if (isset(data) && isset(data.timeout) && data.timeout == 0) {
+                    data.timeout = '';
+                }
+                $('body').setValues(data, '.eqLogicAttr');
+                if ('function' == typeof(printEqLogic)) {
+                    printEqLogic(data);
+                }
+                if ('function' == typeof(addCmdToTable)) {
+                    $('.cmd').remove();
+                    for (var i in data.cmd) {
+                        addCmdToTable(data.cmd[i]);
+                    }
+                }
+                $('body').delegate('.cmd .cmdAttr[data-l1key=type]', 'change', function() {
+                    jeedom.cmd.changeType($(this).closest('.cmd'));
+                });
+                $('body').delegate('.cmd .cmdAttr[data-l1key=subType]', 'change', function() {
+                    jeedom.cmd.changeSubType($(this).closest('.cmd'));
+                });
+                addOrUpdateUrl('id', data.id);
+                $.hideLoading();
+                modifyWithoutSave = false;
+                setTimeout(function() {
+                    modifyWithoutSave = false;
+                }, 1000)
+            }
+        });
+    }
+    return false;
+});
 $('.ajouter_eqlogic').on('click', function() {
     var dialog_title = '{{Choisissez le type d\'équipement que souhaitez ajouter}}';
 
@@ -21,8 +90,12 @@ $('.ajouter_eqlogic').on('click', function() {
         '</div> ' +
         '<div class="radio"> <label > ' +
         '<input type="radio" name="type" id="Chauffage" value="Chauffage"> {{Chauffage avec fil pilote}}</label> ' +
+        '</div>' +
         '</div> ' +
-        '<br>' +
+        '<div class="radio"> <label > ' +
+        '<input type="radio" name="type" id="Perso" value="Perso"> {{Perso}}</label> ' +
+        '</div> ' +
+        '</br> ' +
         '<div class="input">' +
         '<input class="col-sm-8" type="text" placeholder="Nom de l\'équipement" name="nom" id="nom" >  ' +
 
@@ -73,6 +146,10 @@ $('.ajouter_eqlogic').on('click', function() {
         },
     })
 })
+$('.sante').on('click', function() {
+    $('#md_modal').dialog({ title: "{{Santé Planification}}" });
+    $('#md_modal').load('index.php?v=d&plugin=planification&modal=health').dialog('open');
+});
 $('.dupliquer_equipement').off('click').on('click', function() {
         if ($('.eqLogicAttr[data-l1key=id]').value() != undefined && $('.eqLogicAttr[data-l1key=id]').value() != '') {
             bootbox.prompt({
@@ -137,55 +214,13 @@ $('.dupliquer_equipement').off('click').on('click', function() {
         }
     })
     //équipement
-
 $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function() {
-    var img = "plugins/planification/core/img/autre.png"
-    if ($(this).value() == "PAC") {
-        $(".poele").hide()
-        $(".Volet").hide()
-        $(".Chauffage").hide()
-        $(".Prise").hide()
-        $(".PAC").show()
-        img = 'plugins/planification/core/img/pac.png'
-    } else if ($(this).value() == "Volet") {
-        $(".poele").hide()
-        $(".Volet").show()
-        $(".Chauffage").hide()
-        $(".Prise").hide()
-        $(".PAC").hide()
-        img = "plugins/planification/core/img/volet.png"
-    } else if ($(this).value() == "Chauffage") {
-        $(".poele").hide()
-        $(".Volet").hide()
-        $(".Chauffage").show()
-        $(".Prise").hide()
-        $(".PAC").hide()
-        img = "plugins/planification/core/img/chauffage.png"
-    } else if ($(this).value() == "Poele") {
-        $(".poele").show()
-        $(".Volet").hide()
-        $(".Chauffage").hide()
-        $(".Prise").hide()
-        $(".PAC").hide()
-        img = "plugins/planification/core/img/poele.png"
-    } else if ($(this).value() == "Prise") {
-        $(".poele").hide()
-        $(".Volet").hide()
-        $(".Chauffage").hide()
-        $(".Prise").show()
-        $(".PAC").hide()
-        img = "plugins/planification/core/img/prise.png"
-    }
-    $.ajax({
-        url: img,
-        error: function() {
-            $('#img_planificationModel').attr('src', "plugins/planification/core/img/autre.png")
-        },
-        success: function() {
-            $('#img_planificationModel').attr('src', img)
-        }
-    });
+    console.log($('#tab_eqlogic .eqLogicAttr[data-l2key=chemin_image]').val())
+
+
+
 })
+
 $('#tab_eqlogic').on('click', '.list_Cmd_info_numeric', function() {
     //var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=temperature_id]');
     var el = $(this).closest('div').find('input')
@@ -292,6 +327,47 @@ $('#tab_commandes').on('focusout', '.cmdAction', function() {
         el.closest('div td').find('.actionOptions').html(html);
         taAutosize();
     });
+});
+$('#tab_commandes').on('click', '.bt_ajouter_commande', function(e) {
+    var SELECT_LIST = Recup_select("commandes");
+    var tr = ''
+    tr += '<tr class="cmd">'
+    tr += '<td>'
+    tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
+    tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
+    tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
+    tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom}} "</td>'
+    tr += '</td>'
+
+    tr += '<td>'
+    tr += '<div class="input-group" style=" width:100%;">'
+    tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>'
+    tr += '<span class="input-group-btn">';
+    tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>'
+    tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>'
+    tr += '</span>'
+    tr += '</div>'
+    tr += '<div class="actionOptions">'
+    tr += '</div>'
+    tr += '</td>'
+    tr += '<td>'
+    tr += '<div class="custom-select">'
+    tr += SELECT_LIST
+    tr += '</div>'
+    tr += '</td>'
+    tr += '<td>'
+    tr += '</td>'
+    tr += '</tr>'
+
+    $('#table_actions tbody').append(tr)
+    $('#table_actions tbody tr:last .cmdAttr[data-l1key=type]').value(init("action"))
+    jeedom.cmd.changeType($('#table_actions tbody tr:last'), init("other"))
+    couleur = "orange"
+    $('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#", "couleur-" + couleur)
+    $('#table_actions tbody tr:last .select-items ').find("." + "couleur-" + couleur)[0].classList.add("same-as-selected")
+    $('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML = couleur
+
+
 });
 
 $("#tab_commandes #table_actions").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true })
@@ -1171,6 +1247,7 @@ function Recup_liste_commandes_planification() {
                 COMMANDE_LIST = "";
             }
             COMMANDE_LIST = data.result;
+
         }
     });
     return COMMANDE_LIST;
@@ -1178,10 +1255,15 @@ function Recup_liste_commandes_planification() {
 }
 
 function printEqLogic(_eqLogic) {
-
-
     $('#div_planifications').empty()
     $('#table_cmd_planification tbody').empty()
+    if (_eqLogic.configuration.etat_id != "" && typeof(_eqLogic.configuration.etat_id) != "undefined") {
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
+
+    } else {
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
+    }
+
     if (_eqLogic.configuration.type == 'Poele') {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_allume_id)
@@ -1195,32 +1277,24 @@ function printEqLogic(_eqLogic) {
     }
     if (_eqLogic.configuration.type == 'Volet') {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val(_eqLogic.configuration.Alias_Ouvert)
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val(_eqLogic.configuration.Alias_Ferme)
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val(_eqLogic.configuration.Alias_My)
     }
     if (_eqLogic.configuration.type == 'Prise') {
-        if (_eqLogic.configuration.etat_id != "") {
-            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
-
-        } else {
-            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
-        }
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_On]').val(_eqLogic.configuration.Alias_On)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Off]').val(_eqLogic.configuration.Alias_Off)
 
     }
     if (_eqLogic.configuration.type == 'Chauffage') {
-        if (_eqLogic.configuration.etat_id != "") {
-            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
-
-        } else {
-            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
-        }
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Auto]').val(_eqLogic.configuration.Alias_Auto)
+        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Confort]').val(_eqLogic.configuration.Alias_Confort)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Eco]').val(_eqLogic.configuration.Alias_Eco)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Hg]').val(_eqLogic.configuration.Alias_Hg)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Arret]').val(_eqLogic.configuration.Alias_Arret)
     }
+    if (_eqLogic.configuration.type == 'Perso') {}
     $.ajax({
         type: "POST",
         url: "plugins/planification/core/ajax/planification.ajax.php",
@@ -1324,7 +1398,13 @@ function printEqLogic(_eqLogic) {
 
                                         if (periode.Id == cmd.Id) {
                                             Couleur = "couleur-" + cmd.couleur
-                                            Nom = cmd.Id
+                                            Nom = cmd.Nom
+                                            Id = cmd.Id
+
+                                        }
+                                        if (periode.Id == cmd.Nom) {
+                                            Couleur = "couleur-" + cmd.couleur
+                                            Nom = cmd.Nom
                                             Id = cmd.Id
                                         }
                                     });
@@ -1337,13 +1417,98 @@ function printEqLogic(_eqLogic) {
                         }
                     })
                     triage_jour($('#div_planifications .planification:last .JourSemaine.' + jour_en_cours))
-
                     MAJ_Graphique_jour($('#div_planifications .planification:last .JourSemaine.' + jour_en_cours))
                 })
 
             })
         }
     })
+
+    var img = "plugins/planification/core/img/autre.png"
+    $(".Poele").hide();
+    $(".Volet").hide();
+    $(".Chauffage").hide();
+    $(".Prise").hide();
+    $(".PAC").hide();
+    $(".Perso").hide();
+    $(".bt_modifier_image").hide();
+    if (_eqLogic.configuration.type == "PAC") {
+        $(".PAC").show()
+        img = _eqLogic.configuration.temperature_id
+        if (img == "") {
+            img = 'plugins/planification/core/img/pac.png'
+        }
+
+    } else
+    if (_eqLogic.configuration.type == "Volet") {
+        $(".Volet").show()
+        img = _eqLogic.configuration.chemin_image
+        if (img == "") {
+            img = "plugins/planification/core/img/volet.png"
+        }
+    } else if (_eqLogic.configuration.type == "Chauffage") {
+        $(".Chauffage").show()
+        img = _eqLogic.configuration.chemin_image
+        if (img == "") {
+            img = "plugins/planification/core/img/chauffage.png"
+        }
+    } else if (_eqLogic.configuration.type == "Poele") {
+        $(".Poele").show()
+
+        img = _eqLogic.configuration.chemin_image
+        if (img == "") {
+            img = "plugins/planification/core/img/poele.png"
+        }
+    } else if (_eqLogic.configuration.type == "Prise") {
+        $(".Prise").show()
+        img = _eqLogic.configuration.chemin_image
+        if (img == "") {
+            img = "plugins/planification/core/img/prise.png"
+        }
+    } else if (_eqLogic.configuration.type == "Perso") {
+        $(".Perso").show()
+        $(".bt_modifier_image").show()
+        $(".bt_ajouter_commande").show()
+        img = _eqLogic.configuration.chemin_image
+        console.log(img)
+
+        if (img == "") {
+            img = "plugins/planification/core/img/perso.png"
+        }
+        console.log(img)
+    }
+    img = "plugins/planification/core/img/prise.png"
+    console.log(img)
+    $.ajax({
+        type: "POST",
+        url: "plugins/planification/core/ajax/planification.ajax.php",
+        data: {
+            action: "Vérification_existance_fichier",
+            nom_fichier: img
+        },
+        global: true,
+        async: false,
+        error: function(request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function(data) {
+            console.log(data.result)
+            if (data.result != 'ok') {
+                console.log("nok")
+                img = "plugins/planification/core/img/autre.png"
+            }
+            $.ajax({
+                url: img,
+                error: function() {
+                    $('#img_planificationModel').attr('src', "plugins/planification/core/img/autre.png")
+                },
+                success: function() {
+                    $('#img_planificationModel').attr('src', img)
+                    console.log(img)
+                }
+            });
+        }
+    });
 }
 
 function saveEqLogic(_eqLogic) {
@@ -1407,7 +1572,7 @@ function saveEqLogic(_eqLogic) {
         error: function(request, status, error) { handleAjaxError(request, status, error) },
         success: function(data) {
             if (data.state != 'ok') {
-                $('#div_alert').showAlert({
+                $('#   div_alert').showAlert({
                     message: data.result,
                     level: 'danger'
                 })
@@ -1417,7 +1582,7 @@ function saveEqLogic(_eqLogic) {
     })
 
 
-
+    _eqLogic.configuration.Chemin_image = $('.eqLogicAttr[data-l2key=Chemin_image]').val();
     if (_eqLogic.configuration.type == 'Poele') {
         _eqLogic.configuration.temperature_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_id]').val();
         _eqLogic.configuration.etat_allume_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
@@ -1431,6 +1596,9 @@ function saveEqLogic(_eqLogic) {
     }
     if (_eqLogic.configuration.type == 'Volet') {
         _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
+        _eqLogic.configuration.Alias_Ouvert = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val();
+        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
+        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val();
     }
     if (_eqLogic.configuration.type == 'Prise') {
         _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
@@ -1439,7 +1607,7 @@ function saveEqLogic(_eqLogic) {
     }
     if (_eqLogic.configuration.type == 'Chauffage') {
         _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.Alias_Auto = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Auto]').val();
+        _eqLogic.configuration.Alias_Confort = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Confort]').val();
         _eqLogic.configuration.Alias_Eco = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Eco]').val();
         _eqLogic.configuration.Alias_Hg = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Hg]').val();
         _eqLogic.configuration.Alias_Arret = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Arret]').val();
@@ -1449,20 +1617,29 @@ function saveEqLogic(_eqLogic) {
 
 
     _eqLogic.cmd.forEach(function(_cmd) {
+
         $('#table_actions tbody tr').each(function() {
             if (!isset(_cmd.configuration)) {
                 _cmd.configuration = {}
             }
+            if (_cmd.id == '') {
+                _cmd.Type = 'action'
+                _cmd.subType = 'other'
+                _cmd.configuration.Type = 'Planification_perso'
 
-            if (_cmd.configuration.Type == 'Planification') {
+            }
+            if (($(this).getValues('.cmdAttr')[0].id == _cmd.id)) {
+
                 if (typeof($(this).getValues('.expressionAttr')[0].options) != "undefined") {
                     _cmd.configuration.options = ($(this).getValues('.expressionAttr')[0].options)
                 } else {
                     _cmd.configuration.options = ''
                 }
             }
+
+
         })
-    })
+    });
     return _eqLogic
 }
 
@@ -1519,145 +1696,47 @@ function addCmdToTable(_cmd) {
         tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
         tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
         tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" disabled  placeholder="{{Nom}} "</td>'
+        if (_cmd.configuration.Type == "Planification" || _cmd.logicalId == 'auto') {
+            tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" disabled  placeholder="{{Nom}} "</td>'
+        } else {
+            tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom}} "</td>'
+        }
+
         tr += '</td>'
 
         tr += '<td>'
-        if (type_eqlogic == "Poele") {
-            if (_cmd.logicalId == 'allume' || _cmd.logicalId == "eteint") {
-                tr += '<div class="input-group" style=" width:100%;">';
-                tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
+        if (isset(_cmd.configuration.Type)) {
+
+            if (_cmd.configuration.Type == "Planification" || _cmd.configuration.Type == "Planification_perso") {
+                tr += '<div class="input-group" style=" width:100%;">'
+                tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>'
                 tr += '<span class="input-group-btn">';
-                tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
-                tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
-                tr += '</span>';
-                tr += '</div>';
-                tr += '<div class="actionOptions">';
-                tr += '</div>';
+                tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>'
+                tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>'
+                tr += '</span>'
+                tr += '</div>'
+                tr += '<div class="actionOptions">'
+                tr += '</div>'
                 tr += '</td>'
                 tr += '<td>'
                 tr += '<div class="custom-select">'
                 tr += SELECT_LIST
-
                 tr += '</div>'
-                tr += '</td>'
-            } else {
-                tr += '</td>'
-                tr += '<td>'
-                tr += '</td>'
-            }
-
-        }
-        if (type_eqlogic == "PAC") {
-            if (_cmd.logicalId == 'climatisation' || _cmd.logicalId == "arret" || _cmd.logicalId == "chauffage" || _cmd.logicalId == "chauffage ECO" || _cmd.logicalId == "ventilation") {
-                tr += '<div class="input-group" style=" width:100%;">';
-                tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
-                tr += '<span class="input-group-btn">';
-                tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
-                tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
-                tr += '</span>';
-
-                tr += '</div>';
-                tr += '<div class="actionOptions">';
-                tr += '</div>';
-                tr += '</td>'
-                tr += '<td>'
-                tr += '<div class="custom-select">'
-                tr += SELECT_LIST
-
-                tr += '</div>'
-                tr += '</td>'
-            } else {
-                tr += '</td>'
-                tr += '<td>'
                 tr += '</td>'
             }
         }
-        if (type_eqlogic == "Volet") {
-            if (_cmd.logicalId == 'ouverture' || _cmd.logicalId == "fermeture" || _cmd.logicalId == "my") {
-                tr += '<div class="input-group" style=" width:100%;">';
-                tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
-                tr += '<span class="input-group-btn">';
-                tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
-                tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
-                tr += '</span>';
-
-                tr += '</div>';
-                tr += '<div class="actionOptions">';
-                tr += '</div>';
-                tr += '</td>'
-                tr += '<td>'
-                tr += '<div class="custom-select">'
-                tr += SELECT_LIST
-
-                tr += '</div>'
-                tr += '</td>'
-            } else {
-                tr += '</td>'
-                tr += '<td>'
-                tr += '</td>'
-            }
-        }
-        if (type_eqlogic == "Chauffage") {
-            if (_cmd.logicalId == 'confort' || _cmd.logicalId == "eco" || _cmd.logicalId == "hors_gel" || _cmd.logicalId == "arret") {
-                tr += '<div class="input-group" style=" width:100%;">';
-                tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
-                tr += '<span class="input-group-btn">';
-                tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
-                tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
-                tr += '</span>';
-
-                tr += '</div>';
-                tr += '<div class="actionOptions">';
-                tr += '</div>';
-                tr += '</td>'
-                tr += '<td>'
-                tr += '<div class="custom-select">'
-                tr += SELECT_LIST
-
-                tr += '</div>'
-                tr += '</td>'
-            } else {
-                tr += '</td>'
-                tr += '<td>'
-                tr += '</td>'
-            }
-        }
-        if (type_eqlogic == "Prise") {
-            if (_cmd.logicalId == 'on' || _cmd.logicalId == "off") {
-                tr += '<div class="input-group" style=" width:100%;">';
-                tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>';
-                tr += '<span class="input-group-btn">';
-                tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>';
-                tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>';
-                tr += '</span>';
-
-                tr += '</div>';
-                tr += '<div class="actionOptions">';
-                tr += '</div>';
-                tr += '</td>'
-                tr += '<td>'
-                tr += '<div class="custom-select">'
-                tr += SELECT_LIST
-
-                tr += '</div>'
-                tr += '</td>'
-            } else {
-                tr += '</td>'
-                tr += '<td>'
-                tr += '</td>'
-            }
-        }
-
-
-
-
-
         tr += '<td>'
-        if (is_numeric(_cmd.id)) {
-            tr += '<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a> '
-            tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>'
+        if (_cmd.logicalId == 'auto') {
+            tr += '</td>'
+            tr += '<td>'
 
+        }
+        if (is_numeric(_cmd.id)) {
+            tr += '<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a>'
+            tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>'
+            if (_cmd.configuration.Type == "Planification_perso") {
+                tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i>'
+            }
         }
         tr += '</td>'
         tr += '</tr>'
@@ -1669,8 +1748,8 @@ function addCmdToTable(_cmd) {
         if (isset(_cmd.type)) $('#table_actions tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type))
         jeedom.cmd.changeType($('#table_actions tbody tr:last'), init(_cmd.subType))
         $('#table_actions tbody tr:last').find(".actionOptions").append(jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options)))
-        if (type_eqlogic == "Poele") {
-            if (_cmd.logicalId == 'allume' || _cmd.logicalId == "eteint") {
+        if (isset(_cmd.configuration.Type)) {
+            if (_cmd.configuration.Type == "Planification" || _cmd.configuration.Type == "Planification_perso") {
                 if (isset(_cmd.configuration.Couleur)) {
                     couleur = _cmd.configuration.Couleur
                     if (_cmd.configuration.Couleur == "<span>#VALUE#<\/span>") {
@@ -1682,74 +1761,7 @@ function addCmdToTable(_cmd) {
                 $('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#", "couleur-" + couleur)
                 $('#table_actions tbody tr:last .select-items ').find("." + "couleur-" + couleur)[0].classList.add("same-as-selected")
                 $('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML = couleur
-
             }
         }
-        if (type_eqlogic == "PAC") {
-            if (_cmd.logicalId == 'climatisation' || _cmd.logicalId == "arret" || _cmd.logicalId == "chauffage" || _cmd.logicalId == "chauffage ECO" || _cmd.logicalId == "ventilation") {
-                if (isset(_cmd.configuration.Couleur)) {
-                    couleur = _cmd.configuration.Couleur
-                    if (_cmd.configuration.Couleur == "<span>#VALUE#<\/span>") {
-                        couleur = "orange"
-                    }
-                } else {
-                    couleur = "orange"
-                }
-                $('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#", "couleur-" + couleur)
-                $('#table_actions tbody tr:last .select-items ').find("." + "couleur-" + couleur)[0].classList.add("same-as-selected")
-                $('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML = couleur
-
-            }
-        }
-        if (type_eqlogic == "Volet") {
-            if (_cmd.logicalId == 'ouverture' || _cmd.logicalId == "fermeture" || _cmd.logicalId == "my") {
-                if (isset(_cmd.configuration.Couleur)) {
-                    couleur = _cmd.configuration.Couleur
-                    if (_cmd.configuration.Couleur == "<span>#VALUE#<\/span>") {
-                        couleur = "orange"
-                    }
-                } else {
-                    couleur = "orange"
-                }
-                $('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#", "couleur-" + couleur)
-                $('#table_actions tbody tr:last .select-items ').find("." + "couleur-" + couleur)[0].classList.add("same-as-selected")
-                $('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML = couleur
-
-            }
-        }
-        if (type_eqlogic == "Prise") {
-            if (_cmd.logicalId == 'on' || _cmd.logicalId == "off") {
-                if (isset(_cmd.configuration.Couleur)) {
-                    couleur = _cmd.configuration.Couleur
-                    if (_cmd.configuration.Couleur == "<span>#VALUE#<\/span>") {
-                        couleur = "orange"
-                    }
-                } else {
-                    couleur = "orange"
-                }
-                $('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#", "couleur-" + couleur)
-                $('#table_actions tbody tr:last .select-items ').find("." + "couleur-" + couleur)[0].classList.add("same-as-selected")
-                $('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML = couleur
-
-            }
-        }
-        if (type_eqlogic == "Chauffage") {
-            if (_cmd.logicalId == 'confort' || _cmd.logicalId == "eco" || _cmd.logicalId == "hors_gel" || _cmd.logicalId == "arret") {
-                if (isset(_cmd.configuration.Couleur)) {
-                    couleur = _cmd.configuration.Couleur
-                    if (_cmd.configuration.Couleur == "<span>#VALUE#<\/span>") {
-                        couleur = "orange"
-                    }
-                } else {
-                    couleur = "orange"
-                }
-                $('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#", "couleur-" + couleur)
-                $('#table_actions tbody tr:last .select-items ').find("." + "couleur-" + couleur)[0].classList.add("same-as-selected")
-                $('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML = couleur
-
-            }
-        }
-
-
     }
 }
