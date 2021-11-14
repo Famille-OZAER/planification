@@ -21,14 +21,14 @@
         <div class="page_1 center" style="height:100%;padding-top: 10px;margin: 0px;display : #display_page_1#;">
 
             <div>
-                <img class="cmd cmd-widget img" data-type="info" src='plugins/planification/core/template/dashboard/images/volet/#img#' style='height:80px' />
+                <img class="cmd cmd-widget img" data-type="info" src='plugins/planification/core/template/dashboard/images/autre/#img#' style='height:80px' />
                 <span class="nom_eqLogic" style="display:none;position: absolute;top: 80px;width: 100%;color: black;font-weight: 300;font-size: 16px;">#name_display#</span>
             </div>
 
             <div>
-                <img class="cmd cmd-widget ouvrir cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/volet/bouton_ouvrir.png' style='position: relative;left: 5px;width:30px' />
-                <img class="cmd cmd-widget my cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/volet/bouton_my.png' style='display:#show_my#;width:30px' />
-                <img class="cmd cmd-widget fermer cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/volet/bouton_fermer.png' style='position: relative;right: 5px;width:30px' />
+                <img class="cmd cmd-widget ouvrir cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/autre/bouton_ouvrir.png' style='position: relative;left: 5px;width:30px' />
+                <img class="cmd cmd-widget my cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/autre/bouton_my.png' style='display:#show_my#;width:30px' />
+                <img class="cmd cmd-widget fermer cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/autre/bouton_fermer.png' style='position: relative;right: 5px;width:30px' />
             </div>
             <div class="prochaine_action tooltips" style="font-size: 0.9em;margin: 5px;color:white!important">
                 <span style="cursor:default;"></span>
@@ -121,17 +121,7 @@
                         $('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').append('Remise en auto le #endtime#')
                     }
                 }
-                switch ('#action_en_cours#') {
-                    case "Ouverture":
-                        //$('.eqLogic[data-eqLogic_uid=#uid#] .ouvrir').css('pointer-events', 'none')
-                        break
-                    case "My":
-                        //$('.eqLogic[data-eqLogic_uid=#uid#] .my').css('pointer-events', 'none')
-                        break
-                    case "Fermeture":
-                        //$('.eqLogic[data-eqLogic_uid=#uid#] .fermer').css('pointer-events', 'none')
-                        break
-                }
+
                 break
 
 

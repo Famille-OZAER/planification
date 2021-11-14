@@ -208,7 +208,6 @@ class planification extends eqLogic {
 		return $retour;
 	}
 	function execute_action($eqLogic,$eqLogic_cmd,$cmd){
-		var_dump($eqLogic_cmd);
 		if(is_object($eqLogic_cmd)){
 			
 			

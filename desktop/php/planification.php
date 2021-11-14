@@ -110,7 +110,7 @@
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'Chauffage') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						$imgPath = $eqLogic->getConfiguration('Chemin_image');
+						$imgPath = $eqLogic->getConfiguration('chemin_image');
 						if ($imgPath == '') {
 							$imgPath = 'plugins/planification/core/img/chauffage.png';
 						}
@@ -131,7 +131,7 @@
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'PAC') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						$imgPath = $eqLogic->getConfiguration('Chemin_image');
+						$imgPath = $eqLogic->getConfiguration('chemin_image');
 						if ($imgPath == '') {
 							$imgPath = 'plugins/planification/core/img/pac.png';
 						}
@@ -151,7 +151,7 @@
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'Poele') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						$imgPath = $eqLogic->getConfiguration('Chemin_image');
+						$imgPath = $eqLogic->getConfiguration('chemin_image');
 						if ($imgPath == '') {
 							$imgPath = 'plugins/planification/core/img/poele.png';
 						}
@@ -171,7 +171,7 @@
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'Volet') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						$imgPath = $eqLogic->getConfiguration('Chemin_image');
+						$imgPath = $eqLogic->getConfiguration('chemin_image');
 						if ($imgPath == '') {
 							$imgPath = 'plugins/planification/core/img/volet.png';
 						}
@@ -191,7 +191,7 @@
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'Prise') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						$imgPath = $eqLogic->getConfiguration('Chemin_image');
+						$imgPath = $eqLogic->getConfiguration('chemin_image');
 						if ($imgPath == '') {
 							$imgPath = 'plugins/planification/core/img/prise.png';
 						}
@@ -211,7 +211,7 @@
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'Perso') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						$imgPath = $eqLogic->getConfiguration('Chemin_image');
+						$imgPath = $eqLogic->getConfiguration('chemin_image');
 						if ($imgPath == '') {
 							$imgPath = 'plugins/planification/core/img/autre.png';
 						}

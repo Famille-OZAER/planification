@@ -144,11 +144,7 @@ try {
        
         ajax::success();
     }
-    if (init('action') == 'Vérification_existance_fichier') {
-        $nom_fichier = init('nom_fichier'); 
-       				
-        ajax::success( file_exists($nom_fichier));
-    }
+   
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */
 } catch (Exception $e) {

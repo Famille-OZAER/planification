@@ -215,7 +215,6 @@ $('.dupliquer_equipement').off('click').on('click', function() {
     })
     //équipement
 $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function() {
-    console.log($('#tab_eqlogic .eqLogicAttr[data-l2key=chemin_image]').val())
 
 
 
@@ -265,7 +264,11 @@ $('#tab_eqlogic').on('focusout', '.cmdAction', function() {
             },
             success: function(data) {
                 if (data.state != "ok") {
-                    alert("La commande de l'état du chauffage est invalide, veuillez insérer une commande valide.")
+                    $('#div_alert').showAlert({
+                        message: "La commande de l 'état du chauffage est invalide, veuillez insérer une commande valide.",
+                        level: 'danger'
+                    })
+
                     $('#tab_eqlogic .' + type_eq + ' .eqLogicAttr[data-l2key=etat_id]').value("")
                     div_alias.hide()
                 }
@@ -372,6 +375,55 @@ $('#tab_commandes').on('click', '.bt_ajouter_commande', function(e) {
 
 $("#tab_commandes #table_actions").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true })
 $("#tab_commandes #table_infos").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true })
+$("#tab_eqlogic .bt_modifier_image").on('click', function() {
+
+
+    if ($("#mod_selectIcon").length == 0) {
+        $('#div_pageContainer').append('<div id="mod_selectIcon"></div>')
+        $("#mod_selectIcon").dialog({
+            title: '{{Choisissez une icône perso}}',
+            closeText: '',
+            autoOpen: false,
+            modal: true,
+            height: (jQuery(window).height() - 150),
+            width: 1500,
+            open: function() {
+                if ((jQuery(window).width() - 50) < 1500) {
+                    $('#mod_selectIcon').dialog({ width: jQuery(window).width() - 50 })
+                }
+                $('body').css({ overflow: 'hidden' });
+                setTimeout(function() { initTooltips($("#mod_selectIcon")) }, 500)
+            },
+            beforeClose: function(event, ui) {
+                $('body').css({ overflow: 'inherit' })
+            }
+        });
+    }
+    var url = 'index.php?v=d&plugin=planification&modal=selectIcon&show_img=1&show_icon=0&tab_img=1&selectIcon=' + $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]')[0].value
+
+
+
+    $('#mod_selectIcon').empty().load(url, function() {
+        $("#mod_selectIcon").dialog('option', 'buttons', {
+            "Annuler": function() {
+                $(this).dialog("close")
+            },
+            "Valider": function() {
+                var icon = $('.iconSelected .iconSel .img-responsive').attr('src')
+                if (icon == undefined) {
+                    icon = ''
+                }
+                $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]').val(icon)
+                $('#img_planificationModel').attr('src', icon)
+                modifyWithoutSave = true
+                $(this).dialog("close")
+            }
+        });
+        $('#mod_selectIcon').dialog('open')
+    });
+
+});
+
 
 //planifications:
 $("#tab_planifications #div_planifications").sortable({
@@ -382,7 +434,8 @@ $("#tab_planifications #div_planifications").sortable({
     placeholder: "ui-state-highlight",
     tolerance: "intersect",
     forcePlaceholderSize: true
-})
+});
+
 $("#tab_planifications").on('click', '.bt_ajouter_planification', function() {
     bootbox.prompt({
         title: "Veuillez inserer le nouveau nom de la planification à ajouter.",
@@ -397,7 +450,7 @@ $("#tab_planifications").on('click', '.bt_ajouter_planification', function() {
             }
         }
     })
-})
+});
 $("#tab_planifications").on('click', '.bt_supprimer_planification', function() {
     Ce_progamme = $(this).closest('.planification')
     bootbox.confirm({
@@ -419,7 +472,7 @@ $("#tab_planifications").on('click', '.bt_supprimer_planification', function() {
             }
         }
     })
-})
+});
 $('#tab_planifications').on('click', '.bt_dupliquer_planification', function() {
     var planification = $(this).closest('.planification').clone()
 
@@ -442,7 +495,7 @@ $('#tab_planifications').on('click', '.bt_dupliquer_planification', function() {
             }
         }
     })
-})
+});
 $('#tab_planifications').on('click', '.bt_appliquer_planification', function() {
     planification = $(this).closest('.planification')
     programName = planification.find('.nom_planification').html()
@@ -464,7 +517,7 @@ $('#tab_planifications').on('click', '.bt_appliquer_planification', function() {
             }
         }
     })
-})
+});
 $('#tab_planifications').on('click', '.bt_renommer_planification', function() {
     var el = $(this)
     bootbox.prompt({
@@ -480,7 +533,7 @@ $('#tab_planifications').on('click', '.bt_renommer_planification', function() {
             }
         }
     })
-})
+});
 $('#tab_planifications').on('click', '.bt_supprimer_perdiode', function() {
     Divjour = $(this).closest('.JourSemaine')
     $(this).closest('.Periode_jour').remove()
@@ -500,7 +553,7 @@ $('#tab_planifications').on('click', '.bt_ajout_periode', function() {
     Couleur = "erreur"
     Nom = ""
     Couleur = "couleur-" + CMD_LIST[0].couleur
-    Nom = CMD_LIST[0].Id
+    Nom = CMD_LIST[0].Nom
     Id = CMD_LIST[0].Id
     var element = SELECT_LIST.replace("#COULEUR#", Couleur);
     element = element.replace("#VALUE#", Nom)
@@ -516,7 +569,7 @@ $('#tab_planifications').on('click', '.bt_ajout_periode', function() {
     Divplanification = $(this).closest('.planification-body')
     Divplanification.css("overflow", "visible")
     Divplanification.css("max-height", "fit-content")
-})
+});
 $('#tab_planifications').on('click', '.bt_copier_jour', function() {
     var jour = $(this).closest('th').find('.JourSemaine')
     JSONCLIPBOARD = { data: [] }
@@ -534,7 +587,7 @@ $('#tab_planifications').on('click', '.bt_copier_jour', function() {
         Couleur = recup_class_couleur($(this).find('.select-selected')[0].classList)
         JSONCLIPBOARD.data.push({ type_periode, debut_periode, Id, Nom, Couleur })
     })
-})
+});
 $('#tab_planifications').on('click', '.bt_coller_jour', function() {
     if (JSONCLIPBOARD == null) return
     modifyWithoutSave = true;
@@ -548,7 +601,7 @@ $('#tab_planifications').on('click', '.bt_coller_jour', function() {
         Type_periode = periode["type_periode"]
 
         Couleur = periode["Couleur"]
-        Nom = periode["Id"]
+        Nom = periode["Nom"]
         Id = periode["Id"]
         var element = SELECT_LIST.replace("#COULEUR#", Couleur);
         element = element.replace("#VALUE#", Nom)
@@ -562,7 +615,7 @@ $('#tab_planifications').on('click', '.bt_coller_jour', function() {
     $(this).closest("th").find(".collapsible")[0].classList.add("cursor")
     $(this).closest("th").find(".collapsible")[0].classList.remove("no-arrow")
     MAJ_Graphique_jour(Divjour)
-})
+});
 $('#tab_planifications').on('click', '.bt_vider_jour', function() {
     modifyWithoutSave = true;
     $(this).closest("th").find(".collapsible")[0].classList.remove("active")
@@ -575,7 +628,7 @@ $('#tab_planifications').on('click', '.bt_vider_jour', function() {
         $(this).remove()
     })
     MAJ_Graphique_jour(Divjour)
-})
+});
 $('#tab_planifications').on('click', '.collapsible', function() {
     this.classList.toggle("active");
     var Divjour = $(this).closest("th").find(".JourSemaine")
@@ -587,7 +640,7 @@ $('#tab_planifications').on('click', '.collapsible', function() {
         Divjour.css("overflow", "visible")
         Divjour.css("max-height", "fit-content")
     }
-})
+});
 $('#tab_planifications').on('click', '.planification_collapsible', function() {
     this.classList.toggle("active");
 
@@ -618,7 +671,7 @@ $('#tab_planifications').on('click', '.planification_collapsible', function() {
         DivgraphJours.css("max-height", "fit-content")
     }
 
-})
+});
 $('#tab_planifications').on('click', '.select-selected', function(e) {
     /* When the select box is clicked, close any other select boxes,
     and open/close the current select box: */
@@ -643,7 +696,7 @@ $('#tab_planifications').on('click', '.select-items div', function() {
 
     MAJ_Graphique_jour($(this).closest('.JourSemaine'))
     select.click();
-})
+});
 $('#tab_planifications').on('change', '.select_lever_coucher', function() {
     //$("body").delegate( '.select_lever_coucher',"change" ,function () {
     modifyWithoutSave = true;
@@ -855,8 +908,6 @@ $('#tab_planifications').on('click', '.checkbox_lever_coucher', function() {
             Periode.find('.clock-timepicker').attr("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
             Periode.find('.clock-timepicker').removeAttr('oldvalue')
         }
-
-        Periode.find('.clock-timepicker').show()
         Periode.find('.select_lever_coucher').hide()
     }
     triage_jour(Divjour)
@@ -882,6 +933,19 @@ $('#tab_planifications').on('click', '.clock-timepicker', function() {
         }
     });
     $(this).datetimepicker('show');
+});
+$('#tab_planifications').on("blur", ".clock-timepicker", function() {
+    modifyWithoutSave = true;
+    time = $(this).val()
+    $(this).attr("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
+    $(this).attr("value", time)
+    Divjour = $(this).closest('.JourSemaine ')
+    triage_jour($(Divjour))
+    MAJ_Graphique_jour($(Divjour).closest('.JourSemaine'));
+});
+$('#tab_planifications').on("keydown", ".clock-timepicker", function() {
+    modifyWithoutSave = true;
+    $('.clock-timepicker').datetimepicker('destroy')
 });
 //gestion lever coucher de soleil
 $('#tab_gestion').on("change", ".selection_jour", function() {
@@ -1301,9 +1365,6 @@ function printEqLogic(_eqLogic) {
         } else {
             $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
         }
-
-
-        c22e8ad751c33229211c4cd036d7f271b3afcdb1
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_On]').val(_eqLogic.configuration.Alias_On)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Off]').val(_eqLogic.configuration.Alias_Off)
@@ -1477,7 +1538,6 @@ function printEqLogic(_eqLogic) {
         }
     } else if (_eqLogic.configuration.type == "Poele") {
         $(".Poele").show()
-
         img = _eqLogic.configuration.chemin_image
         if (img == "") {
             img = "plugins/planification/core/img/poele.png"
@@ -1493,45 +1553,27 @@ function printEqLogic(_eqLogic) {
         $(".bt_modifier_image").show()
         $(".bt_ajouter_commande").show()
         img = _eqLogic.configuration.chemin_image
-        console.log(img)
+
 
         if (img == "") {
             img = "plugins/planification/core/img/perso.png"
         }
-        console.log(img)
+
     }
-    img = "plugins/planification/core/img/prise.png"
-    console.log(img)
-    $.ajax({
-        type: "POST",
-        url: "plugins/planification/core/ajax/planification.ajax.php",
-        data: {
-            action: "Vérification_existance_fichier",
-            nom_fichier: img
-        },
-        global: true,
-        async: false,
-        error: function(request, status, error) {
-            handleAjaxError(request, status, error);
-        },
-        success: function(data) {
-            console.log(data.result)
-            if (data.result != 'ok') {
-                console.log("nok")
-                img = "plugins/planification/core/img/autre.png"
-            }
-            $.ajax({
-                url: img,
-                error: function() {
-                    $('#img_planificationModel').attr('src', "plugins/planification/core/img/autre.png")
-                },
-                success: function() {
-                    $('#img_planificationModel').attr('src', img)
-                    console.log(img)
-                }
-            });
-        }
-    });
+    var http = new XMLHttpRequest();
+    http.open('HEAD', img, false);
+    http.send();
+    if (http.status != 200) {
+        $('#div_alert').showAlert({
+            message: "L'image " + img + " n'existe pas.",
+            level: 'danger'
+        })
+
+        img = "plugins/planification/core/img/autre.png"
+    }
+
+
+    $('#img_planificationModel').attr('src', img)
 }
 
 function saveEqLogic(_eqLogic) {
@@ -1580,7 +1622,11 @@ function saveEqLogic(_eqLogic) {
         planifications.push(_Cette_planification)
     })
     if (erreur) {
-        alert("Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.")
+        $('#div_alert').showAlert({
+            message: "Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.",
+            level: 'danger'
+        })
+
         return false;
     }
     $.ajax({
@@ -1595,7 +1641,7 @@ function saveEqLogic(_eqLogic) {
         error: function(request, status, error) { handleAjaxError(request, status, error) },
         success: function(data) {
             if (data.state != 'ok') {
-                $('#   div_alert').showAlert({
+                $('#div_alert').showAlert({
                     message: data.result,
                     level: 'danger'
                 })
