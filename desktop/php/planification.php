@@ -25,7 +25,7 @@
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PAC"><i class="fa jeedom-feu"></i>Mes pompes à chaleur
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PACs"><i class="fa jeedom-feu"></i>Mes pompes à chaleur
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'PAC') {	
@@ -125,7 +125,7 @@
 		</div>
 
 
-		<div class="eqLogicThumbnailContainer PAC">
+		<div class="eqLogicThumbnailContainer PACs">
 			<legend><i class="fa jeedom-feu"></i> {{Mes pompes à chaleur}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -422,13 +422,13 @@
 							</div>
 							<div class="form-group alias" style="display:none">
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Allumé:}}</label>
+									<label class="col-sm-3 control-label">{{Alias du mode On:}}</label>
 									<div class="col-sm-6 input-group">
 										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_prise" data-l2key="Alias_On"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Eteint:}}</label>
+									<label class="col-sm-3 control-label">{{Alias du mode Off:}}</label>
 									<div class="col-sm-6 input-group">
 										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_prise" data-l2key="Alias_Off"/>
 									</div>
@@ -450,6 +450,12 @@
 									<label class="col-sm-3 control-label">{{Alias du mode Auto:}}</label>
 									<div class="col-sm-6 input-group">
 										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Auto"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label">{{Alias du mode Confort:}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Confort"/>
 									</div>
 								</div>
 								<div class="form-group">
@@ -478,8 +484,13 @@
 				<form class="form-horizontal col-sm-3">
 					<fieldset>
 						<div class="form-group">
-							<img src="<?php echo($plugin->getPathImgIcon())?>" id="img_planificationModel" style="height:130px;" />
-							<a class="btn btn-sm btn-default bt_modifier_image" style="display:none"><i class="fa jeedomapp-folder"></i> {{Modifier l'image}}</a>
+							<div>
+								<img src="<?php echo($plugin->getPathImgIcon())?>" id="img_planificationModel" style="height:130px;" />
+							</div>
+								<div>
+									<a class="btn btn-sm btn-default bt_modifier_image"><i class="fa jeedomapp-folder"></i> {{Modifier l'image}}</a>
+								</div>
+							
 
 						</div>
 					</fieldset>
@@ -1075,12 +1086,11 @@
 		</div>
 	</div>
 <script>
-
-	if ($('div .Chauffages .eqLogicDisplayCard').length == 0){
+if ($('div .Chauffages .eqLogicDisplayCard').length == 0){
 		$('.Chauffages').hide();
 	}
-	if ($('div .PAC .eqLogicDisplayCard').length == 0){
-		$('.PAC').hide();
+	if ($('div .PACs .eqLogicDisplayCard').length == 0){
+		$('.PACs').hide();
 	}
 	if ($('div .Poeles .eqLogicDisplayCard').length == 0){
 		$('.Poeles').hide();
@@ -1094,6 +1104,9 @@
 	if ($('div .Persos .eqLogicDisplayCard').length == 0){
 		$('.Persos').hide();
 	}
+   
+
+	
 	
 </script>
 </div>

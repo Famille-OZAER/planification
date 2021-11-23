@@ -1114,7 +1114,7 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
             } else if (time_int >= 1425) {
                 time = 23 + ':' + 59
             } else if (dernier_debut == "") {
-                return
+                time = ""
             } else {
                 time = ""
             }
@@ -1509,16 +1509,17 @@ function printEqLogic(_eqLogic) {
     })
 
     var img = "plugins/planification/core/img/autre.png"
+    img = _eqLogic.configuration.chemin_image
     $(".Poele").hide();
     $(".Volet").hide();
     $(".Chauffage").hide();
     $(".Prise").hide();
     $(".PAC").hide();
     $(".Perso").hide();
-    $(".bt_modifier_image").hide();
+
     if (_eqLogic.configuration.type == "PAC") {
         $(".PAC").show()
-        img = _eqLogic.configuration.temperature_id
+        img = _eqLogic.configuration.chemin_image
         if (img == "") {
             img = 'plugins/planification/core/img/pac.png'
         }
@@ -1526,35 +1527,27 @@ function printEqLogic(_eqLogic) {
     } else
     if (_eqLogic.configuration.type == "Volet") {
         $(".Volet").show()
-        img = _eqLogic.configuration.chemin_image
         if (img == "") {
             img = "plugins/planification/core/img/volet.png"
         }
     } else if (_eqLogic.configuration.type == "Chauffage") {
         $(".Chauffage").show()
-        img = _eqLogic.configuration.chemin_image
         if (img == "") {
             img = "plugins/planification/core/img/chauffage.png"
         }
     } else if (_eqLogic.configuration.type == "Poele") {
         $(".Poele").show()
-        img = _eqLogic.configuration.chemin_image
         if (img == "") {
             img = "plugins/planification/core/img/poele.png"
         }
     } else if (_eqLogic.configuration.type == "Prise") {
         $(".Prise").show()
-        img = _eqLogic.configuration.chemin_image
         if (img == "") {
             img = "plugins/planification/core/img/prise.png"
         }
     } else if (_eqLogic.configuration.type == "Perso") {
         $(".Perso").show()
-        $(".bt_modifier_image").show()
         $(".bt_ajouter_commande").show()
-        img = _eqLogic.configuration.chemin_image
-
-
         if (img == "") {
             img = "plugins/planification/core/img/perso.png"
         }

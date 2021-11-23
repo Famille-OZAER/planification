@@ -474,9 +474,19 @@ class planification extends eqLogic {
 					if($date->getTimestamp() > $maintenant->getTimestamp()){
 					
 						foreach ($CMD_LIST as $cmd) {
-							//planification::add_log($eqLogic,"debug","cmd:".$action_en_cours);
-							//planification::add_log($eqLogic,"debug","cmd:".$cmd["Id"]);
-							if($periode["Id"]==$cmd["Id"] && $cmd["Nom"] != $action_en_cours){
+							//log::add('test',"debug","action en cours:".$action_en_cours);
+							
+							//log::add('test',"debug","cmdid:".$cmd["Id"]);
+
+							//log::add('test',"debug","periode_id:".$periode["Id"]);
+							//log::add('test',"debug","action :" . implode('|',$cmd));
+							//log::add('test',"debug","date prochaine action:" . $date->format('d-m-Y H:i'));
+							
+
+
+
+
+							if($periode["Id"]==$cmd["Id"]) {//&& $cmd["Nom"] != $action_en_cours){
 								$action["datetime"]=$date->format('d-m-Y H:i');
 								$action["nom"]=$cmd["Nom"];
 														
@@ -708,7 +718,6 @@ class planification extends eqLogic {
 		$nouveau_fichier_log= "planification" . planification::supp_accents(str_replace(" " , "_",str_replace("[" , "_",str_replace("]" , "",$eqLogic->getHumanName(false)))));
 		$nom_equipement=$eqLogic->getLogicalId();
 		$ancien_fichier_log=planification::supp_accents("planification_".$nom_object."_".$nom_equipement);
-		//rename("/var/www/html/log/".$ancien_fichier_log, "/var/www/html/log/".$nouveau_fichier_log );
 		if(file_exists ( "/var/www/html/log/".$ancien_fichier_log )){
           if ("/var/www/html/log/".$ancien_fichier_log != "/var/www/html/log/".$nouveau_fichier_log){
             rename("/var/www/html/log/".$ancien_fichier_log, "/var/www/html/log/".$nouveau_fichier_log );
@@ -721,6 +730,11 @@ class planification extends eqLogic {
 		
     function postSave() {
 		$eqLogic=$this;
+	
+		$retour=$eqLogic->getConfiguration("chemin_image","none");
+		if($retour='none'){
+			$eqLogic->setConfiguration("chemin_image","");
+		}
 		$eqLogic->Ajout_Commande('mode_fonctionnement','Mode fonctionnement','info','string',null,null,"Auto");
 		$eqLogic->Ajout_Commande('heure_fin','Heure fin action en cours','info','string');
 		$eqLogic->Ajout_Commande('action_en_cours','Action en cours','info','string');
