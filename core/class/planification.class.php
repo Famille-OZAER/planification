@@ -474,19 +474,7 @@ class planification extends eqLogic {
 					if($date->getTimestamp() > $maintenant->getTimestamp()){
 					
 						foreach ($CMD_LIST as $cmd) {
-							//log::add('test',"debug","action en cours:".$action_en_cours);
-							
-							//log::add('test',"debug","cmdid:".$cmd["Id"]);
-
-							//log::add('test',"debug","periode_id:".$periode["Id"]);
-							//log::add('test',"debug","action :" . implode('|',$cmd));
-							//log::add('test',"debug","date prochaine action:" . $date->format('d-m-Y H:i'));
-							
-
-
-
-
-							if($periode["Id"]==$cmd["Id"]) {//&& $cmd["Nom"] != $action_en_cours){
+							if($periode["Id"]==$cmd["Id"] && strtolower($cmd["Nom"]) != strtolower($action_en_cours)){
 								$action["datetime"]=$date->format('d-m-Y H:i');
 								$action["nom"]=$cmd["Nom"];
 														
@@ -1306,10 +1294,10 @@ class planification extends eqLogic {
 				}else{
 					$replace['#display_erreur#'] ="none";
 				}	
-				if(debug_backtrace(false, 2)[1]['class'] == "plan"){
+				//if(debug_backtrace(false, 2)[1]['class'] == "plan"){
 					//$version="plan";
 					//log::add("test","debug",$version);
-				};
+				//};
 				
 				
 				
