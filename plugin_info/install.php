@@ -19,6 +19,7 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function planification_install() {
+	log::add('planification', 'debug', 'planification_install');
 	$folderPath = dirname(__FILE__) . '/../../planification/planifications/';
 	if (!is_dir($folderPath)) mkdir($folderPath, 0755, true);
 	$cron = cron::byClassAndFunction('planification', 'pull');
@@ -41,10 +42,14 @@ function planification_install() {
 }
 
 function planification_update() {
+	log::add('planification', 'debug', 'planification_update');
 	$cron = cron::byClassAndFunction('planification', 'pull');
-	if (is_object($cron)) {
-		$cron->remove();
-	}
+	foreach ($crons as $cron){
+		$options_cron=$cron->getOption();
+		if($options_cron["eqLogic_Id"] == $eqLogic->getId()){
+			$cron->remove();
+		}
+	}	
 	//resave eqs for new cmd:
 	try{
 		$eqLogics = eqLogic::byType('planification');
