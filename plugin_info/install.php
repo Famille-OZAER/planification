@@ -21,6 +21,20 @@ require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function planification_install() {
 	$folderPath = dirname(__FILE__) . '/../../planification/planifications/';
 	if (!is_dir($folderPath)) mkdir($folderPath, 0755, true);
+	$cron = cron::byClassAndFunction('planification', 'pull');
+	if (is_object($cron)) {
+		$cron->remove();
+	}
+	/*try{
+		$eqLogics = eqLogic::byType('planification');
+		foreach ($eqLogics as $eqLogic){
+			$eqLogic->save();
+		}
+	}
+	catch (Exception $e){
+		$e = print_r($e, 1);
+		log::add('planification', 'error', 'planification_update ERREUR: '.$e);
+	}*/
 }
 
 function planification_update() {
