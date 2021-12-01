@@ -22,9 +22,12 @@ function planification_install() {
 	$folderPath = dirname(__FILE__) . '/../../planification/planifications/';
 	if (!is_dir($folderPath)) mkdir($folderPath, 0755, true);
 	$cron = cron::byClassAndFunction('planification', 'pull');
-	if (is_object($cron)) {
-		$cron->remove();
-	}
+	foreach ($crons as $cron){
+		$options_cron=$cron->getOption();
+		if($options_cron["eqLogic_Id"] == $eqLogic->getId()){
+			$cron->remove();
+		}
+	}	
 	/*try{
 		$eqLogics = eqLogic::byType('planification');
 		foreach ($eqLogics as $eqLogic){
