@@ -909,6 +909,7 @@ $('#tab_planifications').on('click', '.checkbox_lever_coucher', function() {
             Periode.find('.clock-timepicker').removeAttr('oldvalue')
         }
         Periode.find('.select_lever_coucher').hide()
+        Periode.find('.clock-timepicker').show()
     }
     triage_jour(Divjour)
     MAJ_Graphique_jour(Divjour)
