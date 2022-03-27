@@ -35,7 +35,7 @@
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Poeles"><i class="fa jeedom-feu"></i>Mes poêles à ganules
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Poeles" style="display:none !important"><i class="fa jeedom-feu"></i>Mes poêles à ganules
 					<?php
 					foreach ($eqLogics as $eqLogic) {
 						if ($eqLogic->getConfiguration('type') == 'Poele') {	
@@ -104,7 +104,7 @@
 		<input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
 
 
-		<div class="eqLogicThumbnailContainer Chauffages">
+		<div class="eqLogicThumbnailContainer Chauffages" style="display:none !important">
 			<legend><i class="fa jeedom-pilote-conf"></i> {{Mes chauffages}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -125,7 +125,7 @@
 		</div>
 
 
-		<div class="eqLogicThumbnailContainer PACs">
+		<div class="eqLogicThumbnailContainer PACs" style="display:none !important">
 			<legend><i class="fa jeedom-feu"></i> {{Mes pompes à chaleur}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -145,7 +145,7 @@
 			?>
 		</div>
 
-		<div class="eqLogicThumbnailContainer Poeles">
+		<div class="eqLogicThumbnailContainer Poeles" style="display:none !important">
 		<legend><i class="fa jeedom-feu"></i> {{Mes poêles à granules}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -165,7 +165,7 @@
 			?>
 		</div>
 
-		<div class="eqLogicThumbnailContainer Volets">
+		<div class="eqLogicThumbnailContainer Volets" style="display:none !important">
 			<legend><i class="fa jeedom-volet-ferme"></i> {{Mes Volets}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -185,7 +185,7 @@
 			?>
 		</div>
 
-		<div class="eqLogicThumbnailContainer Prises">
+		<div class="eqLogicThumbnailContainer Prises" style="display:none !important">
 			<legend><i class="fa jeedom-prise"></i> {{Mes Prises}}</legend>
 				<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -205,7 +205,7 @@
 			?>
 		</div>
 
-		<div class="eqLogicThumbnailContainer Persos">
+		<div class="eqLogicThumbnailContainer Persos" style="display:none !important">
 			<legend><i class="fa jeedom-prise"></i> {{Mes équipement perso}}</legend>
 				<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -306,7 +306,7 @@
 							</div>
 						</div>
 						<div class="form-group" style="display : block;" >
-							<label class="col-sm-3 control-label">{{Chemin de l'image}}</label>
+							<label class="col-sm-3 control-label">{{Chemin de l&#39;image}}</label>
 							<div class="col-sm-9">
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="chemin_image" />
 							</div>
@@ -315,7 +315,7 @@
 							<label class="col-sm-3 control-label"></label>
 							<div class="col-sm-9">
 								<label class="checkbox-inline">
-									<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="affichage_heure"/>Afficher uniquement l'heure sur le widget tant que l'heure de la prochaine action est inferieure à 24 heures
+									<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="affichage_heure"/>Afficher uniquement l&#39;heure sur le widget tant que l&#39;heure de la prochaine action est inferieure à 24 heures
 								</label>
 							</div>
 
@@ -343,7 +343,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l'état du poêle}}</label>
+								<label class="col-sm-3 control-label">{{Commande de l&#39;état du poêle}}</label>
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_id"/>
 									<span class="input-group-btn">
@@ -352,7 +352,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l'état boost du poêle}}</label>
+								<label class="col-sm-3 control-label">{{Commande de lé&#39;tat boost du poêle}}</label>
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_boost_id"/>
 									<span class="input-group-btn">
@@ -380,7 +380,7 @@
 						</div>
 						<div class="option Volet" style="display:none">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l'état du volet}}</label>
+								<label class="col-sm-3 control-label">{{Commande de l&#39;état du volet}}</label>
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_volet" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
@@ -412,7 +412,7 @@
 						</div>
 						<div class="option Prise" style="display:none">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l'état de la prise}}</label>
+								<label class="col-sm-3 control-label">{{Commande de l&#39;état de la prise}}</label>
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_prise" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
@@ -437,7 +437,7 @@
 						</div>
 						<div class="option Chauffage" style="display:none">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l'état du chauffage}}</label>
+								<label class="col-sm-3 control-label">{{Commande de l&#39;état du chauffage}}</label>
 								<div class="col-sm-6 input-group">
 									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_chauffage" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
@@ -488,7 +488,7 @@
 								<img src="<?php echo($plugin->getPathImgIcon())?>" id="img_planificationModel" style="height:130px;" />
 							</div>
 								<div>
-									<a class="btn btn-sm btn-default bt_modifier_image"><i class="fa jeedomapp-folder"></i> {{Modifier l'image}}</a>
+									<a class="btn btn-sm btn-default bt_modifier_image"><i class="fa jeedomapp-folder"></i> {{Modifier l&#39;image}}</a>
 								</div>
 							
 
@@ -513,7 +513,7 @@
 					<label class="col-sm-3 control-label" style="height: 31px;margin: 0px;top: 5px;">{{Jour à configurer}}</label>
 
 					<select class="selection_jour col-sm-3">
-						<option value="Lundi" selected>{{Lundi}}  </option>
+						<option value="Lundi" selected>{{Lundi}}</option>
 						<option value="Mardi">{{Mardi}}</option>
 						<option value="Mercredi">{{Mercredi}}</option>
 						<option value="Jeudi">{{Jeudi}}</option>
@@ -600,7 +600,7 @@
 						</form>
 					</div>	
 				</div>
-				<div class="Mardi col-sm-12" style='display:none'>
+				<div class="Mardi col-sm-12" style="display:none">
 					<div class="col-sm-6 Jour">
 						<form class="form-horizontal">
 
@@ -677,7 +677,7 @@
 						</form>
 					</div>	
 				</div>
-				<div class="Mercredi col-sm-12" style='display:none'>
+				<div class="Mercredi col-sm-12" style="display:none">
 					<div class="col-sm-6 Jour">
 						<form class="form-horizontal">
 							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
@@ -699,7 +699,7 @@
 										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
 										<div class="col-sm-5">
 											<div class="input-group">
-											<	input type="time" class="HeureLeverMin_Mercredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Mercredi"/>
+											<input type="time" class="HeureLeverMin_Mercredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Mercredi"/>
 											</div>
 										</div>
 									</div>
@@ -753,7 +753,7 @@
 						</form>
 					</div>	
 				</div>
-				<div class="Jeudi col-sm-12" style='display:none'>
+				<div class="Jeudi col-sm-12" style="display:none">
 					<div class="col-sm-6 Jour">
 						<form class="form-horizontal">
 							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
@@ -829,7 +829,7 @@
 						</form>
 					</div>	
 				</div>
-				<div class="Vendredi col-sm-12" style='display:none'>
+				<div class="Vendredi col-sm-12" style="display:none">
 					<div class="col-sm-6 Jour">
 						<form class="form-horizontal">
 							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
@@ -905,7 +905,7 @@
 						</form>
 					</div>	
 				</div>
-				<div class="Samedi col-sm-12" style='display:none'>
+				<div class="Samedi col-sm-12" style="display:none">
 					<div class="col-sm-6 Jour">
 						<form class="form-horizontal">
 							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
@@ -981,7 +981,7 @@
 						</form>
 					</div>	
 				</div>
-				<div class="Dimanche col-sm-12" style='display:none'>
+				<div class="Dimanche col-sm-12" style="display:none">
 					<div class="col-sm-6 Jour">
 						<form class="form-horizontal">
 							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
@@ -1086,23 +1086,23 @@
 		</div>
 	</div>
 <script>
-if ($('div .Chauffages .eqLogicDisplayCard').length == 0){
-		$('.Chauffages').hide();
+if ($("div .Chauffages .eqLogicDisplayCard").length != 0){
+		$(".Chauffages").show();
 	}
-	if ($('div .PACs .eqLogicDisplayCard').length == 0){
-		$('.PACs').hide();
+	if ($("div .PACs .eqLogicDisplayCard").length != 0){
+		$(".PACs").show();
 	}
-	if ($('div .Poeles .eqLogicDisplayCard').length == 0){
-		$('.Poeles').hide();
+	if ($("div .Poeles .eqLogicDisplayCard").length != 0){
+		$(".Poeles").show();
 	}
-	if ($('div .Volets .eqLogicDisplayCard').length == 0){
-		$('.Volets').hide();
+	if ($("div .Volets .eqLogicDisplayCard").length != 0){
+		$(".Volets").show();
 	}
-	if ($('div .Prises .eqLogicDisplayCard').length == 0){
-		$('.Prises').hide();
+	if ($("div .Prises .eqLogicDisplayCard").length != 0){
+		$(".Prises").show();
 	}
-	if ($('div .Persos .eqLogicDisplayCard').length == 0){
-		$('.Persos').hide();
+	if ($("div .Persos .eqLogicDisplayCard").length != 0){
+		$(".Persos").show();
 	}
    
 

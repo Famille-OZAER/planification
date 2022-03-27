@@ -1047,7 +1047,8 @@ function Ajoutplanification(_planification) {
         div += jour
         div += '</div>'
         div += '<div class="input-group" style="display:inline-flex">'
-        div += '<span class="input-group-btn">'
+            // div += '<span class="input-group-btn">'
+        div += '<span>'
         div += '<span><i class="fa fa-plus-circle cursor bt_ajout_periode" title="{{Ajouter une période}}"></i> </span>'
         div += '<span><i class="fas fa-sign-out-alt cursor bt_copier_jour" title="{{Copier le jour}}"></i> </span>'
         div += '<span><i class="fas fa-sign-in-alt cursor bt_coller_jour" title="{{Coller le jour}}"></i> </span>'

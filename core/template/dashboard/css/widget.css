@@ -1,103 +1,106 @@
+/* Fontes utilisées */
 
- /* Fontes utilisées */  
- @font-face {
+@font-face {
     font-family: "N_E_B";
     src: url(../images/thermostat/N_E_B.TTF) format("truetype");
 }
-	
+
 @font-face {
     font-family: "MANDATOR";
-    src: url(../images/thermostat/MANDATOR.TTF) format("truetype");
+    src: url(../images/thermostat/mandator.ttf) format("truetype");
 }
-	
 
 .cercle_ext {
-	position:relative;
-	left:20px;
-	top:20px;
-	border: 3px solid #333;
-	height: 260px;
-	width: 260px;
-
-	-moz-border-radius:350px;
-	border-radius:350px;
-	-webkit-border-radius: 350px;
-
-
-	/* Permet de mettre un dégradé sur le cercle en fonction de tous les navigateurs */
-	background: -webkit-radial-gradient(top left, ellipse cover, #eaeaea 0%,#eaeaea 11%,#0e0e0e 61%); /* Chrome10+,Safari5.1+ */
-	background: -moz-radial-gradient(top left, ellipse cover,  #eaeaea 0%, #eaeaea 11%, #0e0e0e 61%); /* FF3.6+ */
-	background: -webkit-gradient(radial, top left, 0px, top left, 100%, color-stop(0%,#eaeaea), color-stop(11%,#eaeaea), color-stop(61%,#0e0e0e)); /* Chrome,Safari4+ */
-	background: -o-radial-gradient(top left, ellipse cover,  #eaeaea 0%,#eaeaea 11%,#0e0e0e 61%); /* Opera 12+ */
-	background: -ms-radial-gradient(top left, ellipse cover,  #eaeaea 0%,#eaeaea 11%,#0e0e0e 61%); /* IE10+ */
-	background: radial-gradient(top left, ellipse cover,  #eaeaea 0%,#eaeaea 11%,#0e0e0e 61%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#0e0e0e',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
-	/* Permet de ne pas pouvoir être sélectionné */
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    position: relative;
+    left: 20px;
+    top: 20px;
+    border: 3px solid #333;
+    height: 260px;
+    width: 260px;
+    -moz-border-radius: 350px;
+    border-radius: 350px;
+    -webkit-border-radius: 350px;
+    /* Permet de mettre un dégradé sur le cercle en fonction de tous les navigateurs */
+    background: -webkit-radial-gradient(top left, ellipse cover, #eaeaea 0%, #eaeaea 11%, #0e0e0e 61%);
+    /* Chrome10+,Safari5.1+ */
+    background: -moz-radial-gradient(top left, ellipse cover, #eaeaea 0%, #eaeaea 11%, #0e0e0e 61%);
+    /* FF3.6+ */
+    background: -webkit-gradient(radial, top left, 0px, top left, 100%, color-stop(0%, #eaeaea), color-stop(11%, #eaeaea), color-stop(61%, #0e0e0e));
+    /* Chrome,Safari4+ */
+    background: -o-radial-gradient(top left, ellipse cover, #eaeaea 0%, #eaeaea 11%, #0e0e0e 61%);
+    /* Opera 12+ */
+    background: -ms-radial-gradient(top left, ellipse cover, #eaeaea 0%, #eaeaea 11%, #0e0e0e 61%);
+    /* IE10+ */
+    background: radial-gradient(top left, ellipse cover, #eaeaea 0%, #eaeaea 11%, #0e0e0e 61%);
+    /* W3C */
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#0e0e0e', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+    /* Permet de ne pas pouvoir être sélectionné */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
-
 
 .Thermostat {
-	position:relative;
-	background-image: url(../images/thermostat/fond.png);
-	background-repeat: no-repeat;
-	width: 300px;
-	height: 300px;
-	transform: scale(0.3) !important;
+    position: relative;
+    background-image: url(../images/thermostat/fond.png);
+    background-repeat: no-repeat;
+    width: 300px;
+    height: 300px;
+    transform: scale(0.3) !important;
     transform-origin: top left;
-	top: calc(50% - 45px);
-	/* Permet de replir la totalité de la zone */
-	background-size:cover;
-	/* Permet de ne pas pouvoir être sélectionné */
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    top: calc(50% - 45px);
+    /* Permet de replir la totalité de la zone */
+    background-size: cover;
+    /* Permet de ne pas pouvoir être sélectionné */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
+
+
 /* Le cercle interne  */
-.cercle_int{
-	position:relative;
-	left:17px;
-	top:17px;
 
-	height: 220px;
-	width: 220px;
-	-moz-border-radius:220px;
-	border-radius:220px;
-	-webkit-border-radius: 220px;
-
-
-	/* Dégradé circulaire */
-	background:#0338ac; /* Chrome10+,Safari5.1+ */
-		/* Permet de ne pas pouvoir être sélectionné */
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+.cercle_int {
+    position: relative;
+    left: 17px;
+    top: 17px;
+    height: 220px;
+    width: 220px;
+    -moz-border-radius: 220px;
+    border-radius: 220px;
+    -webkit-border-radius: 220px;
+    /* Dégradé circulaire */
+    background: #0338ac;
+    /* Chrome10+,Safari5.1+ */
+    /* Permet de ne pas pouvoir être sélectionné */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .Temperature_consigne {
-	position:relative;
-	top:10px;
-	left:-10px;
-	font-family: "MANDATOR", Verdana, Tahoma;
-	font-size: 60px;
-	color:#ffffff;
-	/* Permet de ne pas pouvoir être sélectionné */
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	text-align: center;
+    position: relative;
+    top: 10px;
+    left: -10px;
+    font-family: "MANDATOR", Verdana, Tahoma;
+    font-size: 60px;
+    color: #ffffff;
+    /* Permet de ne pas pouvoir être sélectionné */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
 }
+
 
 /*@media screen and (min-device-width: 600px) and (max-device-width: 900px) {
 	.Temperature_consigne {
@@ -117,22 +120,24 @@
 	}
 }
 */
- 
+
 .Temperature_actuelle {
-	position:relative;
-	top:10px;
-	left:-10px;
-	font-family: "MANDATOR", Verdana, Tahoma;
-	font-size:30px;
-	color:#ffffff;
-	/* Permet de ne pas pouvoir être sélectionné */
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	text-align: center;
+    position: relative;
+    top: 10px;
+    left: -10px;
+    font-family: "MANDATOR", Verdana, Tahoma;
+    font-size: 30px;
+    color: #ffffff;
+    /* Permet de ne pas pouvoir être sélectionné */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
 }
+
+
 /*@media screen and (min-device-width: 600px) and (max-device-width: 700px) {
 	.Temperature_actuelle {
 		position:relative;
@@ -152,36 +157,40 @@
 }
 
 */
-.Nom_Temperature_consigne {
-	position:relative;
-	top:20px;
-	left:-10px;
-	font-family: "MANDATOR", Verdana, Tahoma;
-	font-size:30px;
-	color:#ffffff;
-	/* Permet de ne pas pouvoir être sélectionné */
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 
-	text-align: center;
+.Nom_Temperature_consigne {
+    position: relative;
+    top: 20px;
+    left: -10px;
+    font-family: "MANDATOR", Verdana, Tahoma;
+    font-size: 30px;
+    color: #ffffff;
+    /* Permet de ne pas pouvoir être sélectionné */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
 }
-.monter_temperature{
-	width: 100%;
-	height: 110px;
-	position: absolute;
-	left: -10px;
-	top: -10px;
+
+.monter_temperature {
+    width: 100%;
+    height: 110px;
+    position: absolute;
+    left: -10px;
+    top: -10px;
 }
-.descendre_temperature{
-	width: 100%;
-	height: 110px;
-	position: absolute;
-	left: -10px;	
-	top: 100px;
+
+.descendre_temperature {
+    width: 100%;
+    height: 110px;
+    position: absolute;
+    left: -10px;
+    top: 100px;
 }
+
+
 /*@media screen and (min-device-width: 600px) and (max-device-width: 900px) {
 	.Nom_Temperature_consigne {
 		position:relative;
@@ -201,21 +210,22 @@
 }*/
 
 .Nom_Temperature_actuelle {
-	position:relative;
-	top:10px;
-	left:-10px;
-	font-family: "MANDATOR", Verdana, Tahoma;
-	font-size:15px;
-	color:#ffffff;
-	/* Permet de ne pas pouvoir être sélectionné */
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-
-	text-align: center;
+    position: relative;
+    top: 10px;
+    left: -10px;
+    font-family: "MANDATOR", Verdana, Tahoma;
+    font-size: 15px;
+    color: #ffffff;
+    /* Permet de ne pas pouvoir être sélectionné */
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
 }
+
+
 /*@media screen and (min-device-width: 600px) and (max-device-width: 900px) {
 	.Nom_Temperature_actuelle {
 		position:relative;
@@ -234,32 +244,13 @@
 	}
 }*/
 
-
-.barres{
-    
-	height: 212px;
-	margin: 0 auto;
-	position: relative;
-	top: 10px;
-	left: 2px;
-	width: 228px;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-     user-select: none;
-}
-
-.colorBar{
-	width:15px;
-	height:1px;
-	position:absolute;
-	opacity:0;
-	background-color : #ffffff;
-	-moz-transition:1s;
-	-webkit-transition:1s;
-	-o-transition:1s;
-	transition:1s;
+.barres {
+    height: 212px;
+    margin: 0 auto;
+    position: relative;
+    top: 10px;
+    left: 2px;
+    width: 228px;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -267,6 +258,23 @@
     user-select: none;
 }
 
-.colorBar.active{
-	opacity:1;
+.colorBar {
+    width: 15px;
+    height: 1px;
+    position: absolute;
+    opacity: 0;
+    background-color: #ffffff;
+    -moz-transition: 1s;
+    -webkit-transition: 1s;
+    -o-transition: 1s;
+    transition: 1s;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.colorBar.active {
+    opacity: 1;
 }
