@@ -1,14 +1,7 @@
 /* Fontes utilisées */
 
-@font-face {
-    font-family: "N_E_B";
-    src: url(../images/thermostat/N_E_B.TTF) format("truetype");
-}
 
-@font-face {
-    font-family: "MANDATOR";
-    src: url(../images/thermostat/mandator.ttf) format("truetype");
-}
+
 
 .cercle_ext {
     position: relative;
@@ -89,7 +82,7 @@
     position: relative;
     top: 10px;
     left: -10px;
-    font-family: "MANDATOR", Verdana, Tahoma;
+   
     font-size: 60px;
     color: #ffffff;
     /* Permet de ne pas pouvoir être sélectionné */
@@ -107,7 +100,7 @@
 		position:relative;
 		top:10px;
 		left:-10px;
-		font-family: "MANDATOR", Verdana, Tahoma;
+		
 		font-size: 20px;
 		color:#ffffff;
 		/* Permet de ne pas pouvoir être sélectionné 
@@ -125,7 +118,7 @@
     position: relative;
     top: 10px;
     left: -10px;
-    font-family: "MANDATOR", Verdana, Tahoma;
+    
     font-size: 30px;
     color: #ffffff;
     /* Permet de ne pas pouvoir être sélectionné */
@@ -143,7 +136,7 @@
 		position:relative;
 		top:10px;
 		left:-10px;
-		font-family: "MANDATOR", Verdana, Tahoma;
+		
 		font-size: 10px;
 		color:#ffffff;
 		 Permet de ne pas pouvoir être sélectionné 
@@ -162,7 +155,7 @@
     position: relative;
     top: 20px;
     left: -10px;
-    font-family: "MANDATOR", Verdana, Tahoma;
+ 
     font-size: 30px;
     color: #ffffff;
     /* Permet de ne pas pouvoir être sélectionné */
@@ -196,7 +189,7 @@
 		position:relative;
 		top:10px;
 		left:-10px;
-		font-family: "MANDATOR", Verdana, Tahoma;
+	
 		font-size: 5px;
 		color:#ffffff;
 		/* Permet de ne pas pouvoir être sélectionné 
@@ -213,7 +206,7 @@
     position: relative;
     top: 10px;
     left: -10px;
-    font-family: "MANDATOR", Verdana, Tahoma;
+   
     font-size: 15px;
     color: #ffffff;
     /* Permet de ne pas pouvoir être sélectionné */
@@ -231,7 +224,7 @@
 		position:relative;
 		top:10px;
 		left:-10px;
-		font-family: "MANDATOR", Verdana, Tahoma;
+		
 		font-size: 5px;
 		color:#ffffff;
 		/* Permet de ne pas pouvoir être sélectionné 

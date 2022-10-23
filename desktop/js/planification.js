@@ -1,75 +1,119 @@
 JSONCLIPBOARD = null
 document.addEventListener("click", closeAllSelect);
-$(".li_eqLogic").on('click', function(event) {
-
-    if (event.ctrlKey) {
-        var type = $('body').attr('data-page')
-        var url = '/index.php?v=d&m=' + type + '&p=' + type + '&id=' + $(this).attr('data-eqlogic_id')
-        window.open(url).focus()
-    } else {
-        jeedom.eqLogic.cache.getCmd = Array();
-        if ($('.eqLogicThumbnailDisplay').html() != undefined) {
-            $('.eqLogicThumbnailDisplay').hide();
-        }
-        $('.eqLogic').hide();
-        if ('function' == typeof(prePrintEqLogic)) {
-            prePrintEqLogic($(this).attr('data-eqLogic_id'));
-        }
-        if (isset($(this).attr('data-eqLogic_type')) && isset($('.' + $(this).attr('data-eqLogic_type')))) {
-            $('.' + $(this).attr('data-eqLogic_type')).show();
-        } else {
-            $('.eqLogic').show();
-        }
-        if ($('.li_eqLogic').length != 0) {
-            $('.li_eqLogic').removeClass('active');
-        }
-        $(this).addClass('active');
-        if ($('.li_eqLogic[data-eqLogic_id=' + $(this).attr('data-eqLogic_id') + ']').html() != undefined) {
-            $('.li_eqLogic[data-eqLogic_id=' + $(this).attr('data-eqLogic_id') + ']').addClass('active');
-        }
-
-        $('.nav-tabs a:not(.eqLogicAction)').first().click()
-        $.showLoading()
-        jeedom.eqLogic.print({
-            type: isset($(this).attr('data-eqLogic_type')) ? $(this).attr('data-eqLogic_type') : eqType,
-            id: $(this).attr('data-eqLogic_id'),
-            status: 1,
-            error: function(error) {
-                $.hideLoading();
-                $('#div_alert').showAlert({ message: error.message, level: 'danger' });
-            },
-            success: function(data) {
-                $('body .eqLogicAttr').value('');
-                if (isset(data) && isset(data.timeout) && data.timeout == 0) {
-                    data.timeout = '';
-                }
-                $('body').setValues(data, '.eqLogicAttr');
-                if ('function' == typeof(printEqLogic)) {
-                    printEqLogic(data);
-                }
-                if ('function' == typeof(addCmdToTable)) {
-                    $('.cmd').remove();
-                    for (var i in data.cmd) {
-                        addCmdToTable(data.cmd[i]);
-                    }
-                }
-                $('body').delegate('.cmd .cmdAttr[data-l1key=type]', 'change', function() {
-                    jeedom.cmd.changeType($(this).closest('.cmd'));
-                });
-                $('body').delegate('.cmd .cmdAttr[data-l1key=subType]', 'change', function() {
-                    jeedom.cmd.changeSubType($(this).closest('.cmd'));
-                });
-                addOrUpdateUrl('id', data.id);
-                $.hideLoading();
-                modifyWithoutSave = false;
-                setTimeout(function() {
-                    modifyWithoutSave = false;
-                }, 1000)
-            }
-        });
+$(".li_eqLogic").on('click', function (event) {
+  $.hideAlert()
+  if (event.ctrlKey) {
+    var type = $('body').attr('data-page')
+    var url = 'index.php?v=d&m=' + type + '&p=' + type + '&id=' + $(this).attr('data-eqlogic_id')
+    window.open(url).focus()
+  } else {
+    jeedom.eqLogic.cache.getCmd = Array()
+    if ($('.eqLogicThumbnailDisplay').html() != undefined) {
+      $('.eqLogicThumbnailDisplay').hide()
     }
-    return false;
-});
+    $('.eqLogic').hide()
+    if ('function' == typeof(prePrintEqLogic)) {
+      prePrintEqLogic($(this).attr('data-eqLogic_id'))
+    }
+    if (isset($(this).attr('data-eqLogic_type')) && isset($('.' + $(this).attr('data-eqLogic_type')))) {
+      $('.' + $(this).attr('data-eqLogic_type')).show()
+    } else {
+      $('.eqLogic').show()
+    }
+    if($('.li_eqLogic').length != 0){
+      $('.li_eqLogic').removeClass('active');
+    }
+        if($('.li_eqLogic[data-eqLogic_id='+$(this).attr('data-eqLogic_id')+']').html() != undefined){
+      $('.li_eqLogic[data-eqLogic_id='+$(this).attr('data-eqLogic_id')+']').addClass('active');
+    }
+    $(this).addClass('active')
+    $('.nav-tabs a:not(.eqLogicAction)').first().click()
+    $.showLoading()
+    jeedom.eqLogic.print({
+      type: isset($(this).attr('data-eqLogic_type')) ? $(this).attr('data-eqLogic_type') : eqType,
+      id: $(this).attr('data-eqLogic_id'),
+      status: 1,
+	  getCmdState : 1,
+      error: function(error) {
+        $.hideLoading()
+        $.fn.showAlert({
+          message: error.message,
+          level: 'danger'
+        })
+      },
+      success: function(data) {
+        $('body .eqLogicAttr').value('')
+        if (isset(data) && isset(data.timeout) && data.timeout == 0) {
+          data.timeout = ''
+        }
+        $('body').setValues(data, '.eqLogicAttr')
+		if (!isset(data.category.opening)) $('input[data-l2key="opening"]').prop('checked', false)
+
+        if ('function' == typeof(printEqLogic)) {
+          printEqLogic(data)
+        }
+		$('.cmd').remove()
+		for (var i in data.cmd) {
+		 if(data.cmd[i].type == 'info'){
+            data.cmd[i].state = String(data.cmd[i].state).replace(/<[^>]*>?/gm, '');
+            data.cmd[i]['htmlstate'] =  '<span class="cmdTableState"';
+            data.cmd[i]['htmlstate'] += 'data-cmd_id="' + data.cmd[i].id+ '"';
+            data.cmd[i]['htmlstate'] += 'title="{{Date de valeur}} : ' + data.cmd[i].valueDate + '<br/>{{Date de collecte}} : ' + data.cmd[i].collectDate;
+            if(data.cmd[i].state.length > 50){
+              data.cmd[i]['htmlstate'] += '<br/>'+data.cmd[i].state.replaceAll('"','&quot;');
+            }
+            data.cmd[i]['htmlstate'] += '" >';
+            data.cmd[i]['htmlstate'] += data.cmd[i].state.substring(0, 50) +  ' ' + data.cmd[i].unite;
+            data.cmd[i]['htmlstate'] += '<span>';
+          }else{
+            data.cmd[i]['htmlstate'] = '';
+          }
+          if(typeof addCmdToTable == 'function'){
+            addCmdToTable(data.cmd[i])
+          }else{
+            addCmdToTableDefault(data.cmd[i]);
+          }
+        }
+        $('.cmdTableState').each(function() {
+          jeedom.cmd.addUpdateFunction($(this).attr('data-cmd_id'), function(_options) {
+            _options.value = String(_options.value).replace(/<[^>]*>?/gm, '');
+            let cmd = $('.cmdTableState[data-cmd_id=' + _options.cmd_id + ']')
+            let title = '{{Date de collecte}} : ' + _options.collectDate+' - {{Date de valeur}} ' + _options.valueDate;
+            if(_options.value.length > 50){
+              title += ' - '+_options.value;
+            }
+            cmd.attr('title', title)
+            cmd.empty().append(_options.value.substring(0, 50) + ' ' + _options.unit);
+            cmd.css('color','var(--logo-primary-color)');
+            setTimeout(function(){
+              cmd.css('color','');
+            }, 1000);
+          });
+        })
+        $('#div_pageContainer').on({
+          'change': function(event) {
+            jeedom.cmd.changeType($(this).closest('.cmd'))
+          }
+        }, '.cmd .cmdAttr[data-l1key=type]')
+
+        $('#div_pageContainer').on({
+          'change': function(event) {
+            jeedom.cmd.changeSubType($(this).closest('.cmd'))
+          }
+        }, '.cmd .cmdAttr[data-l1key=subType]')
+
+        jeedomUtils.addOrUpdateUrl('id', data.id)
+        $.hideLoading()
+        modifyWithoutSave = false
+        setTimeout(function() {
+          modifyWithoutSave = false
+        }, 1000)
+      }
+    })
+  }
+  return false
+})
+
 $('.ajouter_eqlogic').on('click', function() {
     var dialog_title = '{{Choisissez le type d\'équipement que souhaitez ajouter}}';
 
@@ -1733,16 +1777,17 @@ function addCmdToTable(_cmd) {
         tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
         tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" disabled placeholder="{{Nom}} "</td>'
         tr += '</td>'
-        tr += '<td>'
-
-
-        tr += '</td>'
+        if (typeof jeeFrontEnd !== 'undefined' && jeeFrontEnd.jeedomVersion !== 'undefined') {
+            tr += '<td>';
+            tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>';
+            tr += '</td>';
+        }
         tr += '<td>'
 
         tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span> '
 
         tr += '</td>'
-
+ 		
         tr += '<td>'
         if (is_numeric(_cmd.id)) {
             tr += '<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a> '
@@ -1751,9 +1796,10 @@ function addCmdToTable(_cmd) {
         tr += '</td>'
         tr += '</tr>'
         $('#table_infos tbody').append(tr)
-        $('#table_infos tbody tr:last').setValues(_cmd, '.cmdAttr')
-        if (isset(_cmd.type)) $('#table_infos tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type))
-        jeedom.cmd.changeType($('#table_infos tbody tr:last'), init(_cmd.subType))
+        const $tr = $('#table_infos tbody tr:last');
+        $tr.setValues(_cmd, '.cmdAttr');
+        jeedom.cmd.changeType($tr, init(_cmd.subType));
+        $tr.find('.cmdAttr[data-l1key=type],.cmdAttr[data-l1key=subType]').prop("disabled", true);
     } else if (_cmd.type == 'action') {
 
         var SELECT_LIST = Recup_select("commandes");
@@ -1793,7 +1839,7 @@ function addCmdToTable(_cmd) {
             }
         }
         tr += '<td>'
-        if (_cmd.logicalId == 'auto') {
+        if (_cmd.logicalId == 'auto' || _cmd.logicalId == 'absent') {
             tr += '</td>'
             tr += '<td>'
 

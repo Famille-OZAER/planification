@@ -19,8 +19,8 @@
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'Chauffage') {	
-								$opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-								echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '" style="' . $opacity .'"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
+								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
+								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
 						}
 					?>
@@ -29,8 +29,8 @@
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'PAC') {	
-								$opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-								echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '" style="' . $opacity .'"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
+								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
+								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
 						}
 					?>
@@ -39,8 +39,8 @@
 					<?php
 					foreach ($eqLogics as $eqLogic) {
 						if ($eqLogic->getConfiguration('type') == 'Poele') {	
-							$opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-							echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '" style="' . $opacity .'"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
+							$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
+							echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 						}
 					}
 					?>
@@ -49,8 +49,8 @@
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'Volet') {	
-								$opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-								echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '" style="' . $opacity .'"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
+								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
+								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
 						}
 					?>
@@ -59,8 +59,8 @@
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'Prise') {	
-								$opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-								echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '" style="' . $opacity .'"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
+								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
+								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
 						}
 					?>
@@ -70,9 +70,9 @@
 				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Persos"><i class="fa jeedom-prise"></i>Mes équipements perso
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('type') == 'Perso') {	
-								$opacity = ($eqLogic->getIsEnable()) ? '' : jeedom::getConfiguration('eqLogic:style:noactive');
-								echo '<li class="cursor li_eqLogic" data-eqLogic_id="' . $eqLogic->getId() . '" style="' . $opacity .'"><a>' . $eqLogic->getHumanName(true) . '</a></li>';
+							if ($eqLogic->getConfiguration('type') == 'Perso') {
+                              	$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
+								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
 						}
 					?>
@@ -1064,7 +1064,7 @@
 				<table id="table_infos" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th width="20%">{{Nom}}</th><th width="55%" align="center">{{}}</th><th width="15%" align="right">{{Options}}</th><th width="20%" align="right"></th>
+							<th width="20%">{{Nom}}</th><th width="55%" align="center">{{Etat}}</th><th width="15%" align="right">{{Options}}</th><th width="20%" align="right"></th>
 						</tr>
 					</thead>
 					<tbody>
