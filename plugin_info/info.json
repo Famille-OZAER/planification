@@ -10,6 +10,8 @@
     "hasOwnDeamon": false,
     "maxDependancyInstallTime": 0,
     "changelog": "https://raw.githack.com/Famille-OZAER/planification/master/docs/changelog.html",
+    "changelog_beta": "https://raw.githack.com/Famille-OZAER/planification/master/docs/changelog.html",
     "documentation": "https://raw.githack.com/Famille-OZAER/planification/master/docs/documentation.html",
+    "documentation_beta": "https://raw.githack.com/Famille-OZAER/planification/master/docs/documentation.html",
     "compatibility": ["smart", "rpi", "docker", "diy", "v4"]
 }
