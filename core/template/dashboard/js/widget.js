@@ -175,7 +175,7 @@ function reset_page(id, uid, page, action_en_cours) {
     }
 }
 
-function Commun_widget(id, uid, info_widget, action_en_cours, set_planification_id, endtime_change_id, calendar_selector) {
+function Commun_widget(id, uid, info_widget, action_en_cours, set_planification_id, endtime_change_id, calendar_selector, page) {
     var taille = parseInt($('.eqLogic[data-eqLogic_uid=' + uid + '] .object_name ').css('height').replace(/px/i, ''))
 
     $('.eqLogic[data-eqLogic_uid=' + uid + '] .tuile').css("height", "calc(100% - " + taille + "px)")
@@ -189,7 +189,13 @@ function Commun_widget(id, uid, info_widget, action_en_cours, set_planification_
         $('.eqLogic[data-eqLogic_uid=' + uid + '] .tuile').css("background-color", "rgba(0,0,0,0.5)")
         $('.eqLogic[data-eqLogic_uid=' + uid + ']').css('box-shadow', '0px 0px 3px 0.5px rgba(255,255,255,1)')
     }
-
+    if (page == 'page1') {
+        $('.eqLogic[data-eqLogic_uid=' + uid + '] .page_1').css('display', 'block');
+        $('.eqLogic[data-eqLogic_uid=' + uid + '] .page_2').css('display', 'none');
+    } else {
+        $('.eqLogic[data-eqLogic_uid=' + uid + '] .page_1').css('display', 'none');
+        $('.eqLogic[data-eqLogic_uid=' + uid + '] .page_2').css('display', 'block');
+    }
 
     if ($('.eqLogic[data-eqLogic_uid=' + uid + '] .page_2').css('display') == 'block') {
         reset_page(id, uid, 'page2 ', action_en_cours)
@@ -207,6 +213,7 @@ function Commun_widget(id, uid, info_widget, action_en_cours, set_planification_
     });
     $('.eqLogic[data-eqLogic_uid=' + uid + '] .changecmd').on('click', function() {
         var page = "page1"
+
         if ($('.eqLogic[data-eqLogic_uid=' + uid + '] .page_2').css('display') == 'block') {
             page = "page1"
 

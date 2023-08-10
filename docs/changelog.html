@@ -37,36 +37,44 @@
                 <li>ajout de la possibilité d'ajouter un équipement personnalisé.</li>
                 <li>Création de la documentation.</li>
             </ul>
+            <h3>10/08/2023</h3>
+            <ul>
+                <li>Corrections de la page santé.</li>
+                <li>Mise à jour de la température de consigne lorsque la température par défaut est enregistrée pour un équipement Poêle, en prenant en compte les valeur min et max du thermostat.</li>
+                <li>Création d'un démon à la place d'un cron par équipement, les crons se bloquaient lors de la restauration d'une sauvegarde.</li>
+                <li>Correction d'un bug sur la selection d'une planification via un scénario, elle était chaque fois réappliquée, lorsque la planification était en manuel, elle repassait en auto lors de la prochaine action.</li>
+                <li>Ajout d'une option dans la configuration du plugin permetant soit de logger par équipement soit logger sur un seul log.</li>
+                <li>Correction d'un bug lors de la duplication d'un équipement.</li>
+                <li>Diverses corrections.</li>
+            </ul>
             <h3>27/10/2022</h3>
             <ul>
                 <li>Compatibilité jeedom 4.2 .</li>
             </ul>
-
-
             <h3>06/12/2021</h3>
             <ul>
                 <li>Correction d'un bug lors de la suppression du mode lever/ coucher de soleil sur une période. Il était impossible de resélecionner une heure.</li>
             </ul>
             <h3>01/12/2021</h3>
             <ul>
-                <li>Ajout de la possibilité d'utiliser une images personnalisée pour l'afficage des équipement.</li>
+                <li>Ajout de la possibilité d'utiliser une images personnalisée pour l'afficage des équipements.</li>
             </ul>
 
             <h3>19/10/2021</h3>
             <ul>
                 <li>Correction d'un bug lors de l'enregistrement des commandes contenant des options </li>
-                <li>Modification l'enregistrement des planifications : stockage des ids à la place des noms de commande</li>
+                <li>Modification l'enregistrement des planifications : stockage des ids à la place des noms de commande.</li>
             </ul>
             <h3>01/05/2021</h3>
             <ul>
-                <li>Création d'une page santé du plugin. Visualisation sur une seule page de toutes les infos de chaque eqLogics.</li>
+                <li>Création d'une page santé du plugin. Visualisation sur une seule page de toutes les infos de chaque équipements.</li>
             </ul>
 
             <h3>29/04/2021</h3>
             <ul>
-                <li>Triage des eqLogics dans la pages principale du plugin.</li>
+                <li>Triage des équipements dans la page principale du plugin.</li>
                 <li>Ajout du widget pour les prises.</li>
-                <li>Simplifiacation des widgets</li>
+                <li>Simplification des widgets</li>
                 <li>Ajout d'une option pour afficher uniquement l'heure de la prochaine action su le widget si celle-ci est inférieure à l'heure actuelle + 24 heures</li>
             </ul>
 
@@ -80,10 +88,10 @@
                 <li>Modification du nom du fichier log si on renome ou change l'objet de l'eqLogic</li>
                 <li>Suppression du cron lors de la désactivation d'un eqLogic.(Il fonctionnait toujours même si celui-ci était désactivé).</li>
                 <li>Ajout de la possibilité de mettre des alias pour l'état réel des chauffages.</li>
-                <li>Mise en surbrillance la checkbox d'activation de l'option "Lever/Coucher de soleil " dans l'onglet planification.</li>
-                <li>Ajout d'une vérification de la validitée de la commande réelle de l'equipement sur la page de l'eqLogic.</li>
+                <li>Mise en surbrillance la checkbox d'activation de l'option "Lever/Coucher de soleil" dans l'onglet planification.</li>
+                <li>Ajout d'une vérification de la validité de la commande réelle de l'equipement sur la page de l'équipement.</li>
                 <li>Correction de l'affichage du thermostat sur certain navigateur.</li>
-                <li>Suppression du cron lors de la suppression de l'eqLogic.</li>
+                <li>Suppression du cron lors de la suppression de l'équipement.</li>
                 <li>Correction de l'encodage des textes pour l'affichage des widgets.</li>
                 <li>Améliration de l'affichage des widgets.</li>
                 <ul class="bloc ">
@@ -119,14 +127,14 @@
             <h3>24/03/2021</h3>
             <ul>
                 <li>Optimisation de la vitesse d'affichage des widgets: création et destruction du datetimepicker à la volée.</li>
-                <li>Optimisation de la vitesse d'affichage des eqLogics: création et destruction du timepicker à la volée.</li>
+                <li>Optimisation de la vitesse d'affichage des équipements: création et destruction du timepicker à la volée.</li>
             </ul>
 
             <h3>21/03/2021</h3>
             <ul>
                 <li>Modification du timepicker dans l'onglet planification.</li>
                 <li>Ajout de la possibilité d'ajouter une période entre les autres dans l'onglet planification.</li>
-                <li>Mise en français des datetimepicker.</li>
+                <li>Mise en français des datetimepickers.</li>
                 <li>Correction des datetimepickers: Création du cron uniquement lors de la selection de l'heure. Jusqu'alors un cron était créé lors de la selection de la date puis il était modifié lors de la selection de l'heure.</li>
             </ul>
 

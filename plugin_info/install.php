@@ -21,11 +21,12 @@ require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function planification_install() {
 	$folderPath = dirname(__FILE__) . '/../../planification/planifications/';
 	if (!is_dir($folderPath)) mkdir($folderPath, 0755, true);
-	
+	planification::deamon_start();
 }
 
 function planification_update() {
 	log::add('planification', 'debug', 'planification_update');
+	planification::deamon_stop();
 	$cron = cron::byClassAndFunction('planification', 'pull');
 	foreach ($crons as $cron){
 		$options_cron=$cron->getOption();
@@ -45,7 +46,7 @@ function planification_update() {
 		$e = print_r($e, 1);
 		log::add('planification', 'error', 'planification_update ERREUR: '.$e);
 	}
-
+	planification::deamon_start();
 }
 
 
@@ -54,6 +55,7 @@ function planification_remove() {
 	if (is_object($cron)) {
 		$cron->remove();
 	}
+	planification::deamon_stop();
 }
 
 ?>

@@ -15,7 +15,7 @@
 			<ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
 				<li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/></li>
 
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Chauffages"><i class="fa jeedom-pilote-conf"></i>Mes Chauffages
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Chauffages"><i class="fa jeedom-pilote-conf"></i> Mes Chauffages
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'Chauffage') {	
@@ -25,7 +25,7 @@
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PACs"><i class="fa jeedom-feu"></i>Mes pompes à chaleur
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PACs"><i class="fa jeedom-feu"></i> Mes pompes à chaleur
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'PAC') {	
@@ -35,7 +35,7 @@
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Poeles" style="display:none !important"><i class="fa jeedom-feu"></i>Mes poêles à ganules
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Poeles" style="display:none !important"><i class="fa jeedom-feu"></i> Mes poêles à ganules
 					<?php
 					foreach ($eqLogics as $eqLogic) {
 						if ($eqLogic->getConfiguration('type') == 'Poele') {	
@@ -45,7 +45,7 @@
 					}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Volets"><i class="fa jeedom-volet-ferme"></i>Mes volets
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Volets"><i class="fa jeedom-volet-ferme"></i> Mes volets
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'Volet') {	
@@ -55,7 +55,7 @@
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Prises"><i class="fa jeedom-prise"></i>Mes prises
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Prises"><i class="fa jeedom-prise"></i> Mes prises
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'Prise') {	
@@ -67,7 +67,7 @@
 
 
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Persos"><i class="fa jeedom-prise"></i>Mes équipements perso
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Persos"><i class="fa jeedom-prise"></i> Mes équipements perso
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'Perso') {
@@ -146,7 +146,7 @@
 		</div>
 
 		<div class="eqLogicThumbnailContainer Poeles" style="display:none !important">
-		<legend><i class="fa jeedom-feu"></i> {{Mes poêles à granules}}</legend>
+			<legend><i class="fa jeedom-feu"></i> {{Mes poêles à granules}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'Poele') {	
@@ -305,7 +305,7 @@
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="type" />
 							</div>
 						</div>
-						<div class="form-group" style="display : block;" >
+						<div class="form-group  image_perso" >
 							<label class="col-sm-3 control-label">{{Chemin de l&#39;image}}</label>
 							<div class="col-sm-9">
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="chemin_image" />
@@ -320,6 +320,7 @@
 							</div>
 
 						</div>
+						
 						<div class="option Poele" style="display:none">
 							<div class="form-group" style="display : block;" >
 								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>

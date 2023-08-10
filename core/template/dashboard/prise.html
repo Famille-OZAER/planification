@@ -18,7 +18,7 @@
     <i class="fa fa-retweet cursor tooltips changecmd noRefresh" title="Changer commandes" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
 
     <div class="tuile">
-        <div class="page_1 center" style="height:100%;padding-top: 10px;margin: 0px;display : #display_page_1#;">
+        <div class="page_1 center" style="height:100%;padding-top: 10px;margin: 0px;display : none;">
 
             <div>
                 <img class="cmd cmd-widget img" data-type="info" src='plugins/planification/core/template/dashboard/images/prise/#img#' style='height:80px' />
@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <div class="page_2 center" style="display : #display_page_2# ;height:100%;margin-top : 0px">
+        <div class="page_2 center" style="display : none ;height:100%;margin-top : 0px">
 
             <div style="height:25%;">
                 <select class="cmd selectCalendar cursor tooltips" style="display:none;top: calc(100% - 26px);position: relative;width:70%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
@@ -142,7 +142,7 @@
 
 
         }
-        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#', '#calendar_selector#')
+        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#', '#calendar_selector#', '#page#')
     </script>
 
 </div>

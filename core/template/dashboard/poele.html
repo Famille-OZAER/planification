@@ -17,7 +17,7 @@
     <i class="fa fa-retweet cursor tooltips changecmd noRefresh" title="Changer commandes" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
 
     <div class="tuile">
-        <div class="row page_1" style="height:80px;padding-top: 10px;margin: 0px;display : #display_page_1#;">
+        <div class="row page_1" style="height:80px;padding-top: 10px;margin: 0px;display : none;">
             <div class="col-xs-6 gauche" style="height: 100%;">
                 <img src="plugins/planification/core/template/dashboard/images/poele/#img#" style="position:relative;top:calc(50% - 40px);float: right;height: 80px;" />
             </div>
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="row page_1" style="padding-top: 0px;margin: 0px;display : #display_page_1#;">
+        <div class="row page_1" style="padding-top: 0px;margin: 0px;display : none;">
             <div class="col-xs-12 center">
                 <span class="action_en_cours tooltips" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white!important" title="Action en cours"></span>
                 <span class="fleche" style="cursor:default;font-size: 0.9em;margin-left: 5px;margin-top: 5px;color:white!important"></span>
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="row page_2" style="height:50%;padding-top: 10px;margin: 0px;display : #display_page_2#;">
+        <div class="row page_2" style="height:50%;padding-top: 10px;margin: 0px;display : none;">
             <div class="col-xs-5 gauche" style="height:100%;padding: 0px!important;">
                 <div style="height: 50%;">
                     <i class="icon jeedom-mouvement Absent cursor tooltips pull-right" title="Mettre la planification en mode absent" style="position: relative;top: calc(100% - 27px);font-size: 1.9em;margin-left: 2px;color:#3498db!important"></i>
@@ -69,7 +69,7 @@
 
 
         </div>
-        <div class="row page_2 center" style="padding-bottom:20px;height:50%;margin: 0px;display : #display_page_2#;">
+        <div class="row page_2 center" style="padding-bottom:20px;height:50%;margin: 0px;display : none;">
             <div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.9em;color:white!important">
             </div>
         </div>
@@ -179,7 +179,7 @@
                         break
                 }
         }
-        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#')
+        Commun_widget('#id#', '#uid# ', '#info_widget# ', '#action_en_cours#', '#set_planification_id#', '#endtime_change_id#', '#calendar_selector#', '#page#')
     </script>
 
 </div>

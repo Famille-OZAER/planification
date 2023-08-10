@@ -5,13 +5,13 @@
     "licence": "AGPL",
     "author": "OZAER Michaël",
     "require": "4.0",
-    "category": "organization",
+    "category": "automatisation",
     "hasDependency": false,
-    "hasOwnDeamon": false,
+    "hasOwnDeamon": true,
     "maxDependancyInstallTime": 0,
     "changelog": "https://raw.githack.com/Famille-OZAER/planification/main/docs/changelog.html",
     "changelog_beta": "https://raw.githack.com/Famille-OZAER/planification/main/docs/changelog.html",
     "documentation": "https://raw.githack.com/Famille-OZAER/planification/main/docs/documentation.html",
     "documentation_beta": "https://raw.githack.com/Famille-OZAER/planification/main/docs/documentation.html",
-    "compatibility": ["smart", "rpi", "docker", "diy", "v4"]
+    "compatibility": ["smart", "rpi", "diy", "v4"]
 }
