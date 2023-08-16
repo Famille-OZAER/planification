@@ -253,12 +253,6 @@ $('.dupliquer_equipement').off('click').on('click', function() {
         }
     })
     //équipement
-$('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function() {
-
-
-
-})
-
 $('#tab_eqlogic').on('click', '.list_Cmd_info_numeric', function() {
     //var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=temperature_id]');
     var el = $(this).closest('div').find('input')
@@ -318,6 +312,54 @@ $('#tab_eqlogic').on('focusout', '.cmdAction', function() {
     } else {
         div_alias.hide()
     }
+});
+$("#tab_eqlogic .bt_modifier_image").on('click', function() {
+
+
+    if ($("#mod_selectIcon").length == 0) {
+        $('#div_pageContainer').append('<div id="mod_selectIcon"></div>')
+        $("#mod_selectIcon").dialog({
+            title: '{{Choisissez une icône perso}}',
+            closeText: '',
+            autoOpen: false,
+            modal: true,
+            height: (jQuery(window).height() - 150),
+            width: 1500,
+            open: function() {
+                if ((jQuery(window).width() - 50) < 1500) {
+                    $('#mod_selectIcon').dialog({ width: jQuery(window).width() - 50 })
+                }
+                $('body').css({ overflow: 'hidden' });
+                setTimeout(function() { initTooltips($("#mod_selectIcon")) }, 500)
+            },
+            beforeClose: function(event, ui) {
+                $('body').css({ overflow: 'inherit' })
+            }
+        });
+    }
+    var url = 'index.php?v=d&plugin=planification&modal=selectIcon&show_img=1&show_icon=0&tab_img=1&selectIcon=' + $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]')[0].value
+
+
+
+    $('#mod_selectIcon').empty().load(url, function() {
+        $("#mod_selectIcon").dialog('option', 'buttons', {
+            "Annuler": function() {
+                $(this).dialog("close")
+            },
+            "Valider": function() {
+                var icon = $('.iconSelected .iconSel .img-responsive').attr('src')
+                if (icon == undefined) {
+                    icon = ''
+                }
+                $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]').val(icon)
+                $('#img_planificationModel').attr('src', icon)
+                modifyWithoutSave = true
+                $(this).dialog("close")
+            }
+        });
+        $('#mod_selectIcon').dialog('open')
+    });
+
 });
 //commandes
 $('#tab_commandes').on('click', '.select-selected', function(e) {
@@ -411,57 +453,9 @@ $('#tab_commandes').on('click', '.bt_ajouter_commande', function(e) {
 
 
 });
-
 $("#tab_commandes #table_actions").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true })
 $("#tab_commandes #table_infos").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true })
-$("#tab_eqlogic .bt_modifier_image").on('click', function() {
 
-
-    if ($("#mod_selectIcon").length == 0) {
-        $('#div_pageContainer').append('<div id="mod_selectIcon"></div>')
-        $("#mod_selectIcon").dialog({
-            title: '{{Choisissez une icône perso}}',
-            closeText: '',
-            autoOpen: false,
-            modal: true,
-            height: (jQuery(window).height() - 150),
-            width: 1500,
-            open: function() {
-                if ((jQuery(window).width() - 50) < 1500) {
-                    $('#mod_selectIcon').dialog({ width: jQuery(window).width() - 50 })
-                }
-                $('body').css({ overflow: 'hidden' });
-                setTimeout(function() { initTooltips($("#mod_selectIcon")) }, 500)
-            },
-            beforeClose: function(event, ui) {
-                $('body').css({ overflow: 'inherit' })
-            }
-        });
-    }
-    var url = 'index.php?v=d&plugin=planification&modal=selectIcon&show_img=1&show_icon=0&tab_img=1&selectIcon=' + $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]')[0].value
-
-
-
-    $('#mod_selectIcon').empty().load(url, function() {
-        $("#mod_selectIcon").dialog('option', 'buttons', {
-            "Annuler": function() {
-                $(this).dialog("close")
-            },
-            "Valider": function() {
-                var icon = $('.iconSelected .iconSel .img-responsive').attr('src')
-                if (icon == undefined) {
-                    icon = ''
-                }
-                $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]').val(icon)
-                $('#img_planificationModel').attr('src', icon)
-                modifyWithoutSave = true
-                $(this).dialog("close")
-            }
-        });
-        $('#mod_selectIcon').dialog('open')
-    });
-
-});
 
 
 //planifications:
@@ -474,7 +468,6 @@ $("#tab_planifications #div_planifications").sortable({
     tolerance: "intersect",
     forcePlaceholderSize: true
 });
-
 $("#tab_planifications").on('click', '.bt_ajouter_planification', function() {
     bootbox.prompt({
         title: "Veuillez inserer le nouveau nom de la planification à ajouter.",

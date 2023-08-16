@@ -53,7 +53,7 @@ sendVarToJS([
  				<div id="div_treeFolder">
 				<ul id="ul_Folder">
                      <?php
-					foreach (ls($rootPath,'img',  false, array('folders')) as $folder) {
+					foreach (ls($rootPath,'img_perso',  false, array('folders')) as $folder) {
                         
 						echo '<li data-jstree=\'{"opened":true}\'><a data-path="' . $rootPath . $folder . '">' . $folder . '</a></li>';
 					}
