@@ -996,6 +996,7 @@ $('#tab_gestion').on("change", ".selection_jour", function() {
     $('#tab_gestion ').find('.Vendredi').css("display", "none")
     $('#tab_gestion ').find('.Samedi').css("display", "none")
     $('#tab_gestion ').find('.Dimanche').css("display", "none")
+    $('#tab_gestion ').find('.bt_copier_lever_coucher').css("display", "inline-block")
     switch ($(this).val()) {
         case 'Lundi':
             $('#tab_gestion ').find('.Lundi').css("display", "block")
@@ -1017,12 +1018,124 @@ $('#tab_gestion').on("change", ".selection_jour", function() {
             break
         case 'Dimanche':
             $('#tab_gestion ').find('.Dimanche').css("display", "block")
+            $('#tab_gestion ').find('.bt_copier_lever_coucher').css("display", "none")
             break
     }
 
 
 });
-//fonctions
+$('#tab_gestion').on("click", ".bt_copier_lever_coucher", function() {
+
+        if ($('#tab_gestion .Lundi').style("display") == "block") {
+            jour = "Lundi"
+            $('#tab_gestion .HeureLeverMin_Mardi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Mardi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Mardi').val($('#tab_gestion .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Mardi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Mercredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Mercredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Mercredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Mercredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Jeudi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Jeudi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Jeudi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Jeudi').val($('#tab_gestion  .HeureCoucherMax' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Vendredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Vendredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Vendredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Vendredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+
+        }
+        if ($('#tab_gestion .Mardi').style("display") == "block") {
+            jour = "Mardi"
+            $('#tab_gestion .HeureLeverMin_Mercredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Mercredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Mercredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Mercredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Jeudi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Jeudi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Jeudi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Jeudi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Vendredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Vendredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Vendredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Vendredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+
+        }
+        if ($('#tab_gestion .Mercredi').style("display") == "block") {
+            jour = "Mercredi"
+            $('#tab_gestion .HeureLeverMin_Jeudi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Jeudi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Jeudi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Jeudi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Vendredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Vendredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Vendredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Vendredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+        }
+        if ($('#tab_gestion .Jeudi').style("display") == "block") {
+            jour = "Jeudi"
+            $('#tab_gestion .HeureLeverMin_Vendredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Vendredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Vendredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Vendredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+
+        }
+        if ($('#tab_gestion .Vendredi').style("display") == "block") {
+            jour = "Vendredi"
+            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+
+        }
+        if ($('#tab_gestion .Samedi').style("display") == "block") {
+            jour = "Samedi"
+            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
+            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
+            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
+            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+
+        }
+        console.log(jour)
+    })
+    //fonctions
 function closeAllSelect(elmnt) {
     var x, y, i, arrNo = [];
     x = document.getElementsByClassName("select-items");

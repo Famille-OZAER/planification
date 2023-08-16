@@ -522,9 +522,9 @@
 						<option value="Samedi">{{Samedi}}</option>
 						<option value="Dimanche">{{Dimanche}}</option>
 					</select>
-					<a class="btn btn-sm btn-default bt_copier_lever_coucher" style="margin: 2px;"> {{Utiliser pour chaque jour}}</a>
+					<a class="btn btn-sm btn-default bt_copier_lever_coucher" style="margin: 2px"> {{Dupliquer pour le reste de la semaine}}</a>
 				</div>
-				<div class="Lundi col-sm-12">
+				<div class="Lundi col-sm-12" style="display:block">
 					<div class="col-sm-6 Jour">
 						<form class="form-horizontal">
 							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
