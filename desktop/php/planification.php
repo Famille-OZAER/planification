@@ -126,7 +126,7 @@
 
 
 		<div class="eqLogicThumbnailContainer PACs" style="display:none !important">
-			<legend><i class="fa jeedom-feu"></i> {{Mes pompes à chaleur}}</legend>
+			<legend><i class="far fa-snowflake"></i> {{Mes pompes à chaleur}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'PAC') {	
