@@ -67,7 +67,7 @@ function deamon(){
 
        
         if($cmd_heure_fin->execCmd() != "" && $date > $timestamp_prochaine_action){
-          planification::add_log( 'info',$eqLogic->getName() . " Recup action actuelle");
+          //planification::add_log( 'info',$eqLogic->getName() . " Recup action actuelle");
           $eqLogic->Execute_action_actuelle();
           $eqLogic->Recup_prochaine_action();
         }
