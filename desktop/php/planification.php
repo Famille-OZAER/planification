@@ -491,7 +491,10 @@
 								<div>
 									<a class="btn btn-sm btn-default bt_modifier_image"><i class="fa jeedomapp-folder"></i> {{Modifier l&#39;image}}</a>
 								</div>
-							
+								<div>
+									<a class="btn btn-sm btn-warning bt_image_défaut" style="display:none"><i class="fas fa-folder-minus"></i> {{Remettre l&#39;image par défaut}}</a>
+								
+								</div>
 
 						</div>
 					</fieldset>

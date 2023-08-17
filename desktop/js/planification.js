@@ -353,6 +353,7 @@ $("#tab_eqlogic .bt_modifier_image").on('click', function() {
                 }
                 $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]').val(icon)
                 $('#img_planificationModel').attr('src', icon)
+                $("#tab_eqlogic .bt_image_défaut").show()
                 modifyWithoutSave = true
                 $(this).dialog("close")
             }
@@ -361,9 +362,41 @@ $("#tab_eqlogic .bt_modifier_image").on('click', function() {
     });
 
 });
+$("#tab_eqlogic .bt_image_défaut").on('click', function() {
+    modifyWithoutSave = true
+    if ($('.eqLogicAttr[data-l2key=type]').value() == "PAC") {
+        img = 'plugins/planification/core/img/pac.png'
+    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Volet") {
+        img = "plugins/planification/core/img/volet.png"
+    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Chauffage") {
+        img = "plugins/planification/core/img/chauffage.png"
+    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Poele") {
+        img = "plugins/planification/core/img/poele.png"
+    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Prise") {
+        img = "plugins/planification/core/img/prise.png"
+    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Perso") {
+        img = "plugins/planification/core/img/perso.png"
+    }
+    var http = new XMLHttpRequest();
+    http.open('HEAD', img, false);
+    http.send();
+    if (http.status != 200) {
+        $('#div_alert').showAlert({
+            message: "L'image " + img + " n'existe pas.",
+            level: 'danger'
+        })
+
+        img = "plugins/planification/plugin_info/planification_icon.png"
+    }
+
+
+    $('#img_planificationModel').attr('src', img)
+    $('.image_perso .eqLogicAttr[data-l2key=chemin_image]').value(img)
+    $("#tab_eqlogic .bt_image_défaut").hide()
+});
 //commandes
 $('#tab_commandes').on('click', '.select-selected', function(e) {
-    modifyWithoutSave = true;
+    modifyWithoutSave = false;
     e.stopPropagation();
     closeAllSelect(this);
     this.nextSibling.classList.toggle("select-hide");
@@ -382,7 +415,7 @@ $('#tab_commandes').on('click', '.select-items div', function() {
     }
     this.classList.add("same-as-selected")
     select.click();
-})
+});
 $('#tab_commandes').on('click', '.listCmdAction', function() {
     //$("body").delegate(".listCmdAction", 'click', function() {
     var el = $(this).closest('div div').find('.cmdAttr[data-l2key=commande]');
@@ -453,8 +486,8 @@ $('#tab_commandes').on('click', '.bt_ajouter_commande', function(e) {
 
 
 });
-$("#tab_commandes #table_actions").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true })
-$("#tab_commandes #table_infos").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true })
+$("#tab_commandes #table_actions").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true });
+$("#tab_commandes #table_infos").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true });
 
 
 
@@ -1470,7 +1503,6 @@ function printEqLogic(_eqLogic) {
     $('#table_cmd_planification tbody').empty()
     if (_eqLogic.configuration.etat_id != "" && typeof(_eqLogic.configuration.etat_id) != "undefined") {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
-
     } else {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
     }
@@ -1493,7 +1525,6 @@ function printEqLogic(_eqLogic) {
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val(_eqLogic.configuration.Alias_Ferme)
         $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val(_eqLogic.configuration.Alias_My)
     }
-
     if (_eqLogic.configuration.type == 'Prise') {
         if (_eqLogic.configuration.etat_id != "" && _eqLogic.configuration.etat_id != undefined) {
             $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
@@ -1650,6 +1681,13 @@ function printEqLogic(_eqLogic) {
 
     var img = "plugins/planification/core/img/autre.png"
     img = _eqLogic.configuration.Chemin_image
+    $(".bt_image_défaut").hide();
+    if (img != undefined) {
+        if (img.indexOf("/img/") !== 0) {
+            $(".bt_image_défaut").show();
+        }
+    }
+
     $(".Poele").hide();
     $(".Volet").hide();
     $(".Chauffage").hide();
