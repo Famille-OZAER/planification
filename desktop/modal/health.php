@@ -96,7 +96,7 @@ $eqLogics = planification::byType('planification');
   foreach ($eqLogic_ids as $eqLogic_id) {
     $eqLogic=planification::byId($eqLogic_id);
     $type_eqLogic = strtolower($eqLogic->getConfiguration('type'));
-    $image=$eqLogic->getConfiguration("chemin_image","none");
+    $image=$eqLogic->getConfiguration("Chemin_image","none");
     if ( $image == "none"){
       if (file_exists(dirname(__FILE__) . '/../../core/img/' . $type_eqLogic . '.png')) {
         $img = '<img src="plugins/planification/core/img/' . $type_eqLogic . '.png" height="55" width="55"/>';
