@@ -38,8 +38,8 @@ function planification_update() {
 	try{
 		$eqLogics = eqLogic::byType('planification');
 		foreach ($eqLogics as $eqLogic){
-			$eqLogic->postSave();
-			$eqLogic->save();
+			//$eqLogic->postSave();
+			//$eqLogic->save();
 		}
 	}
 	catch (Exception $e){
