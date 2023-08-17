@@ -29,10 +29,8 @@ function planification_update() {
 	planification::deamon_stop();
 	$cron = cron::byClassAndFunction('planification', 'pull');
 	foreach ($crons as $cron){
-		$options_cron=$cron->getOption();
-		if($options_cron["eqLogic_Id"] == $eqLogic->getId()){
 			$cron->remove();
-		}
+		
 	}	
 	//resave eqs for new cmd:
 	try{
@@ -51,10 +49,7 @@ function planification_update() {
 
 
 function planification_remove() {
-	$cron = cron::byClassAndFunction('planification', 'pull');
-	if (is_object($cron)) {
-		$cron->remove();
-	}
+	
 	planification::deamon_stop();
 }
 
