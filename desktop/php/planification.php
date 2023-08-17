@@ -25,7 +25,7 @@
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PACs"><i class="fa jeedom-feu"></i> Mes pompes à chaleur
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PACs"><i class="far fa-snowflake"></i> Mes pompes à chaleur
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'PAC') {	
@@ -67,7 +67,7 @@
 
 
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Persos"><i class="fa jeedom-prise"></i> Mes équipements perso
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Persos"><i class="fas fa-user-cog"></i> Mes équipements perso
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if ($eqLogic->getConfiguration('type') == 'Perso') {
@@ -206,7 +206,7 @@
 		</div>
 
 		<div class="eqLogicThumbnailContainer Persos" style="display:none !important">
-			<legend><i class="fa jeedom-prise"></i> {{Mes équipement perso}}</legend>
+			<legend><i class="fas fa-user-cog"></i> {{Mes équipement perso}}</legend>
 				<?php
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('type') == 'Perso') {	

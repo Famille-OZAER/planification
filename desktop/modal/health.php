@@ -73,22 +73,22 @@ $eqLogics = planification::byType('planification');
     if (count($eqLogics) > 0){
         switch ($recherche) {
             case 'chauffage':
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span>Mes Chauffages</span></h3></td></tr>';
+                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fa jeedom-pilote-conf"> Mes Chauffages</span></h3></td></tr>';
                 break;
             case 'PAC':
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span>Mes pompes à chaleur</span></h3></td></tr>';
+                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="far fa-snowflake"></i> Mes pompes à chaleur</span></h3></td></tr>';
                 break;
             case 'poele';
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span>Mes poêles à granules</span></h3></td></tr>';
+                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fa jeedom-feu"></i> Mes poêles à granules</span></h3></td></tr>';
                 break;
             case 'volet';
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span>Mes volets</span></h3></td></tr>';
+                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fa jeedom-volet-ferme"> Mes volets</span></h3></td></tr>';
                 break;
             case 'prise';
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span>Mes prises</span></h3></td></tr>';
+                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fa jeedom-prise"></i> Mes prises</span></h3></td></tr>';
                 break;
             case 'perso';
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span>Mes équipements perso</span></h3></td></tr>';
+                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fas fa-user-cog"></i> Mes équipements perso</span></h3></td></tr>';
                 break;
         }
     }
