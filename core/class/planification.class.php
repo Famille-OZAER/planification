@@ -909,6 +909,8 @@ class planification extends eqLogic {
 
           if($planification["Id"]==$Id_planification_en_cours){
             $valuecalendar = '"'.$planification["nom_planification"]. '" selected';
+            $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$planification["nom_planification"],"value",true);
+
           }else{
             $valuecalendar = '"'.$planification["nom_planification"].'"';
           }
@@ -964,8 +966,7 @@ class planification extends eqLogic {
 
 
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$eqLogic->getCmd(null, 'set_planification'),"id",false);
-      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$eqLogic->getCmd(null, 'planification_en_cours'),"value",true);
-
+     
 
       $page_active=$eqLogic->getCache('Page');
       if($page_active =="" || $page_active=="page1"){
@@ -1391,6 +1392,9 @@ class planificationCmd extends cmd {
           }
         }
         if($eqLogic->getConfiguration("Id_planification_en_cours",$_options["Id_planification"]) == $_options["Id_planification"]){
+          if(cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'planification_en_cours') != $_options["select"]){
+            $eqLogic->checkAndUpdateCmd('planification_en_cours',$_options["select"]);
+          }
           planification::add_log("debug","Planification identique.",$eqLogic);	
           return;
         }
