@@ -63,7 +63,7 @@ function planification_update() {
 		}
 	}
 	catch (Exception $e){
-		$e = print_r($e, 1);
+//$e = print_r($e, 1);
 		log::add('planification', 'error', 'planification_update ERREUR: '.$e);
 	}
 	planification::deamon_start();
