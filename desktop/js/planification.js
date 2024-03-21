@@ -219,6 +219,32 @@ $('.sante').on('click', function() {
     $('#md_modal').dialog({ title: "{{Santé Planification}}" });
     $('#md_modal').load('index.php?v=d&plugin=planification&modal=health').dialog('open');
 });
+$('.modifier_json').on('click', function() {
+    $.ajax({
+        type: "POST",
+        url: "plugins/planification/core/ajax/planification.ajax.php",
+        data: {
+            action: "Modifier_JSON"
+        },
+        global: true,
+        async: false,
+        error: function(error) {
+            $.showAlert({
+                message: error.message,
+                level: 'danger'
+            })
+        },
+        success: function(data) {
+            if (data.state != 'ok') {
+                $.showAlert({
+                    message: data.result,
+                    level: 'danger'
+                })
+                return
+            }
+        }
+    })
+});
 $('.dupliquer_equipement').off('click').on('click', function() {
         if ($('.eqLogicAttr[data-l1key=id]').value() != undefined && $('.eqLogicAttr[data-l1key=id]').value() != '') {
             bootbox.prompt({
