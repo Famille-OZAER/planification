@@ -4,7 +4,7 @@
     "description": "Planification sous forme de semaine avec gestion lever/coucher de soleil",
     "licence": "AGPL",
     "author": "OZAER Michaël",
-    "require": "4.4",
+    "require": "4.3",
     "category": "automatisation",
     "hasDependency": false,
     "hasOwnDeamon": true,
