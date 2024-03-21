@@ -55,9 +55,9 @@ function planification_update() {
 			$nom_fichier_cible =  dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . "_old.json"; 
 			planification::add_log('debug',$planifications_new);  
 			
-			//copy( $nom_fichier_source , $nom_fichier_cible);
-			//$fichier = fopen($nom_fichier_source, 'w');
-			//fwrite($fichier, $planifications_new);
+			copy( $nom_fichier_source , $nom_fichier_cible);
+			$fichier = fopen($nom_fichier_source, 'w');
+			fwrite($fichier, $planifications_new);
 			
 			}
 		}
