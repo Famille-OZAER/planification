@@ -50,8 +50,6 @@ function planification_update() {
 				$numéro_planification +=1;
 			  }          
 			  $planifications_new .='}]';
-			  $arr=[];
-			  array_push($arr,$planifications_new);
 			  $nom_fichier_source = dirname(__FILE__) ."/../planifications/" . $eqLogic->getId() . ".json"; 
 			  $nom_fichier_cible =  dirname(__FILE__) ."/../planifications/" . $eqLogic->getId() . "_old.json"; 
 			  copy( $nom_fichier_source , $nom_fichier_cible);
