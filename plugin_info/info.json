@@ -13,5 +13,5 @@
     "changelog_beta": "https://raw.githack.com/Famille-OZAER/planification/main/docs/changelog.html",
     "documentation": "https://raw.githack.com/Famille-OZAER/planification/main/docs/documentation.html",
     "documentation_beta": "https://raw.githack.com/Famille-OZAER/planification/main/docs/documentation.html",
-    "compatibility": ["smart", "rpi", "diy", "v4.4"]
+    "compatibility": ["smart", "rpi", "diy", "v4"]
 }
