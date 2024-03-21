@@ -1,5 +1,30 @@
 JSONCLIPBOARD = null
 document.addEventListener("click", closeAllSelect);
+if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
+    document.querySelector(".eqLogicThumbnailContainer.chauffages").style.display='block';
+    document.querySelector(".bs-sidenav.chauffages").style.display='block';
+    
+}
+if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
+    document.querySelector(".eqLogicThumbnailContainer.PACs").style.display='block';
+    document.querySelector(".bs-sidenav.PACs").style.display='block';
+}
+if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
+    document.querySelector(".eqLogicThumbnailContainer.poeles").style.display='block';
+    document.querySelector(".bs-sidenav.poeles").style.display='block';
+}
+if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
+    document.querySelector(".eqLogicThumbnailContainer.volets").style.display='block';
+    document.querySelector(".bs-sidenav.volets").style.display='block';
+}
+if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
+    document.querySelector(".eqLogicThumbnailContainer.prises").style.display='block';
+    document.querySelector(".bs-sidenav.prises").style.display='block';
+}
+if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
+    document.querySelector(".eqLogicThumbnailContainer.persos").style.display='block';
+    document.querySelector(".bs-sidenav.persos").style.display='block';
+}
 $(".li_eqLogic").on('click', function(event) {
     $.hideAlert()
     if (event.ctrlKey) {
@@ -121,23 +146,23 @@ $('.ajouter_eqlogic').on('click', function() {
 
         '<form class="form-horizontal onsubmit="return false;"> ' +
         '<div> <div class="radio"> <label > ' +
-        '<input type="radio" name="type" id="Volet" value="Volet" checked="checked"> {{Volet}} </label> ' +
+        '<input type="radio" name="Type_équipement" id="Volet" value="Volet" checked="checked"> {{Volet}} </label> ' +
         '</div>' +
         '<div class="radio"> <label > ' +
-        '<input type="radio" name="type" id="PAC" value="PAC"> {{Pompe à chaleur}}</label> ' +
+        '<input type="radio" name="Type_équipement" id="PAC" value="PAC"> {{Pompe à chaleur}}</label> ' +
         '</div> ' +
         '<div class="radio"> <label > ' +
-        '<input type="radio" name="type" id="Poele" value="Poele"> {{Poêle à granules}}</label> ' +
+        '<input type="radio" name="Type_équipement" id="Poele" value="Poele"> {{Poêle à granules}}</label> ' +
         '</div> ' +
         '<div class="radio"> <label > ' +
-        '<input type="radio" name="type" id="Prise" value="Prise"> {{Prise}}</label> ' +
+        '<input type="radio" name="Type_équipement" id="Prise" value="Prise"> {{Prise}}</label> ' +
         '</div> ' +
         '<div class="radio"> <label > ' +
-        '<input type="radio" name="type" id="Chauffage" value="Chauffage"> {{Chauffage avec fil pilote}}</label> ' +
+        '<input type="radio" name="Type_équipement" id="Chauffage" value="Chauffage"> {{Chauffage avec fil pilote}}</label> ' +
         '</div>' +
         '</div> ' +
         '<div class="radio"> <label > ' +
-        '<input type="radio" name="type" id="Perso" value="Perso"> {{Perso}}</label> ' +
+        '<input type="radio" name="Type_équipement" id="Perso" value="Perso"> {{Perso}}</label> ' +
         '</div> ' +
         '</br> ' +
         '<div class="input">' +
@@ -169,7 +194,7 @@ $('.ajouter_eqlogic').on('click', function() {
                         data: {
                             action: "Ajout_equipement",
                             nom: $("input[name='nom']").val(),
-                            type: $("input[name='type']:checked").val()
+                            type: $("input[name='Type_équipement']:checked").val()
                         },
                         global: true,
                         async: false,
@@ -364,17 +389,17 @@ $("#tab_eqlogic .bt_modifier_image").on('click', function() {
 });
 $("#tab_eqlogic .bt_image_défaut").on('click', function() {
     modifyWithoutSave = true
-    if ($('.eqLogicAttr[data-l2key=type]').value() == "PAC") {
+    if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "PAC") {
         img = 'plugins/planification/core/img/pac.png'
-    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Volet") {
+    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Volet") {
         img = "plugins/planification/core/img/volet.png"
-    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Chauffage") {
+    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Chauffage") {
         img = "plugins/planification/core/img/chauffage.png"
-    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Poele") {
+    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Poele") {
         img = "plugins/planification/core/img/poele.png"
-    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Prise") {
+    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Prise") {
         img = "plugins/planification/core/img/prise.png"
-    } else if ($('.eqLogicAttr[data-l2key=type]').value() == "Perso") {
+    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Perso") {
         img = "plugins/planification/core/img/perso.png"
     }
     var http = new XMLHttpRequest();
@@ -451,7 +476,7 @@ $('#tab_commandes').on('click', '.bt_ajouter_commande', function(e) {
     tr += '<tr class="cmd">'
     tr += '<td>'
     tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
-    tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
+    tr += '<input class="cmdAttr form-control input-sm" data-l1key="Type_équipement" style="display : none">'
     tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
     tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom}} "</td>'
     tr += '</td>'
@@ -1502,50 +1527,50 @@ function printEqLogic(_eqLogic) {
     $('#div_planifications').empty()
     $('#table_cmd_planification tbody').empty()
     if (_eqLogic.configuration.etat_id != "" && typeof(_eqLogic.configuration.etat_id) != "undefined") {
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').show()
     } else {
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').hide()
     }
 
-    if (_eqLogic.configuration.type == 'Poele') {
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_allume_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_boost_id]').val(_eqLogic.configuration.etat_boost_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val(_eqLogic.configuration.temperature_consigne_par_defaut);
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
+    if (_eqLogic.configuration.Type_équipement == 'Poele') {
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_allume_id)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_boost_id]').val(_eqLogic.configuration.etat_boost_id)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val(_eqLogic.configuration.temperature_consigne_par_defaut);
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
     }
-    if (_eqLogic.configuration.type == 'PAC') {
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
+    if (_eqLogic.configuration.Type_équipement == 'PAC') {
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
 
     }
-    if (_eqLogic.configuration.type == 'Volet') {
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val(_eqLogic.configuration.Alias_Ouvert)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val(_eqLogic.configuration.Alias_Ferme)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val(_eqLogic.configuration.Alias_My)
+    if (_eqLogic.configuration.Type_équipement == 'Volet') {
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val(_eqLogic.configuration.Alias_Ouvert)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val(_eqLogic.configuration.Alias_Ferme)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').val(_eqLogic.configuration.Alias_My)
     }
-    if (_eqLogic.configuration.type == 'Prise') {
+    if (_eqLogic.configuration.Type_équipement == 'Prise') {
         if (_eqLogic.configuration.etat_id != "" && _eqLogic.configuration.etat_id != undefined) {
-            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').show()
+            $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').show()
 
         } else {
-            $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .alias').hide()
+            $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').hide()
         }
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_On]').val(_eqLogic.configuration.Alias_On)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Off]').val(_eqLogic.configuration.Alias_Off)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_On]').val(_eqLogic.configuration.Alias_On)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Off]').val(_eqLogic.configuration.Alias_Off)
 
     }
-    if (_eqLogic.configuration.type == 'Chauffage') {
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Confort]').val(_eqLogic.configuration.Alias_Confort)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Eco]').val(_eqLogic.configuration.Alias_Eco)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Hg]').val(_eqLogic.configuration.Alias_Hg)
-        $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Arret]').val(_eqLogic.configuration.Alias_Arret)
+    if (_eqLogic.configuration.Type_équipement == 'Chauffage') {
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Confort]').val(_eqLogic.configuration.Alias_Confort)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Eco]').val(_eqLogic.configuration.Alias_Eco)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Hg]').val(_eqLogic.configuration.Alias_Hg)
+        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Arret]').val(_eqLogic.configuration.Alias_Arret)
 
     }
-    if (_eqLogic.configuration.type == 'Perso') {
+    if (_eqLogic.configuration.Type_équipement == 'Perso') {
         $('.eqLogicAttr[data-l2key=chemin_image]').show()
         $('.bt_modifier_image').show()
         $('.eqLogicAttr[data-l2key=chemin_image]').val(_eqLogic.configuration.Chemin_image)
@@ -1695,34 +1720,34 @@ function printEqLogic(_eqLogic) {
     $(".PAC").hide();
     $(".Perso").hide();
 
-    if (_eqLogic.configuration.type == "PAC") {
+    if (_eqLogic.configuration.Type_équipement == "PAC") {
         $(".PAC").show()
         img = _eqLogic.configuration.chemin_image
         if (img == "" || img == undefined) {
             img = 'plugins/planification/core/img/pac.png'
         }
 
-    } else if (_eqLogic.configuration.type == "Volet") {
+    } else if (_eqLogic.configuration.Type_équipement == "Volet") {
         $(".Volet").show()
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/volet.png"
         }
-    } else if (_eqLogic.configuration.type == "Chauffage") {
+    } else if (_eqLogic.configuration.Type_équipement == "Chauffage") {
         $(".Chauffage").show()
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/chauffage.png"
         }
-    } else if (_eqLogic.configuration.type == "Poele") {
+    } else if (_eqLogic.configuration.Type_équipement == "Poele") {
         $(".Poele").show()
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/poele.png"
         }
-    } else if (_eqLogic.configuration.type == "Prise") {
+    } else if (_eqLogic.configuration.Type_équipement == "Prise") {
         $(".Prise").show()
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/prise.png"
         }
-    } else if (_eqLogic.configuration.type == "Perso") {
+    } else if (_eqLogic.configuration.Type_équipement == "Perso") {
         $(".Perso").show()
         $(".bt_ajouter_commande").show()
         if (img == "" || img == undefined) {
@@ -1824,41 +1849,41 @@ function saveEqLogic(_eqLogic) {
 
     _eqLogic.configuration.Chemin_image = $('.eqLogicAttr[data-l2key=chemin_image]').val();
     console.log($('.eqLogicAttr[data-l2key=chemin_image]').val())
-    if (_eqLogic.configuration.type == 'Poele') {
-        _eqLogic.configuration.temperature_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_id]').val();
-        _eqLogic.configuration.etat_allume_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.etat_boost_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_boost_id]').val();
-        _eqLogic.configuration.temperature_consigne_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val();
-        _eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
+    if (_eqLogic.configuration.Type_équipement == 'Poele') {
+        _eqLogic.configuration.temperature_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').val();
+        _eqLogic.configuration.etat_allume_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val();
+        _eqLogic.configuration.etat_boost_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_boost_id]').val();
+        _eqLogic.configuration.temperature_consigne_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val();
+        _eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
     }
-    if (_eqLogic.configuration.type == 'PAC') {
-        _eqLogic.configuration.temperature_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=temperature_id]').val();
-        _eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
+    if (_eqLogic.configuration.Type_équipement == 'PAC') {
+        _eqLogic.configuration.temperature_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').val();
+        _eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
 
     }
-    if (_eqLogic.configuration.type == 'Volet') {
-        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.Alias_Ouvert = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val();
-        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
-        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val();
-        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_My]').val();
-        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
+    if (_eqLogic.configuration.Type_équipement == 'Volet') {
+        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val();
+        _eqLogic.configuration.Alias_Ouvert = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val();
+        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
+        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').val();
+        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').val();
+        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
 
     }
-    if (_eqLogic.configuration.type == 'Prise') {
-        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.Alias_On = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_On]').val();
-        _eqLogic.configuration.Alias_Off = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Off]').val();
+    if (_eqLogic.configuration.Type_équipement == 'Prise') {
+        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val();
+        _eqLogic.configuration.Alias_On = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_On]').val();
+        _eqLogic.configuration.Alias_Off = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Off]').val();
     }
-    if (_eqLogic.configuration.type == 'Chauffage') {
-        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.Alias_Confort = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Confort]').val();
-        _eqLogic.configuration.Alias_Eco = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Eco]').val();
-        _eqLogic.configuration.Alias_Hg = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Hg]').val();
-        _eqLogic.configuration.Alias_Arret = $('#tab_eqlogic .' + _eqLogic.configuration.type + ' .eqLogicAttr[data-l2key=Alias_Arret]').val();
+    if (_eqLogic.configuration.Type_équipement == 'Chauffage') {
+        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val();
+        _eqLogic.configuration.Alias_Confort = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Confort]').val();
+        _eqLogic.configuration.Alias_Eco = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Eco]').val();
+        _eqLogic.configuration.Alias_Hg = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Hg]').val();
+        _eqLogic.configuration.Alias_Arret = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Arret]').val();
 
     }
-    if (_eqLogic.configuration.type == 'Autre') {
+    if (_eqLogic.configuration.Type_équipement == 'Autre') {
 
     }
 
@@ -1894,7 +1919,7 @@ function addCmdToTable(_cmd) {
     if (_cmd.logicalId == "set_heure_fin" || _cmd.logicalId == "set_consigne_temperature" || _cmd.logicalId == "set_action_en_cours" || _cmd.logicalId == "manuel" || _cmd.logicalId == "refresh" || _cmd.logicalId == "boost_on" || _cmd.logicalId == "boost_off") {
         return
     }
-    var type_eqlogic = $('#tab_eqlogic .eqLogicAttr[data-l2key=type]').value()
+    var type_eqlogic = $('#tab_eqlogic .eqLogicAttr[data-l2key=Type_équipement]').value()
     if (_cmd.logicalId == 'set_planification') {
         set_planification_Id = _cmd.id
         return

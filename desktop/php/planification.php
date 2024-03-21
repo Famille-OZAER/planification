@@ -759,13 +759,27 @@
 	}
 	if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
 		//document.querySelectorAll(".persos").seen();
-	}  
+	}
 	
+		document.cookie = "Vesion = "+ jeeFrontEnd.jeedomVersion 
+		
 </script>
 </div>
 
 
 
-<?php include_file('desktop', 'planification', 'js', 'planification');
- include_file('desktop', 'planification', 'css', 'planification');
- include_file('core', 'plugin.template', 'js');?>
+<?php 
+	if(isset($_COOKIE['Vesion'])) { 
+   
+    	$version=explode('.',$_COOKIE['Vesion']);
+		if(intval($version[0]) >= 4 && intval($version [1]) >=4){
+			include_file('desktop', 'planification V4.4', 'js', 'planification');
+		}else{
+			include_file('desktop', 'planification', 'js', 'planification');
+		}
+       
+    }
+	
+ 	include_file('desktop', 'planification', 'css', 'planification');
+ 	include_file('core', 'plugin.template', 'js');
+?>

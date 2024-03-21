@@ -1,7 +1,24 @@
 JSONCLIPBOARD = null
 flatpickr.localize(flatpickr.l10ns.fr)
 
-
+if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
+    document.querySelectorAll(".chauffages").seen();
+}
+if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
+    document.querySelectorAll(".PACs").seen();
+}
+if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
+	document.querySelectorAll(".poeles").seen();
+}
+if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
+    document.querySelectorAll(".volets").seen();
+}
+if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
+    document.querySelectorAll(".prises").seen();
+}
+if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
+    document.querySelectorAll(".persos").seen();
+}
 
 document.getElementById('div_pageContainer').addEventListener('click', function(event) {
     var _target = null
