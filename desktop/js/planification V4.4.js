@@ -1,24 +1,61 @@
 JSONCLIPBOARD = null
-//jeeFrontEnd.jeedomVersion
-flatpickr.localize(flatpickr.l10ns.fr)
+//
+
+var v_4_4 = false
+if(Number(jeeFrontEnd.jeedomVersion.split('.')[0])>= 4 &&  Number(jeeFrontEnd.jeedomVersion.split('.')[1])>= 4){
+    v_4_4=true
+}
+if (v_4_4){
+ flatpickr.localize(flatpickr.l10ns.fr)
+}
 
 if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
-    document.querySelectorAll(".chauffages").seen();
+    if (v_4_4){
+        document.querySelectorAll(".chauffages").seen();
+    }else{
+        document.querySelector(".eqLogicThumbnailContainer.chauffages").style.display='block';
+        document.querySelector(".bs-sidenav.chauffages").style.display='block';
+    }
 }
 if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
-    document.querySelectorAll(".PACs").seen();
+    if (v_4_4){
+        document.querySelectorAll(".PACs").seen();
+    }else{
+        document.querySelector(".eqLogicThumbnailContainer.PACs").style.display='block';
+        document.querySelector(".bs-sidenav.PACs").style.display='block';
+    }
 }
 if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
-	document.querySelectorAll(".poeles").seen();
+    if (v_4_4){
+	    document.querySelectorAll(".poeles").seen();
+    }else{
+        document.querySelector(".eqLogicThumbnailContainer.poeles").style.display='block';
+        document.querySelector(".bs-sidenav.poeles").style.display='block';
+    }
 }
 if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
-    document.querySelectorAll(".volets").seen();
+    if (v_4_4){
+        document.querySelectorAll(".volets").seen();
+    }else{
+        document.querySelector(".eqLogicThumbnailContainer.volets").style.display='block';
+        document.querySelector(".bs-sidenav.volets").style.display='block';
+    }
 }
 if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
-    document.querySelectorAll(".prises").seen();
+    if (v_4_4){
+        document.querySelectorAll(".prises").seen();
+    }else{
+        document.querySelector(".eqLogicThumbnailContainer.prises").style.display='block';
+        document.querySelector(".bs-sidenav.prises").style.display='block';
+    }
 }
 if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
-    document.querySelectorAll(".persos").seen();
+    if (v_4_4){
+        document.querySelectorAll(".persos").seen();
+    }else{
+        document.querySelector(".eqLogicThumbnailContainer.persos").style.display='block';
+        document.querySelector(".bs-sidenav.persos").style.display='block';
+    }
 }
 
 document.getElementById('div_pageContainer').addEventListener('click', function(event) {
@@ -225,7 +262,7 @@ document.getElementById('div_pageContainer').addEventListener('click', function(
             }
         })
     }
-    if (_target = event.target.closest('.li_eqLogic')) {
+    function li_eqLogicv_4_4(){
         let active_tabpane = document.querySelector(".tab-content .tab-pane.active").getAttribute("id")
         jeedomUtils.hideAlert()
         let type = document.body.getAttribute('data-page')
@@ -248,7 +285,127 @@ document.getElementById('div_pageContainer').addEventListener('click', function(
                 }
             })
         }, "50");
-
+    }
+    function li_eqLogicv_4_3(_this){
+        $.hideAlert()
+        if (event.ctrlKey) {
+            var type = $('body').attr('data-page')
+            var url = 'index.php?v=d&m=' + type + '&p=' + type + '&id=' + _this.attr('data-eqlogic_id')
+            window.open(url).focus()
+        } else {
+            jeedom.eqLogic.cache.getCmd = Array()
+            if ($('.eqLogicThumbnailDisplay').html() != undefined) {
+                $('.eqLogicThumbnailDisplay').hide()
+            }
+            $('.eqLogic').hide()
+            if ('function' == typeof(prePrintEqLogic)) {
+                prePrintEqLogic(_this.attr('data-eqLogic_id'))
+            }
+            if (isset(_this.attr('data-eqLogic_type')) && isset($('.' + _this.attr('data-eqLogic_type')))) {
+                $('.' + _this.attr('data-eqLogic_type')).show()
+            } else {
+                $('.eqLogic').show()
+            }
+            if ($('.li_eqLogic').length != 0) {
+                $('.li_eqLogic').removeClass('active');
+            }
+            if ($('.li_eqLogic[data-eqLogic_id=' + _this.attr('data-eqLogic_id') + ']').html() != undefined) {
+                $('.li_eqLogic[data-eqLogic_id=' + _this.attr('data-eqLogic_id') + ']').addClass('active');
+            }
+            _this.addClass('active')
+            $('.nav-tabs a:not(.eqLogicAction)').first().click()
+            $.showLoading()
+            jeedom.eqLogic.print({
+                type: isset(_this.attr('data-eqLogic_type')) ? _this.attr('data-eqLogic_type') : eqType,
+                id: _this.attr('data-eqLogic_id'),
+                status: 1,
+                getCmdState: 1,
+                error: function(error) {
+                    $.hideLoading()
+                    $.fn.showAlert({
+                        message: error.message,
+                        level: 'danger'
+                    })
+                },
+                success: function(data) {
+                    $('body .eqLogicAttr').value('')
+                    if (isset(data) && isset(data.timeout) && data.timeout == 0) {
+                        data.timeout = ''
+                    }
+                    $('body').setValues(data, '.eqLogicAttr')
+                    if (!isset(data.category.opening)) $('input[data-l2key="opening"]').prop('checked', false)
+    
+                    if ('function' == typeof(printEqLogic)) {
+                        printEqLogic(data)
+                    }
+                    $('.cmd').remove()
+                    for (var i in data.cmd) {
+                        if (data.cmd[i].type == 'info') {
+                            data.cmd[i].state = String(data.cmd[i].state).replace(/<[^>]*>?/gm, '');
+                            data.cmd[i]['htmlstate'] = '<span class="cmdTableState"';
+                            data.cmd[i]['htmlstate'] += 'data-cmd_id="' + data.cmd[i].id + '"';
+                            data.cmd[i]['htmlstate'] += 'title="{{Date de valeur}} : ' + data.cmd[i].valueDate + '<br/>{{Date de collecte}} : ' + data.cmd[i].collectDate;
+                            if (data.cmd[i].state.length > 50) {
+                                data.cmd[i]['htmlstate'] += '<br/>' + data.cmd[i].state.replaceAll('"', '&quot;');
+                            }
+                            data.cmd[i]['htmlstate'] += '" >';
+                            data.cmd[i]['htmlstate'] += data.cmd[i].state.substring(0, 50) + ' ' + data.cmd[i].unite;
+                            data.cmd[i]['htmlstate'] += '<span>';
+                        } else {
+                            data.cmd[i]['htmlstate'] = '';
+                        }
+                        if (typeof addCmdToTable == 'function') {
+                            addCmdToTable(data.cmd[i])
+                        } else {
+                            addCmdToTableDefault(data.cmd[i]);
+                        }
+                    }
+                    $('.cmdTableState').each(function() {
+                        jeedom.cmd.addUpdateFunction(_this.attr('data-cmd_id'), function(_options) {
+                            _options.value = String(_options.value).replace(/<[^>]*>?/gm, '');
+                            let cmd = $('.cmdTableState[data-cmd_id=' + _options.cmd_id + ']')
+                            let title = '{{Date de collecte}} : ' + _options.collectDate + ' - {{Date de valeur}} ' + _options.valueDate;
+                            if (_options.value.length > 50) {
+                                title += ' - ' + _options.value;
+                            }
+                            cmd.attr('title', title)
+                            cmd.empty().append(_options.value.substring(0, 50) + ' ' + _options.unit);
+                            cmd.css('color', 'var(--logo-primary-color)');
+                            setTimeout(function() {
+                                cmd.css('color', '');
+                            }, 1000);
+                        });
+                    })
+                    $('#div_pageContainer').on({
+                        'change': function(event) {
+                            jeedom.cmd.changeType($_this.closest('.cmd'))
+                        }
+                    }, '.cmd .cmdAttr[data-l1key=type]')
+    
+                    $('#div_pageContainer').on({
+                        'change': function(event) {
+                            jeedom.cmd.changeSubType(_this.closest('.cmd'))
+                        }
+                    }, '.cmd .cmdAttr[data-l1key=subType]')
+    
+                    jeedomUtils.addOrUpdateUrl('id', data.id)
+                    $.hideLoading()
+                    modifyWithoutSave = false
+                    setTimeout(function() {
+                        modifyWithoutSave = false
+                    }, 1000)
+                }
+            })
+        }
+        return false
+    }
+    if (_target = event.target.closest('.li_eqLogic')) {
+        if(v_4_4){
+            li_eqLogicv_4_4()
+        }else{
+            li_eqLogicv_4_3($(this))
+        }
+        
     }
     if (_target = event.target.closest('.bt_afficher_timepicker') || event.target.closest('.bt_afficher_timepicker_planification')) { // à laisser, utilisé dans la page planification et gestion lever coucher de soleil
         flatpickr(_target.closest('div').querySelector('.in_timepicker'), {
