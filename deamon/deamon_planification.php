@@ -22,7 +22,7 @@ function deamon(){
         if(!is_null($eqLogic->getObject_id())){
           planification::add_log( 'info', $eqLogic->getName()." " .  jeeObject::byId($eqLogic->getObject_id())->getName());
         }else{
-            planification::add_log( 'info', $eqLogic->getName());
+          planification::add_log( 'info', $eqLogic->getName());
         }
       }
     }
@@ -36,16 +36,19 @@ function deamon(){
       if(is_object($cmd_mode_fonctionnement)){
         $mode_fonctionnement=$cmd_mode_fonctionnement->execCmd();	
       }
+      //planification::add_log( 'info', "mode_fonctionnement: " . $mode_fonctionnement);
+        
       if($mode_fonctionnement != "Auto"){
-
         $cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
-
-        if ($cmd_heure_fin->execCmd() != ""){
-          $timestamp_prochaine_action=strtotime($cmd_heure_fin->execCmd());
-          if($date > $timestamp_prochaine_action){
-            planification::add_log( 'info',"Remise en auto",$eqLogic);
-            $cmd_auto=$eqLogic->getCmd(null, 'Auto');
-            $cmd_auto->execute();
+        //planification::add_log( 'info',"cmd_heure_fin: " . $cmd_heure_fin->execCmd());
+        if(is_object($cmd_heure_fin)){
+          if ($cmd_heure_fin->execCmd() != ""){
+            $timestamp_prochaine_action=strtotime($cmd_heure_fin->execCmd());
+            if($date > $timestamp_prochaine_action){
+              planification::add_log( 'info',"Remise en auto",$eqLogic);
+              $cmd_auto=$eqLogic->getCmd(null, 'Auto');
+              $cmd_auto->execute();
+            }
           }
         }
       }
@@ -57,24 +60,21 @@ function deamon(){
           $action_en_cours=$cmd_action_en_cours->execCmd();
         }
         $Id_planification_en_cours=$eqLogic->getConfiguration("Id_planification_en_cours","");
-
-        if($Id_planification_en_cours==""){
-          //planification::add_log("debug","Aucun Id de planification enregistré");
-          continue;
-        }
-        $cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
-        $timestamp_prochaine_action=strtotime($cmd_heure_fin->execCmd());
+        if($Id_planification_en_cours!=""){
+          $cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
+          $timestamp_prochaine_action=strtotime($cmd_heure_fin->execCmd());
 
        
         if($cmd_heure_fin->execCmd() != "" && $date > $timestamp_prochaine_action){
           //planification::add_log( 'info',$eqLogic->getName() . " Recup action actuelle");
+          
           $eqLogic->Execute_action_actuelle();
-          $eqLogic->Recup_prochaine_action();
+          $eqLogic->Recup_action_suivante();
         }
-
-
-
-
+        }else{
+          //planification::add_log("debug",$eqLogic->getName() .": Aucun Id de planification enregistré");
+        }
+       
       }
     }
 

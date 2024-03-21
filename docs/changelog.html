@@ -37,6 +37,26 @@
                 <li>Ajout de la possibilité d'ajouter un équipement personnalisé.</li>
                 <li>Création de la documentation.</li>
             </ul>
+            <h3>00/03/2024</h3>
+            <ul>
+                <li>Passage en pure Js en prévision de la nouvelle version de jeedom V4.4 se passant complétement de jqwery.</li>
+                <li>Correction de l'enregistrement des planifications dans les fichiers JSON, ils étaient pas bien enregistrés ce qui impactait les performances lors de l'affichage des équipements.</li>
+                <li>Correction d'un bug lors de la création d'un nouvel équipement, il était impossible d'exécuter une planification.</li>
+                <li>Correction d'un bug lors dans le démon, lorsqu'il y avait un équipement sans planification enregistrée, les autres équipements ne fonctionnaient plus.</li>
+                <li>Correction de la fonction de récupération de l'action suivante, elle était continuellement mise à jour.</li>
+                <li>Refonte de tous les widgets, mise à jour des widget en temps réel.</li>
+                <li>Utilisation du nouveau datetimepicker (flatpickr).</li>
+                <li>Correction de l'affichage de l'équipement sur la page des commandes.</li>
+                <li>Modification du widget volet roulant:</li>
+                <ul class="bloc ">
+                    <li>Ajout de la prise en charge d'une baie.</li>
+                    <li>Ajout de la prise en charge de l'ouverture de la fenêtre..</li>
+                    <li>Ajout de la prise en charge de l'ouverture de la baie ( gauche droite ou les deux sens).</li>
+                    <li>Toutes ces nouvelles options sont configurables dans l'équipement.</li>
+                    <li>Si aucune option n'est configurée le widget fonctionnera comme avant.</li>
+                    <li>Optimisations.</li>
+                </ul>
+            </ul>
             <h3>12/10/2023</h3>
             <ul>
                 <li>Correction d'un bug lors de la purge du cache.</li>
@@ -108,6 +128,7 @@
                 <li>Suppression du cron lors de la suppression de l'équipement.</li>
                 <li>Correction de l'encodage des textes pour l'affichage des widgets.</li>
                 <li>Améliration de l'affichage des widgets.</li>
+                
                 <ul class="bloc ">
                     <li>Standardisation.</li>
                     <li>Amélioration du fonctionnement du widget PAC</li>

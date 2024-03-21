@@ -47,16 +47,17 @@ $eqLogics = planification::byType('planification');
   <table id="table_santé" class="table table-condensed tablesorter">
   <thead>
   <tr>
-  <th>{{ID}}</th>
-  <th>{{Image}}</th>
-  <th>{{Equipement}}</th>
-  <th>{{Actif}}</th>
-  <th>{{Mode}}</th>
-  <th>{{Planification en cours}}</th>
-  <th>{{Action en cours}}</th>
-  <th>{{Heure Prochaine action}}</th>
-  <th>{{Prochaine action}}</th>
-  <th>{{Info}}</th>
+    <th>{{ID}}</th>
+    <th>{{Image}}</th>
+    <th>{{Equipement}}</th>
+    <th>{{Actif}}</th>
+    <th>{{Mode}}</th>
+    <th>{{Planification en cours}}</th>
+    <th>{{Action en cours}}</th>
+    <th>{{Heure Prochaine action}}</th>
+    <th>{{Prochaine action}}</th>
+    <th>{{Info}}</th>
+    <th>{{Supprimer}}</th>
   </tr>
   </thead>
   <tbody class="health_planification">
@@ -73,22 +74,22 @@ $eqLogics = planification::byType('planification');
     if (count($eqLogics) > 0){
         switch ($recherche) {
             case 'chauffage':
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fa jeedom-pilote-conf"> Mes Chauffages</span></h3></td></tr>';
+                echo '<tr class="santé_titre chauffage"><td colspan="11"><h3><span><i class="fa jeedom-pilote-conf"> Mes Chauffages</span></h3></td></tr>';
                 break;
             case 'PAC':
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="far fa-snowflake"></i> Mes pompes à chaleur</span></h3></td></tr>';
+                echo '<tr class="santé_titre PAC"><td colspan="11"><h3><span><i class="far fa-snowflake"></i> Mes pompes à chaleur</span></h3></td></tr>';
                 break;
             case 'poele';
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fa jeedom-feu"></i> Mes poêles à granules</span></h3></td></tr>';
+                echo '<tr class="santé_titre poele"><td colspan="11"><h3><span><i class="fa jeedom-feu"></i> Mes poêles à granules</span></h3></td></tr>';
                 break;
             case 'volet';
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fa jeedom-volet-ferme"> Mes volets</span></h3></td></tr>';
+                echo '<tr class="santé_titre volet"><td colspan="11"><h3><span><i class="fa jeedom-volet-ferme"> Mes volets</span></h3></td></tr>';
                 break;
             case 'prise';
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fa jeedom-prise"></i> Mes prises</span></h3></td></tr>';
+                echo '<tr class="santé_titre prise"><td colspan="11"><h3><span><i class="fa jeedom-prise"></i> Mes prises</span></h3></td></tr>';
                 break;
             case 'perso';
-                echo '<tr class="santé_titre"><td colspan="10"><h3><span><i class="fas fa-user-cog"></i> Mes équipements perso</span></h3></td></tr>';
+                echo '<tr class="santé_titre perso"><td colspan="11"><h3><span><i class="fas fa-user-cog"></i> Mes équipements perso</span></h3></td></tr>';
                 break;
         }
     }
@@ -126,6 +127,7 @@ $eqLogics = planification::byType('planification');
       echo '<td></td>';
       echo '<td></td>';
       echo '<td></td>';
+      
       echo '</tr>';
       continue;
     }
@@ -163,8 +165,7 @@ $eqLogics = planification::byType('planification');
         //echo '<td><span class="label label-danger" style="font-size : 1em;">{{Inconnu}}</span></td>';
         echo '<td></td>';
       }
-
-
+      
 
     
     
@@ -187,9 +188,11 @@ $eqLogics = planification::byType('planification');
       $valeur=$eqLogic->getCmd(null,'info')->execCmd();
       echo '<td><span class="label" style="font-size : 1em;">{{'. $valeur.'}}</span></td>';
    
+      echo '<td><span class="label label-danger cursor supprimer" style="font-size : 1em;">{{Supprimer}}</span></td>';
+    
 
-    echo '</tr>';
-  }
+      echo '</tr>';
+    }
   switch ($recherche) {
     case 'chauffage':
         $recherche = 'PAC';
@@ -209,51 +212,95 @@ $eqLogics = planification::byType('planification');
 }
 ?>
   <script>
-
-$('.manuel').on('click', function() {
-
- // jeedom.cmd.execute({id: $(this).attr("cmd_id")});
-  //setTimeout(() => {  creation_table(); }, 2000);
-console.log($(this).closest("tr").children().first().find("span").text())
-})
+   
+if (document.querySelectorAll('.manuel').length > 0){
+  document.querySelectorAll('.manuel').forEach(_el => {
+    _el.onclick = function() {
+      jeedom.cmd.execute({id: this.getAttribute("cmd_id")});
+      setTimeout(() => {  creation_table(); }, 2000);
+    }
+  })
+}
+if (document.querySelectorAll('.supprimer').length > 0){
+  document.querySelectorAll('.supprimer').forEach(_el => {
+    _el.onclick = function() {
+     
+      jeedom.eqLogic.remove({id:Number(this.closest('.santé').querySelector('.id').innerHTML),type:"planification"})
+    
+      var classes=this.closest('.santé').className  
+      
+      this.closest('.santé').remove()
+      document.querySelector('.eqLogicDisplayCard[data-eqlogic_id="'+this.closest('.santé').querySelector('.id').innerHTML+'"]').remove()
+      document.querySelector('.li_eqLogic[data-eqlogic_id="'+this.closest('.santé').querySelector('.id').innerHTML+'"]').remove()
+      if(document.getElementsByClassName(classes).length == 0){
+        document.getElementsByClassName(classes.replace("santé", "santé_titre"))[0].remove()
+        console.log(classes.replace("santé", "eqLogicThumbnailContainer")+'s')
+        document.getElementsByClassName(classes.replace("santé", "eqLogicThumbnailContainer")+'s')[0].remove()
+        document.getElementsByClassName(classes.replace("santé", "bs-sidenav")+'s')[0].remove()
+      }
+    
+    }
+  })
+}
 
   //creation_table()
 function creation_table(){
-  var table = $('.health_planification')
+  var table = document.querySelector('.health_planification')
     table.empty() 
     console.clear()
 
-    $.ajax({
+    domUtils.ajax({
       type: "POST",
       url: "plugins/planification/core/ajax/planification.ajax.php",
       data: {
-        action: "Recup_eqLogic_ids",
+        action: "Santé",
       },
       dataType: 'json',
-
+      global: true,
       async: false,
-      error: function(request, status, error) { handleAjaxError(request, status, error) },
+      error: function(request, status, error) { 
+        handleAjaxError(request, status, error) },
       success: function(data) {
-
         if (data.state != 'ok') {
-          $('#div_alert').showAlert({
+          jeedomUtils.showAlert({
             message: data.result,
             level: 'danger'
             })
             return
           }
 
+          document.querySelector('.health_planification').append(domUtils.parseHTML(data.result))
 
-        $('.health_planification').append(data.result)
+          if (document.querySelectorAll('.manuel').length > 0){
+            document.querySelectorAll('.manuel').forEach(_el => {
+              _el.onclick = function() {
+                jeedom.cmd.execute({id: this.getAttribute("cmd_id")});
+                setTimeout(() => {  creation_table(); }, 2000);
+              }
+            })
+          }
+          if (document.querySelectorAll('.supprimer').length > 0){
+            document.querySelectorAll('.supprimer').forEach(_el => {
+              _el.onclick = function() {
+              
+                jeedom.eqLogic.remove({id:Number(this.closest('.santé').querySelector('.id').innerHTML),type:"planification"})
+    
+                var classes=this.closest('.santé').className  
+                
+                this.closest('.santé').remove()
+                document.querySelector('.eqLogicDisplayCard[data-eqlogic_id="'+this.closest('.santé').querySelector('.id').innerHTML+'"]').remove()
+                document.querySelector('.li_eqLogic[data-eqlogic_id="'+this.closest('.santé').querySelector('.id').innerHTML+'"]').remove()
+                if(document.getElementsByClassName(classes).length == 0){
+                  document.getElementsByClassName(classes.replace("santé", "santé_titre"))[0].remove()
+                  console.log(classes.replace("santé", "eqLogicThumbnailContainer")+'s')
+                  document.getElementsByClassName(classes.replace("santé", "eqLogicThumbnailContainer")+'s')[0].remove()
+                  document.getElementsByClassName(classes.replace("santé", "bs-sidenav")+'s')[0].remove()
+                }
+              }
+            })
+          }
 
-          $('.manuel').on('click', function() {
-
-          jeedom.cmd.execute({id: $(this).attr("cmd_id")});
-          setTimeout(() => {  creation_table(); }, 2000);
-
-        })
-
-        }
+      }
 
     })
 

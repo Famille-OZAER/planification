@@ -13,52 +13,52 @@
 	<div class="col-lg-2 col-md-3 col-sm-4">
 		<div class="bs-sidebar">
 			<ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
-				<li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/></li>
+				<li class="filter" style="margin-bottom: 5px;"><input class="filter form-control" placeholder="{{Rechercher}}" style="width: 100%"/></li>
 
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Chauffages"><i class="fa jeedom-pilote-conf"></i> Mes Chauffages
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav chauffages" style="display:none !important"><i class="fa jeedom-pilote-conf"></i> Mes Chauffages
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('type') == 'Chauffage') {	
+							if ($eqLogic->getConfiguration('Type_équipement') == 'Chauffage') {	
 								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PACs"><i class="far fa-snowflake"></i> Mes pompes à chaleur
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PACs" style="display:none !important"><i class="far fa-snowflake"></i> Mes pompes à chaleur
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('type') == 'PAC') {	
+							if ($eqLogic->getConfiguration('Type_équipement') == 'PAC') {	
 								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Poeles" style="display:none !important"><i class="fa jeedom-feu"></i> Mes poêles à ganules
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav poeles" style="display:none !important"><i class="fa jeedom-feu"></i> Mes poêles à ganules
 					<?php
 					foreach ($eqLogics as $eqLogic) {
-						if ($eqLogic->getConfiguration('type') == 'Poele') {	
+						if ($eqLogic->getConfiguration('Type_équipement') == 'Poele') {	
 							$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 							echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 						}
 					}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Volets"><i class="fa jeedom-volet-ferme"></i> Mes volets
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav volets" style="display:none !important"><i class="fa jeedom-volet-ferme"></i> Mes volets
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('type') == 'Volet') {	
+							if ($eqLogic->getConfiguration('Type_équipement') == 'Volet') {	
 								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Prises"><i class="fa jeedom-prise"></i> Mes prises
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav prises" style="display:none !important"><i class="fa jeedom-prise"></i> Mes prises
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('type') == 'Prise') {	
+							if ($eqLogic->getConfiguration('Type_équipement') == 'Prise') {	
 								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
@@ -67,10 +67,10 @@
 
 
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Persos"><i class="fas fa-user-cog"></i> Mes équipements perso
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav persos" style="display:none !important"><i class="fas fa-user-cog"></i> Mes équipements perso
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('type') == 'Perso') {
+							if ($eqLogic->getConfiguration('Type_équipement') == 'Perso') {
                               	$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
@@ -99,16 +99,21 @@
 				<br/>
 				<span >{{Santé}}</span>
 			</div>
+			<div class="cursor modifier_json">
+				<i class="fab fa-jsfiddle"></i>
+				<br/>
+				<span >{{Modifier JSON}}</span>
+			</div>
 		</div>
 
 		<input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
 
 
-		<div class="eqLogicThumbnailContainer Chauffages" style="display:none !important">
+		<div class="eqLogicThumbnailContainer chauffages" style="display:none !important">
 			<legend><i class="fa jeedom-pilote-conf"></i> {{Mes chauffages}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'Chauffage') {	
+					if ($eqLogic->getConfiguration('Type_équipement') == 'Chauffage') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -129,7 +134,7 @@
 			<legend><i class="far fa-snowflake"></i> {{Mes pompes à chaleur}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'PAC') {	
+					if ($eqLogic->getConfiguration('Type_équipement') == 'PAC') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -145,11 +150,11 @@
 			?>
 		</div>
 
-		<div class="eqLogicThumbnailContainer Poeles" style="display:none !important">
+		<div class="eqLogicThumbnailContainer poeles" style="display:none !important">
 			<legend><i class="fa jeedom-feu"></i> {{Mes poêles à granules}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'Poele') {	
+					if ($eqLogic->getConfiguration('Type_équipement') == 'Poele') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -165,11 +170,11 @@
 			?>
 		</div>
 
-		<div class="eqLogicThumbnailContainer Volets" style="display:none !important">
+		<div class="eqLogicThumbnailContainer volets" style="display:none !important">
 			<legend><i class="fa jeedom-volet-ferme"></i> {{Mes Volets}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'Volet') {	
+					if ($eqLogic->getConfiguration('Type_équipement') == 'Volet') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -185,11 +190,11 @@
 			?>
 		</div>
 
-		<div class="eqLogicThumbnailContainer Prises" style="display:none !important">
+		<div class="eqLogicThumbnailContainer prises" style="display:none !important">
 			<legend><i class="fa jeedom-prise"></i> {{Mes Prises}}</legend>
 				<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'Prise') {	
+					if ($eqLogic->getConfiguration('Type_équipement') == 'Prise') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -205,11 +210,11 @@
 			?>
 		</div>
 
-		<div class="eqLogicThumbnailContainer Persos" style="display:none !important">
+		<div class="eqLogicThumbnailContainer persos" style="display:none !important">
 			<legend><i class="fas fa-user-cog"></i> {{Mes équipement perso}}</legend>
 				<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'Perso') {	
+					if ($eqLogic->getConfiguration('Type_équipement') == 'Perso') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -240,11 +245,11 @@
 			</span>
 		</div>
 		<ul class="nav nav-tabs" role="tablist" style="display:inline-block">
-			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
-			<li role="presentation" class="active"><a href="#tab_eqlogic" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer"></i> {{Equipement}}</a></li>
-			<li role="presentation" id ="menu_tab_planifications"><a href="#tab_planifications" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Planifications}}</a></li>
-			<li role="presentation" id ="menu_tab_gestion"><a href="#tab_gestion" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Gestion Lever/Coucher soleil}}</a></li>
-			<li role="presentation"><a href="#tab_commandes" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes équipement}}</a></li>
+			<li role="presentation" id = ""><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
+			<li role="presentation" id = "menu_tab_eqlogic" ><a href="#tab_eqlogic" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer-alt"></i> {{Equipement}}</a></li>
+			<li role="presentation" id = "menu_tab_planifications"><a href="#tab_planifications" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Planifications}}</a></li>
+			<li role="presentation" id = "menu_tab_gestion"><a href="#tab_gestion" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Gestion Lever/Coucher soleil}}</a></li>
+			<li role="presentation" id = "menu_tab_commandes"><a href="#tab_commandes" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes équipement}}</a></li>
 		</ul>	
 
 
@@ -254,17 +259,17 @@
 			<!--Eqlogic Tab-->
 			<div role="tabpanel" class="tab-pane active" id="tab_eqlogic">
 				<br/>
-				<form class="form-horizontal col-sm-9">
+				<form class="form-horizontal col-sm-10">
 					<fieldset>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">{{Nom de l&#39équipement}}</label>
+							<label class="col-sm-4 control-label">{{Nom de l&#39équipement}}</label>
 							<div class="col-sm-3">
 								<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
 								<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}"/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label" >{{Objet parent}}</label>
+							<label class="col-sm-4 control-label" >{{Objet parent}}</label>
 							<div class="col-sm-3">
 								<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
 								<option value="">{{Aucun}}</option>
@@ -279,8 +284,8 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label">{{Catégorie}}</label>
-							<div class="col-sm-9">
+							<label class="col-sm-4 control-label">{{Catégorie}}</label>
+							<div class="col-sm-6">
 								<?php
 									foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
 										echo '<label class="checkbox-inline">';
@@ -292,28 +297,28 @@
 						</div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label"></label>
-							<div class="col-sm-9">
+							<label class="col-sm-4 control-label">{{Options}}</label>
+							<div class="col-sm-6">
 								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>{{Activer}}</label>
 								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
 							</div>
 						</div>
 
 						<div class="form-group" style="display : none;" >
-							<label class="col-sm-3 control-label">{{Type équipement}}</label>
+							<label class="col-sm-4 control-label">{{Type équipement}}</label>
 							<div class="col-sm-3">
-								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="type" />
+								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Type_équipement" />
 							</div>
 						</div>
-						<div class="form-group  image_perso" >
-							<label class="col-sm-3 control-label">{{Chemin de l&#39;image}}</label>
-							<div class="col-sm-9">
+						<div class="form-group  image_perso" style="display : none;">
+							<label class="col-sm-4 control-label">{{Chemin de l&#39;image}}</label>
+							<div class="col-sm-6">
 								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Chemin_image" />
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label"></label>
-							<div class="col-sm-9">
+							<label class="col-sm-4 control-label">{{Options du widget}}</label>
+							<div class="col-sm-6">
 								<label class="checkbox-inline">
 									<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="affichage_heure"/>Afficher uniquement l&#39;heure sur le widget tant que l&#39;heure de la prochaine action est inferieure à 24 heures
 								</label>
@@ -323,39 +328,39 @@
 						
 						<div class="option Poele" style="display:none">
 							<div class="form-group" style="display : block;" >
-								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
+								<label class="col-sm-4 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 								<div class="col-sm-3">
 									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_poele" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle."/>
 								</div>
 							</div>
 							<div class="form-group" style="display : block;" >
-								<label class="col-sm-3 control-label">{{Température par défaut}}</label>
+								<label class="col-sm-4 control-label">{{Température par défaut}}</label>
 								<div class="col-sm-3">
 									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_poele" data-l2key="temperature_consigne_par_defaut"/>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de température}}</label>
+								<label class="col-sm-4 control-label">{{Commande de température}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="temperature_id"/>
+									<input class="eqLogicAttr form-control  cmdAction" data-l1key="configuration_poele" data-l2key="temperature_id"/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info_numeric"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l&#39;état du poêle}}</label>
+								<label class="col-sm-4 control-label">{{Commande de l&#39;état du poêle}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_id"/>
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_poele" data-l2key="etat_id"/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de lé&#39;tat boost du poêle}}</label>
+								<label class="col-sm-4 control-label">{{Commande de lé&#39;tat boost du poêle}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_poele" data-l2key="etat_boost_id"/>
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_poele" data-l2key="etat_boost_id"/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
 									</span>
@@ -364,15 +369,15 @@
 						</div>
 						<div class="option PAC" style="display:none">
 							<div class="form-group" style="display : block;" >
-								<label class="col-sm-3 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
+								<label class="col-sm-4 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 								<div class="col-sm-3">
 									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle."/>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de température}}</label>
+								<label class="col-sm-4 control-label">{{Commande de température}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_PAC" data-l2key="temperature_id"/>
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_PAC" data-l2key="temperature_id"/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info_numeric"><i class="fa fa-tasks"></i></a>
 									</span>
@@ -381,31 +386,95 @@
 						</div>
 						<div class="option Volet" style="display:none">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l&#39;état du volet}}</label>
+								<label class="col-sm-4 control-label">{{Type de fenêrtre}}</label>
+								<div class="col-sm-6 ">
+									<label class="radio-inline"><input class="eqLogicAttr" type="radio" id="fenêtre" name="Type_fenêtre" data-l1key="configuration_volet" data-l2key="type_fenêtre" />Fenêtre</label>
+									<label class="radio-inline"><input class="eqLogicAttr" type="radio" id="baie" name="Type_fenêtre" data-l1key="configuration_volet" data-l2key="type_fenêtre" />Baie</label>
+								</div>
+							</div>
+							<div class="form-group sens_ouverture" style="display:none">
+								<label class="col-sm-4 control-label">{{Sens ouverture}}</label>
+								<div class="col-sm-6 ">
+									<label class="radio-inline"><input class="eqLogicAttr" type="radio" id="gauche" name="sens_ouveture_fenêtre" data-l1key="configuration_volet" data-l2key="sens_ouveture_fenêtre" />Gauche</label>
+									<label class="radio-inline"><input class="eqLogicAttr" type="radio" id="droite" name="sens_ouveture_fenêtre" data-l1key="configuration_volet" data-l2key="sens_ouveture_fenêtre" />Droite</label>
+									<label class="radio-inline"><input class="eqLogicAttr" type="radio" id="gauche-droite" name="sens_ouveture_fenêtre" data-l1key="configuration_volet" data-l2key="sens_ouveture_fenêtre" />Deux sens</label>
+								</div>
+							</div>
+							
+							
+							<div class='ouverture_gauche'>
+								<fieldset style="border: var(--txt-color);border-style: solid;padding-bottom:20px;margin-bottom:10px">
+    							<legend style="width: auto;text-align:center!important;padding:5px!important">Détecteur d'ouverture gauche</legend>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Commande de l&#39;ouverture}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_volet" data-l2key="Etat_fenêtre_gauche_id"/>
+										<span class="input-group-btn">
+											<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
+										</span>
+									</div>
+								</div>	
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Commande de la batterie}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_volet" data-l2key="Niveau_batterie_gauche_id"/>
+										<span class="input-group-btn">
+											<a class="btn btn-success btn-sm list_Cmd_info_numeric"><i class="fa fa-tasks"></i></a>
+										</span>
+									</div>
+								</div>
+								</fieldset>
+							</div>
+							<div class='ouverture_droite' style='display:none'>
+								<fieldset style="border: var(--txt-color);border-style: solid;padding-bottom:20px;margin-bottom:10px">
+    							<legend style="width: auto;text-align:center!important;padding:5px!important">Détecteur d'ouverture droite</legend>
+								
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Commande de l&#39;ouverture}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_volet" data-l2key="Etat_fenêtre_droite_id"/>
+										<span class="input-group-btn">
+											<a class="btn btn-success btn-sm list_Cmd_info_binary"><i class="fa fa-tasks"></i></a>
+										</span>
+									</div>
+								</div>	
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Commande de la batterie}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_volet" data-l2key="Niveau_batterie_droite_id"/>
+										<span class="input-group-btn">
+											<a class="btn btn-success btn-sm list_Cmd_info_numeric"><i class="fa fa-tasks"></i></a>
+										</span>
+									</div>
+								</div>
+								</fieldset>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Commande de l&#39;état du volet}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_volet" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_volet" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
-							<div class="form-group alias" style="display:none">
+							<div class="alias" style="display:none">
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Ouvert:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode Ouvert:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_volet" data-l2key="Alias_Ouvert"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_volet" data-l2key="Alias_Ouvert"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode My:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode My:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_volet" data-l2key="Alias_My"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_volet" data-l2key="Alias_My"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Fermé:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode Fermé:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_volet" data-l2key="Alias_Ferme"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_volet" data-l2key="Alias_Ferme"/>
 									</div>
 								</div>
 
@@ -413,76 +482,78 @@
 						</div>
 						<div class="option Prise" style="display:none">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l&#39;état de la prise}}</label>
+								<label class="col-sm-4 control-label">{{Commande de l&#39;état de la prise}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_prise" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
+									<input class="eqLogicAttr form-control  cmdAction" data-l1key="configuration_prise" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
-							<div class="form-group alias" style="display:none">
+							<div class="alias" style="display:none">
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode On:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode On:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_prise" data-l2key="Alias_On"/>
+										<input class="eqLogicAttr form-control " data-l1key="configuration_prise" data-l2key="Alias_On"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Off:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode Off:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_prise" data-l2key="Alias_Off"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_prise" data-l2key="Alias_Off"/>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="option Chauffage" style="display:none">
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Commande de l&#39;état du chauffage}}</label>
+								<label class="col-sm-4 control-label">{{Commande de l&#39;état du chauffage}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control input-sm cmdAction" data-l1key="configuration_chauffage" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_chauffage" data-l2key="etat_id" title="Laissez vide pour utiliser l'état de la planification."/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
 							</div>
-							<div class="form-group alias" style="display:none">
+							<div class="alias" style="display:none">
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Auto:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode Auto:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Auto"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_chauffage" data-l2key="Alias_Auto"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Confort:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode Confort:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Confort"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_chauffage" data-l2key="Alias_Confort"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode ECO:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode ECO:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Eco"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_chauffage" data-l2key="Alias_Eco"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Hors-gel:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode Hors-gel:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Hg"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_chauffage" data-l2key="Alias_Hg"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-3 control-label">{{Alias du mode Arrêt:}}</label>
+									<label class="col-sm-4 control-label">{{Alias du mode Arrêt:}}</label>
 									<div class="col-sm-6 input-group">
-										<input class="eqLogicAttr form-control input-sm" data-l1key="configuration_chauffage" data-l2key="Alias_Arret"/>
+										<input class="eqLogicAttr form-control" data-l1key="configuration_chauffage" data-l2key="Alias_Arret"/>
 									</div>
 								</div>
 							</div>
 						</div>
 					</fieldset>
+					
+					  
 				</form>
 
-				<form class="form-horizontal col-sm-3">
+				<form class="form-horizontal col-sm-2">
 					<fieldset>
 						<div class="form-group">
 							<div>
@@ -527,8 +598,36 @@
 					</select>
 					<a class="btn btn-sm btn-default bt_copier_lever_coucher" style="margin: 2px"> {{Dupliquer pour le reste de la semaine}}</a>
 				</div>
-				<div class="Lundi col-sm-12" style="display:block">
-					<div class="col-sm-6 Jour">
+
+				<?php
+				$display='block';
+				for ($i = 1; $i <= 7; $i++) {
+					switch ($i){
+						case 1:
+							$jour = "Lundi";
+							break;
+						case 2:
+							$jour = "Mardi";
+							break;
+						case 3:
+							$jour = "Mercredi";
+							break;
+						case 4:
+							$jour = "Jeudi";
+							break;
+						case 5:
+							$jour = "Vendredi";
+							break;
+						case 6:
+							$jour = "Samedi";
+							break;
+						case 7:
+							$jour = "Dimanche";
+							break;
+					}
+					if ($jour != 'Lundi'){$display="none";}
+			echo '<div class="' . $jour .' col-sm-12" style="display:'.  $display . '">';
+			echo '<div class="col-sm-6 Jour">
 						<form class="form-horizontal">
 							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
 							<fieldset>
@@ -536,20 +635,22 @@
 									<div class="form-group ">
 										<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
 										<div class="col-sm-2">
-											<span class="HeureLever_Lundi label label-success"></span>
+											<span class="HeureLever_' . $jour . ' label label-success"></span>
 										</div>
 									</div>
 									<div class="form-group ">
 										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
 										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_lever_Lundi label label-warning"></span>
+											<span class="Heure_action_suivante_lever_'.$jour.' label label-warning"></span>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
 										<div class="col-sm-5">
 											<div class="input-group">
-												<input type="time" class="HeureLeverMin_Lundi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Lundi"/>
+												<input class="in_timepicker HeureLeverMin_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="LeverMin_'.$jour.'">
+													<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+  												</input>
 											</div>
 										</div>
 									</div>
@@ -557,7 +658,9 @@
 										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
 										<div class="col-sm-5">
 											<div class="input-group">
-												<input type="time" class="HeureLeverMax_Lundi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMax_Lundi"/>
+												<input class="in_timepicker HeureLeverMax_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="LeverMax_'.$jour.'">
+													<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+												</input>
 											</div>
 										</div>
 									</div>
@@ -573,13 +676,13 @@
 									<div class="form-group ">
 										<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
 										<div class="col-sm-2">
-											<span class="HeureCoucher_Lundi label label-success"></span>
+											<span class="HeureCoucher_'.$jour.' label label-success"></span>
 										</div>
 									</div>
 									<div class="form-group ">
 										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
 										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_coucher_Lundi label label-warning"></span>
+											<span class="Heure_action_suivante_coucher_'.$jour.' label label-warning"></span>
 										</div>
 									</div>
 									<div class="form-group">
@@ -587,7 +690,9 @@
 										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
 										<div class="col-sm-5">
 											<div class="input-group">
-												<input type="time" class="HeureCoucherMin_Lundi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMin_Lundi"/>
+												<input class="in_timepicker HeureCoucherMin_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="CoucherMin_'.$jour.'">
+													<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+  												</input>
 											</div>
 										</div>
 									</div>
@@ -595,7 +700,9 @@
 										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
 										<div class="col-sm-5">
 											<div class="input-group">
-												<input type="time" class="HeureCoucherMax_Lundi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMax_Lundi"/>
+												<input class="in_timepicker HeureCoucherMax_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="CoucherMax_'.$jour.'">
+													<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+  												</input>
 											</div>
 										</div>
 									</div>
@@ -603,465 +710,11 @@
 							</fieldset>
 						</form>
 					</div>	
-				</div>
-				<div class="Mardi col-sm-12" style="display:none">
-					<div class="col-sm-6 Jour">
-						<form class="form-horizontal">
-
-							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureLever_Mardi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_lever_Mardi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-									<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-									<div class="col-sm-5">
-										<div class="input-group">
-											<input type="time" class="HeureLeverMin_Mardi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Mardi"/>
-										</div>
-									</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-											<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMax_Mardi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMax_Mardi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>
-					<div class="col-sm-6 Nuit">
-						<form class="form-horizontal">
-							<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureCoucher_Mardi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_coucher_Mardi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMin_Mardi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMin_Mardi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMax_Mardi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMax_Mardi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>	
-				</div>
-				<div class="Mercredi col-sm-12" style="display:none">
-					<div class="col-sm-6 Jour">
-						<form class="form-horizontal">
-							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureLever_Mercredi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_lever_Mercredi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-											<input type="time" class="HeureLeverMin_Mercredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Mercredi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMax_Mercredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMax_Mercredi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>
-					<div class="col-sm-6 Nuit">
-						<form class="form-horizontal">
-							<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureCoucher_Mercredi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_coucher_Mercredi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMin_Mercredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMin_Mercredi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMax_Mercredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMax_Mercredi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>	
-				</div>
-				<div class="Jeudi col-sm-12" style="display:none">
-					<div class="col-sm-6 Jour">
-						<form class="form-horizontal">
-							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureLever_Jeudi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_lever_Jeudi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-											<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMin_Jeudi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Jeudi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMax_Jeudi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMax_Jeudi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>
-					<div class="col-sm-6 Nuit">
-						<form class="form-horizontal">
-							<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureCoucher_Jeudi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_coucher_Jeudi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMin_Jeudi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMin_Jeudi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMax_Jeudi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMax_Jeudi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>	
-				</div>
-				<div class="Vendredi col-sm-12" style="display:none">
-					<div class="col-sm-6 Jour">
-						<form class="form-horizontal">
-							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureLever_Vendredi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_lever_Vendredi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMin_Vendredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Vendredi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMax_Vendredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMax_Vendredi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>
-					<div class="col-sm-6 Nuit">
-						<form class="form-horizontal">
-							<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureCoucher_Vendredi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_coucher_Vendredi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMin_Vendredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMin_Vendredi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMax_Vendredi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMax_Vendredi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>	
-				</div>
-				<div class="Samedi col-sm-12" style="display:none">
-					<div class="col-sm-6 Jour">
-						<form class="form-horizontal">
-							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureLever_Samedi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_lever_Samedi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMin_Samedi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Samedi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMax_Samedi eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMax_Samedi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-								</fieldset>
-						</form>
-					</div>
-					<div class="col-sm-6 Nuit">
-						<form class="form-horizontal">
-							<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureCoucher_Samedi label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_coucher_Samedi label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMin_Samedi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMin_Samedi"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMax_Samedi eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMax_Samedi"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>	
-				</div>
-				<div class="Dimanche col-sm-12" style="display:none">
-					<div class="col-sm-6 Jour">
-						<form class="form-horizontal">
-							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureLever_Dimanche label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_lever_Dimanche label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMin_Dimanche eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMin_Dimanche"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureLeverMax_Dimanche eqLogicAttr form-control" data-l1key="configuration" data-l2key="LeverMax_Dimanche"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>
-					<div class="col-sm-6 Nuit">
-						<form class="form-horizontal">
-							<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureCoucher_Dimanche label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_prochaine_action_coucher_Dimanche label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMin_Dimanche eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMin_Dimanche"/>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input type="time" class="HeureCoucherMax_Dimanche eqLogicAttr form-control" data-l1key="configuration" data-l2key="CoucherMax_Dimanche"/>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>	
-				</div>
+				</div>';
+				}
+				?>
 			</div>
+
 			<!--Commands Tab-->
 			<div role="tabpanel" class="tab-pane" id="tab_commandes">
 				<legend><i class="fa fa-list-alt"></i>  {{Commandes Infos}}</legend>
@@ -1074,8 +727,7 @@
 					<tbody>
 					</tbody>
 				</table>
-				<legend><i class="fa fa-list-alt"></i>  {{Commandes Actions}}<a class="btn btn-sm btn-success bt_ajouter_commande pull-right" style="display:none"><i class="fa fa-plus-circle"></i> {{Ajouter une commande}}</a>
-</legend>
+				<legend><i class="fa fa-list-alt"></i>  {{Commandes Actions}}<a class="btn btn-sm btn-success bt_ajouter_commande pull-right" style="display:none"><i class="fa fa-plus-circle"></i> {{Ajouter une commande}}</a></legend>
 				<table id="table_actions" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
@@ -1090,33 +742,30 @@
 		</div>
 	</div>
 <script>
-if ($("div .Chauffages .eqLogicDisplayCard").length != 0){
-		$(".Chauffages").show();
+	if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
+		//document.querySelectorAll(".chauffages").seen();
 	}
-	if ($("div .PACs .eqLogicDisplayCard").length != 0){
-		$(".PACs").show();
+	if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
+		//document.querySelectorAll(".PACs").seen();
 	}
-	if ($("div .Poeles .eqLogicDisplayCard").length != 0){
-		$(".Poeles").show();
+	if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
+	//	document.querySelectorAll(".poeles").seen();
 	}
-	if ($("div .Volets .eqLogicDisplayCard").length != 0){
-		$(".Volets").show();
+	if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
+	//document.querySelectorAll(".volets").seen();
 	}
-	if ($("div .Prises .eqLogicDisplayCard").length != 0){
-		$(".Prises").show();
+	if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
+		//document.querySelectorAll(".prises").seen();
 	}
-	if ($("div .Persos .eqLogicDisplayCard").length != 0){
-		$(".Persos").show();
-	}
-   
-
-	
+	if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
+		//document.querySelectorAll(".persos").seen();
+	}  
 	
 </script>
 </div>
 
 
 
-<?php include_file('desktop', 'planification', 'js', 'planification');?>
-<?php include_file('desktop', 'planification', 'css', 'planification');?>
-<?php include_file('core', 'plugin.template', 'js');?>
+<?php include_file('desktop', 'planification', 'js', 'planification');
+ include_file('desktop', 'planification', 'css', 'planification');
+ include_file('core', 'plugin.template', 'js');?>

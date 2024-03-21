@@ -22,13 +22,10 @@ if (!isConnect('admin')) {
 
 <script>
 
-function blea_postSaveConfiguration(){
- 
-}
 
 
-$('#bt_savePluginConfig').on('click',function(event){
-    $.ajax({
+document.getElementById('bt_savePluginConfig').onclick =function(event){
+    domUtils.ajax({
         type: "POST",
         url: "plugins/planification/core/ajax/planification.ajax.php",
         data: {
@@ -41,13 +38,12 @@ $('#bt_savePluginConfig').on('click',function(event){
         },
         success: function (data) {
         if (data.state != 'ok') {
-            $('#div_alert').showAlert({message: data.result, level: 'danger'});
+            jeedomUtils.showAlert({message: data.result, level: 'danger'});
             return;
         }
-        //console.log(data)
         }
     });
     location.reload()
 		
-	});
+	};
 </script>

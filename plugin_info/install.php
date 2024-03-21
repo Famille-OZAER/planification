@@ -1,21 +1,5 @@
 <?php
 
-/* This file is part of Jeedom.
- *
- * Jeedom is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * Jeedom is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
- */
-
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function planification_install() {
@@ -27,17 +11,52 @@ function planification_install() {
 function planification_update() {
 	log::add('planification', 'debug', 'planification_update');
 	planification::deamon_stop();
-	$cron = cron::byClassAndFunction('planification', 'pull');
-	foreach ($crons as $cron){
-			$cron->remove();
-		
-	}	
-	//resave eqs for new cmd:
 	try{
-		$eqLogics = eqLogic::byType('planification');
+		$eqLogics = planification::byType('planification');
 		foreach ($eqLogics as $eqLogic){
-			//$eqLogic->postSave();
-			//$eqLogic->save();
+			$planifications=$eqLogic->Recup_planifications(true,true);
+
+			if($planifications !=[] && isset($planifications[0]['nom_planification'])){
+			  planification::add_log('debug',"ok",$eqLogic);  
+			  
+			  $planifications=$eqLogic->Recup_planifications(true,true);
+			  $planifications_new = '[{';
+			  $numéro_planification=0;
+			  foreach ($planifications as $planification) {
+				if ($numéro_planification!=0){
+				  $planifications_new .=',';
+				}
+				$planifications_new .= '"'. $numéro_planification . '":';
+				$planifications_new .='[';
+				$planifications_new .='{"Nom":"'.$planification['nom_planification'] .'",';
+				$planifications_new .='"Id":"'. $planification["Id"] . '",';
+				foreach ($planification["semaine"] as $semaine) {
+				  if ($semaine['jour'] != "Lundi"){
+					$planifications_new .=',';
+				  }
+				  $planifications_new .='"'. $semaine['jour'] .'":[{';
+				  $nb_période=0;
+				  foreach ($semaine["periodes"] as $periode) {
+					if($nb_période>0){
+					  $planifications_new .='},{';
+					}
+					$planifications_new .='"Type":"' . $periode['Type_periode'] .'", "Début":"' . $periode['Debut_periode'] .'", "Id":"' . $periode['Id'] . '"';
+					$nb_période +=1;
+				  }
+				  $planifications_new .='}]';
+				}
+				$planifications_new .='}]';          
+				$numéro_planification +=1;
+			  }          
+			  $planifications_new .='}]';
+			  $arr=[];
+			  array_push($arr,$planifications_new);
+			  $nom_fichier_source = dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . ".json"; 
+			  $nom_fichier_cible =  dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . "_old.json"; 
+			  copy( $nom_fichier_source , $nom_fichier_cible);
+			  fwrite($nom_fichier_source, $planifications_new);
+			
+			}
 		}
 	}
 	catch (Exception $e){

@@ -1,507 +1,687 @@
 <?php
-if (!isConnect()) {
-	throw new Exception('{{401 - Accès non autorisé}}');
+  /* This file is part of Jeedom.
+*
+* Jeedom is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* Jeedom is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+  if (!isConnect()) {
+    throw new Exception('401 - {{Accès non autorisé}}');
+  }
+
+/*
+  Object, widget, etc icon select -> display only icon tree
+  Widget replace select -> display icon tree and user image /data/img tree
+  Object background select -> display gallery image core/img/object_background
+*/
+
+$icon_Struct = [];
+$userImg_Struct = [];
+$gal_Struct = [];
+
+
+$objectId = init('object_id');
+if (!$objectId) {
+  //Build $icon_Struct for js tree:
+  $scanPaths = (init('path', '') != '') ? [__DIR__ . '/../../' . init('path')] : array(__DIR__ . '/../../core/css/icon', __DIR__ . '/../../data/fonts');
+  foreach ($scanPaths as $root) {
+    foreach (ls($root, '*', false, array('folders')) as $dir) {
+      if (!file_exists($root . '/' . $dir . 'style.css') || !file_exists($root . '/' . $dir . 'fonts/' . substr($dir, 0, -1) . '.ttf')) {
+        continue;
+      }
+      // Favor custom fonts over core ones
+      if ($root == __DIR__ . '/../../core/css/icon' && is_dir(__DIR__ . '/../../data/fonts/' . $dir)) {
+        continue;
+      }
+      // Generate name and get last file modification date
+      $name = ucfirst(str_replace(array('/', '_'), array('', ' '), $dir));
+      $mtime = filemtime($root . '/' . $dir . 'style.css');
+      // If changed, Then refresh cached value
+      if (cache::byKey('icon::' . $name . '::mtime')->getValue(0) != $mtime) {
+        // Parse CSS on the fly
+        $matches = null;
+        preg_match_all('/[.](' . str_replace('/', '', $dir) . '-[^ :]+)[ ]*[:]+before/', file_get_contents($root . '/' . $dir . 'style.css'), $matches);
+        sort($matches[1]);
+        // Set cache for next time
+        cache::set('icon::' . $name . '::mtime', $mtime);
+        cache::set('icon::' . $name . '::data', $matches[1]);
+        $icon_Struct[$name] = array_values($matches[1]);
+      } else {
+        // Use cached value (slightly faster)
+        $icon_Struct[$name] = cache::byKey('icon::' . $name . '::data')->getValue(array());
+      }
+    }
+  }
+
+  // No cache for Font-Awesome, as it's faster to fetch the json file directly
+  $res = json_decode(file_get_contents(__DIR__ . '/../../3rdparty/font-awesome5/icons.json'), true);
+  sort($res['icons']);
+  $icon_Struct['Font-Awesome'] = $res['icons'];
+  ksort($icon_Struct);
+} else {
+  //Build $gal_Struct for js tree:
+  $rootPath = __DIR__ . '/../../core/';
+  foreach (ls($rootPath, '*') as $category) {
+    if($category == 'img_perso/'){
+      $gal_Struct[ucfirst(str_replace(array('/', '_'), array('', ' '), $category))] = $rootPath . $category;
+    }
+  }
 }
-$rootPath = __DIR__ . '/../../core/';
-//$rootPath = 'plugins/planification/core/img_perso/';
+
+if (init('showimg') == 1) {
+  //Build $userImg_Struct for js tree:
+  $userImg_Struct['rootPath'] = __DIR__ . '/../../core/img/';
+}
+
 sendVarToJS([
-    'rootPath' => $rootPath,
-	'tab_img' => init('tab_img',0),
-	'show_icon'=>init('show_icon',0),
-	'selectIcon' => init('selectIcon', 0),
-	'selectImg' => init('selectImg', 0),
-	'colorIcon' => init('colorIcon', 0)
+  'jeephp2js.md_iconSelector_objectId' => $objectId,
+  'jeephp2js.md_iconSelector_selectIcon' => init('selectIcon', 0),
+  'jeephp2js.md_iconSelector_colorIcon' => init('colorIcon', 0),
+  'jeephp2js.showimg' => init('showimg', 0),
+  'jeephp2js.icon_Struct' => $icon_Struct,
+  'jeephp2js.userImg_Struct' => $userImg_Struct,
+  'jeephp2js.gal_Struct' => $gal_Struct,
 ]);
+
 ?>
- 
-<div style="display: none;" id="div_iconSelectorAlert"></div>
-<ul class="nav nav-tabs" role="tablist">
-<?php if( init('show_icon') == 1){ ?>    
-	<!--<li role="presentation" class="active"><a href="#tabicon" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-icons"></i> {{Icône}}</a></li>-->
-	<li role="presentation" ><a href="#tabicon" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-icons"></i> {{Icône}}</a></li>
-<?php } ?>
-    <?php if( init('show_img') == 1){ ?>
-		<li role="presentation"><a href="#tabimg" aria-controls="home" role="tab" data-toggle="tab"><i class="far fa-images"></i> {{Image}}</a></li>
+
+<div id="md_iconSelector" data-modalType="md_iconSelector">
+  	<?php if (init('showimg') == 1) { ?>
+	<ul class="nav nav-tabs" role="tablist" style="padding-top:60px;">
+		<li role="presentation" class="active">
+			<a href="#tabicon" role="tab" data-toggle="tab"><i class="fas fa-icons"></i> {{Icônes}}</a>
+		</li>
+		<li role="presentation">
+			<a href="#tabimg" role="tab" data-toggle="tab"><i class="far fa-images"></i> {{Images}}</a>
+		</li>
+	</ul>
 	<?php } ?>
-</ul>
-   
-    <div class="tab-content" style="overflow-y:scroll;">
-        <div id="mySearch" class="input-group" style="margin-left:6px;margin-top:6px">
-            <div class="input-group-btn">
-                <select class="form-control roundedLeft" style="width : 200px;" id="sel_colorIcon">
-                    <option value="">{{Aucune}}</option>
-                    <option value="icon_blue">{{Bleu}}</option>
-                    <option value="icon_yellow">{{Jaune}}</option>
-                    <option value="icon_orange">{{Orange}}</option>
-                    <option value="icon_red">{{Rouge}}</option>
-                    <option value="icon_green">{{Vert}}</option>
-                </select>
-            </div>
-            <input class="form-control" placeholder="{{Rechercher}}" id="in_searchIconSelector">
-            <div class="input-group-btn">
-                <a id="bt_resetSearch" class="btn roundedRight" style="width:30px"><i class="fas fa-times"></i> </a>
-            </div>
-        </div>
-   
-	
-		<div role="tabpanel" class="tab-pane" id="tabimg" style="width:calc(100% - 20px);">
-			<span class="btn btn-default btn-file pull-right">
-				<i class="fas fa-cloud-upload-alt"></i> {{Envoyer}}<input id="bt_uploadImg" type="file" name="file" multiple="multiple" data-path="" style="display: inline-block;">
-			</span>
-
-			<div class="imgContainer">
- 				<div id="div_treeFolder">
-				<ul id="ul_Folder">
-                     <?php
-					foreach (ls($rootPath,'img_perso',  false, array('folders')) as $folder) {
-                        
-						echo '<li data-jstree=\'{"opened":true}\'><a data-path="' . $rootPath . $folder . '">' . $folder . '</a></li>';
-					}
-					?>
-				</ul>
-			</div>
-			<div id="div_imageGallery">
-
-				</div>
+    <div class="tab-content" style="overflow-y:scroll;max-height: 100%">
+		<div id="tabicon" role="tabpanel" class="tab-pane active" <?php if (!init('selectIcon', 1) && init('showimg') != 1) echo ' style="display:none;"' ?>>
+			<div class="imgContainer" <?php if (init('showimg') == 1) echo ' style="padding-top:10px;"' ?>>
+				<div id="treeFolder-icon" class="div_treeFolder"></div>
+				<div class="div_imageGallery"></div>
 			</div>
 		</div>
-        <?php include_file('3rdparty', 'jquery.tree/jstree.min', 'js'); ?>
-
-<script>
-
-$( document ).ready(function() {
-	$('#div_treeFolder').off('click').on('select_node.jstree', function(node, selected) {
-		if (selected.node.a_attr['data-path'] != undefined) {
-			var path = selected.node.a_attr['data-path'];
-			
-			printFileFolder(path);
-			var ref = $('#div_treeFolder').jstree(true)
-			var sel = ref.get_selected()[0]
-			ref.open_node(sel)
-			var nodesList = ref.get_children_dom(sel)
-			if (nodesList.length != 0) {
-				return
-			}
-			jeedom.getFileFolder({
-				type : 'folders',
-				path : path,
-				error: function(error) {
-					$('#div_alert').showAlert({message: error.message, level: 'danger'})
-				},
-				success : function(data) {
-					for (var i in data) {
-					node = ref.create_node(sel, {"type":"folder","text":data[i],state:{opened:true},a_attr:{'data-path':path+data[i]}})
-					$('li#'+node+' a').addClass('li_folder')
-					}
-				}
-			})
-		}
-	})
-
-	$("#div_treeFolder").jstree({
-		"core" : {
-  		"check_callback": true
-		}
-	});
-
-	$('#div_imageGallery').on('click', '.divIconSel', function() {
-		$('.divIconSel').removeClass('iconSelected');
-		$(this).closest('.divIconSel').addClass('iconSelected');
-	})
-
-	$('#div_imageGallery').on('dblclick', '.divIconSel', function() {
-		$('.divIconSel').removeClass('iconSelected');
-		$(this).closest('.divIconSel').addClass('iconSelected');
-		$('#mod_selectIcon').dialog("option", "buttons")['Valider'].apply($('#mod_selectIcon'));
-	})
-
-	$('a[href="#tabimg"]').on('click', function () {
-    $('#div_treeFolder').find('a:first').click();
-	})
-
-	$('a[href="#tabicon"]').on('click', function () {
-		$.hideAlert();
-	})
-});
-
-	$('#bt_uploadImg').fileupload({
-        add: function (e, data) {
-           
-                let currentPath = $('#bt_uploadImg').attr('data-path');
-                console.log(currentPath)
-                data.url = 'core/ajax/jeedom.ajax.php?action=uploadImageIcon&filepath='+currentPath;
-        data.submit();
-        },
-		done: function(e, data) {
-			if (data.result.state != 'ok') {
-				$('#div_iconSelectorAlert').showAlert({message: data.result.result, level: 'danger'});
-				return;
-			}
-			$('.jstree-clicked').click();
-			$('#div_iconSelectorAlert').showAlert({message: 'Fichier(s) ajouté(s) avec succès', level: 'success'});
-		}
-	});
-
-	$('#div_imageGallery').off('click').on('click', '.bt_removeImg',function() {
-		$.hideAlert();
-		var filepath = $(this).attr('data-realfilepath');
-		bootbox.confirm('{{Êtes-vous sûr de vouloir supprimer cette image}} <span style="font-weight: bold ;">' + filepath + '</span> ?', function(result) {
-			if (result) {
-				jeedom.removeImageIcon({
-					filepath : filepath,
-					error: function(error) {
-						$('#div_iconSelectorAlert').showAlert({message: error.message, level: 'danger'});
-					},
-					success: function(data) {
-						$('.jstree-clicked').click();
-						$('#div_iconSelectorAlert').showAlert({message: 'Fichier supprimé avec succès', level: 'success'});
-					}
-				})
-			}
-		})
-	});
-
-	function printFileFolder(_path) {
-		$.hideAlert()
-	  CURRENT_FOLDER = _path;
-	  jeedom.getFileFolder({
-	    type : 'files',
-	    path : _path,
-	    error: function(error) {
-	      $('#div_alert').showAlert({message: error.message, level: 'danger'})
-	    },
-	    success : function(data){
-				let realPath = _path.substr(_path.search('plugins/'));
-               	$('#bt_uploadImg').attr('data-path', realPath);
-	      $('#div_imageGallery').empty();
-	      var div = '';
-	      for (var i in data) {
-					div += '<div class="divIconSel divImgSel">';
-					div += '<div class="cursor iconSel"><img class="img-responsive" src="'+realPath+data[i]+'"/></div>';
-					div += '<div class="iconDesc">'+data[i].substr(0,15)+'</div>';
-					div += '<a class="btn btn-danger btn-xs bt_removeImg" data-realfilepath="'+realPath+data[i]+'"><i class="fas fa-trash"></i> {{Supprimer}}</a>';
-					div += '</div>';
-	      }
-	      $('#div_imageGallery').append(div)
-	    }
-	  })
-	}
-</script>
-
-	<div role="tabpanel" class="tab-pane active" id="tabicon" style="width:calc(100% - 20px)">
-		<?php
-		$scanPaths = array('core/css/icon', 'data/fonts');
-		$div = '';
-		foreach ($scanPaths as $root) {
-			$ls = ls($root, '*');
-			foreach ($ls as $dir) {
-				$root .= '/';
-				if (!is_dir($root . $dir) || !file_exists($root . $dir . '/style.css')) {
-					continue;
-				}
-				$fontfile = $root . $dir . 'fonts/' . substr($dir, 0, -1) . '.ttf';
-				if (!file_exists($fontfile)) continue;
-
-				$css = file_get_contents($root . $dir . '/style.css');
-				$research = strtolower(str_replace('/', '', $dir));
-				preg_match_all("/\." . $research . "-(.*?):/", $css, $matches, PREG_SET_ORDER);
-				$div .= '<div class="iconCategory"><legend>' . str_replace('/', '', $dir) . '</legend>';
-
-				$number = 1;
-				foreach ($matches as $match) {
-					if (isset($match[0])) {
-						if ($number == 1) {
-							$div .= '<div class="row" style="display:flex;flex-wrap: wrap;">';
-						}
-						$div .= '<div class="col-lg-1 divIconSel">';
-						$icon = str_replace(array(':', '.'), '', $match[0]);
-						$div .= '<span class="iconSel"><i class=\'icon ' . $icon . '\'></i></span><br/><span class="iconDesc">' . $icon . '</span>';
-						$div .= '</div>';
-						$number++;
-					}
-				}
-				if($number != 0){
-					$div .= '</div>';
-				}
-				$div .= '</div>';
-			}
-		}
-		echo $div;
-		?>
-		<div class="iconCategory generalCategory">
-			<legend>{{Général}}</legend>
-			<div class="row" style="display:flex;flex-wrap: wrap;">
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-glasses'></i></span><br/><span class="iconDesc">fa-glasses</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-music'></i></span><br/><span class="iconDesc">fa-music</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-search'></i></span><br/><span class="iconDesc">fa-search</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-envelope'></i></span><br/><span class="iconDesc">fa-envelope-o</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-heart'></i></span><br/><span class="iconDesc">fa-heart</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-star'></i></span><br/><span class="iconDesc">fa-star</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-user'></i></span><br/><span class="iconDesc">fa-user</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-film'></i></span><br/><span class="iconDesc">fa-film</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-th-large'></i></span><br/><span class="iconDesc">fa-th-large</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-check'></i></span><br/><span class="iconDesc">fa-check</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-times'></i></span><br/><span class="iconDesc">fa-times</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-power-off'></i></span><br/><span class="iconDesc">fa-power-off</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-list-alt'></i></span><br/><span class="iconDesc">fa-list-alt</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-signal'></i></span><br/><span class="iconDesc">fa-signal</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-cog'></i></span><br/><span class="iconDesc">fa-cog</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-trash-alt'></i></span><br/><span class="iconDesc">fa-trash-o</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-home'></i></span><br/><span class="iconDesc">fa-home</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-file'></i></span><br/><span class="iconDesc">fa-file</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-clock'></i></span><br/><span class="iconDesc">fa-clock</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-road'></i></span><br/><span class="iconDesc">fa-road</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-download'></i></span><br/><span class="iconDesc">fa-download</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-inbox'></i></span><br/><span class="iconDesc">fa-inbox</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-play-circle'></i></span><br/><span class="iconDesc">fa-play-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-sync'></i></span><br/><span class="iconDesc">fa-sync</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-lock'></i></span><br/><span class="iconDesc">fa-lock</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-flag'></i></span><br/><span class="iconDesc">fa-flag</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-headphones'></i></span><br/><span class="iconDesc">fa-headphones</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-volume-up'></i></span><br/><span class="iconDesc">fa-volume-up</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-volume-down'></i></span><br/><span class="iconDesc">fa-volume-down</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-volume-off'></i></span><br/><span class="iconDesc">fa-volume-off</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-qrcode'></i></span><br/><span class="iconDesc">fa-qrcode</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-barcode'></i></span><br/><span class="iconDesc">fa-barcode</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-tag'></i></span><br/><span class="iconDesc">fa-tag</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-book'></i></span><br/><span class="iconDesc">fa-book</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-print'></i></span><br/><span class="iconDesc">fa-print</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-camera'></i></span><br/><span class="iconDesc">fa-camera</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-image'></i></span><br/><span class="iconDesc">fa-image</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-pencil-alt'></i></span><br/><span class="iconDesc">fa-pencil</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-map-marker'></i></span><br/><span class="iconDesc">fa-map-marker</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-tint'></i></span><br/><span class="iconDesc">fa-tint</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-check-square'></i></span><br/><span class="iconDesc">fa-check-square-o</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-arrows-alt'></i></span><br/><span class="iconDesc">fa-arrows</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-step-backward'></i></span><br/><span class="iconDesc">fa-step-backward</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-fast-backward'></i></span><br/><span class="iconDesc">fa-fast-backward</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-backward'></i></span><br/><span class="iconDesc">fa-backward</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-play'></i></span><br/><span class="iconDesc">fa-play</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-pause'></i></span><br/><span class="iconDesc">fa-pause</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-video'></i></span><br/><span class="iconDesc">fa-video</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-stop'></i></span><br/><span class="iconDesc">fa-stop</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-forward'></i></span><br/><span class="iconDesc">fa-forward</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-fast-forward'></i></span><br/><span class="iconDesc">fa-fast-forward</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-step-forward'></i></span><br/><span class="iconDesc">fa-step-forward</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-eject'></i></span><br/><span class="iconDesc">fa-eject</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-chevron-left'></i></span><br/><span class="iconDesc">fa-chevron-left</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-chevron-right'></i></span><br/><span class="iconDesc">fa-chevron-right</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-plus-circle'></i></span><br/><span class="iconDesc">fa-plus-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-minus-circle'></i></span><br/><span class="iconDesc">fa-minus-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-times-circle'></i></span><br/><span class="iconDesc">fa-times-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-check-circle'></i></span><br/><span class="iconDesc">fa-check-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-question-circle'></i></span><br/><span class="iconDesc">fa-question-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-info-circle'></i></span><br/><span class="iconDesc">fa-info-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-crosshairs'></i></span><br/><span class="iconDesc">fa-crosshairs</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-times-circle'></i></span><br/><span class="iconDesc">fa-times-circle-o</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-ban'></i></span><br/><span class="iconDesc">fa-ban</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-arrow-left'></i></span><br/><span class="iconDesc">fa-arrow-left</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-arrow-right'></i></span><br/><span class="iconDesc">fa-arrow-right</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-arrow-up'></i></span><br/><span class="iconDesc">fa-arrow-up</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-arrow-down'></i></span><br/><span class="iconDesc">fa-arrow-down</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-plus'></i></span><br/><span class="iconDesc">fa-plus</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-minus'></i></span><br/><span class="iconDesc">fa-minus</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-asterisk'></i></span><br/><span class="iconDesc">fa-asterisk</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-wheelchair'></i></span><br/><span class="iconDesc">fa-wheelchair</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-exclamation-circle'></i></span><br/><span class="iconDesc">fa-exclamation-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-gift'></i></span><br/><span class="iconDesc">fa-gift</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-leaf'></i></span><br/><span class="iconDesc">fa-leaf</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-fire'></i></span><br/><span class="iconDesc">fa-fire</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-eye'></i></span><br/><span class="iconDesc">fa-eye</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-eye-slash'></i></span><br/><span class="iconDesc">fa-slash</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-exclamation-triangle'></i></span><br/><span class="iconDesc">fa-exclamation-triangle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-plane'></i></span><br/><span class="iconDesc">fa-plane</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-calendar'></i></span><br/><span class="iconDesc">fa-calendar</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-random'></i></span><br/><span class="iconDesc">fa-random</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-comment'></i></span><br/><span class="iconDesc">fa-comment</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-magnet'></i></span><br/><span class="iconDesc">fa-magnet</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-chevron-up'></i></span><br/><span class="iconDesc">fa-chevron-up</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-chevron-down'></i></span><br/><span class="iconDesc">fa-chevron-down</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-shopping-cart'></i></span><br/><span class="iconDesc">fa-shopping-cart</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-folder'></i></span><br/><span class="iconDesc">fa-folder</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-folder-open'></i></span><br/><span class="iconDesc">fa-folder-open</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-chart-bar'></i></span><br/><span class="iconDesc">fa-chart-bar</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-key'></i></span><br/><span class="iconDesc">fa-key</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-heart'></i></span><br/><span class="iconDesc">fa-heart-o</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-sign-out-alt'></i></span><br/><span class="iconDesc">fa-sign-out</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-thumbtack'></i></span><br/><span class="iconDesc">fa-thumbtack</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-sign-in-alt'></i></span><br/><span class="iconDesc">fa-sign-in</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-phone'></i></span><br/><span class="iconDesc">fa-phone</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-unlock'></i></span><br/><span class="iconDesc">fa-unlock</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-credit-card'></i></span><br/><span class="iconDesc">fa-credit-card</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-rss'></i></span><br/><span class="iconDesc">fa-rss</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-hdd'></i></span><br/><span class="iconDesc">fa-hdd</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-bullhorn'></i></span><br/><span class="iconDesc">fa-bullhorn</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-bell'></i></span><br/><span class="iconDesc">fa-bell</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-globe'></i></span><br/><span class="iconDesc">fa-globe</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-wrench'></i></span><br/><span class="iconDesc">fa-wrench</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-filter'></i></span><br/><span class="iconDesc">fa-filter</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-briefcase'></i></span><br/><span class="iconDesc">fa-briefcase</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-cloud'></i></span><br/><span class="iconDesc">fa-cloud</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-flask'></i></span><br/><span class="iconDesc">fa-flask</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-cut'></i></span><br/><span class="iconDesc">fa-cut</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-paperclip'></i></span><br/><span class="iconDesc">fa-paperclip</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-save'></i></span><br/><span class="iconDesc">fa-save</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-table'></i></span><br/><span class="iconDesc">fa-table</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-magic'></i></span><br/><span class="iconDesc">fa-magic</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-truck'></i></span><br/><span class="iconDesc">fa-truck</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-money-bill-alt'></i></span><br/><span class="iconDesc">fa-money</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-columns'></i></span><br/><span class="iconDesc">fa-columns</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-envelope'></i></span><br/><span class="iconDesc">fa-envelope</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-gavel'></i></span><br/><span class="iconDesc">fa-gavel</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-tachometer-alt'></i></span><br/><span class="iconDesc">fa-tachometer-alt</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-bolt'></i></span><br/><span class="iconDesc">fa-bolt</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-sitemap'></i></span><br/><span class="iconDesc">fa-sitemap</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-umbrella'></i></span><br/><span class="iconDesc">fa-umbrella</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-lightbulb'></i></span><br/><span class="iconDesc">fa-lightbulb</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-stethoscope'></i></span><br/><span class="iconDesc">fa-stethoscope</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-suitcase'></i></span><br/><span class="iconDesc">fa-suitcase</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-coffee'></i></span><br/><span class="iconDesc">fa-coffee</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-utensils'></i></span><br/><span class="iconDesc">fa-cutlery</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-building'></i></span><br/><span class="iconDesc">fa-building-o</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-medkit'></i></span><br/><span class="iconDesc">fa-medkit</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-beer'></i></span><br/><span class="iconDesc">fa-beer</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-h-square'></i></span><br/><span class="iconDesc">fa-square</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-desktop'></i></span><br/><span class="iconDesc">fa-desktop</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-laptop'></i></span><br/><span class="iconDesc">fa-laptop</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-tablet'></i></span><br/><span class="iconDesc">fa-tablet</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-mobile'></i></span><br/><span class="iconDesc">fa-mobile</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-circle'></i></span><br/><span class="iconDesc">fa-circle-o</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-spinner'></i></span><br/><span class="iconDesc">fa-spinner</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-circle'></i></span><br/><span class="iconDesc">fa-circle</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-smile'></i></span><br/><span class="iconDesc">fa-smile</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-frown'></i></span><br/><span class="iconDesc">fa-frown</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-meh'></i></span><br/><span class="iconDesc">fa-meh</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-gamepad'></i></span><br/><span class="iconDesc">fa-gamepad</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-keyboard'></i></span><br/><span class="iconDesc">fa-keyboard</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-terminal'></i></span><br/><span class="iconDesc">fa-terminal</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-location-arrow'></i></span><br/><span class="iconDesc">fa-location-arrow</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-microphone'></i></span><br/><span class="iconDesc">fa-microphone</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-microphone-slash'></i></span><br/><span class="iconDesc">fa-microphone-slash</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-shield-alt'></i></span><br/><span class="iconDesc">fa-shield</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-calendar'></i></span><br/><span class="iconDesc">fa-calendar</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-fire-extinguisher'></i></span><br/><span class="iconDesc">fa-fire-extinguisher</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-rocket'></i></span><br/><span class="iconDesc">fa-rocket</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-anchor'></i></span><br/><span class="iconDesc">fa-anchor</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-unlock-alt'></i></span><br/><span class="iconDesc">fa-unlock-alt</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-compass'></i></span><br/><span class="iconDesc">fa-compass</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fab fa-apple'></i></span><br/><span class="iconDesc">fa-apple</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fab fa-windows'></i></span><br/><span class="iconDesc">fa-windows</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fab fa-android'></i></span><br/><span class="iconDesc">fa-android</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fab fa-linux'></i></span><br/><span class="iconDesc">fa-linux</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fab fa-dribbble'></i></span><br/><span class="iconDesc">fa-dribbble</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fab fa-trello'></i></span><br/><span class="iconDesc">fa-trello</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-female'></i></span><br/><span class="iconDesc">fa-female</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-male'></i></span><br/><span class="iconDesc">fa-male</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fab fa-gratipay'></i></span><br/><span class="iconDesc">fa-gratipay</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='far fa-sun'></i></span><br/><span class="iconDesc">fa-sun</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-moon'></i></span><br/><span class="iconDesc">fa-moon</span></div>
-				<div class="col-lg-1 divIconSel"><span class="iconSel"><i class='fas fa-archive'></i></span><br/><span class="iconDesc">fa-archive</span></div>
+		<div id="tabobjectbg" role="tabpanel" class="tab-pane active" <?php if (!$objectId) echo ' style="display:none;"' ?>>
+			<div class="imgContainer" <?php if (init('showimg') == 1) echo ' style="padding-top:10px;"' ?>>
+				<div id="treeFolder-bg" class="div_treeFolder"></div>
+				<div class="div_imageGallery"></div>
 			</div>
-			<div class="row">
-				<div class="col-lg-1 divIconSel customIcon" style="display: none;"></div>
+		</div>
+		<div id="tabimg" role="tabpanel" class="tab-pane" <?php if (init('showimg') != 1) echo ' style="display:none;"' ?>>
+			<div id="treeFunctions">
+				<span class="bt_upload"><i class="fas fa-file-upload" title="{{Ajouter}}"></i></span>
+				<span class="bt_new"><i class="fas fa-folder-plus" title="{{Nouveau}}"></i></span>
+				<span class="bt_rename"><i class="fas fa-folder" title="{{Renommer}}"></i></span>
+				<span class="bt_delete"><i class="fas fa-folder-minus" title="{{Supprimer}}"></i></span>
+			</div>
+			<input class="hidden" id="bt_uploadImg" type="file" name="file" multiple="multiple" data-path="">
+			<div class="imgContainer" style="padding-top: 10px;">
+				<div id="treeFolder-img" class="div_treeFolder"></div>
+				<div class="div_imageGallery"></div>
 			</div>
 		</div>
 	</div>
+
+	<div id="mySearch" class="input-group">
+		<div class="input-group-btn">
+			<select class="form-control roundedLeft" style="width:200px;display:none;" id="sel_colorIcon">
+				<option disabled>---{{Couleur des icônes}}---</option>
+				<option value="">{{Aucune couleur}}</option>
+				<option value="icon_blue" class="icon_blue">{{Icônes bleues}}</option>
+				<option value="icon_yellow" class="icon_yellow">{{Icônes jaunes}}</option>
+				<option value="icon_orange" class="icon_orange">{{Icônes oranges}}</option>
+				<option value="icon_red" class="icon_red">{{Icônes rouges}}</option>
+				<option value="icon_green" class="icon_green">{{Icônes vertes}}</option>
+			</select>
+		</div>
+		<input class="form-control" placeholder="{{Rechercher}}" id="in_searchIconSelector">
+		<div class="input-group-btn">
+			<a id="bt_resetIconSelectorSearch" class="btn roundedRight" style="width:30px"><i class="fas fa-times"></i> </a>
+		</div>
+		<div id="bt_cancelConfirm" class="input-group-btn"></div>
+	</div>
 </div>
 
-<script>
-setTimeout(function() {
-	if (getDeviceType()['type'] == 'desktop') $("input[id^='in_search']").focus()
-}, 500)
+<?php
+include_file('3rdparty', 'tree/treejs', 'css');
+include_file('3rdparty', 'tree/tree', 'js');
+?>
 
-$('#sel_colorIcon').off('change').on('change',function() {
-	$('.iconSel i').removeClass('icon_green icon_blue icon_orange icon_red icon_yellow').addClass($(this).value())
-})
+  <script>
+if (!jeeFrontEnd.md_iconSelector) {
+    jeeFrontEnd.md_iconSelector = {
+      iconClasses: null,
+      init: function() {
+        this.setModal()
 
-//searching
-$('#in_searchIconSelector').on('keyup',function() {
-	$('.divIconSel').show()
-	$('.customIcon').hide()
-	$('.iconCategory').show()
-	var search = $(this).value()
-	if (search != '') {
-		search = normTextLower(search)
-		$('.iconDesc').each(function() {
-			if ($(this).text().indexOf(search) == -1) {
-				$(this).closest('.divIconSel').hide()
-			}
-		})
-	}
+        TreeConfig.leaf_icon = '<i class="far fa-folder cursor"></i>'
+        TreeConfig.parent_icon = '<i class="far fa-folder-tree cursor"></i>'
+        TreeConfig.open_icon = '<i class="far fa-folder-open cursor"></i>'
+        TreeConfig.close_icon = '<i class="far fa-folder cursor"></i>'
 
-	var somethingFound = 0
-	$('.iconCategory').each(function() {
-		var hide = true
-		if ($(this).find('.divIconSel:visible').length == 0) {
-			$(this).hide()
-		} else {
-			somethingFound +=1
-		}
-	})
-	if (somethingFound == 0) {
-		$('.generalCategory').show()
-		$('.customIcon').empty().append('<span class="iconSel"><i class="' + $(this).value() + '"></i></span><br/><span class="iconDesc">' + $(this).value() + '</span>').show()
-	}
-})
+        if (Object.keys(jeephp2js.icon_Struct).length > 0) this.setIconTree()
+        if (Object.keys(jeephp2js.userImg_Struct).length > 0) this.setUserImgTree()
+        if (Object.keys(jeephp2js.gal_Struct).length > 0) this.setCoreGalTree()
+      },
+      postInit: function() {
+        if (jeedomUtils.userDevice.type == 'desktop') document.getElementById("in_searchIconSelector").focus();
 
-$('#bt_resetSearch').on('click', function() {
-	$('#in_searchIconSelector').val('').keyup()
-})
+        if (jeephp2js.md_iconSelector_selectIcon != '' && jeephp2js.md_iconSelector_selectIcon != '0') { // Select current icon
+          let icon = document.querySelector('#tabicon div.div_imageGallery span.iconSel > i.' + jeephp2js.md_iconSelector_selectIcon);
+          if (icon) icon.closest('div.divIconSel').addClass('iconSelected').scrollIntoView({
+           block: "center"
+          });
+        } else { // Select first icon category
+          document.querySelector('span.tj_description').click();
+        }
+        if (jeephp2js.md_iconSelector_colorIcon != "0") { // Select current color
+          document.getElementById('sel_colorIcon').value = jeephp2js.md_iconSelector_colorIcon;
+          document.getElementById('sel_colorIcon').triggerEvent('change');
+        }
+      },
+      setModal: function() {
+        var modal = jeeDialog.get('#sel_colorIcon', 'dialog')
+        var modalFooter = jeeDialog.get('#sel_colorIcon', 'footer')
+        var uiOptions = modal.querySelector('#mySearch')
+        var btTarget = uiOptions.querySelector('#bt_cancelConfirm')
+        modalFooter.insertBefore(uiOptions, modalFooter.firstChild)
+        btTarget.append(modalFooter.querySelector('button[data-type="cancel"]'))
+        btTarget.append(modalFooter.querySelector('button[data-type="confirm"]'))
+        modal.querySelector('.jeeDialogContent').style.overflowY = 'hidden'
+        document.getElementById('sel_colorIcon').selectedIndex = 1
+      },
+      //Tree builders:
+      setIconTree: function() {
+        this.icon_root = new TreeNode('icons_root', {
+          expanded: true
+        })
+        this.icon_tree = new TreeView(this.icon_root, document.getElementById('treeFolder-icon'), {
+          show_root: false
+        })
 
-setTimeout(function() {
-	if (tab_img && tab_img == 1) {
-		$('#mod_selectIcon ul li a[href="#tabimg"]').click()
-	}
-}, 500)
-setTimeout(function() {
-	if (show_icon && show_icon == 0) {
-		$('#mySearch').hide()
-		$('.iconCategory').hide()
-	}
-}, 500)
-$('#mod_selectIcon ul li a[href="#tabicon"]').click(function() {
-	$('#mySearch').show()
-	$('.iconCategory').show()
-})
-$('#mod_selectIcon ul li a[href="#tabimg"]').click(function() {
-	$('#mySearch').hide()
-	$('.iconCategory').hide()
-})
+        var newNode
+        var tmp = null
+        var folderDisplayContainer = document.getElementById('treeFolder-icon').parentNode.querySelector('div.div_imageGallery')
+        folderDisplayContainer.empty()
+        for (const category in jeephp2js.icon_Struct) {
+          const keyClass = 'ico' + category.replace('-', '').replace(' ', '')
+          newNode = new TreeNode('<span class="leafRef cursor ' + keyClass + '">' + category + '</span>');
+          newNode.on('click', (event, node) => {
+            document.querySelector('legend.' + keyClass)?.scrollIntoView();
+          });
+          this.icon_root.addChild(newNode);
 
-$('.divIconSel').on('click', function() {
-	$('.divIconSel').removeClass('iconSelected');
-	$(this).closest('.divIconSel').addClass('iconSelected');
-})
+          document.getElementById('sel_colorIcon').seen()
+          const iconColor = (document.getElementById('sel_colorIcon').value != '') ? (' ' + document.getElementById('sel_colorIcon').value) : '';
+          var iconClasses = jeephp2js.md_iconSelector_selectIcon.iconClasses
 
-$('.divIconSel').on('dblclick', function() {
-	$('.divIconSel').removeClass('iconSelected');
-	$(this).closest('.divIconSel').addClass('iconSelected');
-	$('#mod_selectIcon').dialog("option", "buttons")['Valider'].apply($('#mod_selectIcon'));
-})
+          const tagB = document.createElement('b');
+          tagB.textContent = category;
+          const tagLegend = document.createElement('legend');
+          tagLegend.className = keyClass;
+          tagLegend.appendChild(tagB);
+          folderDisplayContainer.appendChild(tagLegend);
 
-$('#mod_selectIcon').css('overflow', 'hidden')
-setTimeout(function() {
-	if (tab_img && tab_img == 1) {
-		$('#mod_selectIcon ul li a[href="#tabimg"]').click()
-	}
-}, 500)
-  
-var intervalID =setInterval(show_incon_selected, 500);
-function show_incon_selected(){
+          const iconList = jeephp2js.icon_Struct[category]
+          for (const i in iconList) {
+            if (category == 'Font-Awesome') {
+              var selected = (iconClasses && iconClasses[2] === iconList[i].substr(4)) ? ' iconSelected' : ''
+              var name = iconList[i].substr(7)
+            } else {
+              var selected = (iconClasses && iconClasses[2] === iconList[i]) ? ' iconSelected' : ''
+              var name = iconList[i].substr(1 + category.length)
+            }
 
-	$('#div_imageGallery .img-responsive').each(function() {
-		if($(this).attr('src') == selectIcon){
-			clearInterval(intervalID);  
-			$(this).closest('.divIconSel').addClass('iconSelected')
-		}
-	})
-	var buttonSet = $('.ui-dialog[aria-describedby="mod_selectIcon"]').find('.ui-dialog-buttonpane')
-	buttonSet.find('#mySearch').remove()
-	var mySearch = $('.ui-dialog[aria-describedby="mod_selectIcon"]').find('#mySearch')
-	buttonSet.append(mySearch)
-	if (colorIcon != "0") {
-		$('#sel_colorIcon').value(colorIcon)
-	}
-}
+            const tagDiv = document.createElement('div');
+            tagDiv.className = 'divIconSel cursor text-center ' + keyClass + selected;
+            const tagI = document.createElement('i');
+            tagI.className = 'icon ' + iconList[i] + iconColor;
+            const tagSpan1 = document.createElement('span');
+            tagSpan1.className = 'iconSel';
+            tagSpan1.appendChild(tagI);
+            tagDiv.appendChild(tagSpan1);
+            tagDiv.appendChild(document.createElement('br'));
+            const tagSpan2 = document.createElement('span');
+            tagSpan2.className = 'iconDesc';
+            tagSpan2.textContent = name;
+            tagDiv.appendChild(tagSpan2);
+            tagDiv.style.display = 'block'
 
-</script>
+            folderDisplayContainer.appendChild(tagDiv)
+          }
+        }
+        this.icon_tree.reload()
+      },
+      iconTreeOnScroll: function() {
+        var view = document.querySelector('#md_iconSelector .tab-content').getBoundingClientRect();
+        var legends = document.querySelectorAll('#tabicon .imgContainer legend');
+        var i = 0;
+        while (i < legends.length && legends[i].getBoundingClientRect().bottom < view.top) {
+          document.querySelector('#treeFolder-icon .' + (legends[i].className)).parentNode.removeClass('selected');
+          i += 1;
+        }
+        if (i < legends.length && legends[i].getBoundingClientRect().bottom < view.bottom) { // In view
+          document.querySelector('#treeFolder-icon .' + (legends[i].className)).parentNode.addClass('selected');
+          i += 1;
+        } else { // Out of view, select last
+          document.querySelector('#treeFolder-icon .' + (legends[i - 1].className)).parentNode.addClass('selected');
+        }
+        while (i < legends.length) {
+          document.querySelector('#treeFolder-icon .' + (legends[i].className)).parentNode.removeClass('selected');
+          i += 1;
+        }
+      },
+      setUserImgTree: function() {
+        this.userImg_root = new TreeNode('<span class="leafRef cursor" data-path="' + jeephp2js.userImg_Struct['rootPath'] + '">Img</span>', {
+          expanded: true,
+          options: {
+            path: jeephp2js.userImg_Struct['rootPath'],
+          }
+        })
+        this.userImg_tree = new TreeView(this.userImg_root, document.getElementById('treeFolder-img'))
+
+        this.userImg_root.on('click', (event, node) => {
+          if (!event.target.matches('i')) node.toggleExpanded() //Default behavior always toggle
+          jeeFrontEnd.md_iconSelector.onClickUserFolder(node)
+        })
+
+        //ContextMenu
+        new jeeCtxMenu({
+          selector: '#treeFolder-img span.tj_description',
+          zIndex: 9999,
+          items: {
+            upload: {
+              name: '{{Ajouter}}',
+              icon: 'fas fa-file-upload',
+              callback: function(key, opt) {
+                jeeFrontEnd.md_iconSelector.uploadToFolder(opt.trigger.tj_node)
+              },
+            },
+            createSubFolder: {
+              name: '{{Nouveau}}',
+              icon: 'fas fa-folder-plus',
+              callback: function(key, opt) {
+                jeeFrontEnd.md_iconSelector.createFolder(opt.trigger.tj_node)
+              },
+            },
+            Rename: {
+              name: '{{Renommer}}',
+              icon: 'fas fa-folder',
+              callback: function(key, opt) {
+                jeeFrontEnd.md_iconSelector.renameFolder(opt.trigger.tj_node)
+              },
+            },
+            Delete: {
+              name: '{{Supprimer}}',
+              icon: 'fas fa-folder-minus',
+              callback: function(key, opt) {
+                jeeFrontEnd.md_iconSelector.deleteFolder(opt.trigger.tj_node)
+              },
+            }
+          }
+        })
+      },
+      onClickUserFolder: function(_node) {
+        var path = _node.getOptions().options.path
+        jeeFrontEnd.md_iconSelector.printFileFolder(path, 'treeFolder-img')
+        //Get subfolders:
+        if (_node.getChildren().length > 0) { //Node ever opened, childs loaded.
+          return
+        }
+        jeedom.getFileFolder({
+          type: 'folders',
+          path: path,
+          error: function(error) {
+            jeedomUtils.showAlert({
+              attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+              message: error.message,
+              level: 'danger'
+            })
+          },
+          success: function(data) {
+            for (var i in data) {
+              newNode = new TreeNode('<span class="leafRef cursor" data-path="' + path + data[i] + '">' + data[i].replace('/', '') + '</span>', {
+                options: {
+                  path: path + data[i],
+                }
+              })
+              newNode.on('click', (event, node) => {
+                jeeFrontEnd.md_iconSelector.onClickUserFolder(node)
+              })
+              _node.addChild(newNode)
+            }
+            jeeFrontEnd.md_iconSelector.userImg_tree.reload()
+          }
+        })
+      },
+      uploadToFolder: function(_node) {
+        document.getElementById('bt_uploadImg').setAttribute('data-path', _node.getOptions().options.path.replace(/^.+\/..\/..\//, ''))
+        document.getElementById('bt_uploadImg').click()
+      },
+      createFolder: function(_node) {
+        var path = _node.getOptions().options.path
+        jeeDialog.prompt("{{Nom du nouveau dossier}} ?", function(result) {
+          if (result !== null) {
+            jeedom.createFolder({
+              name: result,
+              path: path,
+              error: function(error) {
+                jeedomUtils.showAlert({
+                  attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+                  message: error.message,
+                  level: 'danger'
+                })
+              },
+              success: function() {
+                var childs = _node.getChildren()
+                for (var i = childs.length - 1; i >= 0; i--) {
+                  _node.removeChildPos(i)
+                }
+                jeeFrontEnd.md_iconSelector.onClickUserFolder(_node)
+              }
+            })
+          }
+        })
+      },
+      renameFolder: function(_node) {
+        if (_node == _node.getRoot()) {
+          jeedomUtils.showAlert({
+            attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+            message: '{{Impossible de renommer le dossier parent}}',
+            level: 'warning'
+          })
+          return false
+        }
+
+        var path = _node.getOptions().options.path
+        jeeDialog.prompt("{{Nouveau nom du dossier}} ?", function(result) {
+          if (result !== null) {
+            var newPath = path.substring(1, path.length - 1)
+            newPath = newPath.split('/')
+            newPath.pop()
+            newPath = '/' + newPath.join('/') + '/' + result + '/'
+            jeedom.renameFolder({
+              src: path,
+              dst: newPath,
+              error: function(error) {
+                jeedomUtils.showAlert({
+                  attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+                  message: error.message,
+                  level: 'danger'
+                })
+              },
+              success: function() {
+                var childs = _node.parent.getChildren()
+                for (var i = childs.length - 1; i >= 0; i--) {
+                  _node.parent.removeChildPos(i)
+                }
+                _node.parent.setSelected(true)
+                jeeFrontEnd.md_iconSelector.onClickUserFolder(_node.parent)
+              }
+            })
+          }
+        })
+      },
+      deleteFolder: function(_node) {
+        if (_node == _node.getRoot()) {
+          jeedomUtils.showAlert({
+            attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+            message: '{{Impossible de supprimer le dossier parent}}',
+            level: 'warning'
+          })
+          return false
+        }
+
+        var path = _node.getOptions().options.path
+        var msg = "{{Etes-vous sûr de vouloir supprimer le dossier}} <strong>" + path.replace(/^.+\/..\/..\//, '') + "</strong> ?<br>{{Attention : le contenu du dossier sera définitivement supprimé lors de l'opération.}}"
+        jeeDialog.confirm(msg, function(result) {
+          if (result !== null) {
+            jeedom.deleteFolder({
+              path: path,
+              error: function(error) {
+                jeedomUtils.showAlert({
+                  attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+                  message: error.message,
+                  level: 'danger'
+                })
+              },
+              success: function() {
+                _node.parent.removeChild(_node)
+                jeeFrontEnd.md_iconSelector.userImg_tree.getSelectedNodes().forEach(_sel => {
+                  _sel.setSelected(false)
+                })
+                _node.parent.setSelected(true)
+                jeeFrontEnd.md_iconSelector.userImg_tree.reload()
+                jeeFrontEnd.md_iconSelector.onClickUserFolder(_node.parent)
+              }
+            })
+          }
+        })
+      },
+      setCoreGalTree: function() {
+        this.gallery_root = new TreeNode('icons_root', {
+          expanded: true
+        })
+        this.gallery_tree = new TreeView(this.gallery_root, document.getElementById('treeFolder-bg'), {
+          show_root: false
+        })
+        this.gallery_tree.setContainer(document.getElementById('treeFolder-bg'))
+
+        var newNode
+        for (const [key, value] of Object.entries(jeephp2js.gal_Struct)) {
+          newNode = new TreeNode('<span class="leafRef cursor" data-path="' + value + '">' + key + '</span>', {
+            options: {
+              path: value,
+            }
+          })
+          newNode.on('click', (event, node) => {
+            jeeFrontEnd.md_iconSelector.printFileFolder(node.getOptions().options.path, 'treeFolder-bg')
+          })
+          this.gallery_root.addChild(newNode)
+        }
+
+        this.gallery_tree.reload()
+      },
+      capitalizeFirstLetter: function(_string) {
+        return _string.charAt(0).toUpperCase() + _string.slice(1)
+      },
+      //Load selected tree into container:
+      printFileFolder: function(_path, jstreeId, callback) {
+        console.log(_path)
+        console.log(jstreeId)
+        jeedomUtils.hideAlert()
+        jeedom.getFileFolder({
+          type: 'files',
+          path: _path,
+          error: function(error) {
+            jeedomUtils.showAlert({
+              attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+              message: error.message,
+              level: 'danger'
+            })
+          },
+          success: function(data) {
+            var folderDisplayContainer = document.getElementById(jstreeId).parentNode.querySelector('div.div_imageGallery')
+            folderDisplayContainer.empty()
+            var realPath = 'plugins/planification/' +_path.replace(/^.+\/..\/..\//, '')
+            
+            var div = ''
+            if (jstreeId === 'treeFolder-img') {
+               
+              document.getElementById('sel_colorIcon').unseen()
+              for (var i in data) {
+                div += '<div class="divIconSel divImgSel">'
+                div += '<div class="cursor iconSel"><img class="img-responsive" src="' + realPath + data[i] + '"/></div>'
+                div += '<div class="iconDesc">' + jeeFrontEnd.md_iconSelector.capitalizeFirstLetter(data[i].substr(0, data[i].lastIndexOf('.')).substr(0, 15).split('_').join(' ')) + '</div>'
+                div += '<a class="btn btn-danger btn-xs bt_removeImg" data-realfilepath="' + realPath + data[i] + '" style="z-index: 2000;"><i class="fas fa-trash-alt"></i> {{Supprimer}}</a>'
+                div += '</div>'
+              }
+            } else if (jstreeId === 'treeFolder-bg') {
+               
+              document.getElementById('sel_colorIcon').unseen()
+              for (var i in data) {
+                div += '<div class="divIconSel divBgSel" style="height: 130px; width: 140px;">'
+                div += '<div class="cursor iconSel"><img class="img-responsive" src="' + realPath + data[i] + '" data-filename="' + _path + data[i] + '"/></div>'
+                //div += '<div class="iconDesc">' + jeeFrontEnd.md_iconSelector.capitalizeFirstLetter(data[i].substr(0, data[i].lastIndexOf('.')).split('_').join(' ')) + '</div>'
+                div += '</div>'
+              }
+            }
+            folderDisplayContainer.insertAdjacentHTML('beforeend', div)
+          }
+        })
+      }
+    }
+  }
+
+  (function() { // Self Isolation!
+    jeeFrontEnd.md_iconSelector.init()
+
+    //Manage events outside parents delegations:
+    document.getElementById('in_searchIconSelector').addEventListener('keyup', function(event) {
+      var tab = document.querySelector('#md_iconSelector div.tab-pane.active').getAttribute('id')
+
+      document.querySelectorAll('.divIconSel').seen()
+      var search = event.target.value
+      if (search != '') {
+        search = jeedomUtils.normTextLower(search)
+        document.querySelectorAll('#' + tab + ' .iconDesc').forEach(_item => {
+          if (!jeedomUtils.normTextLower(_item.textContent).includes(search)) {
+            _item.closest('.divIconSel').unseen()
+          }
+        })
+      }
+      document.querySelectorAll('#' + tab + ' .imgContainer legend').forEach(_item => {
+        var k = _item.nextSibling;
+        while (k != null && !k.isVisible() && k.tagName == 'DIV') {
+          k = k.nextSibling;
+        }
+        (k == null || k.tagName == 'LEGEND') ? _item.unseen(): _item.seen();
+      });
+      jeeFrontEnd.md_iconSelector.iconTreeOnScroll();
+    })
+    document.getElementById('bt_resetIconSelectorSearch').addEventListener('click', function(event) {
+      document.getElementById('in_searchIconSelector').jeeValue('').triggerEvent('keyup')
+    })
+
+    document.getElementById('sel_colorIcon').addEventListener('change', function(event) {
+      document.querySelectorAll('.iconSel i').removeClass('icon_green', 'icon_blue', 'icon_orange', 'icon_red', 'icon_yellow').addClass(event.target.value)
+    })
+
+    /*Events delegations
+     */
+    document.querySelector('#md_iconSelector .tab-content').addEventListener("scroll", jeeFrontEnd.md_iconSelector.iconTreeOnScroll);
+
+    document.getElementById('md_iconSelector').addEventListener('click', function(event) {
+      var _target = null
+      if (_target = event.target.closest('a.bt_removeImg')) {
+        jeedomUtils.hideAlert()
+        var filepath = _target.getAttribute('data-realfilepath')
+        jeeDialog.confirm('{{Êtes-vous sûr de vouloir supprimer cette image}} <strong>' + filepath + '</strong> ?', function(result) {
+          if (result) {
+            jeedom.removeImageIcon({
+              filepath: filepath,
+              error: function(error) {
+                jeedomUtils.showAlert({
+                  attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+                  message: error.message,
+                  level: 'danger'
+                })
+              },
+              success: function() {
+                document.querySelector('.leafRef[data-path$="' + filepath.replace(/[^\/]+$/, '') + '"]')?.click()
+              }
+            })
+          }
+        })
+        return
+      }
+
+      if (_target = event.target.closest('.divIconSel')) {
+        document.querySelectorAll('.divIconSel').removeClass('iconSelected')
+        _target.closest('.divIconSel').addClass('iconSelected')
+        return
+      }
+
+      if (_target = event.target.closest('#mod_selectIcon ul.nav.nav-tabs li a')) {
+        jeedomUtils.hideAlert()
+        var tabhref = _target.getAttribute('href')
+        if (tabhref === '#tabicon') {
+          document.getElementById('sel_colorIcon').seen()
+        } else {
+          document.getElementById('sel_colorIcon').unseen()
+          if (!document.querySelector(tabhref + ' .div_treeFolder .tj_description.selected')) {
+            document.querySelector(tabhref + ' .div_treeFolder span.tj_description').click()
+          }
+        }
+        return
+      }
+
+      if (_target = event.target.closest('#treeFunctions .bt_upload')) {
+        jeeFrontEnd.md_iconSelector.uploadToFolder(jeeFrontEnd.md_iconSelector.userImg_tree.getSelectedNodes()[0])
+        return
+      }
+
+      if (_target = event.target.closest('#treeFunctions .bt_new')) {
+        jeeFrontEnd.md_iconSelector.createFolder(jeeFrontEnd.md_iconSelector.userImg_tree.getSelectedNodes()[0])
+        return
+      }
+
+      if (_target = event.target.closest('#treeFunctions .bt_rename')) {
+        jeeFrontEnd.md_iconSelector.renameFolder(jeeFrontEnd.md_iconSelector.userImg_tree.getSelectedNodes()[0])
+        return
+      }
+
+      if (_target = event.target.closest('#treeFunctions .bt_delete')) {
+        jeeFrontEnd.md_iconSelector.deleteFolder(jeeFrontEnd.md_iconSelector.userImg_tree.getSelectedNodes()[0])
+        return
+      }
+    })
+
+    document.getElementById('md_iconSelector').addEventListener('dblclick', function(event) {
+      var _target = null
+      if (_target = event.target.closest('.divIconSel')) {
+        document.querySelectorAll('.divIconSel').removeClass('iconSelected')
+        _target.closest('.divIconSel').addClass('iconSelected')
+        document.getElementById('mod_selectIcon').querySelector('button[data-type="confirm"]').click()
+        return
+      }
+    })
+
+    if (jeephp2js.showimg == 1) {
+      new jeeFileUploader({
+        fileInput: document.getElementById('bt_uploadImg'),
+        add: function(event, options) {
+          let currentPath = document.getElementById('bt_uploadImg').getAttribute('data-path')
+          options.url = 'core/ajax/jeedom.ajax.php?action=uploadImageIcon&filepath=' + currentPath
+          options.submit()
+        },
+        done: function(event, data) {
+          if (data.result.state != 'ok') {
+            jeedomUtils.showAlert({
+              attachTo: jeeDialog.get('#md_iconSelector', 'dialog'),
+              message: data.result.result,
+              level: 'danger'
+            })
+            return
+          }
+          document.querySelector('.leafRef[data-path$="' + data.result.result.filepath.replace(/^.+\/..\/..\//, '').replace(/[^\/]+$/, '') + '"]')?.click()
+        }
+      })
+    }
+
+    jeeFrontEnd.md_iconSelector.postInit()
+
+  })()
+  </script>

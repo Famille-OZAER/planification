@@ -1,21 +1,4 @@
 <?php
-
-  /* This file is part of Jeedom.
-*
-* Jeedom is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Jeedom is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
-*/
-
   try {
     require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
     include_file('core', 'authentification', 'php');
@@ -25,26 +8,131 @@
     }
 
     ajax::init();
+    if (init('action') == 'toHtml') {//OK
+      $eqLogic=planification::byId(init('eqLogic_id'));
+      
+      ajax::success($eqLogic->toHtml());
+    }
+    if (init('action') == 'récup_infos_widget') {//OK
+      $eqLogic=planification::byId(init('eqLogic_id'));
+      $cmds=cmd::byEqLogicId(init('eqLogic_id'));
+      $cmd_array=[];
+      foreach ($cmds as $cmd) {
+        if ($cmd->getConfiguration("Type") == '' && 
+        $cmd->getLogicalId() != "boost_off" && 
+        $cmd->getLogicalId() != "boost_on" && 
+        $cmd->getLogicalId() != "set_heure_fin" && 
+        $cmd->getLogicalId() != "set_planification" && 
+        $cmd->getLogicalId() != "set_consigne_temperature" && 
+        $cmd->getLogicalId() != "consigne_temperature_chauffage" && 
+        $cmd->getLogicalId() != "consigne_temperature_climatisation" && 
+        $cmd->getLogicalId() != "refresh" && 
+        $cmd->getLogicalId() != "absent" && 
+        $cmd->getLogicalId() != "auto"){
+          if ($cmd->getLogicalId() == 'heure_fin'){
+            if($cmd->execCmd() != ""){
 
+              if($eqLogic->getConfiguration("affichage_heure",false)){
+                $heure_fin=strtotime($cmd->execCmd());
+                $interval = date_diff( new DateTime($cmd->execCmd()), new DateTime("now"));
+                if(intval($interval->format('%a')) ==0){
+                  $cmd_array[$cmd->getLogicalId()] =date('H:i',$heure_fin);
+                }else{
+                  $cmd_array[$cmd->getLogicalId()] =date('d-m-Y H:i',$heure_fin);
+                }
+              }else{
+                $heure_fin=strtotime($cmd_heure_fin->execCmd());
+                if(date('d-m-Y',$heure_fin) != date('d-m-Y') ){
+                  $cmd_array[$cmd->getLogicalId()] =date('d-m-Y H:i',$heure_fin);
+                }else{
+                  $cmd_array[$cmd->getLogicalId()] =date('H:i',$heure_fin);
+                }
+              }
+              //$cmd_array['datetimepicker'] = date('Y/m/d H:i',$heure_fin);
+            }else{
+              $cmd_array[$cmd->getLogicalId()] ="";
+              //$cmd_array['datetimepicker'] = date('Y/m/d H:i');
 
+            }
+          }else{
+            $cmd_array[$cmd->getLogicalId()] = $cmd->execCmd();
+          }
+        }
+      }
+      $cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('temperature_id',"")));
+      if (is_object($cmd_temperature)){
+        $cmd_array['Temperature'] = $cmd_temperature->execCmd();
+      }else{
+        $cmd_array['Temperature']= '';
+      
+      };
+      //$cmd_array['Type_équipement']=$eqLogic->getConfiguration("Type_équipement");
+      if ($eqLogic->getConfiguration("Type_équipement") == "Volet"){
+        $type_fenêtre=$eqLogic->getConfiguration("Type_fenêtre");
+        $cmd_Etat_volet=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
+        if (is_object($cmd_Etat_volet)){
+          $etat_volet=$cmd_Etat_volet->execCmd();
+          $alias_ouverture=strtolower($eqLogic->getConfiguration('Alias_Ouvert',""));
+          $alias_fermeture=strtolower($eqLogic->getConfiguration('Alias_Ferme',""));
+          $alias_my=strtolower($eqLogic->getConfiguration('Alias_My',""));
+          if(strtolower($etat_volet) == $alias_ouverture){ $cmd_array['action_en_cours'] = "ouverture";}
+          if(strtolower($etat_volet) == $alias_fermeture){$cmd_array['action_en_cours'] = "fermeture";}
+          if(strtolower($etat_volet) == $alias_my){$cmd_array['action_en_cours'] = "my" ;}
 
+        }
+        $cmd_niveau_batterie_gauche=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Niveau_batterie_gauche_id',"")));
+        if (is_object($cmd_niveau_batterie_gauche)){
+          $cmd_array['niveau_batterie_gauche'] =$cmd_niveau_batterie_gauche->execCmd();
+        }   
+        $cmd_niveau_batterie_droite=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Niveau_batterie_droite_id',"")));
+        if (is_object($cmd_niveau_batterie_droite)){
+          $cmd_array['niveau_batterie_droite'] =$cmd_niveau_batterie_droite->execCmd();
+        }  
+        $cmd_array['sens_ouverture_fenêtre']='';
+        $cmd_Etat_fenêtre_gauche=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Etat_fenêtre_gauche_id',"")));
+        if (is_object($cmd_Etat_fenêtre_gauche)){
+          if($cmd_Etat_fenêtre_gauche->execCmd() == 1){
+            if($type_fenêtre == 'fenêtre'){
+              $cmd_array['sens_ouverture_fenêtre']='ouverte';
+            }else{
+              $cmd_array['sens_ouverture_fenêtre']='gauche';
+            }
+            
+          }
+          if($cmd_Etat_fenêtre_gauche->execCmd() == 0 && $type_fenêtre == 'fenêtre'){
+            $cmd_array['sens_ouverture_fenêtre']='fermée';
+          }
+        }
+        $cmd_Etat_fenêtre_droite=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Etat_fenêtre_droite_id',"")));
+        if (is_object($cmd_Etat_fenêtre_droite)){
+          if($cmd_Etat_fenêtre_droite->execCmd() == 1){
+            if($cmd_array['sens_ouverture_fenêtre'] !=''){
+              $cmd_array['sens_ouverture_fenêtre'] =  "gauche-droite";
+            }else{
+              $cmd_array['sens_ouverture_fenêtre'] = 'droite';
+            }            
+          }         
+        }         
+      }
+      $cmd_array["page"]=$eqLogic->getCache('Page');
+      ajax::success($cmd_array);
+    }
     if (init('action') == 'Enregistrer_planifications') {//OK
       $dossier = dirname(__FILE__) . '/../../planifications/';
       if (!is_dir($dossier)) mkdir($dossier, 0755, true);
       $nom_fichier_json=dirname(__FILE__) ."/../../planifications/" . init('id') . ".json";
       $fichier = fopen( $nom_fichier_json, 'w');
-      if(init('planifications')!=""){
-        fwrite($fichier, json_encode(init('planifications')));
+      if(init('planifications')!=""){        
+        fwrite($fichier, init('planifications'));
       }else{
         unlink ($nom_fichier_json) ;
       }
       ajax::success();
     }
-
     if (init('action') == 'Recup_planification') {//OK
       $dossier = dirname(__FILE__) . '/../../planifications/';
       if (!is_dir($dossier)) mkdir($dossier, 0755, true);
-      $nom_fichier=dirname(__FILE__) ."/../../planifications/" . init('id') . ".json";
+      $nom_fichier=dirname(__FILE__) ."/../../planifications/" . init('eqLogic_id') . ".json";
       $res="";
       if(file_exists ( $nom_fichier ) ){
         $res=file_get_contents ($nom_fichier);
@@ -117,7 +205,7 @@
       $eqLogic->setConfiguration('type', init('type'));
       $eqLogic->save();
       $res=$eqLogic->getId();
-      ajax::success( $res);
+      ajax::success($res);
     }
     if (init('action') == 'Set_widget_cache') {
       $eqLogic=planification::byId(init('id'));
@@ -142,7 +230,7 @@
       }
 
 
-      ajax::success();
+      ajax::success(true);
     }
     if (init('action') == 'Remove_log') {
       if (!config::byKey('UseLogByeqLogic', 'planification')){
@@ -167,29 +255,29 @@
       if (count($eqLogics) > 0){
         switch ($recherche) {
           case 'chauffage':
-            $div .= '<tr class="santé_titre"><td colspan="10"><h3><span class="fa jeedom-pilote-conf"> Mes Chauffages</span></h3></td></tr>';
+            $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fa jeedom-pilote-conf"> Mes Chauffages</span></h3></td></tr>';
             break;
           case 'PAC':
-            $div .= '<tr class="santé_titre"><td colspan="10"><h3><span class="fa jeedom-feu"> Mes pompes à chaleur</span></h3></td></tr>';
+            $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fa jeedom-feu"> Mes pompes à chaleur</span></h3></td></tr>';
             break;
           case 'poele';
-            $div .= '<tr class="santé_titre"><td colspan="10"><h3><span class="fa jeedom-feu"> Mes poêles à granules</span></h3></td></tr>';
+            $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fa jeedom-feu"> Mes poêles à granules</span></h3></td></tr>';
             break;
           case 'volet';
-            $div .= '<tr class="santé_titre"><td colspan="10"><h3><span class="fa jeedom-volet-ferme"> Mes volets</span></h3></td></tr>';
+            $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fa jeedom-volet-ferme"> Mes volets</span></h3></td></tr>';
             break;
           case 'prise';
-            $div .= '<tr class="santé_titre"><td colspan="10"><h3><span class="fa jeedom-prise"> Mes prises</span></h3></td></tr>';
+            $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fa jeedom-prise"> Mes prises</span></h3></td></tr>';
             break;
           case 'perso';
-            $div .= '<tr class="santé_titre"><td colspan="10"><h3><span class="fas fa-cogs"> Mes équipements perso</span></h3></td></tr>';
+            $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fas fa-cogs"> Mes équipements perso</span></h3></td></tr>';
             break;
         }
       }
 
       foreach ($eqLogic_ids as $eqLogic_id) {
         $eqLogic=planification::byId($eqLogic_id);
-        $type_eqLogic = strtolower($eqLogic->getConfiguration('type'));
+        $type_eqLogic = strtolower($eqLogic->getConfiguration('Type_équipement'));
         $image=$eqLogic->getConfiguration("chemin_image","none");
         if ( $image == "none"){
           if (file_exists(dirname(__FILE__) . '/../../core/img/' . $type_eqLogic . '.png')) {
@@ -215,6 +303,7 @@
         }else{
           $div .=  '<td><span class="label label-danger" style="font-size : 1em;"><i class="fas fa-times"></i></span></td>';
           $div .= '<td><span></span></td>';
+          $div .= '<td></td>';
           $div .= '<td></td>';
           $div .= '<td></td>';
           $div .= '<td></td>';
@@ -278,7 +367,8 @@
 
         $valeur=$eqLogic->getCmd(null,'info')->execCmd();
         $div .= '<td><span class="label" style="font-size : 1em;">'. $valeur.'</span></td>';
-
+        $div .= '<td><span class="label label-danger cursor supprimer" style="font-size : 1em;">Supprimer</span></td>';
+    
 
         $div .= '</tr>';
       }
@@ -301,124 +391,56 @@
       }
       ajax::success( $div);
     }
-    if (init('action') == 'Santé1') {
-      $eqLogics=eqLogic::byType('planification');
-      $div="";
-      foreach ($eqLogics as $eqLogic){
-        $type_eqLogic = strtolower($eqLogic->getConfiguration('type'));
-        $image=$eqLogic->getConfiguration("chemin_image","none");
-        if ( $image == "none"){
-          if (file_exists(dirname(__FILE__) . '/../../core/img/' . $type_eqLogic . '.png')) {
-            $img = '<img src="plugins/planification/core/img/' . $type_eqLogic . '.png" height="55" width="55"/>';
-          } else {
-            $img = "";
-          } 
-        }else{
+    if (init('action') == 'Modifier_JSON'){
+      $eqLogics=planification::byType('planification');   
+      $planifications_new='';   
+      foreach ($eqLogics as $eqLogic) {
+        $planifications=$eqLogic->Recup_planifications(true,true);
 
-          $img = '<img src="' . $image . '" height="55" width="55"/>';
-
-        }
-
-        $div .= '<tr>';
-        $div .= '<td>' . $img . '</td>';
-        $div .= '<td><span class="label id">' . $eqLogic->getId() . '</span></td>';
-
-
-        if($eqLogic->getObject()==""){
-          $Object = "Aucun";
-        }else{
-          $Object = $eqLogic->getObject()->getName();
-        }
-        $div .= '<td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $Object . " " . $eqLogic->getName() . '</a></td>';
-
-        if ($eqLogic->getIsEnable() ) {
-          $div .=  '<td><span class="label label-success" style="height:21px;font-size : 1em;"><i class="fas fa-check"></i></span></td>';
-        }else{
-          $div .=  '<td><span class="label label-danger" style="height:21px;font-size : 1em;"><i class="fas fa-times"></i></span></td>';
-        }
-        $cmd= $eqLogic->getCmd(null,'mode_fonctionnement');
-        if (is_object($cmd)){
-          $valeur=$cmd->execCmd();;
-          if ($valeur == "Auto"){
-            $div .= '<td><span class="label label-success" style="height:21px;font-size : 1em;">'. $valeur.'</span></td>';
-          }elseif ($valeur == "Manuel"){
-            $cmd_auto= $eqLogic->getCmd(null,'auto');
-            $div .= '<td><span class="label label-warning cursor manuel" cmd_id='. $cmd_auto->getId().' style="height:21px;font-size : 1em;">'. $valeur.'</span></td>';
-          }else{
-            $div .= '<td><span class="label label-danger" style="height:21px;font-size : 1em;">Inconnu</span></td>';
-          }
-        }else{
-          $div .= '<td><span class="label label-danger" style="font-size : 1em;">Inconnu</span></td>';
-        }
-
-        $cmd= $eqLogic->getCmd(null,'planification_en_cours');
-        if (is_object($cmd)){
-          $valeur=$cmd->execCmd();
-          $div .= '<td><span class="label" style="font-size : 1em;">'. $valeur.'</span></td>';
-        }else{
-          $div .= '<td><span class="label label-danger" style="font-size : 1em;">Inconnu</span></td>';
-        }
-
-        $cmd= $eqLogic->getCmd(null,'action_en_cours');
-        if (is_object($cmd)){
-          $valeur=$cmd->execCmd();
-          $div .= '<td><span class="label" style="font-size : 1em;">'. $valeur.'</span></td>';
-        }else{
-          $div .= '<td><span class="label label-danger" style="font-size : 1em;">Inconnu</span></td>';
-        }
-        $cmd= $eqLogic->getCmd(null,'heure_fin');
-        if (is_object($cmd)){
-          $valeur = $cmd->execCmd();
-          if ($valeur != ""){
-            $valeur = strtotime($cmd->execCmd());
-
-            if(date('d-m-Y',$valeur) != date('d-m-Y') ){
-              $valeur = date('d-m-Y H:i',$valeur);
-            }else{
-              $valeur = date('H:i',$valeur);
+        if($planifications !=[] && isset($planifications[0]['nom_planification'])){
+          planification::add_log('debug',"ok",$eqLogic);  
+          
+          $planifications=$eqLogic->Recup_planifications(true,true);
+          $planifications_new = '[{';
+          $numéro_planification=0;
+          foreach ($planifications as $planification) {
+            if ($numéro_planification!=0){
+              $planifications_new .=',';
             }
-            $div .= '<td><span class="label" style="font-size : 1em;">'. $valeur.'</span></td>';
-          }else{
-            $div .= '<td><span class="label label-danger" style="font-size : 1em;">Inconnu</span></td>';
-          }
-
-
-
-        }else{
-          $div .= '<td><span class="label label-danger" style="font-size : 1em;">Inconnu</span></td>';
-        }
-        $cmd= $eqLogic->getCmd(null,'action_suivante');
-        if (is_object($cmd)){
-          $valeur=$cmd->execCmd();
-          if ($valeur != ""){
-            $div .= '<td><span class="label" style="font-size : 1em;">'. $valeur.'</span></td>';
-          }else{
-            $cmd= $eqLogic->getCmd(null,'heure_fin');
-            if (is_object($cmd)){
-              $valeur = $cmd->execCmd();
-              if ($valeur != ""){
-                $div .= '<td><span class="label" style="font-size : 1em;">Remise en Auto</span></td>';
-              }else{
-                $div .= '<td><span class="label label-danger" style="font-size : 1em;">Aucune</span></td>';
+            $planifications_new .= '"'. $numéro_planification . '":';
+            $planifications_new .='[';
+            $planifications_new .='{"Nom":"'.$planification['nom_planification'] .'",';
+            $planifications_new .='"Id":"'. $planification["Id"] . '",';
+            foreach ($planification["semaine"] as $semaine) {
+              if ($semaine['jour'] != "Lundi"){
+                $planifications_new .=',';
               }
+              $planifications_new .='"'. $semaine['jour'] .'":[{';
+              $nb_période=0;
+              foreach ($semaine["periodes"] as $periode) {
+                if($nb_période>0){
+                  $planifications_new .='},{';
+                }
+                $planifications_new .='"Type":"' . $periode['Type_periode'] .'", "Début":"' . $periode['Debut_periode'] .'", "Id":"' . $periode['Id'] . '"';
+                $nb_période +=1;
+              }
+              $planifications_new .='}]';
             }
-
-          }
-        }else{
-          $div .= '<td><span class="label label-danger" style="font-size : 1em;">Inconnu</span></td>';
+            $planifications_new .='}]';          
+            $numéro_planification +=1;
+          }          
+          $planifications_new .='}]';
+          $nom_fichier_source = dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . ".json"; 
+          $nom_fichier_cible =  dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . "_old.json"; 
+          copy( $nom_fichier_source , $nom_fichier_cible);
+          $fichier = fopen($nom_fichier_source, 'w');
+          fwrite($fichier, $planifications_new);
+        
         }
-        $cmd= $eqLogic->getCmd(null,'info');
-        if (is_object($cmd)){
-          $valeur=$cmd->execCmd();
-          $div .= '<td><span class="label" style="font-size : 1em;">'. $valeur.'</span></td>';
-        }else{
-          $div .= '<td><span class="label label-danger" style="font-size : 1em;">Inconnu</span></td>';
-        }
-
-        $div .= '</tr>';
+          
       }
-
-      ajax::success( $div);
+        
+      ajax::success( $planifications_new);
     }
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */

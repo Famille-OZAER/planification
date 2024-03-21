@@ -337,8 +337,8 @@ $("#tab_eqlogic .bt_modifier_image").on('click', function() {
             }
         });
     }
-    var url = 'index.php?v=d&plugin=planification&modal=selectIcon&show_img=1&show_icon=0&tab_img=1&selectIcon=' + $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]')[0].value
-
+    var url = 'index.php?v=d&plugin=planification&modal=selectIcon&show_img=1&show_icon=0&tab_img=1&selectIcon=' + $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="Chemin_image"]').value()
+    
 
 
     $('#mod_selectIcon').empty().load(url, function() {
@@ -1820,7 +1820,7 @@ function saveEqLogic(_eqLogic) {
             }
         }
     })
-
+    
 
     _eqLogic.configuration.Chemin_image = $('.eqLogicAttr[data-l2key=chemin_image]').val();
     console.log($('.eqLogicAttr[data-l2key=chemin_image]').val())
