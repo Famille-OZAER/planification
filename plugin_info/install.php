@@ -3,6 +3,7 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function planification_install() {
+	log::add('planification', 'debug', 'planification_update');
 	$folderPath = dirname(__FILE__) . '/../../planification/planifications/';
 	if (!is_dir($folderPath)) mkdir($folderPath, 0755, true);
 	planification::deamon_start();
