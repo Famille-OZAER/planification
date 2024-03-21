@@ -1,4 +1,5 @@
 JSONCLIPBOARD = null
+//jeeFrontEnd.jeedomVersion
 flatpickr.localize(flatpickr.l10ns.fr)
 
 if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
