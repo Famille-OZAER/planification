@@ -1,28 +1,28 @@
 JSONCLIPBOARD = null
 document.addEventListener("click", closeAllSelect);
 if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicDisplayCard.chauffages").style.display = 'block'
-    document.querySelector(".bs-sidenav.chauffages").style.display = 'block'
+    document.querySelector(".chauffages .eqLogicDisplayCard").style.display = 'block'
+    document.querySelector(".chauffages .bs-sidenav").style.display = 'block'
 }
 if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicDisplayCard.PACs").style.display = 'block'
-    document.querySelector(".bs-sidenav.PACs").style.display = 'block'
+    document.querySelector(".PACs .eqLogicDisplayCard").style.display = 'block'
+    document.querySelector(".PACs .bs-sidenav").style.display = 'block'
 }
 if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
-	document.querySelector(".eqLogicDisplayCard.poeles").style.display = 'block'
-    document.querySelector(".bs-sidenav.poeles").style.display = 'block'
+	document.querySelector(".poeles .eqLogicDisplayCard").style.display = 'block'
+    document.querySelector(".poeles .bs-sidenav").style.display = 'block'
 }
 if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicDisplayCard.volets").style.display = 'block'
-    document.querySelector(".bs-sidenav.volets").style.display = 'block';
+    document.querySelector(".volets .eqLogicDisplayCard").style.display = 'block'
+    document.querySelector(".volets .bs-sidenav").style.display = 'block';
 }
 if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicDisplayCard.prises").style.display = 'block'
-    document.querySelector(".bs-sidenav.prises").style.display = 'block'
+    document.querySelector(".prises .eqLogicDisplayCard").style.display = 'block'
+    document.querySelector(".prises .bs-sidenav").style.display = 'block'
 }
 if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicDisplayCard.persos").style.display = 'block'
-    document.querySelector(".bs-sidenav.persos").style.display = 'block'  
+    document.querySelector(".persos .eqLogicDisplayCard").style.display = 'block'
+    document.querySelector(".persos .bs-sidenav").style.display = 'block'  
 }
 $(".li_eqLogic").on('click', function(event) {
     $.hideAlert()
