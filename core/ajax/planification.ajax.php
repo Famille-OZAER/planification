@@ -202,7 +202,7 @@
       $eqLogic->setEqType_name('planification');
       $eqLogic->setIsVisible(0);
       $eqLogic->setIsEnable(1);
-      $eqLogic->setConfiguration('type', init('type'));
+      $eqLogic->setConfiguration('Type_équipement', init('Type_équipement'));
       $eqLogic->save();
       $res=$eqLogic->getId();
       ajax::success($res);
@@ -391,57 +391,7 @@
       }
       ajax::success( $div);
     }
-    if (init('action') == 'Modifier_JSON'){
-      $eqLogics=planification::byType('planification');   
-      $planifications_new='';   
-      foreach ($eqLogics as $eqLogic) {
-        $planifications=$eqLogic->Recup_planifications(true,true);
-
-        if($planifications !=[] && isset($planifications[0]['nom_planification'])){
-          planification::add_log('debug',"ok",$eqLogic);  
-          
-          $planifications=$eqLogic->Recup_planifications(true,true);
-          $planifications_new = '[{';
-          $numéro_planification=0;
-          foreach ($planifications as $planification) {
-            if ($numéro_planification!=0){
-              $planifications_new .=',';
-            }
-            $planifications_new .= '"'. $numéro_planification . '":';
-            $planifications_new .='[';
-            $planifications_new .='{"Nom":"'.$planification['nom_planification'] .'",';
-            $planifications_new .='"Id":"'. $planification["Id"] . '",';
-            foreach ($planification["semaine"] as $semaine) {
-              if ($semaine['jour'] != "Lundi"){
-                $planifications_new .=',';
-              }
-              $planifications_new .='"'. $semaine['jour'] .'":[{';
-              $nb_période=0;
-              foreach ($semaine["periodes"] as $periode) {
-                if($nb_période>0){
-                  $planifications_new .='},{';
-                }
-                $planifications_new .='"Type":"' . $periode['Type_periode'] .'", "Début":"' . $periode['Debut_periode'] .'", "Id":"' . $periode['Id'] . '"';
-                $nb_période +=1;
-              }
-              $planifications_new .='}]';
-            }
-            $planifications_new .='}]';          
-            $numéro_planification +=1;
-          }          
-          $planifications_new .='}]';
-          $nom_fichier_source = dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . ".json"; 
-          $nom_fichier_cible =  dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . "_old.json"; 
-          copy( $nom_fichier_source , $nom_fichier_cible);
-          $fichier = fopen($nom_fichier_source, 'w');
-          fwrite($fichier, $planifications_new);
-        
-        }
-          
-      }
-        
-      ajax::success( $planifications_new);
-    }
+   
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */
   } catch (Exception $e) {

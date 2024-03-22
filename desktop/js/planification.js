@@ -1,30 +1,5 @@
 JSONCLIPBOARD = null
 document.addEventListener("click", closeAllSelect);
-if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.chauffages").style.display='block';
-    document.querySelector(".bs-sidenav.chauffages").style.display='block';
-    
-}
-if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.PACs").style.display='block';
-    document.querySelector(".bs-sidenav.PACs").style.display='block';
-}
-if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.poeles").style.display='block';
-    document.querySelector(".bs-sidenav.poeles").style.display='block';
-}
-if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.volets").style.display='block';
-    document.querySelector(".bs-sidenav.volets").style.display='block';
-}
-if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.prises").style.display='block';
-    document.querySelector(".bs-sidenav.prises").style.display='block';
-}
-if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.persos").style.display='block';
-    document.querySelector(".bs-sidenav.persos").style.display='block';
-}
 $(".li_eqLogic").on('click', function(event) {
     $.hideAlert()
     if (event.ctrlKey) {
@@ -219,32 +194,6 @@ $('.sante').on('click', function() {
     $('#md_modal').dialog({ title: "{{Santé Planification}}" });
     $('#md_modal').load('index.php?v=d&plugin=planification&modal=health').dialog('open');
 });
-$('.modifier_json').on('click', function() {
-    $.ajax({
-        type: "POST",
-        url: "plugins/planification/core/ajax/planification.ajax.php",
-        data: {
-            action: "Modifier_JSON"
-        },
-        global: true,
-        async: false,
-        error: function(error) {
-            $.showAlert({
-                message: error.message,
-                level: 'danger'
-            })
-        },
-        success: function(data) {
-            if (data.state != 'ok') {
-                $.showAlert({
-                    message: data.result,
-                    level: 'danger'
-                })
-                return
-            }
-        }
-    })
-});
 $('.dupliquer_equipement').off('click').on('click', function() {
         if ($('.eqLogicAttr[data-l1key=id]').value() != undefined && $('.eqLogicAttr[data-l1key=id]').value() != '') {
             bootbox.prompt({
@@ -389,7 +338,7 @@ $("#tab_eqlogic .bt_modifier_image").on('click', function() {
         });
     }
     var url = 'index.php?v=d&plugin=planification&modal=selectIcon&show_img=1&show_icon=0&tab_img=1&selectIcon=' + $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="Chemin_image"]').value()
-    
+    console.log(url)
 
 
     $('#mod_selectIcon').empty().load(url, function() {
@@ -502,7 +451,7 @@ $('#tab_commandes').on('click', '.bt_ajouter_commande', function(e) {
     tr += '<tr class="cmd">'
     tr += '<td>'
     tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
-    tr += '<input class="cmdAttr form-control input-sm" data-l1key="Type_équipement" style="display : none">'
+    tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
     tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
     tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom}} "</td>'
     tr += '</td>'
@@ -1871,7 +1820,7 @@ function saveEqLogic(_eqLogic) {
             }
         }
     })
-    
+
 
     _eqLogic.configuration.Chemin_image = $('.eqLogicAttr[data-l2key=chemin_image]').val();
     console.log($('.eqLogicAttr[data-l2key=chemin_image]').val())
