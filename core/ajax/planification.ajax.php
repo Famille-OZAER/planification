@@ -68,7 +68,8 @@
       };
       //$cmd_array['Type_équipement']=$eqLogic->getConfiguration("Type_équipement");
       if ($eqLogic->getConfiguration("Type_équipement") == "Volet"){
-        $type_fenêtre=$eqLogic->getConfiguration("Type_fenêtre");
+        $type_fenêtre=$eqLogic->getConfiguration("Type_fenêtre",'fenêtre');
+        $cmd_array['sens_ouverture_fenêtre']='';
         $cmd_Etat_volet=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
         if (is_object($cmd_Etat_volet)){
           $etat_volet=$cmd_Etat_volet->execCmd();
@@ -138,7 +139,7 @@
       if(file_exists ( $nom_fichier ) ){
         $res=file_get_contents ($nom_fichier);
       }
-      ajax::success($nom_fichier);
+      ajax::success($res);
     }
     if (init('action') == 'Recup_select') {
       $eqLogic = planification::byId(init('eqLogic_id'));

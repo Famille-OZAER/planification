@@ -821,35 +821,35 @@ $('#tab_planifications').on('change', '.select_lever_coucher', function() {
         Periode.find('.select_lever_coucher').prop('selectedIndex', 0)
     }
     if (Periode.find('.select_lever_coucher').prop('selectedIndex') == 0) {
-        if ($(Divjour).hasClass("Lundi")) {
+        if ($(Divjour).classList.contains("Lundi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText
-        } else if ($(Divjour).hasClass("Mardi")) {
+        } else if ($(Divjour).classList.contains("Mardi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mardi')[0].innerText
-        } else if ($(Divjour).hasClass("Mercredi")) {
+        } else if ($(Divjour).classList.contains("Mercredi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mercredi')[0].innerText
-        } else if ($(Divjour).hasClass("Jeudi")) {
+        } else if ($(Divjour).classList.contains("Jeudi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Jeudi')[0].innerText
-        } else if ($(Divjour).hasClass("Vendredi")) {
+        } else if ($(Divjour).classList.contains("Vendredi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Vendredi')[0].innerText
-        } else if ($(Divjour).hasClass("Samedi")) {
+        } else if ($(Divjour).classList.contains("Samedi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Samedi')[0].innerText
-        } else if ($(Divjour).hasClass("Dimanche")) {
+        } else if ($(Divjour).classList.contains("Dimanche")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Dimanche')[0].innerText
         }
     } else {
-        if ($(Divjour).hasClass("Lundi")) {
+        if ($(Divjour).classList.contains("Lundi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Lundi')[0].innerText
-        } else if ($(Divjour).hasClass("Mardi")) {
+        } else if ($(Divjour).classList.contains("Mardi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mardi')[0].innerText
-        } else if ($(Divjour).hasClass("Mercredi")) {
+        } else if ($(Divjour).classList.contains("Mercredi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mercredi')[0].innerText
-        } else if ($(Divjour).hasClass("Jeudi")) {
+        } else if ($(Divjour).classList.contains("Jeudi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Jeudi')[0].innerText
-        } else if ($(Divjour).hasClass("Vendredi")) {
+        } else if ($(Divjour).classList.contains("Vendredi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Vendredi')[0].innerText
-        } else if ($(Divjour).hasClass("Samedi")) {
+        } else if ($(Divjour).classList.contains("Samedi")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Samedi')[0].innerText
-        } else if ($(Divjour).hasClass("Dimanche")) {
+        } else if ($(Divjour).classList.contains("Dimanche")) {
             time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Dimanche')[0].innerText
         }
     }
@@ -907,36 +907,36 @@ $('#tab_planifications').on('click', '.checkbox_lever_coucher', function() {
             }
             if (autre_valeur_select_lever_coucher == "coucher") {
                 Periode.find('.select_lever_coucher').prop("selectedIndex", 0)
-                if ($(Divjour).hasClass("Lundi")) {
+                if ($(Divjour).classList.contains("Lundi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText
-                } else if ($(Divjour).hasClass("Mardi")) {
+                } else if ($(Divjour).classList.contains("Mardi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mardi')[0].innerText
-                } else if ($(Divjour).hasClass("Mercredi")) {
+                } else if ($(Divjour).classList.contains("Mercredi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mercredi')[0].innerText
-                } else if ($(Divjour).hasClass("Jeudi")) {
+                } else if ($(Divjour).classList.contains("Jeudi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Jeudi')[0].innerText
-                } else if ($(Divjour).hasClass("Vendredi")) {
+                } else if ($(Divjour).classList.contains("Vendredi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Vendredi')[0].innerText
-                } else if ($(Divjour).hasClass("Samedi")) {
+                } else if ($(Divjour).classList.contains("Samedi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Samedi')[0].innerText
-                } else if ($(Divjour).hasClass("Dimanche")) {
+                } else if ($(Divjour).classList.contains("Dimanche")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Dimanche')[0].innerText
                 }
             } else if (autre_valeur_select_lever_coucher == "lever") {
                 Periode.find('.select_lever_coucher').prop("selectedIndex", 1)
-                if ($(Divjour).hasClass("Lundi")) {
+                if ($(Divjour).classList.contains("Lundi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Lundi')[0].innerText
-                } else if ($(Divjour).hasClass("Mardi")) {
+                } else if ($(Divjour).classList.contains("Mardi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mardi')[0].innerText
-                } else if ($(Divjour).hasClass("Mercredi")) {
+                } else if ($(Divjour).classList.contains("Mercredi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mercredi')[0].innerText
-                } else if ($(Divjour).hasClass("Jeudi")) {
+                } else if ($(Divjour).classList.contains("Jeudi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Jeudi')[0].innerText
-                } else if ($(Divjour).hasClass("Vendredi")) {
+                } else if ($(Divjour).classList.contains("Vendredi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Vendredi')[0].innerText
-                } else if ($(Divjour).hasClass("Samedi")) {
+                } else if ($(Divjour).classList.contains("Samedi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Samedi')[0].innerText
-                } else if ($(Divjour).hasClass("Dimanche")) {
+                } else if ($(Divjour).classList.contains("Dimanche")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Dimanche')[0].innerText
                 }
             }
@@ -952,36 +952,36 @@ $('#tab_planifications').on('click', '.checkbox_lever_coucher', function() {
 
             if (valeur_select_lever_coucher == "lever") {
 
-                if ($(Divjour).hasClass("Lundi")) {
+                if ($(Divjour).classList.contains("Lundi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText
-                } else if ($(Divjour).hasClass("Mardi")) {
+                } else if ($(Divjour).classList.contains("Mardi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mardi')[0].innerText
-                } else if ($(Divjour).hasClass("Mercredi")) {
+                } else if ($(Divjour).classList.contains("Mercredi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mercredi')[0].innerText
-                } else if ($(Divjour).hasClass("Jeudi")) {
+                } else if ($(Divjour).classList.contains("Jeudi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Jeudi')[0].innerText
-                } else if ($(Divjour).hasClass("Vendredi")) {
+                } else if ($(Divjour).classList.contains("Vendredi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Vendredi')[0].innerText
-                } else if ($(Divjour).hasClass("Samedi")) {
+                } else if ($(Divjour).classList.contains("Samedi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Samedi')[0].innerText
-                } else if ($(Divjour).hasClass("Dimanche")) {
+                } else if ($(Divjour).classList.contains("Dimanche")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Dimanche')[0].innerText
                 }
 
             } else {
-                if ($(Divjour).hasClass("Lundi")) {
+                if ($(Divjour).classList.contains("Lundi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Lundi')[0].innerText
-                } else if ($(Divjour).hasClass("Mardi")) {
+                } else if ($(Divjour).classList.contains("Mardi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mardi')[0].innerText
-                } else if ($(Divjour).hasClass("Mercredi")) {
+                } else if ($(Divjour).classList.contains("Mercredi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mercredi')[0].innerText
-                } else if ($(Divjour).hasClass("Jeudi")) {
+                } else if ($(Divjour).classList.contains("Jeudi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Jeudi')[0].innerText
-                } else if ($(Divjour).hasClass("Vendredi")) {
+                } else if ($(Divjour).classList.contains("Vendredi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Vendredi')[0].innerText
-                } else if ($(Divjour).hasClass("Samedi")) {
+                } else if ($(Divjour).classList.contains("Samedi")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Samedi')[0].innerText
-                } else if ($(Divjour).hasClass("Dimanche")) {
+                } else if ($(Divjour).classList.contains("Dimanche")) {
                     time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Dimanche')[0].innerText
                 }
             }
@@ -1289,10 +1289,11 @@ function Ajoutplanification(_planification) {
     div += '</div>'
     div += '</div>'
 
-    document.getElementById('div_planifications').append(domUtils.DOMparseHTML(div))
+    document.getElementById('div_planifications').innerHTML =div
 
 }
 function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = null, Type_periode = false) {
+    console.log(Div_jour)
     Periode_jours = Div_jour.querySelectorAll('.Periode_jour')
     prochain_debut = "00:00"
     if (Periode_jours.length > 0) {
@@ -1329,36 +1330,36 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
         }
     }
     if (time == "" && Type_periode == "lever") {
-        if (Div_jour.hasClass("Lundi")) {
+        if (Div_jour.classList.contains("Lundi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText
-        } else if (Div_jour.hasClass("Mardi")) {
+        } else if (Div_jour.classList.contains("Mardi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mardi').innerText
-        } else if (Div_jour.hasClass("Mercredi")) {
+        } else if (Div_jour.classList.contains("Mercredi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mercredi').innerText
-        } else if (Div_jour.hasClass("Jeudi")) {
+        } else if (Div_jour.classList.contains("Jeudi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Jeudi').innerText
-        } else if (Div_jour.hasClass("Vendredi")) {
+        } else if (Div_jour.classList.contains.containsClass("Vendredi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Vendredi').innerText
-        } else if (Div_jour.hasClass("Samedi")) {
+        } else if (Div_jour.classList.contains("Samedi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Samedi').innerText
-        } else if (Div_jour.hasClass("Dimanche")) {
+        } else if (Div_jour.classList.contains("Dimanche")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Dimanche').innerText
         }
     } else if (time == "" && Type_periode == "coucher") {
 
-        if (Div_jour.hasClass("Lundi")) {
+        if (Div_jour.classList.contains("Lundi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Lundi').innerText
-        } else if (Div_jour.hasClass("Mardi")) {
+        } else if (Div_jour.classList.contains("Mardi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mardi').innerText
-        } else if (Div_jour.hasClass("Mercredi")) {
+        } else if (Div_jour.classList.contains("Mercredi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mercredi').innerText
-        } else if (Div_jour.hasClass("Jeudi")) {
+        } else if (Div_jour.classList.contains("Jeudi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Jeudi').innerText
-        } else if (Div_jour.hasClass("Vendredi")) {
+        } else if (Div_jour.classList.contains("Vendredi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Vendredi').innerText
-        } else if (Div_jour.hasClass("Samedi")) {
+        } else if (Div_jour.classList.contains("Samedi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Samedi').innerText
-        } else if (Div_jour.hasClass("Dimanche")) {
+        } else if (Div_jour.classList.contains("Dimanche")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Dimanche').innerText
         }
     } else if (time == null) {
@@ -1404,14 +1405,14 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
     }
     if (Type_periode == "lever") {
         nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
-        nouvelle_periode.querySelector('.in_timepicker').unseen()
+        nouvelle_periode.querySelector('.in_timepicker').style.display='none'
         nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 0)
-        nouvelle_periode.querySelector('.select_lever_coucher').seen()
+        nouvelle_periode.querySelector('.select_lever_coucher').style.display='block'
     } else if (Type_periode == "coucher") {
         nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
-        nouvelle_periode.querySelector('.in_timepicker').unseen()
+        nouvelle_periode.querySelector('.in_timepicker').style.display='none'
         nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 1)
-        nouvelle_periode.querySelector('.select_lever_coucher').seen()
+        nouvelle_periode.querySelector('.select_lever_coucher').style.display='block'
     }
     Div_jour.closest("th").querySelector(".collapsible").classList.remove("no-arrow")
     Div_jour.closest("th").querySelector(".collapsible").classList.add("cursor")
@@ -1426,7 +1427,7 @@ function triage_jour(Div_jour) {
     }).map(function(map) {
         div += map.el.outerHTML
     })
-    Div_jour.html(div)
+    Div_jour.innerHTML=div
     Div_jour.querySelectorAll('.checkbox_lever_coucher').forEach(function(checkbox) {
 
         if (checkbox.getAttribute("checked") == 'true') {
@@ -1448,7 +1449,7 @@ function MAJ_Graphique_jour(Div_jour) {
 
     graphDiv = Div_jour.closest('.planification-body').querySelector('.graphique_jour_' + Div_jour.getAttribute("class").split(' ')[1])
 
-    graphDiv.empty()
+    graphDiv.innerHTML = ""
     Periode_jour = Div_jour.querySelectorAll('.Periode_jour')
     for (var i = 0; i < Periode_jour.length; i++) {
         var isFirst = (i == 0) ? true : false
@@ -1483,7 +1484,7 @@ function MAJ_Graphique_jour(Div_jour) {
         nouveau_graph = '<div class="graph ' + class_periode + '" style="width:' + width + '%; height:20px; display:inline-block;">'
         nouveau_graph += '<span class="tooltiptext  ' + class_periode + '">' + debut_periode + " - " + fin_periode + "<br>" + mode + '</span>'
         nouveau_graph += '</div>'
-        graphDiv.append(domUtils.DOMparseHTML(nouveau_graph))
+        graphDiv.innerHTML=nouveau_graph
     }
 }
 function Recup_select(type_) {

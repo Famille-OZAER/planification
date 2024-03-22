@@ -69,7 +69,14 @@
     <script>
         var show_name=false
         var show_object=false
-        flatpickr.localize(flatpickr.l10ns.fr)
+        var v_4_4 = false
+        if(Number(jeeFrontEnd.jeedomVersion.split('.')[0])>= 4 &&  Number(jeeFrontEnd.jeedomVersion.split('.')[1])>= 4){
+            v_4_4=true
+        }
+        if (v_4_4){
+            flatpickr.localize(flatpickr.l10ns.fr)
+        }
+        
         if ('#refresh_id#' != '') {
             document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').addEventListener('click', function() {
                 jeedom.cmd.execute({
@@ -188,21 +195,21 @@
                 });
             }
             if (_target = event.target.closest('.img_fenêtre')) {
-                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_fenêtre').hasClass("cursor")) {
+                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_fenêtre').classList.contains("cursor")) {
                     jeedom.cmd.execute({
                         id: '#auto_id#'
                     });
                 }
             }
             if (_target = event.target.closest('.img_auto_manu')) {
-                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').hasClass("cursor")) {
+                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').classList.contains("cursor")) {
                     jeedom.cmd.execute({
                         id: '#auto_id#'
                     });
                 }
             }
             if (_target = event.target.closest('.nom_eqLogic')) {
-                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').hasClass("cursor")) {
+                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').classList.contains("cursor")) {
                     jeedom.cmd.execute({
                         id: '#auto_id#'
                     });
@@ -215,40 +222,72 @@
         Commun_widget('#info_widget#', '#action_en_cours#', '#set_planification_id#', '#calendar_selector#', '#page#')
 
 
-        function Affichage_widget(mode, planification_en_cours, show_my, action_en_cours, action_suivante, heure_fin, type_fenetre, sens_ouverture_fenêtre, niveau_batterie_gauche, niveau_batterie_droite,  forcer_valeurs) {
+        function Affichage_widget(mode, planification_en_cours, show_my, action_en_cours, action_suivante, heure_fin, type_fenêtre, sens_ouverture_fenêtre, niveau_batterie_gauche, niveau_batterie_droite,  forcer_valeurs) {
             if (forcer_valeurs) {
-                domUtils.ajax({
-                    type: "POST",
-                    url: "plugins/planification/core/ajax/planification.ajax.php",
-                    data: {
-                        action: "récup_infos_widget",
-                        eqLogic_id: '#id#'
-                    },
-                    global: true,
-                    async: false,
-                    error: function(request, status, error) {
-                        handleAjaxError(request, status, error);
-                    },
-                    success: function(data) {
-                      
-                        mode = data.result.mode_fonctionnement
-                        planification_en_cours = data.result.planification_en_cours
-                        action_en_cours = data.result.action_en_cours
-                        action_suivante = data.result.action_suivante
-                        heure_fin = data.result.heure_fin
-                        info_widget = data.result.info
-                        page = data.result.page
-                        niveau_batterie_gauche = data.result.niveau_batterie_gauche
-                        niveau_batterie_droite = data.result.niveau_batterie_droite
-                        sens_ouverture_fenêtre = data.result.sens_ouverture_fenêtre
-                    }
-                });
+                if (v_4_4){
+                    domUtils.ajax({
+                        type: "POST",
+                        url: "plugins/planification/core/ajax/planification.ajax.php",
+                        data: {
+                            action: "récup_infos_widget",
+                            eqLogic_id: '#id#'
+                        },
+                        global: true,
+                        async: false,
+                        error: function(request, status, error) {
+                            handleAjaxError(request, status, error);
+                        },
+                        success: function(data) {
+                        
+                            mode = data.result.mode_fonctionnement
+                            planification_en_cours = data.result.planification_en_cours
+                            action_en_cours = data.result.action_en_cours
+                            action_suivante = data.result.action_suivante
+                            heure_fin = data.result.heure_fin
+                            info_widget = data.result.info
+                            page = data.result.page
+                            niveau_batterie_gauche = data.result.niveau_batterie_gauche
+                            niveau_batterie_droite = data.result.niveau_batterie_droite
+                            sens_ouverture_fenêtre = data.result.sens_ouverture_fenêtre
+                            type_fenêtre = data.result.type_fenêtre
+                        }
+                    });
+                }else{
+                    $.ajax({
+                        type: "POST",
+                        url: "plugins/planification/core/ajax/planification.ajax.php",
+                        data: {
+                            action: "récup_infos_widget",
+                            eqLogic_id: '#id#'
+                        },
+                        global: true,
+                        async: false,
+                        error: function(request, status, error) {
+                            handleAjaxError(request, status, error);
+                        },
+                        success: function(data) {
+                        console.log(data.result)
+                            mode = data.result.mode_fonctionnement
+                            planification_en_cours = data.result.planification_en_cours
+                            action_en_cours = data.result.action_en_cours
+                            action_suivante = data.result.action_suivante
+                            heure_fin = data.result.heure_fin
+                            info_widget = data.result.info
+                            page = data.result.page
+                            niveau_batterie_gauche = data.result.niveau_batterie_gauche
+                            niveau_batterie_droite = data.result.niveau_batterie_droite
+                            sens_ouverture_fenêtre = data.result.sens_ouverture_fenêtre
+                            type_fenêtre = data.result.type_fenêtre
+                        }
+                    });
+                }
+              
 
                 Commun_widget(info_widget, action_en_cours, '#set_planification_id#', '#calendar_selector#', page)
 
             }
            
-           if (type_fenetre == "fenêtre"){
+           if (type_fenêtre == "fenêtre"){
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.left='calc(50% + 10px)'
            }else{
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.left='calc(50% + 15px)'
@@ -272,31 +311,31 @@
             if (sens_ouverture_fenêtre==''){
                 switch (action_en_cours.toLowerCase()) {
                     case "ouverture":
-                        image = type_fenetre + "-100.png";
+                        image = type_fenêtre + "-100.png";
                         break;
                     case "fermeture":            
-                        image = type_fenetre + "-0.png";
+                        image = type_fenêtre + "-0.png";
                         break;
                     case "my":
-                        image = type_fenetre + "-50.png";
+                        image = type_fenêtre + "-50.png";
                         break;
                     default:
-                        image = type_fenetre + "-100.png";
+                        image = type_fenêtre + "-100.png";
 
                 };
             }else{
                 switch (action_en_cours.toLowerCase()) {
                     case "ouverture":
-                        image = type_fenetre + "-100-" + sens_ouverture_fenêtre + ".png";
+                        image = type_fenêtre + "-100-" + sens_ouverture_fenêtre + ".png";
                         break;
                     case "fermeture":            
-                        image = type_fenetre + "-0-" + sens_ouverture_fenêtre + ".png";
+                        image = type_fenêtre + "-0-" + sens_ouverture_fenêtre + ".png";
                         break;
                     case "my":
-                        image = type_fenetre + "-50-" + sens_ouverture_fenêtre + ".png";
+                        image = type_fenêtre + "-50-" + sens_ouverture_fenêtre + ".png";
                         break;
                     default:
-                        image = type_fenetre + "-100-" + sens_ouverture_fenêtre + ".png";
+                        image = type_fenêtre + "-100-" + sens_ouverture_fenêtre + ".png";
 
                 };
             }           
@@ -321,13 +360,13 @@
             switch (mode) {
                 case "Auto":
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .bt_afficher_timepicker').style.display = 'none'
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_fenêtre').removeClass("cursor")
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').removeClass("cursor")
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_fenêtre').classList.remove("cursor")
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').classList.remove("cursor")
                     if (action_suivante != " ") {
                         if (heure_fin.length == 5) {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').empty().append(action_suivante + ' à ' + heure_fin)
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = action_suivante + ' à ' + heure_fin
                         } else {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').empty().append(action_suivante + ' le ' + heure_fin)
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = action_suivante + ' le ' + heure_fin
                         }
                     }
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_fenêtre').setAttribute('title', 'Planification en cours: ' + planification_en_cours);
@@ -337,18 +376,18 @@
                     break
                 case "Manuel":
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .bt_afficher_timepicker').style.display = 'block';
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_fenêtre').addClass("cursor")
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_fenêtre').classList.add("cursor")
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_fenêtre').setAttribute("title", "Cliquez pour remettre le volet en auto.")
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').addClass("cursor")
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').classList.add("cursor")
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').setAttribute("title", "Cliquez pour remettre le volet en auto.")
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').addClass("cursor")
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').classList.add("cursor")
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').setAttribute("title", "Cliquez pour remettre le volet en auto.")
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').empty()
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = ""
                     if (heure_fin != " " && heure_fin != "") {
                         if (heure_fin.length == 5) {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').empty().append('Remise en auto à ' + heure_fin)
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = 'Remise en auto à ' + heure_fin
                         } else {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').empty().append('Remise en auto le ' + heure_fin)
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = 'Remise en auto le ' + heure_fin
                         }
                     }
                     break
@@ -357,8 +396,8 @@
 
         function Commun_widget(info_widget, action_en_cours, set_planification_id, calendar_selector, page) {
 
-            if (document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').hasClass('displayObjectName')) {
-                if (!document.querySelector('.eqLogic[data-eqLogic_uid=#uid#]').hasClass('hideEqLogicName')) {
+            if (document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('displayObjectName')) {
+                if (!document.querySelector('.eqLogic[data-eqLogic_uid=#uid#]').classList.contains('hideEqLogicName')) {
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .widget-name').style.display = "none"
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').style.display = "block"
                 }
@@ -481,13 +520,13 @@
 
             if (info_widget != " " && info_widget != " ") {
 
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .info_widget').empty().append(info_widget)
+                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .info_widget').innerHTML = info_widget
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .changecmd').style.display = 'block';
             }
             
            
              //mise en place de l'icone auto/manu + redimensionnement tuile
-            if(!document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').hasClass('hideEqLogicName') && !show_name){
+            if(!document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('hideEqLogicName') && !show_name){
                 show_name=true
                 document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
                 document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
@@ -500,7 +539,7 @@
                 document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
                 
             }
-            if(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').hasClass('displayObjectName') && !show_object){
+            if(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('displayObjectName') && !show_object){
                 show_object=true
                 document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
                 document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'

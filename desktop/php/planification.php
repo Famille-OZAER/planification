@@ -18,7 +18,7 @@
 				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav chauffages" style="display:none !important"><i class="fa jeedom-pilote-conf"></i> Mes Chauffages
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('Type_équipement') == 'Chauffage') {	
+							if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'chauffage') {	
 								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
@@ -28,7 +28,7 @@
 				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav PACs" style="display:none !important"><i class="far fa-snowflake"></i> Mes pompes à chaleur
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('Type_équipement') == 'PAC') {	
+							if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'pac') {	
 								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
@@ -38,7 +38,7 @@
 				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav poeles" style="display:none !important"><i class="fa jeedom-feu"></i> Mes poêles à ganules
 					<?php
 					foreach ($eqLogics as $eqLogic) {
-						if ($eqLogic->getConfiguration('Type_équipement') == 'Poele') {	
+						if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'poele') {	
 							$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 							echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 						}
@@ -48,7 +48,7 @@
 				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav volets" style="display:none !important"><i class="fa jeedom-volet-ferme"></i> Mes volets
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('Type_équipement') == 'Volet') {	
+							if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'volet') {	
 								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
@@ -58,7 +58,7 @@
 				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav prises" style="display:none !important"><i class="fa jeedom-prise"></i> Mes prises
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('Type_équipement') == 'Prise') {	
+							if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'prise') {	
 								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
@@ -70,7 +70,7 @@
 				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav persos" style="display:none !important"><i class="fas fa-user-cog"></i> Mes équipements perso
 					<?php
 						foreach ($eqLogics as $eqLogic) {
-							if ($eqLogic->getConfiguration('Type_équipement') == 'Perso') {
+							if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'perso') {
                               	$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
 								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
 							}
@@ -109,7 +109,7 @@
 			<legend><i class="fa jeedom-pilote-conf"></i> {{Mes chauffages}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('Type_équipement') == 'Chauffage') {	
+					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'chauffage') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -130,7 +130,7 @@
 			<legend><i class="far fa-snowflake"></i> {{Mes pompes à chaleur}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('Type_équipement') == 'PAC') {	
+					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'pac') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -150,7 +150,7 @@
 			<legend><i class="fa jeedom-feu"></i> {{Mes poêles à granules}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('Type_équipement') == 'Poele') {	
+					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'poele') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -170,7 +170,7 @@
 			<legend><i class="fa jeedom-volet-ferme"></i> {{Mes Volets}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('Type_équipement') == 'Volet') {	
+					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'volet') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -190,7 +190,7 @@
 			<legend><i class="fa jeedom-prise"></i> {{Mes Prises}}</legend>
 				<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('Type_équipement') == 'Prise') {	
+					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'prise') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -210,7 +210,7 @@
 			<legend><i class="fas fa-user-cog"></i> {{Mes équipement perso}}</legend>
 				<?php
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('Type_équipement') == 'Perso') {	
+					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'perso') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
@@ -622,93 +622,93 @@
 							break;
 					}
 					if ($jour != 'Lundi'){$display="none";}
-			echo '<div class="' . $jour .' col-sm-12" style="display:'.  $display . '">';
-			echo '<div class="col-sm-6 Jour">
-						<form class="form-horizontal">
-							<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureLever_' . $jour . ' label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_action_suivante_lever_'.$jour.' label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input class="in_timepicker HeureLeverMin_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="LeverMin_'.$jour.'">
-													<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
-  												</input>
+					echo '<div class="' . $jour .' col-sm-12" style="display:'.  $display . '">';
+					echo '<div class="col-sm-6 Jour">
+								<form class="form-horizontal">
+									<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
+									<fieldset>
+										<div class="well">
+											<div class="form-group ">
+												<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
+												<div class="col-sm-2">
+													<span class="HeureLever_' . $jour . ' label label-success"></span>
+												</div>
+											</div>
+											<div class="form-group ">
+												<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
+												<div class="col-sm-2">
+													<span class="Heure_action_suivante_lever_'.$jour.' label label-warning"></span>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-7 control-label">{{Heure minimum}}</label>
+												<div class="col-sm-5">
+													<div class="input-group">
+														<input class="in_timepicker HeureLeverMin_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="LeverMin_'.$jour.'">
+															<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+														</input>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-7 control-label">{{Heure maximum}}</label>
+												<div class="col-sm-5">
+													<div class="input-group">
+														<input class="in_timepicker HeureLeverMax_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="LeverMax_'.$jour.'">
+															<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+														</input>
+													</div>
+												</div>
 											</div>
 										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input class="in_timepicker HeureLeverMax_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="LeverMax_'.$jour.'">
-													<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
-												</input>
+									</fieldset>
+								</form>
+							</div>
+							<div class="col-sm-6 Nuit">
+								<form class="form-horizontal">
+									<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
+									<fieldset>
+										<div class="well">
+											<div class="form-group ">
+												<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
+												<div class="col-sm-2">
+													<span class="HeureCoucher_'.$jour.' label label-success"></span>
+												</div>
 											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>
-					<div class="col-sm-6 Nuit">
-						<form class="form-horizontal">
-							<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
-							<fieldset>
-								<div class="well">
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
-										<div class="col-sm-2">
-											<span class="HeureCoucher_'.$jour.' label label-success"></span>
-										</div>
-									</div>
-									<div class="form-group ">
-										<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-										<div class="col-sm-2">
-											<span class="Heure_action_suivante_coucher_'.$jour.' label label-warning"></span>
-										</div>
-									</div>
-									<div class="form-group">
+											<div class="form-group ">
+												<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
+												<div class="col-sm-2">
+													<span class="Heure_action_suivante_coucher_'.$jour.' label label-warning"></span>
+												</div>
+											</div>
+											<div class="form-group">
 
-										<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input class="in_timepicker HeureCoucherMin_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="CoucherMin_'.$jour.'">
-													<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
-  												</input>
+												<label class="col-sm-7 control-label">{{Heure minimum}}</label>
+												<div class="col-sm-5">
+													<div class="input-group">
+														<input class="in_timepicker HeureCoucherMin_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="CoucherMin_'.$jour.'">
+															<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+														</input>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-7 control-label">{{Heure maximum}}</label>
+												<div class="col-sm-5">
+													<div class="input-group">
+														<input class="in_timepicker HeureCoucherMax_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="CoucherMax_'.$jour.'">
+															<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+														</input>
+													</div>
+												</div>
 											</div>
 										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-										<div class="col-sm-5">
-											<div class="input-group">
-												<input class="in_timepicker HeureCoucherMax_'.$jour.' eqLogicAttr input-sm" data-l1key="configuration" data-l2key="CoucherMax_'.$jour.'">
-													<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
-  												</input>
-											</div>
-										</div>
-									</div>
-								</div>
-							</fieldset>
-						</form>
-					</div>	
-				</div>';
-				}
-				?>
+									</fieldset>
+								</form>
+							</div>	
+						</div>';
+						}
+						?>
 			</div>
 
 			<!--Commands Tab-->
@@ -750,7 +750,7 @@
 		if(intval($version[0]) >= 4 && intval($version [1]) >=4){
 			include_file('desktop', 'planification V4.4', 'js', 'planification');
 		}else{
-			include_file('desktop', 'planification', 'js', 'planification');
+			include_file('desktop', 'planification V4.4', 'js', 'planification');
 		}
        
     
