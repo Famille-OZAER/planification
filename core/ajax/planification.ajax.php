@@ -69,6 +69,7 @@
       //$cmd_array['Type_équipement']=$eqLogic->getConfiguration("Type_équipement");
       if ($eqLogic->getConfiguration("Type_équipement") == "Volet"){
         $type_fenêtre=$eqLogic->getConfiguration("Type_fenêtre",'fenêtre');
+        $cmd_array['type_fenêtre']=$type_fenêtre;
         $cmd_array['sens_ouverture_fenêtre']='';
         $cmd_Etat_volet=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
         if (is_object($cmd_Etat_volet)){

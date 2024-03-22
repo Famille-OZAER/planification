@@ -30,16 +30,19 @@ function planification_update() {
 				case 'volet':
 					$eqLogic->setConfiguration('Type_équipement', "Volet");
 					$eqLogic->save();
+					break;
 				case 'pac':
 					$eqLogic->setConfiguration('Type_équipement', "PAC");
 					$eqLogic->save();
+					break;
 				case 'poele':
 					$eqLogic->setConfiguration('Type_équipement', "Poele");
 					$eqLogic->save();
-				
+					break;
 				case 'chauffage':
 					$eqLogic->setConfiguration('Type_équipement', "Chauffage");
 					$eqLogic->save();
+					break;
 				case "prise":
 					$eqLogic->setConfiguration('Type_équipement', "Prise");
 					$eqLogic->save();
@@ -47,6 +50,7 @@ function planification_update() {
 				case "autre":
 					$eqLogic->setConfiguration('Type_équipement', "Autre");
 					$eqLogic->save();
+					break;
 			}  
 			
 		  	$planifications=$eqLogic->Recup_planifications(true,true);
