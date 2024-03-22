@@ -964,6 +964,7 @@ class planification extends eqLogic {
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$eqLogic->getCmd(null, 'set_planification'),"id",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Affichage_widget','Affichage_widget' .$eqLogic->getId(),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Reset_page','Reset_page' .$eqLogic->getId(),"value",false);
+      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Commun_widget','Commun_widget' .$eqLogic->getId(),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'SetWidget_Thermostat','SetWidget_Thermostat' .$eqLogic->getId(),"value",false);
       $cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
       
