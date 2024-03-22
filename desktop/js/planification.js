@@ -1,28 +1,28 @@
 JSONCLIPBOARD = null
 document.addEventListener("click", closeAllSelect);
 if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
-    document.querySelector(".chauffages .eqLogicDisplayCard").style.display = 'block'
-    document.querySelector(".chauffages .bs-sidenav").style.display = 'block'
+    document.querySelector(".eqLogicThumbnailContainer.chauffages").style.display = 'block'
+    document.querySelector(".bs-sidenav.chauffages").style.display = 'block'
 }
 if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
-    document.querySelector(".PACs .eqLogicDisplayCard").style.display = 'block'
-    document.querySelector(".PACs .bs-sidenav").style.display = 'block'
+    document.querySelector(".eqLogicThumbnailContainer.PACs").style.display = 'block'
+    document.querySelector(".bs-sidenav.PACs").style.display = 'block'
 }
 if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
-	document.querySelector(".poeles .eqLogicDisplayCard").style.display = 'block'
-    document.querySelector(".poeles .bs-sidenav").style.display = 'block'
+	document.querySelector(".eqLogicThumbnailContainer.poeles").style.display = 'block'
+    document.querySelector(".bs-sidenav.poeles").style.display = 'block'
 }
 if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
-    document.querySelector(".volets .eqLogicDisplayCard").style.display = 'block'
-    document.querySelector(".volets .bs-sidenav").style.display = 'block';
+    document.querySelector(".eqLogicThumbnailContainer.volets").style.display = 'block'
+    document.querySelector(".bs-sidenav.volets").style.display = 'block';
 }
 if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
-    document.querySelector(".prises .eqLogicDisplayCard").style.display = 'block'
-    document.querySelector(".prises .bs-sidenav").style.display = 'block'
+    document.querySelector(".eqLogicThumbnailContainer.prises").style.display = 'block'
+    document.querySelector(".bs-sidenav.prises").style.display = 'block'
 }
 if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
-    document.querySelector(".persos .eqLogicDisplayCard").style.display = 'block'
-    document.querySelector(".persos .bs-sidenav").style.display = 'block'  
+    document.querySelector(".eqLogicThumbnailContainer.persos").style.display = 'block'
+    document.querySelector(".bs-sidenav.persos").style.display = 'block'  
 }
 $(".li_eqLogic").on('click', function(event) {
     $.hideAlert()
@@ -1217,12 +1217,10 @@ function recup_class_couleur(classes) {
 
     return class_color
 }
-
 function Ajoutplanification(_planification) {
     var JOURS = ['{{Lundi}}', '{{Mardi}}', '{{Mercredi}}', '{{Jeudi}}', '{{Vendredi}}', '{{Samedi}}', '{{Dimanche}}']
-    modifyWithoutSave = true;
     if (init(_planification.nom) == '') return
-    if (init(_planification.Id) == '') { _planification.Id = uniqId(); }
+    if (init(_planification.Id) == '') { _planification.Id = jeedomUtils.uniqId(); }
     var random = Math.floor((Math.random() * 1000000) + 1)
     var div = '<div class="planification panel panel-default" Id=' + _planification.Id + '>'
     div += '<div class="panel-heading">'
@@ -1249,7 +1247,6 @@ function Ajoutplanification(_planification) {
         div += jour
         div += '</div>'
         div += '<div class="input-group" style="display:inline-flex">'
-            // div += '<span class="input-group-btn">'
         div += '<span>'
         div += '<span><i class="fa fa-plus-circle cursor bt_ajout_periode" title="{{Ajouter une période}}"></i> </span>'
         div += '<span><i class="fas fa-sign-out-alt cursor bt_copier_jour" title="{{Copier le jour}}"></i> </span>'
@@ -1292,16 +1289,16 @@ function Ajoutplanification(_planification) {
     div += '</div>'
     div += '</div>'
 
-    $('#div_planifications').append(div)
-}
+    document.getElementById('div_planifications').append(domUtils.DOMparseHTML(div))
 
+}
 function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = null, Type_periode = false) {
-    modifyWithoutSave = true;
-    Periode_jours = $(Div_jour).find('.Periode_jour')
+    Periode_jours = Div_jour.querySelectorAll('.Periode_jour')
     prochain_debut = "00:00"
     if (Periode_jours.length > 0) {
         periode_precedente = Periode_jours[Periode_jours.length - 1]
-        dernier_debut = $(periode_precedente).find('.clock-timepicker').val()
+        dernier_debut = periode_precedente.querySelector('.in_timepicker').value
+
         prochain_debut_int = parseInt(dernier_debut.split(':')[0]) * 60 + parseInt(dernier_debut.split(':')[1]) + 1
         heures = Math.trunc(prochain_debut_int / 60)
         heures_str = "0" + heures
@@ -1320,7 +1317,7 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
             } else if (dernier_debut == "") {
                 time = ""
             } else {
-                time = ""
+                time = prochain_debut
             }
 
         } else if (Mode_periode == null) {
@@ -1331,111 +1328,133 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
             }
         }
     }
-
     if (time == "" && Type_periode == "lever") {
-        if ($(Div_jour).hasClass("Lundi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText
-        } else if ($(Div_jour).hasClass("Mardi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mardi')[0].innerText
-        } else if ($(Div_jour).hasClass("Mercredi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mercredi')[0].innerText
-        } else if ($(Div_jour).hasClass("Jeudi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Jeudi')[0].innerText
-        } else if ($(Div_jour).hasClass("Vendredi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Vendredi')[0].innerText
-        } else if ($(Div_jour).hasClass("Samedi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Samedi')[0].innerText
-        } else if ($(Div_jour).hasClass("Dimanche")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Dimanche')[0].innerText
+        if (Div_jour.hasClass("Lundi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText
+        } else if (Div_jour.hasClass("Mardi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mardi').innerText
+        } else if (Div_jour.hasClass("Mercredi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mercredi').innerText
+        } else if (Div_jour.hasClass("Jeudi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Jeudi').innerText
+        } else if (Div_jour.hasClass("Vendredi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Vendredi').innerText
+        } else if (Div_jour.hasClass("Samedi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Samedi').innerText
+        } else if (Div_jour.hasClass("Dimanche")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Dimanche').innerText
         }
     } else if (time == "" && Type_periode == "coucher") {
-        if ($(Div_jour).hasClass("Lundi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Lundi')[0].innerText
-        } else if ($(Div_jour).hasClass("Mardi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mardi')[0].innerText
-        } else if ($(Div_jour).hasClass("Mercredi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mercredi')[0].innerText
-        } else if ($(Div_jour).hasClass("Jeudi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Jeudi')[0].innerText
-        } else if ($(Div_jour).hasClass("Vendredi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Vendredi')[0].innerText
-        } else if ($(Div_jour).hasClass("Samedi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Samedi')[0].innerText
-        } else if ($(Div_jour).hasClass("Dimanche")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Dimanche')[0].innerText
+
+        if (Div_jour.hasClass("Lundi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Lundi').innerText
+        } else if (Div_jour.hasClass("Mardi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mardi').innerText
+        } else if (Div_jour.hasClass("Mercredi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mercredi').innerText
+        } else if (Div_jour.hasClass("Jeudi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Jeudi').innerText
+        } else if (Div_jour.hasClass("Vendredi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Vendredi').innerText
+        } else if (Div_jour.hasClass("Samedi")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Samedi').innerText
+        } else if (Div_jour.hasClass("Dimanche")) {
+            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Dimanche').innerText
         }
     } else if (time == null) {
         time = '00:00'
     }
+
     var time_int = (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1])
     div = '<div class="Periode_jour periode' + (Periode_jours.length + 1) + ' input-group" style="width:100% !important; line-height:1.4px !important;display: inline-grid">'
     div += '<div>'
     div += '<input style="width: 28px !important;font-size: 20px!important;vertical-align: middle;padding: 5px;" title="activer/désactiver heure lever/coucher de soleil" class="checkbox_lever_coucher checkbox form-control input-sm cursor" type="checkbox">'
-    div += '<select class="select_lever_coucher select form-control input-sm" style="background-color: var(--btn-default-color) !important;width: calc(100% - 52px)!important;;display: none;" title="Type planification">'
+    div += '<select class="select_lever_coucher select form-control input-sm" style="background-color: var(--btn-default-color) !important;width: calc(100% - 65px)!important;;display: none;" title="Type planification">'
     div += '<option value="lever" selected>Lever de soleil</option>'
     div += '<option value="coucher">Coucher de soleil</option>'
     div += '</select>'
-
-    div += '<input class="clock-timepicker form-control input-sm cursor" type="text" time_int="' + time_int + '"  value="' + time + '" style="width:calc(100% - 56px);display:inline-block;position: relative" >'
-
+    div += '<input class="in_timepicker form-control input-sm "  time_int="' + time_int + '"  value="' + time + '" style="left:-10px;padding:0px!important;text-align:center;width:calc(100% - 80px)!important;display:inline-block;position: relative">'
+    div += '<a class="btn btn-default bt_afficher_timepicker_planification btn-sm" style="background-color: var(--form-bg-color) !important;position: absolute;right: 26px;display: inline-block"><i class="icon far fa-clock"></i></a>'
+    div += '</input>'
     div += '<a class="btn btn-default bt_supprimer_perdiode btn-sm" style="position: absolute;right: 0px;display: inline-block" title="Supprimer cette période"><i class="fa fa-minus-circle"></i></a>'
     div += '</div>'
     div += '<div class="custom-select">'
     div += PROGRAM_MODE_LIST
     div += '</div>'
     div += '</div>'
+    Div_jour.insertAdjacentHTML('beforeend', div)
+    nouvelle_periode = Div_jour.querySelectorAll(".Periode_jour")[Div_jour.querySelectorAll(".Periode_jour").length - 1]
 
-    nouvelle_periode = $(div)
+
+
+
+
     if (Mode_periode != null) {
-
-        for (var i = 0; i < nouvelle_periode.find('.select-items').find("div").length; i++) {
-            if (nouvelle_periode.find('.select-items').find("div")[i].id == nouvelle_periode.find('.select-selected').prop("id")) {
-                nouvelle_periode.find('.select-items').find("div")[i].classList.add('same-as-selected')
+        for (var i = 0; i < nouvelle_periode.querySelectorAll('.select-items div').length; i++) {
+            if (nouvelle_periode.querySelectorAll('.select-items div')[i].id == nouvelle_periode.querySelector('.select-selected').getAttribute("id")) {
+                nouvelle_periode.querySelectorAll('.select-items div')[i].classList.add('same-as-selected')
             }
         }
-
     } else {
-        nouvelle_periode.find('.select-items').find("div")[0].classList.add('same-as-selected')
+        nouvelle_periode.querySelector('.select-items div').classList.add('same-as-selected')
     }
-    if ($('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText == "") {
-        nouvelle_periode.find('.checkbox_lever_coucher').css("display", 'none')
-        nouvelle_periode.find('.clock-timepicker').css("width", 'calc(100% - 28px)')
+    if (document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText == "") {
+        nouvelle_periode.querySelector('.checkbox_lever_coucher').style.display = 'none'
+        nouvelle_periode.querySelector('.in_timepicker').style.width = 'calc(100% - 28px)'
     }
     if (Type_periode == "lever") {
-        nouvelle_periode.find('.checkbox_lever_coucher').prop('checked', true)
-        nouvelle_periode.find('.clock-timepicker').hide()
-        nouvelle_periode.find('.select_lever_coucher').prop("selectedIndex", 0)
-        nouvelle_periode.find('.select_lever_coucher').show()
+        nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
+        nouvelle_periode.querySelector('.in_timepicker').unseen()
+        nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 0)
+        nouvelle_periode.querySelector('.select_lever_coucher').seen()
     } else if (Type_periode == "coucher") {
-        nouvelle_periode.find('.checkbox_lever_coucher').prop('checked', true)
-        nouvelle_periode.find('.clock-timepicker').hide()
-        nouvelle_periode.find('.select_lever_coucher').prop("selectedIndex", 1)
-        nouvelle_periode.find('.select_lever_coucher').show()
+        nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
+        nouvelle_periode.querySelector('.in_timepicker').unseen()
+        nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 1)
+        nouvelle_periode.querySelector('.select_lever_coucher').seen()
     }
-    Div_jour.closest("th").find(".collapsible")[0].classList.remove("no-arrow")
-    Div_jour.closest("th").find(".collapsible")[0].classList.add("cursor")
-    Div_jour.append(nouvelle_periode)
+    Div_jour.closest("th").querySelector(".collapsible").classList.remove("no-arrow")
+    Div_jour.closest("th").querySelector(".collapsible").classList.add("cursor")
 }
 
 function triage_jour(Div_jour) {
-    $(Div_jour).find(".clock-timepicker").map(function() {
-        return { val: $(this).attr("time_int"), el: this.closest(".Periode_jour ") };
+    var div = ""
+    Array.prototype.map.call(Div_jour.querySelectorAll(".in_timepicker"), function(période) {
+        return { val: période.getAttribute("time_int"), el: période.closest(".Periode_jour ") };
     }).sort(function(a, b) {
         return a.val - b.val;
-    }).map(function() {
-        return this.el;
-    }).appendTo($(Div_jour));
+    }).map(function(map) {
+        div += map.el.outerHTML
+    })
+    Div_jour.html(div)
+    Div_jour.querySelectorAll('.checkbox_lever_coucher').forEach(function(checkbox) {
+
+        if (checkbox.getAttribute("checked") == 'true') {
+            checkbox.checked = true
+        } else {
+            checkbox.checked = false
+        }
+    })
+    Div_jour.querySelectorAll('.select_lever_coucher').forEach(function(lever_coucher) {
+        if (lever_coucher.getAttribute("selectedIndex") == '0') {
+            lever_coucher.value = 'lever'
+        } else if (lever_coucher.getAttribute("selectedIndex") == '1') {
+            lever_coucher.value = 'coucher'
+        }
+    })
 }
 
 function MAJ_Graphique_jour(Div_jour) {
-    graphDiv = $(Div_jour).closest('.planification-body').find(".graphJours").find('.graphique_jour_' + $(Div_jour).attr("class").split(' ')[1])
+
+    graphDiv = Div_jour.closest('.planification-body').querySelector('.graphique_jour_' + Div_jour.getAttribute("class").split(' ')[1])
+
     graphDiv.empty()
-    Periode_jour = $(Div_jour).find('.Periode_jour')
+    Periode_jour = Div_jour.querySelectorAll('.Periode_jour')
     for (var i = 0; i < Periode_jour.length; i++) {
         var isFirst = (i == 0) ? true : false
         var isLast = (i == Periode_jour.length - 1) ? true : false
         var periode = Periode_jour[i]
-        var debut_periode = $(periode).find('.clock-timepicker').attr("value")
+        var debut_periode = periode.querySelector('.in_timepicker').getAttribute("value")
         var heure_debut = (parseInt(debut_periode.split(':')[0]) * 60) + parseInt(debut_periode.split(':')[1])
         var delta, class_periode, mode, nouveau_graph, heure_fin, width, fin_periode, fin_periode
         if (isFirst && heure_debut != 0) {
@@ -1447,36 +1466,35 @@ function MAJ_Graphique_jour(Div_jour) {
             nouveau_graph = '<div class="graph ' + class_periode + '" style="width:' + width + '%; height:20px; display:inline-block;">'
             nouveau_graph += '<span class="tooltiptext  ' + class_periode + '">' + debut_periode + " - 23:59<br>" + mode + '</span>'
             nouveau_graph += '</div>'
-            graphDiv.append(nouveau_graph)
+            graphDiv.append(domUtils.DOMparseHTML(nouveau_graph))
         }
         if (isLast) {
             heure_fin = 1439
             fin_periode = "23:59"
         } else {
-            //fin_periode = $(Periode_jour[i+1]).find('.clock-timepicker').val()
-            fin_periode = $(Periode_jour[i + 1]).find('.clock-timepicker').attr("value")
+
+            fin_periode = Periode_jour[i + 1].querySelector('.in_timepicker').getAttribute("value")
             heure_fin = (parseInt(fin_periode.split(':')[0]) * 60) + parseInt(fin_periode.split(':')[1])
         }
         delta = heure_fin - heure_debut
         width = (delta * 100) / 1440
-        class_periode = recup_class_couleur($(periode).find('.select-selected').attr('class').split(' '))
-        mode = $(periode).find('.select-selected').text()
+        class_periode = recup_class_couleur(periode.querySelector('.select-selected').getAttribute('class').split(' '))
+        mode = periode.querySelector('.select-selected').value
         nouveau_graph = '<div class="graph ' + class_periode + '" style="width:' + width + '%; height:20px; display:inline-block;">'
         nouveau_graph += '<span class="tooltiptext  ' + class_periode + '">' + debut_periode + " - " + fin_periode + "<br>" + mode + '</span>'
         nouveau_graph += '</div>'
-        graphDiv.append(nouveau_graph)
+        graphDiv.append(domUtils.DOMparseHTML(nouveau_graph))
     }
 }
-
-function Recup_select($type) {
+function Recup_select(type_) {
     var SELECT = ""
     $.ajax({
         type: "POST",
         url: "plugins/planification/core/ajax/planification.ajax.php",
         data: {
             action: "Recup_select",
-            eqLogic_id: $('.eqLogicAttr[data-l1key=id]').value(),
-            type: $type
+            eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
+            type: type_
         },
         global: true,
         async: false,
@@ -1485,7 +1503,7 @@ function Recup_select($type) {
         },
         success: function(data) {
             if (data.state != 'ok') {
-                $('#div_alert').showAlert({ message: data, level: 'danger' });
+                $.showAlert({ message: data, level: 'danger' });
                 SELECT = "";
             }
             SELECT = data.result;
@@ -1494,7 +1512,6 @@ function Recup_select($type) {
     return SELECT;
 
 }
-
 function Recup_liste_commandes_planification() {
     var COMMANDE_LIST = []
     $.ajax({
@@ -1502,7 +1519,7 @@ function Recup_liste_commandes_planification() {
         url: "plugins/planification/core/ajax/planification.ajax.php",
         data: {
             action: "Recup_liste_commandes_planification",
-            eqLogic_id: $('.eqLogicAttr[data-l1key=id]').value(),
+            eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
         },
         global: true,
         async: false,
@@ -1511,7 +1528,7 @@ function Recup_liste_commandes_planification() {
         },
         success: function(data) {
             if (data.state != 'ok') {
-                $('#div_alert').showAlert({ message: data, level: 'danger' });
+                $.showAlert({ message: data, level: 'danger' });
                 COMMANDE_LIST = "";
             }
             COMMANDE_LIST = data.result;
@@ -1521,7 +1538,6 @@ function Recup_liste_commandes_planification() {
     return COMMANDE_LIST;
 
 }
-
 function printEqLogic(_eqLogic) {
     $('#div_planifications').empty()
     $('#table_cmd_planification tbody').empty()
@@ -1616,26 +1632,24 @@ function printEqLogic(_eqLogic) {
             $('#tab_gestion ').find('.HeureCoucher_Vendredi')[0].innerText = data.result["Coucher_soleil"]
             $('#tab_gestion ').find('.HeureCoucher_Samedi')[0].innerText = data.result["Coucher_soleil"]
             $('#tab_gestion ').find('.HeureCoucher_Dimanche')[0].innerText = data.result["Coucher_soleil"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText = data.result["Heure_prochaine_action_lever_lundi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mardi')[0].innerText = data.result["Heure_prochaine_action_lever_mardi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mercredi')[0].innerText = data.result["Heure_prochaine_action_lever_mercredi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_lever_Jeudi')[0].innerText = data.result["Heure_prochaine_action_lever_jeudi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_lever_Vendredi')[0].innerText = data.result["Heure_prochaine_action_lever_vendredi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_lever_Samedi')[0].innerText = data.result["Heure_prochaine_action_lever_samedi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_lever_Dimanche')[0].innerText = data.result["Heure_prochaine_action_lever_dimanche"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Lundi')[0].innerText = data.result["Heure_prochaine_action_coucher_lundi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mardi')[0].innerText = data.result["Heure_prochaine_action_coucher_mardi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mercredi')[0].innerText = data.result["Heure_prochaine_action_coucher_mercredi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Jeudi')[0].innerText = data.result["Heure_prochaine_action_coucher_jeudi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Vendredi')[0].innerText = data.result["Heure_prochaine_action_coucher_vendredi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Samedi')[0].innerText = data.result["Heure_prochaine_action_coucher_samedi"]
-            $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Dimanche')[0].innerText = data.result["Heure_prochaine_action_coucher_dimanche"]
+            $('#tab_gestion ').find('.Heure_action_suivante_lever_Lundi')[0].innerText = data.result["Heure_prochaine_action_lever_lundi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_lever_Mardi')[0].innerText = data.result["Heure_prochaine_action_lever_mardi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_lever_Mercredi')[0].innerText = data.result["Heure_prochaine_action_lever_mercredi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_lever_Jeudi')[0].innerText = data.result["Heure_prochaine_action_lever_jeudi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_lever_Vendredi')[0].innerText = data.result["Heure_prochaine_action_lever_vendredi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_lever_Samedi')[0].innerText = data.result["Heure_prochaine_action_lever_samedi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_lever_Dimanche')[0].innerText = data.result["Heure_prochaine_action_lever_dimanche"]
+            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Lundi')[0].innerText = data.result["Heure_prochaine_action_coucher_lundi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Mardi')[0].innerText = data.result["Heure_prochaine_action_coucher_mardi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Mercredi')[0].innerText = data.result["Heure_prochaine_action_coucher_mercredi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Jeudi')[0].innerText = data.result["Heure_prochaine_action_coucher_jeudi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Vendredi')[0].innerText = data.result["Heure_prochaine_action_coucher_vendredi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Samedi')[0].innerText = data.result["Heure_prochaine_action_coucher_samedi"]
+            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Dimanche')[0].innerText = data.result["Heure_prochaine_action_coucher_dimanche"]
         }
 
     })
     nom_planification_erreur = []
-
-
 
     var SELECT_LIST = Recup_select("planifications")
     var CMD_LIST = Recup_liste_commandes_planification()
@@ -1644,15 +1658,15 @@ function printEqLogic(_eqLogic) {
         url: "plugins/planification/core/ajax/planification.ajax.php",
         data: {
             action: "Recup_planification",
-            id: _eqLogic["id"]
+            eqLogic_id: _eqLogic["id"]
         },
-        //dataType: 'json',
         global: false,
         async: false,
         error: function(request, status, error) { handleAjaxError(request, status, error) },
         success: function(data) {
+            console.log(data)
             if (data.state != 'ok') {
-                $('#div_alert').showAlert({
+                jeedomUtils.showAlert({
                     message: data.result,
                     level: 'danger'
                 })
@@ -1661,44 +1675,55 @@ function printEqLogic(_eqLogic) {
             if (data.result == false) {
                 return
             }
+            
             var array = JSON.parse("[" + data.result + "]");
             if (array[0].length == 0) { return; }
-            array[0].forEach(function(planification) {
-                Ajoutplanification({ nom: planification.nom_planification, Id: planification.Id, nouveau: false })
-                $('#div_planifications .planification:last .JourSemaine').each(function() {
-                    jour_en_cours = $(this)[0].classList[1]
-                    planification.semaine.forEach(function(jour) {
-                        if (jour.jour == jour_en_cours) {
-                            if (isset(jour.periodes)) {
-                                jour.periodes.forEach(function(periode) {
-                                    Couleur = "erreur"
-                                    Nom = ""
-                                    Id = ""
-                                    CMD_LIST.forEach(function(cmd) {
+            var numéro_planification = 0
 
-                                        if (periode.Id == cmd.Id) {
-                                            Couleur = "couleur-" + cmd.couleur
-                                            Nom = cmd.Nom
-                                            Id = cmd.Id
+            array[0].forEach(function(planifications) {
+                while (isset(planifications[numéro_planification])) {
+                    var nom_planification = ""
+                    var id_planification = ""
+                    var périodes = []
 
-                                        } else if (periode.Id == cmd.Nom) {
-                                            Couleur = "couleur-" + cmd.couleur
-                                            Nom = cmd.Nom
-                                            Id = cmd.Id
-                                        }
-                                    });
-                                    var element = SELECT_LIST.replace("#COULEUR#", Couleur);
-                                    element = element.replace("#VALUE#", Nom)
-                                    element = element.replace("#ID#", Id)
-                                    Ajout_Periode(element, $('.planification:last .JourSemaine.' + jour_en_cours), periode.Debut_periode, periode.Id, periode.Type_periode)
-                                })
-                            }
-                        }
+                    planifications[numéro_planification].forEach(function(planification) {
+                        if (isset(planification.Nom)) { nom_planification = planification.Nom }
+                        if (isset(planification.Id)) { id_planification = planification.Id }
+                        if (isset(planification.Lundi)) { périodes['Lundi'] = planification.Lundi }
+                        if (isset(planification.Mardi)) { périodes['Mardi'] = planification.Mardi }
+                        if (isset(planification.Mercredi)) { périodes['Mercredi'] = planification.Mercredi }
+                        if (isset(planification.Jeudi)) { périodes['Jeudi'] = planification.Jeudi }
+                        if (isset(planification.Vendredi)) { périodes['Vendredi'] = planification.Vendredi }
+                        if (isset(planification.Samedi)) { périodes['Samedi'] = planification.Samedi }
+                        if (isset(planification.Dimanche)) { périodes['Dimanche'] = planification.Dimanche }
+
                     })
-                    triage_jour($('#div_planifications .planification:last .JourSemaine.' + jour_en_cours))
-                    MAJ_Graphique_jour($('#div_planifications .planification:last .JourSemaine.' + jour_en_cours))
-                })
 
+                    Ajoutplanification({ nom: nom_planification, Id: id_planification, nouveau: false })
+
+                    document.querySelectorAll('#div_planifications .planification')[numéro_planification].querySelectorAll('.JourSemaine').forEach(function(div_jour) {
+                        périodes[div_jour.classList[1]].forEach(function(periode) {
+                            if (!isset(periode.Type)) { return }
+                            Couleur = "erreur"
+                            Nom = ""
+                            Id = ""
+                            CMD_LIST.forEach(function(cmd) {
+                                if (periode.Id == cmd.Id || periode.Id == cmd.Nom) {
+                                    Couleur = "couleur-" + cmd.couleur
+                                    Nom = cmd.Nom
+                                    Id = cmd.Id
+                                }
+                            });
+                            var element = SELECT_LIST.replace("#COULEUR#", Couleur);
+                            element = element.replace("#VALUE#", Nom)
+                            element = element.replace("#ID#", Id)
+                            Ajout_Periode(element, div_jour, periode.Début, periode.Id, periode.Type)
+                        })
+                        triage_jour(div_jour)
+                        MAJ_Graphique_jour(div_jour)
+                    })
+                    numéro_planification += 1
+                }
             })
         }
     })

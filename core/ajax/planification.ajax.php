@@ -132,12 +132,13 @@
     if (init('action') == 'Recup_planification') {//OK
       $dossier = dirname(__FILE__) . '/../../planifications/';
       if (!is_dir($dossier)) mkdir($dossier, 0755, true);
+      
       $nom_fichier=dirname(__FILE__) ."/../../planifications/" . init('eqLogic_id') . ".json";
       $res="";
       if(file_exists ( $nom_fichier ) ){
         $res=file_get_contents ($nom_fichier);
       }
-      ajax::success($res);
+      ajax::success($nom_fichier);
     }
     if (init('action') == 'Recup_select') {
       $eqLogic = planification::byId(init('eqLogic_id'));
