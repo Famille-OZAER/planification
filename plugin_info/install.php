@@ -20,10 +20,10 @@ function planification_update() {
 			$type_équipement = $eqLogic->getConfiguration('type','');
 		
 			if($type_équipement !=""){
-				//$eqLogic->setConfiguration('type', '');
+				$eqLogic->setConfiguration('type', '');
 				$eqLogic->setConfiguration('Type_équipement', $type_équipement);
 				$eqLogic->save();
-				log::add('planification', 'debug', 'ok');
+				
 			}
 		  	$planifications=$eqLogic->Recup_planifications(true,true);
   
