@@ -1,11 +1,5 @@
 JSONCLIPBOARD = null
 //
-
-var v_4_4 = false
-if(Number(jeeFrontEnd.jeedomVersion.split('.')[0])>= 4 &&  Number(jeeFrontEnd.jeedomVersion.split('.')[1])>= 4){
-    v_4_4=true
-}
-
 flatpickr.localize(flatpickr.l10ns.fr)
 
 
@@ -205,34 +199,7 @@ document.getElementById('div_pageContainer').addEventListener('click', function(
             })
         }
     }
-    if (_target = event.target.closest('.modifier_json')) {
-
-        domUtils.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Modifier_JSON"
-            },
-            global: true,
-            async: false,
-            error: function(error) {
-                jeedomUtils.showAlert({
-                    message: error.message,
-                    level: 'danger'
-                })
-            },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    jeedomUtils.showAlert({
-                        message: data.result,
-                        level: 'danger'
-                    })
-                    return
-                }
-            }
-        })
-    }
-  
+      
     if (_target = event.target.closest('.li_eqLogic')) {
         let active_tabpane = document.querySelector(".tab-content .tab-pane.active").getAttribute("id")
         jeedomUtils.hideAlert()

@@ -99,11 +99,7 @@
 				<br/>
 				<span >{{Santé}}</span>
 			</div>
-			<div class="cursor modifier_json">
-				<i class="fab fa-jsfiddle"></i>
-				<br/>
-				<span >{{Modifier JSON}}</span>
-			</div>
+			
 		</div>
 
 		<input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
