@@ -13,10 +13,12 @@ function planification_update() {
 	log::add('planification', 'debug', 'planification_update');
 	planification::deamon_stop();
 	try{
-		$eqLogic->setConfiguration('type', '');
+		$type_équipement = $eqLogic->getConfiguration('type');
+		
         if($type_équipement !=""){
-          $eqLogic->setConfiguration('Type_équipement', $type_équipement);
-          $eqLogic->save();
+			$eqLogic->setConfiguration('type', '');
+            $eqLogic->setConfiguration('Type_équipement', $type_équipement);
+            $eqLogic->save();
         }
 		$eqLogics=planification::byType('planification');   
 		$planifications_new='';   
