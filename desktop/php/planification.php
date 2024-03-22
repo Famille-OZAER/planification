@@ -751,11 +751,11 @@
 	
    
     	$version=explode('.',jeedom::version());
-		echo jeedom::version();
+		//echo jeedom::version();
 		if(intval($version[0]) >= 4 && intval($version [1]) >=4){
 			include_file('desktop', 'planification V4.4', 'js', 'planification');
 		}else{
-			include_file('desktop', 'planification V4.4', 'js', 'planification');
+			include_file('desktop', 'planification', 'js', 'planification');
 		}
        
     
