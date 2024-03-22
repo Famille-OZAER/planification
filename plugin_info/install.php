@@ -3,7 +3,7 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
 function planification_install() {
-	log::add('planification', 'debug', 'planification_update');
+	log::add('planification', 'debug', 'planification_install');
 	$folderPath = dirname(__FILE__) . '/../../planification/planifications/';
 	if (!is_dir($folderPath)) mkdir($folderPath, 0755, true);
 	planification::deamon_start();
@@ -19,6 +19,7 @@ function planification_update() {
 			$eqLogic->setConfiguration('type', '');
             $eqLogic->setConfiguration('Type_équipement', $type_équipement);
             $eqLogic->save();
+			log::add('planification', 'debug', 'ok');
         }
 		$eqLogics=planification::byType('planification');   
 		$planifications_new='';   
@@ -26,8 +27,6 @@ function planification_update() {
 		  $planifications=$eqLogic->Recup_planifications(true,true);
   
 		  if($planifications !=[] && isset($planifications[0]['nom_planification'])){
-			planification::add_log('debug',"ok",$eqLogic);  
-			
 			$planifications=$eqLogic->Recup_planifications(true,true);
 			$planifications_new = '[{';
 			$numéro_planification=0;
