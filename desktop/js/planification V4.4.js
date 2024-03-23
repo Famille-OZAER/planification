@@ -407,7 +407,7 @@ document.getElementById('tab_eqlogic').addEventListener('click', function(event)
     if (_target = event.target.closest('.list_Cmd_info_binary')) {
         var el = _target.closest('div').querySelector('input')
         jeedom.cmd.getSelectModal({ cmd: { type: 'info', subType: "binary" } }, function(result) {
-            el.value = result.humam;
+            el.value = result.human;
         });
     }
     if (_target = event.target.closest('.list_Cmd_info')) {
@@ -2391,11 +2391,13 @@ function saveEqLogic(_eqLogic) {
         _eqLogic.configuration.Alias_Ferme = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').value;
         _eqLogic.configuration.Alias_My = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').value;
         var type_fenêtre="fenêtre"
+        
         document.querySelectorAll('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=type_fenêtre]').forEach(_el => {
-           if (_el.value == 1){
+           if (_el.checked == 1){
                 type_fenêtre=_el.id
             }
         })
+        
         _eqLogic.configuration.Type_fenêtre= type_fenêtre;
         var sens_ouverture="gauche"
         document.querySelectorAll('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=sens_ouveture_fenêtre]').forEach(_el => {
