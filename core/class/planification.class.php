@@ -917,8 +917,8 @@ class planification extends eqLogic {
       $replace = $eqLogic->preToHtml($_version);
       
       if (!is_array($replace)) {return $replace; }
-      $version = jeedom::versionAlias($_version);
-      if ($eqLogic->getDisplay('hideOn' . $version) == 1) { return ''; }
+      
+      if ($eqLogic->getDisplay('hideOn' . jeedom::versionAlias($_version)) == 1) { return ''; }
       $erreur=false;
       $liste_erreur=[];
       $replace['#type_equipement#']=$eqLogic->getConfiguration("Type_équipement","");

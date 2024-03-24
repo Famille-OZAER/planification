@@ -179,7 +179,7 @@ function reset_page(id, uid, page, action_en_cours) {
     }
 }
 
-function commun_widget(id, uid, info_widget, action_en_cours, set_planification_id, heure_fin_change_id, calendar_selector, page, type) {
+function commun_widget(id, uid, info_widget, action_en_cours, set_planification_id, heure_fin_change_id, calendar_selector, page) {
 
     var taille = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=' + uid + '] .object_name ').style.height.replace(/px/i, ''))
 
