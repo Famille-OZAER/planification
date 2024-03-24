@@ -560,9 +560,9 @@
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_2').style.display = 'block';
             }
             if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_2').style.display == 'block') {
-                reset_page('page2', action_en_cours)
+                Reset_page('page2', action_en_cours)
             } else {
-                reset_page('page1', action_en_cours)
+                Reset_page('page1', action_en_cours)
             }
             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').onchange = function(select) {
                 jeedom.cmd.execute({
@@ -577,10 +577,10 @@
                 var page = "page1"
                 if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_2').style.display == 'block') {
                     page = "page1"
-                    reset_page(page, action_en_cours)
+                    Reset_page(page, action_en_cours)
                 } else {
                     page = "page2"
-                    reset_page(page, action_en_cours)
+                    Reset_page(page, action_en_cours)
                 }
                 domUtils.ajax({
                     type: "POST",
@@ -673,7 +673,7 @@
 
         }
 
-        function reset_page(page, action_en_cours) {
+        function Reset_page(page, action_en_cours) {
             if (page == 'page1') {
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 ').style.display = 'block'
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_2').style.display = 'none'
@@ -715,7 +715,7 @@
                             }
                         }
                     })
-                    reset_page("page1", action_en_cours)
+                    Reset_page("page1", action_en_cours)
                 }, 60000);
             }
         }
