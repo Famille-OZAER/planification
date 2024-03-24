@@ -1246,7 +1246,7 @@ class planification extends eqLogic {
       }else{
         $replace['#display_erreur#'] ="none";
       }	
-      $html = template_replace($replace, getTemplate('core', $version, $eqLogic->getConfiguration("Type_équipement",""), 'planification'));
+      $html = template_replace($replace, getTemplate('planification', $version, $eqLogic->getConfiguration("Type_équipement",""), 'planification'));
   
       cache::set('widgetHtml' . $version . $eqLogic->getId(), $html, 0);
     } catch (Exception $e) {
