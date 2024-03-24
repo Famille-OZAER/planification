@@ -923,30 +923,26 @@ class planification extends eqLogic {
       $liste_erreur=[];
       $replace['#type_equipement#']=$eqLogic->getConfiguration("Type_équipement","");
       $replace['#calendar_selector#']='';
-
-     
-        $planifications = $eqLogic::Recup_planifications(true);
-        $Id_planification_en_cours=$eqLogic->getConfiguration("Id_planification_en_cours","");
-        if($planifications == []){
-          $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#','Aucune planification',"value",true); 
-        }
-        if($planifications != []){
-          foreach($planifications as $planification){
-            //planification::add_log("debug",$planification[0]["Id"] . '::::'.$Id_planification_en_cours,$eqLogic);
-            if($planification[0]["Id"]==$Id_planification_en_cours){
-              $valuecalendar = '"'.$planification[0]["Nom"]. '" selected';
-              $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$planification[0]["Nom"],"value",true);
-            }else{
-              $valuecalendar = '"'.$planification[0]["Nom"].'"';
-              //$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$planification[0]["Nom"],"value",true);
-            }
-            if (!isset($replace['#calendar_selector#'])) {
-              $replace['#calendar_selector#'] = '<option id=' .$planification[0]["Id"]. ' value=' .$valuecalendar . '>' . $planification[0]["Nom"] . '</option>';
-            } else {
-              $replace['#calendar_selector#'] .= '<option id=' .$planification[0]["Id"]. ' value=' . $valuecalendar . '>' . $planification[0]["Nom"]. '</option>';
-            }
+      $planifications = $eqLogic::Recup_planifications(true);
+      $Id_planification_en_cours=$eqLogic->getConfiguration("Id_planification_en_cours","");
+      
+      /*if($planifications != []){
+        foreach($planifications as $planification){
+          //planification::add_log("debug",$planification[0]["Id"] . '::::'.$Id_planification_en_cours,$eqLogic);
+          if($planification[0]["Id"]==$Id_planification_en_cours){
+            $valuecalendar = '"'.$planification[0]["Nom"]. '" selected';
+            $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$planification[0]["Nom"],"value",true);
+          }else{
+            $valuecalendar = '"'.$planification[0]["Nom"].'"';
+            //$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$planification[0]["Nom"],"value",true);
+          }
+          if (!isset($replace['#calendar_selector#'])) {
+            $replace['#calendar_selector#'] = '<option id=' .$planification[0]["Id"]. ' value=' .$valuecalendar . '>' . $planification[0]["Nom"] . '</option>';
+          } else {
+            $replace['#calendar_selector#'] .= '<option id=' .$planification[0]["Id"]. ' value=' . $valuecalendar . '>' . $planification[0]["Nom"]. '</option>';
           }
         }
+      }*/
       
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#mode#',$eqLogic->getCmd(null, 'mode_fonctionnement'),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#mode_id#',$eqLogic->getCmd(null, 'mode_fonctionnement'),"id",false);
@@ -958,15 +954,16 @@ class planification extends eqLogic {
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_suivante#',$eqLogic->getCmd(null, 'action_suivante'),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#action_suivante_id#',$eqLogic->getCmd(null, 'action_suivante'),"id",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_heure_fin_id#',$eqLogic->getCmd(null, 'set_heure_fin'),"id",false);
+      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#heure_fin_id#',$eqLogic->getCmd(null, 'heure_fin'),"id",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#info_widget#',$eqLogic->getCmd(null, 'info'),"value",true);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#info_widget_id#',$eqLogic->getCmd(null, 'info'),"id",false);
-      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#heure_fin_id#',$eqLogic->getCmd(null, 'heure_fin'),"id",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$eqLogic->getCmd(null, 'set_planification'),"id",false);
+      //rmplacement des noms de fonction avec l'id de l'equipement en plus à la fin du nom de fonction
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Affichage_widget','Affichage_widget' .$eqLogic->getId(),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Reset_page','Reset_page' .$eqLogic->getId(),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Commun_widget','Commun_widget' .$eqLogic->getId(),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'SetWidget_Thermostat','SetWidget_Thermostat' .$eqLogic->getId(),"value",false);
-      $cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
+      /*$cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
       
         if($cmd_heure_fin->execCmd() != ""){
 
@@ -995,7 +992,7 @@ class planification extends eqLogic {
           $replace['#heure_fin#'] ="";
          // $replace['#datetimepicker#'] = date('Y/m/d H:i');
 
-        }
+        }*/
       $page_active=$eqLogic->getCache('Page');
       if($page_active =="" || $page_active=="page1"){
         $replace['#page#']="page1";
@@ -1166,13 +1163,7 @@ class planification extends eqLogic {
         } 
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#sens_ouverture_fenêtre#',$sens_ouverture_fenêtre,"value",false);
           
-        if ($erreur){
-          $replace['#display_erreur#'] ="block";
-        }else{
-          $replace['#display_erreur#'] ="none";
-        }	
-        $html = template_replace($replace, getTemplate('core', $version, 'volet', 'planification'));
-      }
+        }
       if ($eqLogic->getConfiguration("Type_équipement","")== "Chauffage"){
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#confort_id#',$eqLogic->getCmd(null, 'confort'),"id",false);		
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#eco_id#',$eqLogic->getCmd(null, 'eco'),"id",false);		
@@ -1250,7 +1241,13 @@ class planification extends eqLogic {
       }else{
         $replace['#display_erreur#'] ="none";
       }
-
+      if ($erreur){
+        $replace['#display_erreur#'] ="block";
+      }else{
+        $replace['#display_erreur#'] ="none";
+      }	
+      $html = template_replace($replace, getTemplate('core', $version, $eqLogic->getConfiguration("Type_équipement",""), 'planification'));
+  
       cache::set('widgetHtml' . $version . $eqLogic->getId(), $html, 0);
     } catch (Exception $e) {
       planification::add_log("error",'Erreur lors de la création du widget Détails : '. $e->getMessage(),$eqLogic);
