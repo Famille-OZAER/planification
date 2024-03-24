@@ -1,5 +1,5 @@
 var timeoutId
-flatpickr.localize(flatpickr.l10ns.fr)
+//flatpickr.localize(flatpickr.l10ns.fr)
 
 function setWidget_Thermostat(_this, set_consigne_temperature_id, consigne_min, consigne_max, consigne, temperature) {
     var div = ""
