@@ -921,11 +921,11 @@ class planification extends eqLogic {
      if (intval($version_arr[0]) >= 4 && intval($version_arr[0]) >= 4){
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'domUtils.ajax(','$.ajax(',"value",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'jeedomUtils.showAlert(','$.fn.showAlert(',"value",false);
-        include_file('3rdparty', 'flatpickr/flatpickr.min', 'css');
-	      include_file('3rdparty', 'flatpickr/flatpickr.dark', 'css');
-	      include_file('3rdparty', 'flatpickr/flatpickr.min', 'js');
-        include_file('3rdparty', 'flatpickr/l10n/fr', 'js');
-        include_file('3rdparty', 'flatpickr/l10n/es', 'js');
+        include_file('3rdparty', 'flatpickr/flatpickr.min', 'css', 'planification';
+	      include_file('3rdparty', 'flatpickr/flatpickr.dark', 'css', 'planification');
+	      include_file('3rdparty', 'flatpickr/flatpickr.min', 'js', 'planification');
+        include_file('3rdparty', 'flatpickr/l10n/fr', 'js', 'planification');
+        include_file('3rdparty', 'flatpickr/l10n/es', 'js', 'planification');
 }
      
       $version_alias=jeedom::versionAlias($_version);
