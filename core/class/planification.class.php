@@ -916,33 +916,43 @@ class planification extends eqLogic {
       $eqLogic=$this;
       $replace = $eqLogic->preToHtml($_version);
       
-      if (!is_array($replace)) {return $replace; }
-      $version = jeedom::versionAlias($_version);
-      if ($eqLogic->getDisplay('hideOn' . $version) == 1) { return ''; }
+       if (!is_array($replace)) {return $replace; }
+      $version_arr=explode('.', jeedom::version());
+     if (intval($version_arr[0]) >= 4 && intval($version_arr[0]) >= 4){
+        $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'domUtils.ajax(','$.ajax(',"value",false);
+        $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'jeedomUtils.showAlert(','$.fn.showAlert(',"value",false);
+        include_file('3rdparty', 'flatpickr/flatpickr.min', 'css');
+	      include_file('3rdparty', 'flatpickr/flatpickr.dark', 'css');
+	      include_file('3rdparty', 'flatpickr/flatpickr.min', 'js');
+        include_file('3rdparty', 'flatpickr/l10n/fr', 'js');
+        include_file('3rdparty', 'flatpickr/l10n/es', 'js');
+}
+     
+      $version_alias=jeedom::versionAlias($_version);
+      //echo $version_alias;
+      if ($eqLogic->getDisplay('hideOn' . $version_alias) == 1) { return ''; }
       $erreur=false;
       $liste_erreur=[];
-      $replace['#type_equipement#']=$eqLogic->getConfiguration("Type_équipement","");
+      //$replace['#type_equipement#']=$eqLogic->getConfiguration("Type_équipement","");
       $replace['#calendar_selector#']='';
       $planifications = $eqLogic::Recup_planifications(true);
       $Id_planification_en_cours=$eqLogic->getConfiguration("Id_planification_en_cours","");
       
-      /*if($planifications != []){
+      if($planifications != []){
         foreach($planifications as $planification){
-          //planification::add_log("debug",$planification[0]["Id"] . '::::'.$Id_planification_en_cours,$eqLogic);
           if($planification[0]["Id"]==$Id_planification_en_cours){
             $valuecalendar = '"'.$planification[0]["Nom"]. '" selected';
             $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$planification[0]["Nom"],"value",true);
           }else{
             $valuecalendar = '"'.$planification[0]["Nom"].'"';
-            //$eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#planification_en_cours#',$planification[0]["Nom"],"value",true);
-          }
+           }
           if (!isset($replace['#calendar_selector#'])) {
             $replace['#calendar_selector#'] = '<option id=' .$planification[0]["Id"]. ' value=' .$valuecalendar . '>' . $planification[0]["Nom"] . '</option>';
           } else {
             $replace['#calendar_selector#'] .= '<option id=' .$planification[0]["Id"]. ' value=' . $valuecalendar . '>' . $planification[0]["Nom"]. '</option>';
           }
         }
-      }*/
+      }
       
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#mode#',$eqLogic->getCmd(null, 'mode_fonctionnement'),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#mode_id#',$eqLogic->getCmd(null, 'mode_fonctionnement'),"id",false);
@@ -1022,52 +1032,12 @@ class planification extends eqLogic {
           $replace['#temperature#'] = "";
           $replace['#temperature_id#']="";
         }
-        $image="Off.png";
-
+       
         $cmd_Mode_fonctionnement=$eqLogic->getCmd(null, 'mode_fonctionnement');
         $Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
-        //planification::add_log("debug","mode de fonctionnement" . $Mode_fonctionnement,$eqLogic);
-
+     
         $cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_allume_id',"")));
-        if (is_object($cmd_Etat_Allume)){
-          if($cmd_Etat_Allume->execCmd() == 1){
-            $image="On.png";
-            $cmd_Etat_Boost=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_boost_id',"")));
-            if (is_object($cmd_Etat_Boost)){
-              if($cmd_Etat_Boost->execCmd())
-              {
-                $image="OnBoost.png";
-              }
-            }
-          }
-
-        }else{
-          $cmd_action_en_cours=$eqLogic->getCmd(null, 'action_en_cours');
-          if (is_object($cmd_action_en_cours)){
-            $action_en_cours=$cmd_action_en_cours->execCmd();
-            switch (strtolower($action_en_cours)){
-              case "allumé":
-                $image="On.png";								
-                break;	
-              case "forcé";
-                $image="On.png";
-                break;			
-              case "eteint";
-                $image="Off.png";
-                break;
-            }
-          }
-
-        }
-
-
-
-        $replace['#img#'] = $image;
-        if ($erreur){
-          $replace['#display_erreur#'] ="block";
-        }else{
-          $replace['#display_erreur#'] ="none";
-        }	
+               
         
         $html = template_replace($replace, getTemplate('core', $version, 'poele', 'planification'));
       }
@@ -1100,13 +1070,7 @@ class planification extends eqLogic {
         }
 
         
-        if ($erreur){
-          $replace['#display_erreur#'] ="block";
-        }else{
-          $replace['#display_erreur#'] ="none";
-        }
-        $html = template_replace($replace, getTemplate('core', $version, 'PAC', 'planification'));
-      }
+         }
       if ($eqLogic->getConfiguration("Type_équipement","")== "Volet"){
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#ouvrir_id#',$eqLogic->getCmd(null, 'ouverture'),"id",false);		
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#fermer_id#',$eqLogic->getCmd(null, 'fermeture'),"id",false);		
@@ -1115,16 +1079,13 @@ class planification extends eqLogic {
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#type_fenêtre#',$eqLogic->getConfiguration('Type_fenêtre',""),"value",false);
         
         $cmd_My=$eqLogic->getCmd(null, 'my');
-        if(is_object($cmd_My)){
-          $commande=$cmd_My->getConfiguration("commande","");
-          if($cmd_My->getConfiguration("commande","") == ""){
-            $replace['#show_my#'] =false;
-          }else{
-            $replace['#show_my#'] = true;
-          }
-        }else{
+        $commande=$cmd_My->getConfiguration("commande","");
+        if($cmd_My->getConfiguration("commande","") == ""){
           $replace['#show_my#'] =false;
+        }else{
+          $replace['#show_my#'] = true;
         }
+       
         $cmd_Etat=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
         if (is_object($cmd_Etat)){
           $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#etat_id#',$cmd_Etat,"id",false);
@@ -1170,13 +1131,7 @@ class planification extends eqLogic {
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#hg_id#',$eqLogic->getCmd(null, 'hors_gel'),"id",false);	
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$eqLogic->getCmd(null, 'arret'),"id",false);		
         
-        if ($erreur){
-          $replace['#display_erreur#'] ="block";
-        }else{
-          $replace['#display_erreur#'] ="none";
-        }	
-        $html = template_replace($replace, getTemplate('core', $version, 'chauffage', 'planification'));
-      }
+        }
       if ($eqLogic->getConfiguration("Type_équipement","")== "Prise"){
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#on_id#',$eqLogic->getCmd(null, 'on'),"id",false);		
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#off_id#',$eqLogic->getCmd(null, 'off'),"id",false);	
@@ -1228,27 +1183,18 @@ class planification extends eqLogic {
 
         }
         $replace['#img#'] = $image;
-        if ($erreur){
-          $replace['#display_erreur#'] ="block";
-        }else{
-          $replace['#display_erreur#'] ="none";
-        }	
-        $html = template_replace($replace, getTemplate('core', $version, 'prise', 'planification'));
-      }
+         }
+      
       if ($erreur){
         $replace['#display_erreur#'] ="block";
         planification::add_log("debug",'Erreur: '. implode("//",$liste_erreur),$eqLogic);
-      }else{
-        $replace['#display_erreur#'] ="none";
-      }
-      if ($erreur){
-        $replace['#display_erreur#'] ="block";
+     
       }else{
         $replace['#display_erreur#'] ="none";
       }	
-      $html = template_replace($replace, getTemplate('planification', $version, $eqLogic->getConfiguration("Type_équipement",""), 'planification'));
+      $html = template_replace($replace, getTemplate('planification', $_version, $eqLogic->getConfiguration("Type_équipement",""), 'planification'));
   
-      cache::set('widgetHtml' . $version . $eqLogic->getId(), $html, 0);
+      cache::set('widgetHtml' . $_version . $eqLogic->getId(), $html, 0);
     } catch (Exception $e) {
       planification::add_log("error",'Erreur lors de la création du widget Détails : '. $e->getMessage(),$eqLogic);
     }
