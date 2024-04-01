@@ -32,9 +32,9 @@
                 <i class="fas fa-sync"></i>
             </span>
             <div>
-                <img class="cmd cmd-widget ouvrir cursor" data-type="action" src='plugins/planification/template/dashboard/images/Volet/bouton_ouvrir.png' style='position: relative;left: 5px;width:30px' />
-                <img class="cmd cmd-widget my cursor" data-type="action" src='plugins/planification/template/dashboard/images/Volet/bouton_my.png' style='display:none;width:30px' />
-                <img class="cmd cmd-widget fermer cursor" data-type="action" src='plugins/planification/template/dashboard/images/Volet/bouton_fermer.png' style='position: relative;right: 5px;width:30px' />
+                <img class="cmd cmd-widget ouvrir cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/Volet/bouton_ouvrir.png' style='position: relative;left: 5px;width:30px' />
+                <img class="cmd cmd-widget my cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/Volet/bouton_my.png' style='display:none;width:30px' />
+                <img class="cmd cmd-widget fermer cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/Volet/bouton_fermer.png' style='position: relative;right: 5px;width:30px' />
             </div>
             <div class="prochaine_action tooltips" style="font-size: 0.9em;margin: 5px;color:white!important">
                 <span style="cursor:default;"></span>
@@ -65,11 +65,12 @@
 
         </div>
     </div>
-   
-
-
+  
     
     <script>
+    
+          
+
         var show_name=false
         var show_object=false
         var v_4_4 = false
@@ -78,11 +79,6 @@
         }
         if (v_4_4){
             flatpickr.localize(flatpickr.l10ns.fr)
-        }else{
-            
-            
-
-
         }
         
     
@@ -234,7 +230,7 @@
             }           
             
             
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').setAttribute("src", 'plugins/planification/template/dashboard/images/volet/' + image)
+            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').setAttribute("src", 'plugins/planification/template/dashboard/images/Volet/' + image)
 
             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').setAttribute("src", 'plugins/planification/template/dashboard/images/' + mode.toLowerCase() + '.png')
 
@@ -375,49 +371,53 @@
             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .bt_afficher_timepicker').onclick = function() {
 
                 _target = document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .bt_afficher_timepicker')
-                if(v_4_4){
-                    flatpickr(_target.closest('div div').querySelector('.in_timepicker'), {
-                        enableTime: true,
-                        noCalendar: false,
-                        dateFormat: "d-m-Y H:i",
-                        time_24hr: true,
-                        minuteIncrement: 1,
-                        allowInput: true,
-                        clickOpens: false,
-                        onChange: function(selectedDates, dateStr, instance) {
+                flatpickr(_target.closest('div div').querySelector('.in_timepicker'), {
+                    enableTime: true,
+                    noCalendar: false,
+                    dateFormat: "d-m-Y H:i",
+                    time_24hr: true,
+                    minuteIncrement: 1,
+                    allowInput: true,
+                    clickOpens: false,
+                    onChange: function(selectedDates, dateStr, instance) {
 
-                        },
-                        onOpen: function(selectedDates, dateStr, instance) {
-                            console.log(instance)
-
-                            if (instance.element.value == '') {
-                                date = new Date()
-                                date.setMinutes(date.getMinutes() + 1);
-                                instance.setDate(date);
-                                instance.set('minDate', date)
-                            }
-
-                        },
-                        onClose: function(selectedDates, dateStr, instance) {
-                            console.log('#set_heure_fin_id#')
-                            console.log(dateStr)
-                            jeedom.cmd.execute({
-                                id: '#set_heure_fin_id#',
-                                value: {
-                                    'message': dateStr
-                                }
-                            });
-
-                            instance.destroy()
-                        },
-                        onValueUpdate: function(selectedDates, dateStr, instance) {
-
+                    },
+                    onOpen: function(selectedDates, dateStr, instance) {
+                       if (v_4_4){
+                         if (!instance.calendarContainer.querySelector('.flatpickr-hour').classList.contains('expressionAttr')){
+                            instance.calendarContainer.querySelector('.flatpickr-hour').classList.add('expressionAttr')
+                            instance.calendarContainer.querySelector('.flatpickr-minute').classList.add('expressionAttr')
+                            instance.calendarContainer.querySelector('.cur-year').classList.add('expressionAttr')
+                            instance.calendarContainer.querySelector('.flatpickr-monthDropdown-months').classList.add('expressionAttr')
                         }
-                    });
-                    _target.closest("div").querySelector('.in_timepicker')._flatpickr.open()
-                }else{
+                       }
+                        date = new Date() 
+                         instance.set('minDate', date)
+                        if (instance.element.value == '') {
+                            date.setMinutes(date.getMinutes() + 1);
+                            instance.setDate(date);
+                          
+                        }
+                        console.log(  instance)
 
-                }
+                    },
+                    onClose: function(selectedDates, dateStr, instance) {
+                        
+                        jeedom.cmd.execute({
+                            id: '#set_heure_fin_id#',
+                            value: {
+                                'message': dateStr
+                            }
+                        });
+
+                        instance.destroy()
+                    },
+                    onValueUpdate: function(selectedDates, dateStr, instance) {
+
+                    }
+                });
+                _target.closest("div").querySelector('.in_timepicker')._flatpickr.open()
+                
                
             };
 

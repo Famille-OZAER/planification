@@ -918,15 +918,65 @@ class planification extends eqLogic {
       
        if (!is_array($replace)) {return $replace; }
       $version_arr=explode('.', jeedom::version());
-     if (intval($version_arr[0]) >= 4 && intval($version_arr[0]) >= 4){
+     if (intval($version_arr[0]) >= 4 && intval($version_arr[1]) < 4){
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'domUtils.ajax(','$.ajax(',"value",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'jeedomUtils.showAlert(','$.fn.showAlert(',"value",false);
-        include_file('3rdparty', 'flatpickr/flatpickr.min', 'css', 'planification';
-	      include_file('3rdparty', 'flatpickr/flatpickr.dark', 'css', 'planification');
-	      include_file('3rdparty', 'flatpickr/flatpickr.min', 'js', 'planification');
-        include_file('3rdparty', 'flatpickr/l10n/fr', 'js', 'planification');
-        include_file('3rdparty', 'flatpickr/l10n/es', 'js', 'planification');
-}
+       
+        /*$file="/var/www/html/desktop/custom/custom.js";
+	      $read=file($file);
+	      $existe=false;
+        $write_tmp="";
+        foreach($read as $line){
+          $write_tmp .= $line;
+          if(strpos($line, 'flatpickr v4.6.13')===FALSE){
+            $existe=true;
+          } 
+        }
+        
+        if (!$existe){
+          $file2="/var/www/html/plugins/planification/3rdparty/flatpickr/flatpickr.min.js";
+	        $read2=file($file2);
+	       foreach($read2 as $line2){
+            $write_tmp .= $line2;
+          
+          }
+            copy($file, $file.".bak");
+            $write=fopen($file , 'w+');
+            fwrite ( $write ,  $write_tmp);
+          
+             fclose($write);
+        
+        }*/
+
+        $file="/var/www/html/desktop/custom/custom.css";
+       
+	      $read=file($file);
+	      $existe=false;
+        $write_tmp="";
+        foreach($read as $line){
+          $write_tmp .= $line;
+          
+          if(strpos($line, '.flatpickr-calendar {')!==FALSE){
+         
+            $existe=true;
+          } 
+        }
+        
+        if (!$existe){
+          $file2="/var/www/html/plugins/planification/3rdparty/flatpickr/flatpickr.dark.css";
+	        $read2=file($file2);
+	       foreach($read2 as $line2){
+            $write_tmp .= $line2;
+          
+          }
+            copy($file, $file.".bak");
+            $write=fopen($file , 'w+');
+            fwrite ( $write ,  $write_tmp);
+          
+             fclose($write);
+        
+        }
+      }
      
       $version_alias=jeedom::versionAlias($_version);
       //echo $version_alias;
@@ -1039,7 +1089,7 @@ class planification extends eqLogic {
         $cmd_Etat_Allume=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_allume_id',"")));
                
         
-        $html = template_replace($replace, getTemplate('core', $version, 'poele', 'planification'));
+        
       }
 
       if ($eqLogic->getConfiguration("Type_équipement","")== "PAC"){
