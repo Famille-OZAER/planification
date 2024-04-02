@@ -68,7 +68,7 @@ function planification_update() {
         
         }
       }
-	$yyy=rename('/var/www/html/plugins/planification/core/template/images/chauffage', '/var/www/html/plugins/planification/core/template/images/Chauffage');
+	$yyy=rename('/var/www/html/plugins/planification/core/template/dashboard/images/chauffage', '/var/www/html/plugins/planification/core/template/dashboard/images/Chauffage');
 	if($yyy){
 		log::add('planification_update', 'error', 'planification_update ERREUR: OK');
 	}else{
