@@ -81,7 +81,7 @@ function planification_update() {
 	unlink ("/var/www/html/plugins/planification/core/template/dashboard/thermostat.html");
 	unlink ("/var/www/html/plugins/planification/core/template/dashboard/volet.html"); 
 	unlink ("/var/www/html/plugins/planification/core/template/dashboard/autre.html");
-	$scandir = scandir("/var/www/html/plugins/planification/core/template/dashboard/images/chauffage");
+	$scandir = scandir("/var/www/html/plugins/planification/core/template/dashboard/images/chauffage/");
 		foreach($scandir as $fichier){
 			log::add('planification_update', 'debug', $fichier);
 		}
