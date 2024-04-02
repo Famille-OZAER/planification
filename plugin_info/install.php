@@ -68,7 +68,8 @@ function planification_update() {
         
         }
       }
-	rename('/var/www/html/plugins/planification/core/template/images/chauffage', '/var/www/html/plugins/planification/core/template/images/Chauffage');
+	$yyy=rename('/var/www/html/plugins/planification/core/template/images/chauffage', '/var/www/html/plugins/planification/core/template/images/Chauffage');
+	log::add('planification', 'error', 'planification_update ERREUR: '.$yyy);
 	rename('/../core/template/images/pac', '/../core/template/images/PAC');
 	rename('/../core/template/images/poele', '/../core/template/images/Poele');
 	rename('/../core/template/images/prise', '/../core/template/images/Prise');
