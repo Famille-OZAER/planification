@@ -41,47 +41,52 @@ function planification_update() {
 
         $file="/var/www/html/desktop/custom/custom.css";
        
-	      $read=file($file);
-	      $existe=false;
+	    $read=file($file);
+	    $existe=false;
         $write_tmp="";
         foreach($read as $line){
-          $write_tmp .= $line;
+          	$write_tmp .= $line;
           
-          if(strpos($line, '.flatpickr-calendar {')!==FALSE){
+          	if(strpos($line, '.flatpickr-calendar {')!==FALSE){
          
-            $existe=true;
-          } 
+           		$existe=true;
+          	} 
         }
         
         if (!$existe){
-          $file2="/var/www/html/plugins/planification/3rdparty/flatpickr/flatpickr.dark.css";
+          	$file2="/var/www/html/plugins/planification/3rdparty/flatpickr/flatpickr.dark.css";
 	        $read2=file($file2);
-	       foreach($read2 as $line2){
-            $write_tmp .= $line2;
+	       	foreach($read2 as $line2){
+            	$write_tmp .= $line2;
           
-          }
+          	}
             copy($file, $file.".bak");
             $write=fopen($file , 'w+');
             fwrite ( $write ,  $write_tmp);
           
-             fclose($write);
+            fclose($write);
         
         }
-      }
-	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/chauffage"); 
-	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/pac");
-	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/poele");
-	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/prise");
-	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/thermostat");
-	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/volet");
-	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/chauffage.html"); 
-	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/pac.html");
-	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/poele.html");
-	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/prise.html");
-	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/thermostat.html");
-	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/volet.html"); 
-	 
-	  try{
+    }
+	rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/chauffage"); 
+	rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/pac");
+	rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/poele");
+	rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/prise");
+	rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/thermostat");
+	rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/volet");
+	unlink ("/var/www/html/plugins/planification/core/template/dashboard/chauffage.html"); 
+	unlink ("/var/www/html/plugins/planification/core/template/dashboard/pac.html");
+	unlink ("/var/www/html/plugins/planification/core/template/dashboard/poele.html");
+	unlink ("/var/www/html/plugins/planification/core/template/dashboard/prise.html");
+	unlink ("/var/www/html/plugins/planification/core/template/dashboard/thermostat.html");
+	unlink ("/var/www/html/plugins/planification/core/template/dashboard/volet.html"); 
+	unlink ("/var/www/html/plugins/planification/core/template/dashboard/autre.html");
+	$scandir = scandir("/var/www/html/plugins/planification/core/template/dashboard/images/chauffage");
+		foreach($scandir as $fichier){
+			log::add('planification', 'debug', $fichier);
+		}
+
+	try{
 		
 		$eqLogics=planification::byType('planification');   
 		$planifications_new='';   
