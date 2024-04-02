@@ -12,6 +12,62 @@ function planification_install() {
 function planification_update() {
 	log::add('planification', 'debug', 'planification_update');
 	planification::deamon_stop();
+	if (intval($version_arr[0]) >= 4 && intval($version_arr[1]) < 4){
+        $file="/var/www/html/desktop/custom/custom.js";
+	    $read=file($file);
+	    $existe=false;
+        $write_tmp="";
+        foreach($read as $line){
+          $write_tmp .= $line;
+          if(strpos($line, 'flatpickr v4.6.13')!==FALSE){
+            $existe=true;
+          } 
+        }
+        
+        if (!$existe){
+          $file2="/var/www/html/plugins/planification/3rdparty/flatpickr/flatpickr.min.js";
+	        $read2=file($file2);
+	       foreach($read2 as $line2){
+            $write_tmp .= $line2;
+          
+          }
+            copy($file, $file.".bak");
+            $write=fopen($file , 'w+');
+            fwrite ( $write ,  $write_tmp);
+          
+             fclose($write);
+        
+        }
+
+        $file="/var/www/html/desktop/custom/custom.css";
+       
+	      $read=file($file);
+	      $existe=false;
+        $write_tmp="";
+        foreach($read as $line){
+          $write_tmp .= $line;
+          
+          if(strpos($line, '.flatpickr-calendar {')!==FALSE){
+         
+            $existe=true;
+          } 
+        }
+        
+        if (!$existe){
+          $file2="/var/www/html/plugins/planification/3rdparty/flatpickr/flatpickr.dark.css";
+	        $read2=file($file2);
+	       foreach($read2 as $line2){
+            $write_tmp .= $line2;
+          
+          }
+            copy($file, $file.".bak");
+            $write=fopen($file , 'w+');
+            fwrite ( $write ,  $write_tmp);
+          
+             fclose($write);
+        
+        }
+      }
 	try{
 		
 		$eqLogics=planification::byType('planification');   
