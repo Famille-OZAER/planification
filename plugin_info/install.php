@@ -68,24 +68,25 @@ function planification_update() {
         
         }
       }
+	rename('/var/html/plugins/planification/core/template/images/chauffage', '/var/html/plugins/planification/core/template/images/Chauffage');
+	rename('/../core/template/images/pac', '/../core/template/images/PAC');
+	rename('/../core/template/images/poele', '/../core/template/images/Poele');
+	rename('/../core/template/images/prise', '/../core/template/images/Prise');
+	rename('/../core/template/images/thermostat', '/../core/template/images/Thermostat');
+	rename('/../core/template/images/volet', '/../core/template/images/Volet');
+	
+	rename('/../core/template/chauffage.html', '/../core/template/Chauffage.html');
+	rename('/../core/template/pac.html', '/../core/template/images/PAC.html');
+	rename('/../core/template/poele.html', '/../core/template/images/Poele.html');
+	rename('/../core/template/prise.html', '/../core/template/images/Prise.html');
+	rename('/../core/template/volet.html', '/../core/template/images/Volet.html');
 	try{
 		
 		$eqLogics=planification::byType('planification');   
 		$planifications_new='';   
 		foreach ($eqLogics as $eqLogic) {
 			$type_équipement = $eqLogic->getConfiguration('type','');
-			rename('/../core/template/images/chauffage', '/../core/template/images/Chauffage');
-			rename('/../core/template/images/pac', '/../core/template/images/PAC');
-			rename('/../core/template/images/poele', '/../core/template/images/Poele');
-			rename('/../core/template/images/prise', '/../core/template/images/Prise');
-			rename('/../core/template/images/thermostat', '/../core/template/images/Thermostat');
-			rename('/../core/template/images/volet', '/../core/template/images/Volet');
 			
-			rename('/../core/template/chauffage.html', '/../core/template/Chauffage.html');
-			rename('/../core/template/pac.html', '/../core/template/images/PAC.html');
-			rename('/../core/template/poele.html', '/../core/template/images/Poele.html');
-			rename('/../core/template/prise.html', '/../core/template/images/Prise.html');
-			rename('/../core/template/volet.html', '/../core/template/images/Volet.html');
 			if($type_équipement !=""){
 				$eqLogic->setConfiguration('type', '');
 				$eqLogic->setConfiguration('Type_équipement', $type_équipement);
