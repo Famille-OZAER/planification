@@ -69,7 +69,11 @@ function planification_update() {
         }
       }
 	$yyy=rename('/var/www/html/plugins/planification/core/template/images/chauffage', '/var/www/html/plugins/planification/core/template/images/Chauffage');
-	log::add('planification', 'error', 'planification_update ERREUR: '.$yyy);
+	if($yyy){
+		log::add('planification_update', 'error', 'planification_update ERREUR: OK');
+	}else{
+		log::add('planification_update', 'error', 'planification_update ERREUR: NOK');
+	}
 	rename('/../core/template/images/pac', '/../core/template/images/PAC');
 	rename('/../core/template/images/poele', '/../core/template/images/Poele');
 	rename('/../core/template/images/prise', '/../core/template/images/Prise');
