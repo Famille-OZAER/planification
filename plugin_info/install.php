@@ -68,21 +68,7 @@ function planification_update() {
         
         }
       }
-	rename('/var/www/html/plugins/planification/core/template/dashboard/images/chauffage', '/var/www/html/plugins/planification/core/template/dashboard/images/Chauffage');
-	
-	rename('/../core/template/dashboard/images/pac', '/../core/template/dashboard/images/PAC');
-	rename('/../core/template/dashboard/images/poele', '/../core/template/images/Poele');
-	rename('/../core/template/dashboard/images/prise', '/../core/template/images/Prise');
-	rename('/../core/template/dashboard/images/thermostat', '/../core/template/images/Thermostat');
-	rename('/../core/template/dashboard/images/volet', '/../core/template/images/Volet');
-	
-	rename('/../core/template/dashboard/chauffage.html', '/../core/template/dashboard/Chauffage.html');
-	rename('/../core/template/dashboard/pac.html', '/../core/template/dashboard/PAC.html');
-	rename('/../core/template/dashboard/poele.html', '/../core/template/dashboard/Poele.html');
-	rename('/../core/template/dashboard/prise.html', '/../core/template/dashboard/Prise.html');
-	rename('/../core/template/dashboard/volet.html', '/../core/template/dashboard/Volet.html');
-	
-	rename('/../core/template/dashboard/autre.html', '/../core/template/dashboard/Autre.html');
+
 	try{
 		
 		$eqLogics=planification::byType('planification');   
