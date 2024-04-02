@@ -10,7 +10,7 @@ function planification_install() {
 }
 
 function planification_update() {
-	log::add('planification', 'debug', 'planification_update');
+	
 	planification::deamon_stop();
 	if (intval($version_arr[0]) >= 4 && intval($version_arr[1]) < 4){
         $file="/var/www/html/desktop/custom/custom.js";
@@ -68,13 +68,30 @@ function planification_update() {
         
         }
       }
-
-	try{
+	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/chauffage"); 
+	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/pac");
+	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/poele");
+	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/prise");
+	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/thermostat");
+	  rmdir ("/var/www/html/plugins/planification/core/template/dashboard/images/volet");
+	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/chauffage.html"); 
+	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/pac.html");
+	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/poele.html");
+	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/prise.html");
+	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/thermostat.html");
+	  unlink ("/var/www/html/plugins/planification/core/template/dashboard/volet.html"); 
+	 
+	  try{
 		
 		$eqLogics=planification::byType('planification');   
 		$planifications_new='';   
 		foreach ($eqLogics as $eqLogic) {
-			$type_équipement = $eqLogic->getConfiguration('type','');
+			
+			
+		  	$planifications=$eqLogic->Recup_planifications(true,true);
+  
+			if($planifications !=[] && isset($planifications[0]['nom_planification'])){
+				$type_équipement = $eqLogic->getConfiguration('type','');
 			
 			if($type_équipement !=""){
 				$eqLogic->setConfiguration('type', '');
@@ -108,11 +125,7 @@ function planification_update() {
 					$eqLogic->setConfiguration('Type_équipement', "Autre");
 					$eqLogic->save();
 					break;
-			}  
-			
-		  	$planifications=$eqLogic->Recup_planifications(true,true);
-  
-			if($planifications !=[] && isset($planifications[0]['nom_planification'])){
+				}  
 				$planifications=$eqLogic->Recup_planifications(true,true);
 				$planifications_new = '[{';
 				$numéro_planification=0;
@@ -155,7 +168,6 @@ function planification_update() {
 		}
 	}
 	catch (Exception $e){
-//$e = print_r($e, 1);
 		log::add('planification', 'error', 'planification_update ERREUR: '.$e);
 	}
 	planification::deamon_start();
