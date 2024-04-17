@@ -111,44 +111,53 @@ function planification_update() {
 		$eqLogics=planification::byType('planification');   
 		$planifications_new='';   
 		foreach ($eqLogics as $eqLogic) {
-			
-			
-		  	$planifications=$eqLogic->Recup_planifications(true,true);
-  
-			if($planifications !=[] && isset($planifications[0]['nom_planification'])){
+			$planifications=$eqLogic->Recup_planifications(true,true);
+  			if($planifications !=[] && isset($planifications[0]['nom_planification'])){
 				$type_équipement = $eqLogic->getConfiguration('type','');
 			
-			if($type_équipement !=""){
+			if($type_équipement != ""){
 				$eqLogic->setConfiguration('type', '');
 				$eqLogic->setConfiguration('Type_équipement', $type_équipement);
-				$eqLogic->save();
+				$eqLogic->save(true);
 				
 			}
 			$type_équipement = $eqLogic->getConfiguration('Type_équipement','');
 			switch (strtolower($type_équipement)){
 				case 'volet':
-					$eqLogic->setConfiguration('Type_équipement', "Volet");
-					$eqLogic->save();
+					if ($type_équipement != "Volet"){
+						$eqLogic->setConfiguration('Type_équipement', "Volet");
+						$eqLogic->save(true);
+					}
 					break;
 				case 'pac':
-					$eqLogic->setConfiguration('Type_équipement', "PAC");
-					$eqLogic->save();
+					if ($type_équipement != "PAC"){
+						$eqLogic->setConfiguration('Type_équipement', "PAC");
+						$eqLogic->save(true);
+					}
 					break;
 				case 'poele':
-					$eqLogic->setConfiguration('Type_équipement', "Poele");
-					$eqLogic->save();
+					if ($type_équipement != "Poele"){
+						$eqLogic->setConfiguration('Type_équipement', "Poele");
+						$eqLogic->save(true);
+					}
 					break;
 				case 'chauffage':
-					$eqLogic->setConfiguration('Type_équipement', "Chauffage");
-					$eqLogic->save();
+					if ($type_équipement != "Chauffage"){
+						$eqLogic->setConfiguration('Type_équipement', "Chauffage");
+						$eqLogic->save(true);
+					}
 					break;
 				case "prise":
-					$eqLogic->setConfiguration('Type_équipement', "Prise");
-					$eqLogic->save();
+					if ($type_équipement != "Prise"){
+						$eqLogic->setConfiguration('Type_équipement', "Prise");
+						$eqLogic->save(true);
+					}
 					break;
 				case "autre":
-					$eqLogic->setConfiguration('Type_équipement', "Autre");
-					$eqLogic->save();
+					if ($type_équipement != "Autre"){
+						$eqLogic->setConfiguration('Type_équipement', "Autre");
+						$eqLogic->save(true);
+					}
 					break;
 				}  
 				$planifications=$eqLogic->Recup_planifications(true,true);

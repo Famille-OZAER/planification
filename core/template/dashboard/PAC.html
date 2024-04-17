@@ -8,48 +8,35 @@
         <a href="#eqLink#" class="reportModeHidden">#name_display#</a>
     </center>
 
-    <span class="cmd refresh pull-right cursor" style="position: absolute;right: 0px;top:0px" data-cmd_id="#refresh_id#">
-      <i class="fas fa-sync"></i>
-  </span>
-    <i class="fa fa-retweet cursor tooltips changecmd noRefresh" title="Changer commandes" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
-    <div class="tuile" style="height: calc(100% - 22px); background-color: rgb(255 255 255 /5%);">
+   
+   <div class="tuile" style="height: 100%; background-color: rgb(255 255 255 /5%);">
 
         <div class="page_1" style="margin: 0px;height:100%;margin: 0px;display: noney;">
             <div class="col-xs-6 gauche" style="height:60%;margin:0px;padding: 0px!important;">
-
                 <i class="cmd fa fa-fire boost cursor tooltips" title="Activer le mode boost" style="position:relative;float:right;top: calc(100% - 30px);display:none;font-size: 1.9em;margin-left: 5px;color:white!important"></i>
-                <img src="plugins/planification/core/template/dashboard/images/pac/Arret.png" style="position:relative;top:calc(100% - 80px);float: right;height: 80px;" />
+                <img class="cmd cmd-widget img" style="position:relative;top:calc(100% - 80px);float: right;height: 80px;" />
+              
+                <span>
+                    <img class="cmd cmd-widget img_auto_manu" data-type="info" src='' style="position: absolute;top: 65px;right: 5px;height:20px" />       
+                </span>
             </div>
-            <div class="col-xs-6 droite" style="display:none;height:60%;margin:0px;padding: 0px!important;">
+            <div class="col-xs-6 droite" style="height:60%;margin:0px;padding: 0px!important;">
                 <div class="Thermostat" style="display:none;top: calc(100% - 90px);"></div>
             </div>
-            <div class="col-xs-12 center" style="height:40%;margin:0px;padding: 0px!important;">
-                <span class="action_en_cours tooltips" style="cursor:default;font-size:10px;margin-left: 5px;margin-top: 5px;color:white!important" title="Action en cours"></span>
-                <span class="fleche" style="cursor:default;font-size: 10px;margin-left: 5px;margin-top: 5px;color:white!important"></span>
-                <span class="action_suivante tooltips" style="cursor:default;font-size: 10px;margin-left: 5px;margin-top: 5px;color:white!important" title="Prochaine action"></span>
-                <span class="heure_action_suivante tooltips" style="cursor:default;font-size: 10px;margin-left: 5px;margin-top: 5px;color:white!important" title="Heure prochaine action"></span>
-                <div>
-                    <span class="planification_en_cours tooltips" style="cursor:default;font-size: 10px;margin-left: 5px;margin-top: 5px;color:white!important" title="planification en cours"></span>
-                </div>
+             <div class="col-xs-12 center" style="margin:0px;padding-top: 10px!important;">
+                <i data-cmd_id="#arret_id#" class="Arrêt  cmd fa fa-times cursor tooltips" title="Arrêter la planification." style="position: relative;top: calc(100% - 40px);font-size: 30px;margin-right: 7px;color:#3498db!important"></i>
+                <i data-cmd_id="#ventilation_id#" class="Ventilation  cmd icon techno-ventilation cursor tooltips" title="Forçage de la planification en mode ventilation." style="position: relative;top: calc(100% - 40px);font-size: 30px;margin-right: 7px;color:#3498db!important"></i>
+                <i data-cmd_id="#chauffage_id#" class="Chauffage  cmd icon nature-weather1 cursor tooltips" title="Forçage de la planification en mode chauffage." style="position: relative;left:2px;top: calc(100% - 40px);font-size:30px;margin-right: 7px;color:#3498db!important"></i>
+                <i data-cmd_id="#climatisation_id#" class="Climatisation  cmd icon nature-snowflake cursor tooltips" title="Forçage de la planification mode climatisation." style="position: relative;top: calc(100% - 27px);font-size: 30px;margin-left: 2px;color:#3498db!important"></i>
+           </div>
+           <div class="prochaine_action tooltips col-xs-12 center" style="font-size: 0.9em;margin: 5px;color:white!important">
+            <span style="cursor:default;"></span>
             </div>
         </div>
 
-        <div class="page_2" style="padding-top: 10px;height:70%;margin: 0px; display: none;">
-            <div class="col-xs-6 gauche" style="height:100%;padding: 0px!important;">
-                <div style="height: 50%;">
-                    <i data-cmd_id="#climatisation_id#" class="Climatisation pull-right cmd icon nature-snowflake cursor tooltips" title="Mettre le planning en mode climatisation forcée" style="position: relative;top: calc(100% - 27px);font-size: 30px;margin-left: 2px;color:#3498db!important"></i>
-                    <i data-cmd_id="#absent_id#" class="Absent pull-right cmd icon jeedom-mouvement cursor tooltips" title="Mettre le planning en mode absent" style="position: relative;top: calc(100% - 27px);font-size: 30px;margin-left: 2px;color:#3498db!important"></i>
-                    <i data-cmd_id="#auto_id#" class="Auto pull-right cmd fa fa-cog cursor tooltips" title="Mettre le planning en mode automatique" style="position: relative;top: calc(100% - 27px);font-size: 30px;margin-left: 2px;color:#3498db!important"></i>
-
-                </div>
-                <div style="height: 50%;">
-                    <i data-cmd_id="#arret_id#" class="Arrêt pull-right cmd fa fa-times cursor tooltips" title="Arrêter le planning" style="position: relative;top: calc(100% - 40px);font-size: 30px;margin-right: 7px;color:#3498db!important"></i>
-                    <i data-cmd_id="#ventilation_id#" class="Ventilation pull-right cmd icon techno-ventilation cursor tooltips" title="Mettre le planning en mode ventilation forcée" style="position: relative;top: calc(100% - 40px);font-size: 30px;margin-right: 7px;color:#3498db!important"></i>
-                    <i data-cmd_id="#chauffage_id#" class="Chauffage pull-right cmd icon nature-weather1 cursor tooltips" title="Mettre le planning en mode chauffe forcée" style="position: relative;left:2px;top: calc(100% - 40px);font-size:30px;margin-right: 7px;color:#3498db!important"></i>
-                </div>
-
-            </div>
-            <div class="col-xs-6 droite" style="height:100%;padding: 0px!important;">
+        <div class="page_2" style="height:70%;margin: 0px; display: none;">
+            
+            <div class="col-xs-12 center" style="height:100%;padding: 0px!important;">
                 <div style="height:50%;">
                     <select class="selectCalendar cursor tooltips" style="top: calc(100% - 27px);position: relative;width:80%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
             #calendar_selector#
@@ -63,101 +50,50 @@
                     </a>
                 </div>
             </div>
-            <div class="col-xs-12 page_2 center" style="height:30%;margin: 0px;">
+            <div class="col-xs-12  center" style="height:30%;margin: 0px;">
                 <div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.7em;color:white!important">
                 </div>
             </div>
         </div>
-
-
+        <span class="cmd refresh pull-right cursor" style="position: absolute;right: 0px;top:0px" data-cmd_id="#refresh_id#">
+            <i class="fas fa-sync"></i>
+        </span>
+        <i class="fa fa-retweet cursor tooltips changecmd noRefresh" title="Afficher la deuxième page" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
+    
     </div>
 
     <link rel="stylesheet" type="text/css" href="plugins/planification/core/template/dashboard/css/widget.css" media="all" />
 
     <script>
-        //refresh
-        if ('#refresh_id#' != '') {
-            document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').addEventListener('click', function() {
-                jeedom.cmd.execute({
-                    id: '#refresh_id#'
-                })
-            })
-        } else {
-            document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').remove()
-        }
-        //mode
-        jeedom.cmd.addUpdateFunction('#mode_id#', function(_options) {
-            Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-        });
-        //action en cours
-        jeedom.cmd.addUpdateFunction('#action_en_cours_id#', function(_options) {
-            Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-        });
-        //action suivante
-        jeedom.cmd.addUpdateFunction('#action_suivante_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //température consigne
-        jeedom.cmd.addUpdateFunction('#consigne_temperature_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //consigne temperature chauffage
-        jeedom.cmd.addUpdateFunction('#consigne_temperature_chauffage_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //consigne temperature climatisation
-        jeedom.cmd.addUpdateFunction('#consigne_temperature_climatisation_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //heure_fin
-        jeedom.cmd.addUpdateFunction('#heure_fin_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //info_widget
-        jeedom.cmd.addUpdateFunction('#info_widget_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //planification
-        jeedom.cmd.addUpdateFunction('#planification_en_cours_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //set_consigne_temperature
-        jeedom.cmd.addUpdateFunction('#set_consigne_temperature_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //set_planification_id
-        jeedom.cmd.addUpdateFunction('#set_planification_id#', function(_options) {
-                Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-            })
-            //température_pièce
-        jeedom.cmd.addUpdateFunction('#temperature_id#', function(_options) {
-            Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-        })
-
-        //boost
-        jeedom.cmd.addUpdateFunction('#boost_id#', function(_options) {
-            Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', true)
-        })
-
-        jeedom.cmd.refreshValue([{
-            cmd_id: '#boost_id#',
-            value: '#boost#',
-            display_value: '#boost#'
-        }])
-        jeedom.cmd.refreshValue([{
-            cmd_id: '#mode_id#',
-            value: '#mode#',
-            display_value: '#mode#'
-        }])
-        jeedom.cmd.refreshValue([{
-            cmd_id: '#action_en_cours_id#',
-            value: '#action_en_cours#',
-            display_value: '#action_en_cours#'
-        }])
-
+        var show_name=false
+        var show_object=false
+        var température=0
+        var info_widget=''
+        var timeoutId
         document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .tuile').addEventListener('click', function(event) {
             var _target = null
-
+            if (_target = event.target.closest('.img')) {
+                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').classList.contains("cursor")) {
+                    jeedom.cmd.execute({
+                        id: '#auto_id#'
+                    });
+                }
+            }
+            if (_target = event.target.closest('.img_auto_manu')) {
+                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').classList.contains("cursor")) {
+                    jeedom.cmd.execute({
+                        id: '#auto_id#'
+                    });
+                }
+            }
+            //refresh
+            if (_target = event.target.closest('.refresh')) {
+                    jeedom.cmd.execute({
+                        id: '#refresh_id#'
+                    });
+              
+            }
+            var _target = null
             if (_target = event.target.closest('.boost')) {
                 if (_target.style.color == "white") {
                     jeedom.cmd.execute({
@@ -174,210 +110,249 @@
                         }
                     })
                 }
-                return
             }
-            if (_target = event.target.closest('.Auto')) {
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.pointerEvents = 'none';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.setProperty('color', 'white', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'auto';
-                jeedom.cmd.execute({
+           /* if (_target = event.target.closest('.Auto')) {
+               jeedom.cmd.execute({
                     id: '#auto_id#'
                 });
-
-                return
-            }
+            }*/
             if (_target = event.target.closest('.Climatisation')) {
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'white', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'none';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'auto';
                 jeedom.cmd.execute({
                     id: '#climatisation_id#'
                 });
-                return
             }
             if (_target = event.target.closest('.Chauffage')) {
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'white', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'none';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'auto';
-                jeedom.cmd.execute({
+                 jeedom.cmd.execute({
                     id: '#chauffage_id#'
                 });
-                return
             }
             if (_target = event.target.closest('.Arrêt')) {
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'white', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'none';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'auto';
-                jeedom.cmd.execute({
+               jeedom.cmd.execute({
                     id: '#arret_id#'
                 });
-                return
-            }
-            if (_target = event.target.closest('.Absent')) {
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.setProperty('color', 'white', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.pointerEvents = 'none';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'auto';
-                jeedom.cmd.execute({
-                    id: '#absent_id#'
-                });
-                return
             }
             if (_target = event.target.closest('.Ventilation')) {
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.pointerEvents = 'auto';
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'white', 'important');
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'none';
-                jeedom.cmd.execute({
+               jeedom.cmd.execute({
                     id: '#ventilation_id#'
                 });
-                return
+            }
+ 
+
+
+        })
+            //température consigne
+        jeedom.cmd.addUpdateFunction('#consigne_temperature_id#', function(_options) {
+            Affichage_widget()
+         })
+            //consigne temperature chauffage
+        jeedom.cmd.addUpdateFunction('#consigne_temperature_chauffage_id#', function(_options) {
+            Affichage_widget()
+        })
+            //consigne temperature climatisation
+        jeedom.cmd.addUpdateFunction('#consigne_temperature_climatisation_id#', function(_options) {
+           Affichage_widget()
+        })
+
+        //set_consigne_temperature
+        jeedom.cmd.addUpdateFunction('#set_consigne_temperature_id#', function(_options) {
+            Affichage_widget()
+        })
+            
+            //température_pièce
+        jeedom.cmd.addUpdateFunction('#temperature_id#', function(_options) {
+            if (température != _options.value){
+                température = _options.value
+                Affichage_widget()
             }
         })
-        Affichage_widget('#mode#', '#planification_en_cours#', '#boost#', '#action_en_cours#', '#action_suivante#', '#heure_fin#', false)
-        Commun_widget('#id#', '#uid#', '#info_widget#', '#action_en_cours#', '#set_planification_id#', '#heure_fin_change_id#', '#calendar_selector#', '#page#', 'PAC')
-        SetWidget_Thermostat(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#]'), '#set_consigne_temperature_id#', '#consigne_min#', '#consigne_max#', '#consigne#', '#temperature#')
 
+        //boost
+        jeedom.cmd.addUpdateFunction('#boost_id#', function(_options) {
+            Affichage_widget()
+        })
 
+       
 
-        function Affichage_widget(mode, planification_en_cours, boost, action_en_cours, action_suivante, heure_fin, forcer_valeurs) {
+      
+        Affichage_widget()
+      
 
+        function Affichage_widget() {
+            domUtils.ajax({
+                type: "POST",
+                url: "plugins/planification/core/ajax/planification.ajax.php",
+                data: {
+                    action: "récup_infos_widget",
+                    eqLogic_id: '#id#'
+                },
+                global: true,
+                async: false,
+                error: function(request, status, error) {
+                    handleAjaxError(request, status, error);
+                },
+                success: function(data) {
+                    mode = data.result.mode_fonctionnement
+                    planification_en_cours = data.result.planification_en_cours
+                    boost = data.result.boost
+                    action_en_cours = data.result.action_en_cours
+                    prochaine_action = data.result.prochaine_action
+                    heure_fin = data.result.heure_fin
+                    consigne = data.result.consigne_temperature
+                    info_widget = data.result.info
+                    temperature = data.result.Temperature
+                   
+                    
+                    
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'auto';
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'auto';
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'auto';
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'auto';
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'block'
+                     //mise en place de l'icone auto/manu + redimensionnement tuile
 
-            if (forcer_valeurs) {
-                domUtils.ajax({
-                    type: "POST",
-                    url: "plugins/planification/core/ajax/planification.ajax.php",
-                    data: {
-                        action: "récup_infos_widget",
-                        eqLogic_id: '#id#'
-                    },
-                    global: true,
-                    async: false,
-                    error: function(request, status, error) {
-                        handleAjaxError(request, status, error);
-                    },
-                    success: function(data) {
-                        console.log(data.result)
-                        mode = data.result.mode_fonctionnement
-                        planification_en_cours = data.result.planification_en_cours
-                        boost = data.result.boost
-                        action_en_cours = data.result.action_en_cours
-                        action_suivante = data.result.action_suivante
-                        heure_fin = data.result.heure_fin
-                        consigne = data.result.consigne_temperature
-                        info_widget = data.result.info
-                        temperature = data.result.Temperature
+                     if (document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('displayObjectName')) {
+                        if (!document.querySelector('.eqLogic[data-eqLogic_uid=#uid#]').classList.contains('hideEqLogicName')) {
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .widget-name').style.display = "none"
+                       }
                     }
-                });
+                    if(!document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('hideEqLogicName') && !show_name){
+                        show_name=true
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number('65px'.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight-25 +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .page_1 .gauche').style.height='50%'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .page_1 .droite').style.height='50%'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top = '0px'
+                     }else{
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
+                    }
+                    
+                    if(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('displayObjectName') && !show_object){
+                      
+                        show_object=true
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number('65px'.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight -25+'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .page_1 .gauche').style.height='50%'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .page_1 .droite').style.height='50%'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top = '0px'
+                    }else{
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
+                    }
+                    if (planification_en_cours == "") {
+                        planification_en_cours = "Aucune planification"
+                    }
+                    if (action_en_cours == '' && planification_en_cours != "Aucune planification") {
+                        action_en_cours = "Aucune action trouvée dans la planification " + planification_en_cours + "."
+                    }
 
-                SetWidget_Thermostat(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#]'), '#set_consigne_temperature_id#', '#consigne_min#', '#consigne_max#', '#consigne#', temperature)
-                Commun_widget('#id#', '#uid#', info_widget, action_en_cours, '#set_planification_id#', '#heure_fin_change_id#', '#calendar_selector#', '#page#', 'PAC')
+                    
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .tuile img').setAttribute("src", 'plugins/planification/core/template/dashboard/images/PAC/' + action_en_cours + '.png')
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').setAttribute("src", 'plugins/planification/core/template/dashboard/images/' + mode.toLowerCase() + '.png')
+                   
+                    switch (mode) {
+                        case "Auto":
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').classList.remove("cursor")
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').classList.remove("cursor")
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').setAttribute('title', 'Planification en cours: ' + planification_en_cours);
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').setAttribute('title', 'Planification en cours: ' + planification_en_cours);
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').setAttribute('title', 'Planification en cours: ' + planification_en_cours);
+                            
+                            if (action_en_cours == "Ventilation" || action_en_cours == "Arrêt" ) {
+                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'none';
+                            }
+                            if (prochaine_action != "") {
+                                if(prochaine_action == "Chauffage" || prochaine_action == "Chauffage ECO"|| prochaine_action == "Climatisation"){
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'block';
+                                }                    
+                                if (heure_fin.length == 5) {
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = prochaine_action + ' à ' + heure_fin
+                                } else {
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = prochaine_action + ' le ' + heure_fin
+                                }
+                            }
+                            switch (action_en_cours) {
+                                case "Arrêt":
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '10px'
+                                    break;
+                                case "Climatisation":
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '35px'
+                                    break;
+                                case 'Ventilation':
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '10px'
+                                    break;
+                                case "Chauffage":
+                                case "Chauffage ECO":
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '35px'
+                                    break;
+                            }
+                            
+                            break
+                        case "Manuel":
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').classList.add("cursor")
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').classList.add("cursor")
+                            if (heure_fin != " " && heure_fin != "") {
+                                if (heure_fin.length == 5) {
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = 'Remise en auto à ' + heure_fin
+                                } else {
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = 'Remise en auto le ' + heure_fin
+                                }
+                            }else{
+                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .prochaine_action').innerHTML = ''
+                            }
+                            switch (action_en_cours) {
 
-            }
-            // document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').jeeValue(heure_fin);
+                                case "Arrêt":
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'white', 'important');
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '10px'
+                                    break
+                                case "Ventilation":
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'white', 'important');
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '10px'
+                                    break
+                                case "Chauffage":
+                                case "Chauffage ECO":
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'white', 'important');
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '35px'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'block'
+                                
 
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.pointerEvents = 'auto';
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'auto';
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'auto';
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'auto';
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.pointerEvents = 'auto';
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'auto';
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'block'
-            if (planification_en_cours == "") {
-                planification_en_cours = "Aucune planification"
-            }
-            if (action_en_cours == '' && planification_en_cours != "Aucune planification") {
-                action_en_cours = "Aucune action trouvée dans la planification " + planification_en_cours + "."
-            }
+                                    break
+                                case "Climatisation":
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'white', 'important');
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '35px'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
+                                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'block'
+                                    break
+                                default:
+                                    break
+                            }
+                            break
 
-            switch (action_en_cours) {
-                case "Climatisation":
-                    image = "Climatisation.png";
-                    break;
-                case "Chauffage":
-                    image = "Chauffage.png";
-                    break;
-                case "Chauffage ECO":
-                    image = "Chauffage.png";
-                    break;
-                case "Ventilation":
-                    image = "Ventilation.png";
-                    break;
-                case "Arrêt":
-                    image = "Arret.png";
-                    break;
-                default:
-                    image = "Arret.png";
-                    break;
-            };
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .tuile img').setAttribute("src", 'plugins/planification/core/template/dashboard/images/pac/' + image)
-
-            switch (mode) {
-                case "Auto":
-
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.pointerEvents = 'none';
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Auto').style.setProperty('color', 'white', 'important');
-                    //document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').style.display = 'none';
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .planification_en_cours').empty().append(planification_en_cours);
-
+                    }
                     if (boost == 1) {
                         if (action_en_cours == "Chauffage") {
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block';
@@ -389,169 +364,64 @@
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').setAttribute('title', 'Désactiver le mode boost');
                         }
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours);
-                    }
-                    if (boost == 0) {
+                    }else{
                         if (action_en_cours != "Chauffage" && action_en_cours != "Climatisation") {
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'none';
+                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').style.right = '10px'
                         } else {
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block';
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.setProperty('color', 'white', 'important');
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').setAttribute('title', 'Activer le mode boost');
                         }
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours);
                     }
-                    if (action_en_cours == "Ventilation" || action_en_cours == "Absent") {
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'none';
-                    }
-                    if (action_suivante == "") {
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty();
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty();
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty();
-                    } else {
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append(action_suivante);
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante ').empty().append(heure_fin);
-                    }
-                    break
-                case "Manuel":
-                    //document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .datetimepicker').style.display = 'block';
-                    if (boost == 1) {
-                        if (action_en_cours == "Chauffage") {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block';
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.setProperty('color', 'red', 'important');
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').setAttribute('title', 'Désactiver le mode boost');
-
-                        } else if (action_en_cours == "Climatisation") {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block';
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.setProperty('color', 'rgb(52, 152, 219)', 'important');
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').setAttribute('title', 'Désactiver le mode boost');
-                        }
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours);
-                    }
-                    if (boost == 0) {
-                        if (action_en_cours != "Chauffage" && action_en_cours != "Climatisation") {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'none';
-                        } else {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block';
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.setProperty('color', 'white', 'important');
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').setAttribute('title', 'Activer le mode boost');
-                        }
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours);
-                    }
-                    switch (action_en_cours) {
-
-                        case "Arrêt":
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.pointerEvents = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Arrêt').style.setProperty('color', 'white', 'important');
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours)
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite ').style.display = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .boost').style.display = 'none'
-
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty()
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty()
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty()
-                            break
-                        case "Absent":
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.pointerEvents = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Absent').style.setProperty('color', 'white', 'important');
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours)
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'none'
-                            if (heure_fin != "") {
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append('Auto')
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty().append(heure_fin)
-                            } else {
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append('Réactivation manuelle')
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty()
-                            }
-                            break
-                        case "Ventilation":
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.pointerEvents = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Ventilation').style.setProperty('color', 'white', 'important');
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours + ' (manuel)')
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'none'
-                            if (heure_fin != "") {
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append('Auto')
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty().append(heure_fin)
-                            } else {
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append('Réactivation manuelle')
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty()
-                            }
-                            break
-                        case "Chauffage":
-                        case "Chauffage ECO":
-                            if (boost == 1) {
-                                action_en_cours = action_en_cours + ' Boost'
-                            }
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.pointerEvents = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Chauffage').style.setProperty('color', 'white', 'important');
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours + ' (manuel)')
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'block'
-                            if (heure_fin != "") {
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append('Auto')
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty().append(heure_fin)
-                            } else {
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append('Réactivation manuelle')
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty()
-                            }
-
-                            break
-                        case "Climatisation":
-                            if (boost == 1) {
-                                action_en_cours = action_en_cours + ' Boost'
-                            }
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.pointerEvents = 'none'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Climatisation').style.setProperty('color', 'white', 'important');
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_en_cours').empty().append(action_en_cours + ' (manuel)')
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .boost').style.display = 'inline-block'
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .selectCalendar').style.display = 'none'
-
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'block'
-                            if (heure_fin != "") {
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append('Auto')
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty().append(heure_fin)
-                            } else {
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .fleche').empty().append(domUtils.DOMparseHTML('<i class="fa fa-arrow-right"></i>'))
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .action_suivante').empty().append('Réactivation manuelle')
-                                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .heure_action_suivante').empty()
-                            }
-
-                            break
-                        default:
-                            break
-                    }
-                    break
-
-            }
+           
+                    Commun_widget(info_widget, action_en_cours, '#set_planification_id#', '#calendar_selector#', page)
+                    SetWidget_Thermostat( '#consigne_min#', '#consigne_max#', consigne, temperature)
+                
+                }
+            });
         }
 
         function Commun_widget(info_widget, action_en_cours, set_planification_id, calendar_selector, page) {
 
-            var taille = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .object_name ').style.height.replace(/px/i, ''))
-            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .tuile').style.height = "calc(100% -" + taille + "px)"
-            if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .object_name').style.display == "block") {
-                if (document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .widget-name').style.display == "block") {
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .widget-name').style.display = "none"
-                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .nom_eqLogic').style.display = "block"
-                }
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .tuile').style.backgroundColor = "rgba(0,0,0,0.5)"
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#]').style.boxShadow = '0px 0px 3px 0.5px rgba(255,255,255,1)'
-            }
+            //mode
+            jeedom.cmd.addUpdateFunction('#mode_id#', function(_options) {
+                Affichage_widget()
+            });
+            //action en cours
+            jeedom.cmd.addUpdateFunction('#action_en_cours_id#', function(_options) {
+                Affichage_widget()
+            });
+            //etat
+            jeedom.cmd.addUpdateFunction('#etat_id#', function(_options) {
+                Affichage_widget()
+            }); 
+            //action suivante
+            jeedom.cmd.addUpdateFunction('#action_suivante_id#', function(_options) {
+                Affichage_widget()
+            });
+            //heure de fin
+            jeedom.cmd.addUpdateFunction('#heure_fin_id#', function(_options) {
+                Affichage_widget()
+            });
+            //set_planification_id
+            jeedom.cmd.addUpdateFunction('#set_planification_id#', function(_options) {
+                Affichage_widget()
+            })
+            //planification
+            jeedom.cmd.addUpdateFunction('#planification_en_cours_id#', function(_options) {
+                Affichage_widget()
+            })
+            //info_widget
+            jeedom.cmd.addUpdateFunction('#info_widget_id#', function(_options) {
+                if (info_widget != _options.value){
+                    info_widget = _options.value
+                    Affichage_widget()
+                }              
+            })
+            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .tuile').style.backgroundColor = "rgba(0,0,0,0.5)"
+            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#]').style.boxShadow = '0px 0px 1px 0.5px rgba(255,255,255,1)'
+           
             if (page == 'page1') {
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1').style.display = 'block';
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_2 ').style.display = 'none';
@@ -621,7 +491,7 @@
 
                     },
                     onOpen: function(selectedDates, dateStr, instance) {
-                        console.log(instance)
+                       
 
                         if (instance.element.value == '') {
                             date = new Date()
@@ -632,8 +502,7 @@
 
                     },
                     onClose: function(selectedDates, dateStr, instance) {
-                        console.log('#set_heure_fin_id#')
-                        console.log(dateStr)
+                       
                         jeedom.cmd.execute({
                             id: '#set_heure_fin_id#',
                             value: {
@@ -667,7 +536,7 @@
 
             if (info_widget != " " && info_widget != " ") {
 
-                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .info_widget').empty().append(info_widget)
+                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .info_widget').innerHTML = info_widget
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .changecmd').style.display = 'block';
             }
 
@@ -679,10 +548,9 @@
                 document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_2').style.display = 'none'
                 if (document.querySelectorAll('.eqLogic[data-eqLogic_uid=#uid#] .droite').length > 1) {
                     if (action_en_cours == " " || action_en_cours == "Arrêt" || action_en_cours == "Absent" || action_en_cours == "Ventilation") {
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'none'
+                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'none'
                     } else {
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .page_1 .droite').style.display = 'block'
-                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'block'
+                         document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'block'
                     }
                 }
 
@@ -719,8 +587,7 @@
                 }, 60000);
             }
         }
-
-        function SetWidget_Thermostat(_this, set_consigne_temperature_id, consigne_min, consigne_max, consigne, temperature) {
+        function SetWidget_Thermostat(consigne_min, consigne_max, consigne, temperature) {
             var div = ""
             div += "<div class='cercle_ext'>"
             div += "<div class='cercle_int'>"
@@ -735,7 +602,7 @@
             div += "</div>"
             div += "</div>"
 
-            document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .Thermostat').empty().append(domUtils.parseHTML(div));
+            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').innerHTML = div;
             var rad2deg = 180 / Math.PI;
             var deg = 0;
             for (var i = -20; i < 81; i++) {
@@ -744,17 +611,17 @@
                 myleft = Math.cos((180 - deg) / rad2deg) * 95 + 100;
 
                 var div = '<div class="colorBar" style="-webkit-transform: rotate(' + deg + 'deg) scale(1.25, 0.5); -moz-transform: rotate(' + deg + 'deg) scale(1.25, 0.5); -ms-transform: rotate(' + deg + 'deg) scale(1.25, 0.5);transform: rotate(' + deg + 'deg) scale(1.25, 0.5);top: ' + mytop + 'px; left: ' + myleft + 'px" >'
-                document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .barres').append(domUtils.parseHTML(div));
+                    document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .barres').append(domUtils.parseHTML(div));
             }
-            majWidget(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .Thermostat'), false)
+            Maj_Thermostat(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat'), false)
 
-            document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .monter_temperature').onclick = function() {
-                var temperatureConsigne = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .cercle_int .Temperature_consigne').getAttribute("consigne"))
+            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .monter_temperature').onclick = function() {
+                var temperatureConsigne = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .cercle_int .Temperature_consigne').getAttribute("consigne"))
                 if (temperatureConsigne == "") {
                     temperatureConsigne = 7
                 }
-                var temperatureMax = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .cercle_int .barres').getAttribute("max"))
-                var temperatureMin = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .cercle_int .barres').getAttribute("min"))
+                var temperatureMax = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .cercle_int .barres').getAttribute("max"))
+                var temperatureMin = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .cercle_int .barres').getAttribute("min"))
                 temperatureConsigne = temperatureConsigne + 1
                 if (Math.round(temperatureConsigne) > temperatureMax) {
                     temperatureConsigne = temperatureMax
@@ -762,27 +629,27 @@
                 if (Math.round(temperatureConsigne) < temperatureMin) {
                     temperatureConsigne = temperatureMin
                 }
-                document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .cercle_int .Temperature_consigne').setAttribute("consigne", temperatureConsigne)
-                majWidget(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .Thermostat'), true)
+                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .cercle_int .Temperature_consigne').setAttribute("consigne", temperatureConsigne)
+                Maj_Thermostat(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat'), true)
                 clearTimeout(timeoutId);
                 timeoutId = setTimeout(function() {
-                    majWidget(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .Thermostat'), false)
-                    var temp = document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .Thermostat').querySelector('.Temperature_consigne').getAttribute("consigne")
+                    Maj_Thermostat(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat'), false)
+                    var temp = document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').querySelector('.Temperature_consigne').getAttribute("consigne")
                     jeedom.cmd.execute({
-                        id: set_consigne_temperature_id,
+                        id: '#set_consigne_temperature_id#',
                         value: {
                             slider: temp
                         }
                     });
                 }, 2000);
             };
-            document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .descendre_temperature').onclick = function() {
-                var temperatureConsigne = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .cercle_int .Temperature_consigne').getAttribute("consigne"))
+            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .descendre_temperature').onclick = function() {
+                var temperatureConsigne = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .cercle_int .Temperature_consigne').getAttribute("consigne"))
                 if (temperatureConsigne == "") {
                     temperatureConsigne = 7
                 }
-                var temperatureMax = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .cercle_int .barres').getAttribute("max"))
-                var temperatureMin = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .cercle_int .barres').getAttribute("min"))
+                var temperatureMax = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .cercle_int .barres').getAttribute("max"))
+                var temperatureMin = parseInt(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .cercle_int .barres').getAttribute("min"))
                 temperatureConsigne = temperatureConsigne - 1
                 if (Math.round(temperatureConsigne) > temperatureMax) {
                     temperatureConsigne = temperatureMax
@@ -791,14 +658,14 @@
                     temperatureConsigne = temperatureMin
                 }
 
-                document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .cercle_int .Temperature_consigne').setAttribute("consigne", temperatureConsigne)
-                majWidget(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .Thermostat'), true)
+                document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .cercle_int .Temperature_consigne').setAttribute("consigne", temperatureConsigne)
+                Maj_Thermostat(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat'), true)
                 clearTimeout(timeoutId);
                 timeoutId = setTimeout(function() {
-                    majWidget(document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .Thermostat'), false)
-                    var temp = document.querySelector('.eqLogic[data-eqLogic_uid=' + _this.getAttribute("data-eqlogic_uid") + '] .Thermostat').querySelector('.Temperature_consigne').getAttribute("consigne")
+                    Maj_Thermostat(document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat'), false)
+                    var temp = document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').querySelector('.Temperature_consigne').getAttribute("consigne")
                     jeedom.cmd.execute({
-                        id: set_consigne_temperature_id,
+                        id: '#set_consigne_temperature_id#',
                         value: {
                             slider: temp
                         }
@@ -808,5 +675,61 @@
 
 
         }
+        function Maj_Thermostat(_this, click) {
+
+            var couleurs = ['243594', '2c358f', '373487', '44337e', '513174', '5c306c', '6b2f62', '792e58', '892d4d', '9e2b3d', 'b4292e', 'c9271f', 'e0250e'];
+            var temperatureConsigne = Math.round(_this.querySelector('.Temperature_consigne').getAttribute('consigne'))
+            if (temperatureConsigne == 0) { temperatureConsigne = 7 }
+            var temperatureMax = parseInt(_this.querySelector('.barres').getAttribute("max"))
+            var temperatureMin = parseInt(_this.querySelector('.barres').getAttribute("min"))
+
+            if (Math.round(temperatureConsigne) > temperatureMax) {
+                temperatureConsigne = temperatureMax
+            }
+            if (Math.round(temperatureConsigne) < temperatureMin) {
+                temperatureConsigne = temperatureMin
+            }
+            var temperatureMax = _this.querySelector('.barres').getAttribute('max')
+            var temperatureMin = _this.querySelector('.barres').getAttribute('min')
+            var temperatureActuelle = _this.querySelector('.Temperature_actuelle').getAttribute('temp')
+            _this.querySelector('.Temperature_consigne').html(temperatureConsigne + "°C");
+            if (temperatureActuelle != '') {
+                _this.querySelector('.Nom_Temperature_actuelle').html("Température actuelle");
+                _this.querySelector('.Temperature_actuelle').html(temperatureActuelle + "°C");
+            } else {
+                _this.querySelector('.Nom_Temperature_actuelle').html("");
+                _this.querySelector('.Temperature_actuelle').html("");
+            }
+            ratio = temperatureMax / (temperatureMax - temperatureMin) - 1
+            nb = (Math.round(temperatureConsigne) / (temperatureMax - temperatureMin) - ratio) * 100
+
+            if (click) {
+                _this.querySelectorAll('.colorBar').removeClass('active')
+                var i = 0
+                _this.querySelectorAll('.colorBar').forEach(_el => {
+                    if (i < nb) {
+                        _el.addClass("active")
+                    }
+                    i++
+                })
+            } else {
+                _this.querySelector('.colorBar').removeClass('active');
+            }
+
+            var couleurFond = ""
+            if (temperatureConsigne < 16) {
+                couleurFond = '#' + couleurs[0];
+            }
+            if (temperatureConsigne > 28) {
+                couleurFond = '#' + couleurs[11];
+            }
+            if (temperatureConsigne <= 28 && temperatureConsigne >= 16) {
+                couleurFond = '#' + couleurs[temperatureConsigne - 16];
+            }
+            centerCircle = _this.querySelector('.cercle_int')
+            centerCircle.style.background = couleurFond;
+
+        }
+    
     </script>
 </div>

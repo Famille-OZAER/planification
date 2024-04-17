@@ -665,37 +665,49 @@ class planification extends eqLogic {
 
     }
     $eqLogic->setConfiguration("numero_objet",$eqLogic->getObject_id());
-       $eqLogic->setLogicalId(planification::supp_accents($eqLogic->getName()));
-       if ($eqLogic->getConfiguration("LeverMin_Lundi")==""){$eqLogic->setConfiguration("LeverMin_Lundi","00:00");}
-       if ($eqLogic->getConfiguration("LeverMax_Lundi")==""){$eqLogic->setConfiguration("LeverMax_Lundi","23:59");}
-       if ($eqLogic->getConfiguration("CoucherMin_Lundi")==""){$eqLogic->setConfiguration("CoucherMin_Lundi","00:00");}
-       if ($eqLogic->getConfiguration("CoucherMax_Lundi")==""){$eqLogic->setConfiguration("CoucherMax_Lundi","23:59");}
-       if ($eqLogic->getConfiguration("LeverMin_Mardi")==""){$eqLogic->setConfiguration("LeverMin_Mardi","00:00");}
-       if ($eqLogic->getConfiguration("LeverMax_Mardi")==""){$eqLogic->setConfiguration("LeverMax_Mardi","23:59");}
-       if ($eqLogic->getConfiguration("CoucherMin_Mardi","")==""){$eqLogic->setConfiguration("CoucherMin_Mardi","00:00");}
-       if ($eqLogic->getConfiguration("CoucherMax_Mardi","")==""){$eqLogic->setConfiguration("CoucherMax_Mardi","23:59");}
-       if ($eqLogic->getConfiguration("LeverMin_Mercredi","")==""){$eqLogic->setConfiguration("LeverMin_Mercredi","00:00");}
-       if ($eqLogic->getConfiguration("LeverMax_Mercredi","")==""){$eqLogic->setConfiguration("LeverMax_Mercredi","23:59");}
-       if ($eqLogic->getConfiguration("CoucherMin_Mercredi","")==""){$eqLogic->setConfiguration("CoucherMin_Mercredi","00:00");}
-       if ($eqLogic->getConfiguration("CoucherMax_Mercredi","")==""){$eqLogic->setConfiguration("CoucherMax_Mercredi","23:59");}
-       if ($eqLogic->getConfiguration("LeverMin_Jeudi","")==""){$eqLogic->setConfiguration("LeverMin_Jeudi","00:00");}
-       if ($eqLogic->getConfiguration("LeverMax_Jeudi","")==""){$eqLogic->setConfiguration("LeverMax_Jeudi","23:59");}
-       if ($eqLogic->getConfiguration("CoucherMin_Jeudi","")==""){$eqLogic->setConfiguration("CoucherMin_Jeudi","00:00");}
-       if ($eqLogic->getConfiguration("CoucherMax_Jeudi","")==""){$eqLogic->setConfiguration("CoucherMax_Jeudi","23:59");}
-       if ($eqLogic->getConfiguration("LeverMin_Vendredi","")==""){$eqLogic->setConfiguration("LeverMin_Vendredi","00:00");}
-       if ($eqLogic->getConfiguration("LeverMax_Vendredi","")==""){$eqLogic->setConfiguration("LeverMax_Vendredi","23:59");}
-       if ($eqLogic->getConfiguration("CoucherMin_Vendredi","")==""){$eqLogic->setConfiguration("CoucherMin_Vendredi","00:00");}
-       if ($eqLogic->getConfiguration("CoucherMax_Vendredi","")==""){$eqLogic->setConfiguration("CoucherMax_Vendredi","23:59");}
-       if ($eqLogic->getConfiguration("LeverMin_Samedi","")==""){$eqLogic->setConfiguration("LeverMin_Samedi","00:00");}
-       if ($eqLogic->getConfiguration("LeverMax_Samedi","")==""){$eqLogic->setConfiguration("LeverMax_Samedi","23:59");}
-       if ($eqLogic->getConfiguration("CoucherMin_Samedi","")==""){$eqLogic->setConfiguration("CoucherMin_Samedi","00:00");}
-       if ($eqLogic->getConfiguration("CoucherMax_Samedi","")==""){$eqLogic->setConfiguration("CoucherMax_Samedi","23:59");}
-       if ($eqLogic->getConfiguration("LeverMin_Dimanche","")==""){$eqLogic->setConfiguration("LeverMin_Dimanche","00:00");}
-       if ($eqLogic->getConfiguration("LeverMax_Dimanche")==""){$eqLogic->setConfiguration("LeverMax_Dimanche","23:59");}
-       if ($eqLogic->getConfiguration("CoucherMin_Dimanche")==""){$eqLogic->setConfiguration("CoucherMin_Dimanche","00:00");}
-       if ($eqLogic->getConfiguration("CoucherMax_Dimanche")==""){$eqLogic->setConfiguration("CoucherMax_Dimanche","23:59");}
-       
-       $eqLogic->save(true);
+    $eqLogic->setLogicalId(planification::supp_accents($eqLogic->getName()));
+    if ($eqLogic->getConfiguration("LeverMin_Lundi")==""){$eqLogic->setConfiguration("LeverMin_Lundi","00:00");}
+    if ($eqLogic->getConfiguration("LeverMax_Lundi")==""){$eqLogic->setConfiguration("LeverMax_Lundi","23:59");}
+    if ($eqLogic->getConfiguration("CoucherMin_Lundi")==""){$eqLogic->setConfiguration("CoucherMin_Lundi","00:00");}
+    if ($eqLogic->getConfiguration("CoucherMax_Lundi")==""){$eqLogic->setConfiguration("CoucherMax_Lundi","23:59");}
+    if ($eqLogic->getConfiguration("LeverMin_Mardi")==""){$eqLogic->setConfiguration("LeverMin_Mardi","00:00");}
+    if ($eqLogic->getConfiguration("LeverMax_Mardi")==""){$eqLogic->setConfiguration("LeverMax_Mardi","23:59");}
+    if ($eqLogic->getConfiguration("CoucherMin_Mardi","")==""){$eqLogic->setConfiguration("CoucherMin_Mardi","00:00");}
+    if ($eqLogic->getConfiguration("CoucherMax_Mardi","")==""){$eqLogic->setConfiguration("CoucherMax_Mardi","23:59");}
+    if ($eqLogic->getConfiguration("LeverMin_Mercredi","")==""){$eqLogic->setConfiguration("LeverMin_Mercredi","00:00");}
+    if ($eqLogic->getConfiguration("LeverMax_Mercredi","")==""){$eqLogic->setConfiguration("LeverMax_Mercredi","23:59");}
+    if ($eqLogic->getConfiguration("CoucherMin_Mercredi","")==""){$eqLogic->setConfiguration("CoucherMin_Mercredi","00:00");}
+    if ($eqLogic->getConfiguration("CoucherMax_Mercredi","")==""){$eqLogic->setConfiguration("CoucherMax_Mercredi","23:59");}
+    if ($eqLogic->getConfiguration("LeverMin_Jeudi","")==""){$eqLogic->setConfiguration("LeverMin_Jeudi","00:00");}
+    if ($eqLogic->getConfiguration("LeverMax_Jeudi","")==""){$eqLogic->setConfiguration("LeverMax_Jeudi","23:59");}
+    if ($eqLogic->getConfiguration("CoucherMin_Jeudi","")==""){$eqLogic->setConfiguration("CoucherMin_Jeudi","00:00");}
+    if ($eqLogic->getConfiguration("CoucherMax_Jeudi","")==""){$eqLogic->setConfiguration("CoucherMax_Jeudi","23:59");}
+    if ($eqLogic->getConfiguration("LeverMin_Vendredi","")==""){$eqLogic->setConfiguration("LeverMin_Vendredi","00:00");}
+    if ($eqLogic->getConfiguration("LeverMax_Vendredi","")==""){$eqLogic->setConfiguration("LeverMax_Vendredi","23:59");}
+    if ($eqLogic->getConfiguration("CoucherMin_Vendredi","")==""){$eqLogic->setConfiguration("CoucherMin_Vendredi","00:00");}
+    if ($eqLogic->getConfiguration("CoucherMax_Vendredi","")==""){$eqLogic->setConfiguration("CoucherMax_Vendredi","23:59");}
+    if ($eqLogic->getConfiguration("LeverMin_Samedi","")==""){$eqLogic->setConfiguration("LeverMin_Samedi","00:00");}
+    if ($eqLogic->getConfiguration("LeverMax_Samedi","")==""){$eqLogic->setConfiguration("LeverMax_Samedi","23:59");}
+    if ($eqLogic->getConfiguration("CoucherMin_Samedi","")==""){$eqLogic->setConfiguration("CoucherMin_Samedi","00:00");}
+    if ($eqLogic->getConfiguration("CoucherMax_Samedi","")==""){$eqLogic->setConfiguration("CoucherMax_Samedi","23:59");}
+    if ($eqLogic->getConfiguration("LeverMin_Dimanche","")==""){$eqLogic->setConfiguration("LeverMin_Dimanche","00:00");}
+    if ($eqLogic->getConfiguration("LeverMax_Dimanche")==""){$eqLogic->setConfiguration("LeverMax_Dimanche","23:59");}
+    if ($eqLogic->getConfiguration("CoucherMin_Dimanche")==""){$eqLogic->setConfiguration("CoucherMin_Dimanche","00:00");}
+    if ($eqLogic->getConfiguration("CoucherMax_Dimanche")==""){$eqLogic->setConfiguration("CoucherMax_Dimanche","23:59");}
+    
+    if ($eqLogic->getConfiguration('Type_équipement','') == 'PAC'){
+      $cmd_absent= $eqLogic->getCmd(null, "absent");
+      if(is_object($cmd_absent)){
+        $cmd_absent->remove();
+      }
+    }
+    if ($eqLogic->getConfiguration('Type_équipement','') == 'Chauffage'){
+      $cmd_absent= $eqLogic->getCmd(null, "absent");
+      if(is_object($cmd_absent)){
+        $cmd_absent->remove();
+      }
+    }
+    $eqLogic->save(true);
   }
   function postSave() {
     $eqLogic=$this;
@@ -758,7 +770,6 @@ class planification extends eqLogic {
     }
 
     if ($eqLogic->getConfiguration('Type_équipement','') == 'PAC'){
-      $eqLogic->Ajout_Commande('absent','Absent','action','other');
       $eqLogic->Ajout_Commande('climatisation','Climatisation','action','other');
       $eqLogic->Ajout_Commande('ventilation','Ventilation','action','other');
       $eqLogic->Ajout_Commande('chauffage','Chauffage','action','other');
@@ -778,7 +789,6 @@ class planification extends eqLogic {
       $eqLogic->Ajout_Commande('confort','Confort','action','other');
       $eqLogic->Ajout_Commande('eco','Eco','action','other');
       $eqLogic->Ajout_Commande('hors_gel','Hors gel','action','other');
-      $eqLogic->Ajout_Commande('absent','Absent','action','other');
       $eqLogic->Ajout_Commande('arret','Arrêt','action','other');
     }
 
@@ -916,13 +926,8 @@ class planification extends eqLogic {
       $eqLogic=$this;
       $replace = $eqLogic->preToHtml($_version);
       
-       if (!is_array($replace)) {return $replace; }
-      $version_arr=explode('.', jeedom::version());
-     if (intval($version_arr[0]) >= 4 && intval($version_arr[1]) < 4){
-        $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'domUtils.ajax(','$.ajax(',"value",false);
-        $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'jeedomUtils.showAlert(','$.fn.showAlert(',"value",false);       
-      }
-     
+      if (!is_array($replace)) {return $replace; }
+         
       $version_alias=jeedom::versionAlias($_version);
       //echo $version_alias;
       if ($eqLogic->getDisplay('hideOn' . $version_alias) == 1) { return ''; }
@@ -963,48 +968,27 @@ class planification extends eqLogic {
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#info_widget#',$eqLogic->getCmd(null, 'info'),"value",true);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#info_widget_id#',$eqLogic->getCmd(null, 'info'),"id",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#set_planification_id#',$eqLogic->getCmd(null, 'set_planification'),"id",false);
-      //rmplacement des noms de fonction avec l'id de l'equipement en plus à la fin du nom de fonction
+      //remplacement des noms de fonction avec l'id de l'equipement en plus à la fin du nom de fonction
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Affichage_widget','Affichage_widget' .$eqLogic->getId(),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Reset_page','Reset_page' .$eqLogic->getId(),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Commun_widget','Commun_widget' .$eqLogic->getId(),"value",false);
       $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'SetWidget_Thermostat','SetWidget_Thermostat' .$eqLogic->getId(),"value",false);
-      /*$cmd_heure_fin=$eqLogic->getCmd(null, 'heure_fin');
+      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'Maj_Thermostat','Maj_Thermostat' .$eqLogic->getId(),"value",false);
+      //remplacement des noms de variable avec l'id de l'equipement en plus à la fin du nom de fonction
+      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'show_name','show_name' .$eqLogic->getId(),"value",false);
+      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'show_object','show_object' .$eqLogic->getId(),"value",false);
+      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'température','température' .$eqLogic->getId(),"value",false);
+      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'info_widget','info_widget' .$eqLogic->getId(),"value",false);
+      $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'timeoutId','timeoutId' .$eqLogic->getId(),"value",false);
       
-        if($cmd_heure_fin->execCmd() != ""){
-
-          if($eqLogic->getConfiguration("affichage_heure",false)){
-            $heure_fin=strtotime($cmd_heure_fin->execCmd());
-            $interval = date_diff( new DateTime($cmd_heure_fin->execCmd()), new DateTime("now"));
-            if(intval($interval->format('%a')) ==0){
-              $replace['#heure_fin#'] =date('H:i',$heure_fin);
-            }else{
-              $replace['#heure_fin#'] =date('d-m-Y H:i',$heure_fin);
-            }
-          }else{
-            $heure_fin=strtotime($cmd_heure_fin->execCmd());
-            if(date('d-m-Y',$heure_fin) != date('d-m-Y') ){
-              $replace['#heure_fin#'] =date('d-m-Y H:i',$heure_fin);
-            }else{
-              $replace['#heure_fin#'] =date('H:i',$heure_fin);
-            }
-          }
-
-         // $replace['#datetimepicker#'] = date('Y/m/d H:i',$heure_fin);
-
-
-
-        }else{
-          $replace['#heure_fin#'] ="";
-         // $replace['#datetimepicker#'] = date('Y/m/d H:i');
-
-        }*/
+      
       $page_active=$eqLogic->getCache('Page');
       if($page_active =="" || $page_active=="page1"){
         $replace['#page#']="page1";
       }else{
         $replace['#page#']="page2";
       }
-      $replace['#type_eqlogic#'] = $eqLogic->getConfiguration("Type_équipement","");
+      
       if ($eqLogic->getConfiguration("Type_équipement","")== "Poele"){
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#arret_id#',$eqLogic->getCmd(null, 'arret'),"id",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#consigne#',$eqLogic->getCmd(null, 'consigne_temperature'),"value",false);
@@ -1044,7 +1028,6 @@ class planification extends eqLogic {
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost_off_id#',$eqLogic->getCmd(null, 'boost_off'),"id",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost#',$eqLogic->getCmd(null, 'boost'),"value",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#boost_id#',$eqLogic->getCmd(null, 'boost'),"id",false);
-        $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#absent_id#',$eqLogic->getCmd(null, 'absent'),"id",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#climatisation_id#',$eqLogic->getCmd(null, 'climatisation'),"id",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#ventilation_id#',$eqLogic->getCmd(null, 'ventilation'),"id",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#chauffage_id#',$eqLogic->getCmd(null, 'chauffage'),"id",false);
@@ -1069,17 +1052,9 @@ class planification extends eqLogic {
       if ($eqLogic->getConfiguration("Type_équipement","")== "Volet"){
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#ouvrir_id#',$eqLogic->getCmd(null, 'ouverture'),"id",false);		
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#fermer_id#',$eqLogic->getCmd(null, 'fermeture'),"id",false);		
-        $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#my_id#',$eqLogic->getCmd(null, 'my'),"id",false);		
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#my_id#',$eqLogic->getCmd(null, 'my'),"id",false);
         $eqLogic::replace_into_html($erreur,$liste_erreur,$replace,'#type_fenêtre#',$eqLogic->getConfiguration('Type_fenêtre',""),"value",false);
-        
-        $cmd_My=$eqLogic->getCmd(null, 'my');
-        $commande=$cmd_My->getConfiguration("commande","");
-        if($cmd_My->getConfiguration("commande","") == ""){
-          $replace['#show_my#'] =false;
-        }else{
-          $replace['#show_my#'] = true;
-        }
+       
        
         $cmd_Etat=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
         if (is_object($cmd_Etat)){
@@ -1353,7 +1328,6 @@ class planificationCmd extends cmd {
               case 'chauffage ECO':
               case 'climatisation':
               case 'ventilation':
-              case 'absent':
                 $eqLogic->checkAndUpdateCmd('action_en_cours',ucwords($cmd->getName()));
 
                 if(!isset($_options["mode"])){
@@ -1362,11 +1336,6 @@ class planificationCmd extends cmd {
                   if($cmd->getLogicalId() == "arret" ){
                     $eqLogic->checkAndUpdateCmd('boost', 0);
                     $eqLogic->getCmd(null, "heure_fin")->event("");
-                    $eqLogic->getCmd(null, "action_suivante")->event("");
-                  }else if($cmd->getLogicalId() == "absent"){
-                    planification::add_log("info","mode" . $cmd->getName()  ,$eqLogic);
-                    $eqLogic->checkAndUpdateCmd('boost', 0);
-                    $eqLogic->getCmd(null, "set_heure_fin")->event("");
                     $eqLogic->getCmd(null, "action_suivante")->event("");
                   }else{
                     if ($cmd->getLogicalId() == "chauffage" || $cmd->getLogicalId() == "chauffage ECO"){
@@ -1486,7 +1455,6 @@ class planificationCmd extends cmd {
                 break;
 
               case 'arret':
-              case 'absent':
               case 'confort':
               case 'hors_gel':
               case 'eco':
@@ -1504,29 +1472,6 @@ class planificationCmd extends cmd {
                     $cmd_action_suivante = $eqLogic->getCmd(null, "action_suivante");
                     if(is_object($cmd_action_suivante)){
                       $cmd_action_suivante->event("");
-                    }
-                  }else if($cmd->getLogicalId() == "absent"){
-                    $cmd_set_heure_fin=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'set_heure_fin');
-                    if (is_object($cmd_set_heure_fin)){
-                      $duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",0);
-                      if($duree_mode_manuel_par_defaut ==0 ){
-                        $cmd_heure_fin = $eqLogic->getCmd(null, "heure_fin");
-                        if(is_object($cmd_heure_fin)){
-                          $cmd_heure_fin->event("");
-                        }
-                        $cmd_action_suivante = $eqLogic->getCmd(null, "action_suivante");
-                        if(is_object($cmd_action_suivante)){
-                          $cmd_action_suivante->event("");
-                        }
-                        planification::add_log("debug","Réactivation manuelle",$eqLogic);
-                        $eqLogic->refresh();
-                        $eqLogic->Execute_action_actuelle();
-                        return;
-                      }else{
-                        $date_Fin=strtotime('+'.($duree_mode_manuel_par_defaut)." minute");
-                        $arr=["message" => date ('d-m-Y H:i', $date_Fin)];
-                        $cmd_set_heure_fin->execute( $arr) ;
-                      }
                     }
                   }else{
                     $cmd_set_heure_fin=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'set_heure_fin');

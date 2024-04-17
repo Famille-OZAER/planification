@@ -1,12 +1,10 @@
 JSONCLIPBOARD = null
 //
-var v_4_4 = false
-if(Number(jeeFrontEnd.jeedomVersion.split('.')[0])>= 4 &&  Number(jeeFrontEnd.jeedomVersion.split('.')[1])>= 4){
-    v_4_4=true
-}
-if (v_4_4){
+
+
+
  flatpickr.localize(flatpickr.l10ns.fr)
-}
+
 
 
 if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
@@ -213,7 +211,7 @@ document.getElementById('div_pageContainer').addEventListener('click', function(
     }
       
     if (_target = event.target.closest('.li_eqLogic')) {
-        if (v_4_4){
+       
             let active_tabpane = document.querySelector(".tab-content .tab-pane.active").getAttribute("id")
         
             jeedomUtils.hideAlert()
@@ -238,118 +236,7 @@ document.getElementById('div_pageContainer').addEventListener('click', function(
                     }
                 })
             }, "50");
-        }else{
-            
-            $.hideAlert()
-            if (event.ctrlKey) {
-                var type = $('body').attr('data-page')
-                var url = 'index.php?v=d&m=planification&p=planification&id=' + $(_target).attr('data-eqlogic_id')
-                window.open(url).focus()
-            } else {
-                jeedom.eqLogic.cache.getCmd = Array()
-               
-                $('.eqLogicThumbnailDisplay').hide()
-                if ('function' == typeof(prePrintEqLogic)) {
-                    prePrintEqLogic($(_target).attr('data-eqLogic_id'))
-                }
-                if (isset($(_target).attr('data-eqLogic_type')) && isset($('.' + $(_target).attr('data-eqLogic_type')))) {
-                    $('.' + $(_target).attr('data-eqLogic_type')).show()
-                } else {
-                    $('.eqLogic').show()
-                }
-                if ($('.li_eqLogic').length != 0) {                    
-                    document.querySelectorAll('.li_eqLogic').forEach(function(li_eqLogic) {  
-                        li_eqLogic.classList.remove('active');
-                    })
-                }
-                if ($('.li_eqLogic[data-eqLogic_id=' + $(_target).attr('data-eqLogic_id') + ']').innerHTML != undefined) {
-                    $('.li_eqLogic[data-eqLogic_id=' + $(_target).attr('data-eqLogic_id') + ']').classList.add('active');
-                }
-                _target.classList.add('active')
-                $('.nav-tabs a:not(.eqLogicAction)').first().click()
-                $.showLoading()
-                jeedom.eqLogic.print({
-                    type: isset($(_target).attr('data-eqLogic_type')) ? $(_target).attr('data-eqLogic_type') : eqType,
-                    id: $(_target).attr('data-eqLogic_id'),
-                    status: 1,
-                    getCmdState: 1,
-                    error: function(error) {
-                        $.hideLoading()
-                        $.fn.showAlert({
-                            message: error.message,
-                            level: 'danger'
-                        })
-                    },
-                    success: function(data) {
-                        $('body .eqLogicAttr').value('')
-                        if (isset(data) && isset(data.timeout) && data.timeout == 0) {
-                            data.timeout = ''
-                        }
-                        $('body').setValues(data, '.eqLogicAttr')
-                        if (!isset(data.category.opening)) $('input[data-l2key="opening"]').prop('checked', false)
-
-                        if ('function' == typeof(printEqLogic)) {
-                            printEqLogic(data)
-                        }
-                        $('.cmd').remove()
-                        for (var i in data.cmd) {
-                            if (data.cmd[i].type == 'info') {
-                                data.cmd[i].state = String(data.cmd[i].state).replace(/<[^>]*>?/gm, '');
-                                data.cmd[i]['htmlstate'] = '<span class="cmdTableState"';
-                                data.cmd[i]['htmlstate'] += 'data-cmd_id="' + data.cmd[i].id + '"';
-                                data.cmd[i]['htmlstate'] += 'title="{{Date de valeur}} : ' + data.cmd[i].valueDate + '<br/>{{Date de collecte}} : ' + data.cmd[i].collectDate;
-                                if (data.cmd[i].state.length > 50) {
-                                    data.cmd[i]['htmlstate'] += '<br/>' + data.cmd[i].state.replaceAll('"', '&quot;');
-                                }
-                                data.cmd[i]['htmlstate'] += '" >';
-                                data.cmd[i]['htmlstate'] += data.cmd[i].state.substring(0, 50) + ' ' + data.cmd[i].unite;
-                                data.cmd[i]['htmlstate'] += '<span>';
-                            } else {
-                                data.cmd[i]['htmlstate'] = '';
-                            }
-                            if (typeof addCmdToTable == 'function') {
-                                addCmdToTable(data.cmd[i])
-                            } else {
-                                addCmdToTableDefault(data.cmd[i]);
-                            }
-                        }
-                        $('.cmdTableState').each(function() {
-                            jeedom.cmd.addUpdateFunction($(_target).attr('data-cmd_id'), function(_options) {
-                                _options.value = String(_options.value).replace(/<[^>]*>?/gm, '');
-                                let cmd = $('.cmdTableState[data-cmd_id=' + _options.cmd_id + ']')
-                                let title = '{{Date de collecte}} : ' + _options.collectDate + ' - {{Date de valeur}} ' + _options.valueDate;
-                                if (_options.value.length > 50) {
-                                    title += ' - ' + _options.value;
-                                }
-                                cmd.attr('title', title)
-                                cmd.empty().append(_options.value.substring(0, 50) + ' ' + _options.unit);
-                                cmd.css('color', 'var(--logo-primary-color)');
-                                setTimeout(function() {
-                                    cmd.css('color', '');
-                                }, 1000);
-                            });
-                        })
-                        $('#div_pageContainer').on({
-                            'change': function(event) {
-                                jeedom.cmd.changeType($(_target).closest('.cmd'))
-                            }
-                        }, '.cmd .cmdAttr[data-l1key=type]')
-
-                        $('#div_pageContainer').on({
-                            'change': function(event) {
-                                jeedom.cmd.changeSubType($(_target).closest('.cmd'))
-                            }
-                        }, '.cmd .cmdAttr[data-l1key=subType]')
-
-                        jeedomUtils.addOrUpdateUrl('id', data.id)
-                        $.hideLoading()
-                        modifyWithoutSave = false
-                        
-                    }
-                })
-            }
-            return false
-        }
+        
     }
     if (_target = event.target.closest('.bt_afficher_timepicker') || event.target.closest('.bt_afficher_timepicker_planification')) { // à laisser, utilisé dans la page planification et gestion lever coucher de soleil
         flatpickr(_target.closest('div').querySelector('.in_timepicker'), {
@@ -561,18 +448,11 @@ document.getElementById('tab_eqlogic').addEventListener('focusout', function(eve
                     },
                     success: function(data) {
                         if (data.state != "ok") {
-                            if(v_4_4){
-                                jeedomUtils.showAlert({
+                            jeedomUtils.showAlert({
                                     message: "La commande de l 'état du chauffage est invalide, veuillez insérer une commande valide.",
                                     level: 'danger'
                                 })
-                            }else{
-                                $.fn.showAlert({
-                                    message: "La commande de l 'état du chauffage est invalide, veuillez insérer une commande valide.",
-                                    level: 'danger'
-                                })
-
-                            }
+                           
                             
 
                             document.querySelector('#tab_eqlogic .' + type_eq + ' .eqLogicAttr[data-l2key=etat_id]').value = ""
@@ -766,8 +646,7 @@ document.getElementById('tab_planifications').addEventListener('click', function
     if (_target = event.target.closest('.bt_appliquer_planification')) {
         planification = _target.closest('.planification')
         programName = planification.querySelector('.nom_planification').innerHTML
-        if (v_4_4){
-            jeeDialog.confirm({
+                    jeeDialog.confirm({
                 message: "Voulez vous vraiment appliquer la planification " + programName + " maintenant ?",
                 buttons: {
                     confirm: {
@@ -785,28 +664,7 @@ document.getElementById('tab_planifications').addEventListener('click', function
                     }
                 }
             })
-        }else{
-            planification = $(this).closest('.planification')
-            //programName = planification.find('.nom_planification').html()
-            bootbox.confirm({
-                message: "Voulez vous vraiment appliquer la planification " + programName + " maintenant ?",
-                buttons: {
-                    confirm: {
-                        label: 'Oui',
-                        className: 'btn-success'
-                    },
-                    cancel: {
-                        label: 'Non',
-                        className: 'btn-danger'
-                    }
-                },
-                callback: function(result) {
-                    if (result === true) {
-                        jeedom.cmd.execute({ id: set_planification_Id, value: { select: programName, Id_planification: planification.attr("Id") } })
-                    }
-                }
-            }) 
-        }
+      
         
     }
     if (_target = event.target.closest('.bt_supprimer_planification')) {
@@ -1684,8 +1542,7 @@ function MAJ_Graphique_jour(Div_jour) {
 
 function Recup_select(type_) {
     var SELECT = ""
-    if(v_4_4){
-        domUtils.ajax({
+            domUtils.ajax({
             type: "POST",
             url: "plugins/planification/core/ajax/planification.ajax.php",
             data: {
@@ -1706,30 +1563,7 @@ function Recup_select(type_) {
             SELECT = data.result;
             }
         });
-    }else{
-        $.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-            action: "Recup_select",
-            eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
-            type: type_
-            },
-            global: true,
-            async: false,
-            error: function(request, status, error) {
-            handleAjaxError(request, status, error);
-            },
-            success: function(data) {
-            if (data.state != 'ok') {
-                
-                $.fn.showAlert({ message: data, level: 'danger' });
-            SELECT = "";
-            }
-            SELECT = data.result;
-            }
-        });
-    }
+    
   
     return SELECT;
 
@@ -1737,7 +1571,7 @@ function Recup_select(type_) {
 
 function Recup_liste_commandes_planification() {
     var COMMANDE_LIST = []
-    if (v_4_4){
+    
         domUtils.ajax({
             type: "POST",
             url: "plugins/planification/core/ajax/planification.ajax.php",
@@ -1759,29 +1593,7 @@ function Recup_liste_commandes_planification() {
     
             }
         });
-    }else{
-        $.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Recup_liste_commandes_planification",
-                eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
-            },
-            global: true,
-            async: false,
-            error: function(request, status, error) {
-                handleAjaxError(request, status, error);
-            },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    $.fn.showAlert({ message: data, level: 'danger' });
-                    COMMANDE_LIST = "";
-                }
-                COMMANDE_LIST = data.result;
     
-            }
-        });
-    }
     
     return COMMANDE_LIST;
 
@@ -1813,9 +1625,21 @@ function printEqLogic(_eqLogic) {
     }
     if (_eqLogic.configuration.Type_équipement == 'Volet') {
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').value = _eqLogic.configuration.etat_id
-        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').value = _eqLogic.configuration.Alias_Ouvert
-        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').value = _eqLogic.configuration.Alias_Ferme
-        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').value = _eqLogic.configuration.Alias_My
+        if(_eqLogic.configuration.Alias_Ouvert == 'undefined'){
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').value = ''
+        }else{
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').value = _eqLogic.configuration.Alias_Ouvert
+        }
+        if(_eqLogic.configuration.Alias_My == 'undefined'){
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').value = ''
+        }else{
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').value = _eqLogic.configuration.Alias_My
+        }
+        if(_eqLogic.configuration.Alias_Ferme == 'undefined'){
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').value = ''
+        }else{
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').value = _eqLogic.configuration.Alias_Ferme
+        }
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Niveau_batterie_gauche_id]').value = isset(_eqLogic.configuration.Niveau_batterie_gauche_id) ? _eqLogic.configuration.Niveau_batterie_gauche_id : '' 
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Niveau_batterie_droite_id]').value = isset(_eqLogic.configuration.Niveau_batterie_droite_id) ? _eqLogic.configuration.Niveau_batterie_droite_id : ''
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Etat_fenêtre_gauche_id]').value = isset(_eqLogic.configuration.Etat_fenêtre_gauche_id) ? _eqLogic.configuration.Etat_fenêtre_gauche_id : ''
@@ -1859,6 +1683,7 @@ function printEqLogic(_eqLogic) {
         }
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').value = _eqLogic.configuration.etat_id
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_On]').value = _eqLogic.configuration.Alias_On
+        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Off]').value = _eqLogic.configuration.Alias_Off
     }
     if (_eqLogic.configuration.Type_équipement == 'Chauffage') {
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').value = _eqLogic.configuration.etat_id
@@ -1874,7 +1699,6 @@ function printEqLogic(_eqLogic) {
         document.querySelector('.eqLogicAttr[data-l2key=chemin_image]').value = _eqLogic.configuration.Chemin_image
 
     }
-    if (v_4_4){
         domUtils.ajax({
             type: "POST",
             url: "plugins/planification/core/ajax/planification.ajax.php",
@@ -1934,71 +1758,14 @@ function printEqLogic(_eqLogic) {
             }
 
         })
-    }else{
-        $.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Recup_infos_lever_coucher_soleil",
-                id: _eqLogic["id"]
-            },
-            dataType: 'json',
-            global: false,
-            async: false,
-            error: function(request, status, error) { handleAjaxError(request, status, error) },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    $.fn.showAlert({ message: data.result, level: 'danger' });
-                    return
-                }
-
-                if (data.result == false) {
-                    $.fn.showAlert({
-                        message: "Pour utiliser la fonction lever/coucher de soleil, veuillez enregistrer les coordonnées GPS (latitude et longitude) dans la configuration de jeedom.",
-                        level: 'warning'
-                    })
-                    return
-                }
-
-                document.querySelector('#tab_gestion .HeureLever_Lundi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Mardi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Mercredi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Jeudi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Vendredi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Samedi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Dimanche').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Lundi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Mardi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Mercredi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Jeudi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Vendredi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Samedi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Dimanche').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText = data.result["Heure_action_suivante_lever_lundi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mardi').innerText = data.result["Heure_action_suivante_lever_mardi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mercredi').innerText = data.result["Heure_action_suivante_lever_mercredi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Jeudi').innerText = data.result["Heure_action_suivante_lever_jeudi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Vendredi').innerText = data.result["Heure_action_suivante_lever_vendredi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Samedi').innerText = data.result["Heure_action_suivante_lever_samedi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Dimanche').innerText = data.result["Heure_action_suivante_lever_dimanche"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Lundi').innerText = data.result["Heure_action_suivante_coucher_lundi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mardi').innerText = data.result["Heure_action_suivante_coucher_mardi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mercredi').innerText = data.result["Heure_action_suivante_coucher_mercredi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Jeudi').innerText = data.result["Heure_action_suivante_coucher_jeudi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Vendredi').innerText = data.result["Heure_action_suivante_coucher_vendredi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Samedi').innerText = data.result["Heure_action_suivante_coucher_samedi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Dimanche').innerText = data.result["Heure_action_suivante_coucher_dimanche"]
-            }
-
-        })
-    }
+    
     nom_planification_erreur = []
 
 
 
     var SELECT_LIST = Recup_select("planifications")
     var CMD_LIST = Recup_liste_commandes_planification()
-    if (v_4_4){
+   
         domUtils.ajax({
             type: "POST",
             url: "plugins/planification/core/ajax/planification.ajax.php",
@@ -2073,82 +1840,7 @@ function printEqLogic(_eqLogic) {
                 })
             }
         })
-    }else{
-        $.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Recup_planification",
-                eqLogic_id: _eqLogic["id"]
-            },
-            //dataType: 'json',
-            global: false,
-            async: false,
-            error: function(request, status, error) { handleAjaxError(request, status, error) },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    $.fn.showAlert({
-                        message: data.result,
-                        level: 'danger'
-                    })
-                    return
-                }
-                if (data.result == false) {
-                    return
-                }
-                var array = JSON.parse("[" + data.result + "]");
-                if (array[0].length == 0) { return; }
-                var numéro_planification = 0
-                    //console.log(data.result)
     
-                array[0].forEach(function(planifications) {
-                    while (isset(planifications[numéro_planification])) {
-                        var nom_planification = ""
-                        var id_planification = ""
-                        var périodes = []
-    
-                        planifications[numéro_planification].forEach(function(planification) {
-                            if (isset(planification.Nom)) { nom_planification = planification.Nom }
-                            if (isset(planification.Id)) { id_planification = planification.Id }
-                            if (isset(planification.Lundi)) { périodes['Lundi'] = planification.Lundi }
-                            if (isset(planification.Mardi)) { périodes['Mardi'] = planification.Mardi }
-                            if (isset(planification.Mercredi)) { périodes['Mercredi'] = planification.Mercredi }
-                            if (isset(planification.Jeudi)) { périodes['Jeudi'] = planification.Jeudi }
-                            if (isset(planification.Vendredi)) { périodes['Vendredi'] = planification.Vendredi }
-                            if (isset(planification.Samedi)) { périodes['Samedi'] = planification.Samedi }
-                            if (isset(planification.Dimanche)) { périodes['Dimanche'] = planification.Dimanche }
-    
-                        })
-    
-                        Ajoutplanification({ nom: nom_planification, Id: id_planification, nouveau: false })
-    
-                        document.querySelectorAll('#div_planifications .planification')[numéro_planification].querySelectorAll('.JourSemaine').forEach(function(div_jour) {
-                            périodes[div_jour.classList[1]].forEach(function(periode) {
-                                if (!isset(periode.Type)) { return }
-                                Couleur = "erreur"
-                                Nom = ""
-                                Id = ""
-                                CMD_LIST.forEach(function(cmd) {
-                                    if (periode.Id == cmd.Id || periode.Id == cmd.Nom) {
-                                        Couleur = "couleur-" + cmd.couleur
-                                        Nom = cmd.Nom
-                                        Id = cmd.Id
-                                    }
-                                });
-                                var element = SELECT_LIST.replace("#COULEUR#", Couleur);
-                                element = element.replace("#VALUE#", Nom)
-                                element = element.replace("#ID#", Id)
-                                Ajout_Periode(element, div_jour, periode.Début, periode.Id, periode.Type)
-                            })
-                            triage_jour(div_jour)
-                            MAJ_Graphique_jour(div_jour)
-                        })
-                        numéro_planification += 1
-                    }
-                })
-            }
-        })
-    }
     
 
     var img = "plugins/planification/core/img/autre.png"
@@ -2217,17 +1909,11 @@ function printEqLogic(_eqLogic) {
     http.open('HEAD', img, false);
     http.send();
     if (http.status != 200) {
-        if(v_4_4){
+        
             jeedomUtils.showAlert({
                 message: "L'image " + img + " n'existe pas.",
                 level: 'danger'
             })
-        }else{
-            $.fn.showAlert({
-                message: "L'image " + img + " n'existe pas.",
-                level: 'danger'
-            })
-        }
         
 
         img = "plugins/planification/plugin_info/planification_icon.png"
@@ -2310,23 +1996,16 @@ function saveEqLogic(_eqLogic) {
     //console.log(planifications)
     //return
     if (erreur) {
-        if(v_4_4){
-            jeedomUtils.showAlert({
+      jeedomUtils.showAlert({
                 message: "Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.",
                 level: 'danger'
             })
-        }else{
-            $.fn.showAlert({
-                message: "Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.",
-                level: 'danger'
-            })
-        }
+        
         
 
         return;
     }
-    if (v_4_4){
-        domUtils.ajax({
+           domUtils.ajax({
             type: "POST",
             url: "plugins/planification/core/ajax/planification.ajax.php",
             data: {
@@ -2346,29 +2025,7 @@ function saveEqLogic(_eqLogic) {
                 }
             }
         })
-    }else{
-        console.log( _eqLogic["id"])
-        $.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Enregistrer_planifications",
-                id: _eqLogic["id"],
-                planifications: JSON.stringify(JSON.parse(planifications), null, " ")
-            },
-            global: false,
-            error: function(request, status, error) { handleAjaxError(request, status, error) },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    $.fn.showAlert({
-                        message: data.result,
-                        level: 'danger'
-                    })
-                    return
-                }
-            }
-        })
-    }
+    
    
 
     _eqLogic.configuration.Chemin_image = document.querySelector('.eqLogicAttr[data-l2key=Chemin_image]').value;
@@ -2526,14 +2183,9 @@ function addCmdToTable(_cmd) {
 
         document.getElementById('table_infos').insertAdjacentHTML('beforeend', tr)
         const _tr = document.getElementById('table_infos').lastChild
-        if(v_4_4){
-            _tr.setJeeValues(_cmd, '.cmdAttr');
-            jeedom.cmd.changeType(_tr, init(_cmd.subType));
-        }else{
-            const $tr = $('#table_infos tbody tr:last');
-            $tr.setValues(_cmd, '.cmdAttr');
-            jeedom.cmd.changeType($tr, init(_cmd.subType));
-        }
+        _tr.setJeeValues(_cmd, '.cmdAttr');
+        jeedom.cmd.changeType(_tr, init(_cmd.subType));
+       
         
         _tr.querySelector('.cmdAttr[data-l1key=type],.cmdAttr[data-l1key=subType]').setAttribute("disabled", true);
     } else if (_cmd.type == 'action') {
@@ -2593,25 +2245,18 @@ function addCmdToTable(_cmd) {
 
         document.getElementById('table_actions').insertAdjacentHTML('beforeend', tr)
         const _tr = document.getElementById('table_actions').lastChild
-        if(v_4_4){
-            
-            _tr.setJeeValues(_cmd, '.cmdAttr');
+       _tr.setJeeValues(_cmd, '.cmdAttr');
             if (isset(_tr.querySelector(".actionOptions"))) {
                 jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options),
                     function(html) {
-                        if (v_4_4){
-                            _tr.querySelector('.actionOptions').innerHTML=html;
-                        }
+                        _tr.querySelector('.actionOptions').innerHTML=html;
+                      
                     });
     
     
                 
             }
-        }else{
-            const $tr = $('#table_actions tbody tr:last');
-            $tr.setValues(_cmd, '.cmdAttr');
-            $('#table_actions tbody tr:last').find(".actionOptions").append(jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options)))
-        }
+       
        
         
 

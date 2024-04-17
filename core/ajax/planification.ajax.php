@@ -36,24 +36,23 @@
                 $heure_fin=strtotime($cmd->execCmd());
                 $interval = date_diff( new DateTime($cmd->execCmd()), new DateTime("now"));
                 if(intval($interval->format('%a')) ==0){
-                  $cmd_array[$cmd->getLogicalId()] =date('H:i',$heure_fin);
+                  $cmd_array['heure_fin'] =date('H:i',$heure_fin);
                 }else{
-                  $cmd_array[$cmd->getLogicalId()] =date('d-m-Y H:i',$heure_fin);
+                  $cmd_array['heure_fin'] =date('d/m/Y H:i',$heure_fin);
                 }
               }else{
-                $heure_fin=strtotime($cmd_heure_fin->execCmd());
-                if(date('d-m-Y',$heure_fin) != date('d-m-Y') ){
-                  $cmd_array[$cmd->getLogicalId()] =date('d-m-Y H:i',$heure_fin);
-                }else{
-                  $cmd_array[$cmd->getLogicalId()] =date('H:i',$heure_fin);
-                }
+                $heure_fin=strtotime($cmd->execCmd());
+                $cmd_array['heure_fin'] =date('d/m/Y H:i',$heure_fin);
+                
               }
               //$cmd_array['datetimepicker'] = date('Y/m/d H:i',$heure_fin);
             }else{
-              $cmd_array[$cmd->getLogicalId()] ="";
+              $cmd_array['heure_fin'] ="";
               //$cmd_array['datetimepicker'] = date('Y/m/d H:i');
 
             }
+          }elseif ($cmd->getLogicalId() == 'action_suivante'){
+            $cmd_array['prochaine_action'] = $cmd->execCmd();
           }else{
             $cmd_array[$cmd->getLogicalId()] = $cmd->execCmd();
           }
@@ -114,8 +113,18 @@
               $cmd_array['sens_ouverture_fenêtre'] = 'droite';
             }            
           }         
-        }         
+        } 
+        $cmd_My=$eqLogic->getCmd(null, 'my');
+        $commande=$cmd_My->getConfiguration("commande","");
+        if($cmd_My->getConfiguration("commande","") == ""){
+          $cmd_array['show_my'] =false;
+        }else{
+          $cmd_array['show_my'] = true;
+        }        
       }
+       
+    
+
       $cmd_array["page"]=$eqLogic->getCache('Page');
       ajax::success($cmd_array);
     }
