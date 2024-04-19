@@ -11,6 +11,7 @@ function planification_install() {
 function find_all_files($dir){
     $root = scandir($dir);
     foreach($root as $value){
+		log::add('planification_update', 'debug',"*". $value);
         if($value === '.' || $value === '..') {continue;}
 
         if(is_file($dir.'/'.$value)) {
