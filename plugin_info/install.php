@@ -17,11 +17,12 @@ function find_all_files($dir){
 
         if(is_file($dir.'/'.$value)) {
 			$result[]=$dir.$value;
-			log::add('planification_update', 'debug',"*". $dir.'/'.$value);
+			log::add('planification_update', 'debug', $dir.'/'.$value);
 			unlink ($dir.'/'.$value); 
 	
 			continue;
 		}else{
+			log::add('planification_update', 'debug',"****". $dir.'/'.$value);
 			rmdir ($dir.'/'.$value);
 			foreach(find_all_files($dir.'/'.$value) as $value){
 			//$result[]=$value;
