@@ -2,11 +2,9 @@
     data-tags="#tags#" style="min-width:270px!important;max-width:270px!important;min-height:170px!important;max-height:170px!important;width: 270px;height: 170px;">
 
     <center class="object_name" style="overflow: hidden;padding-right:22px;padding-left:12px;font-weight:300;word-break: break-all;max-height:45px;font-size:16px;background-color: rgb(0 0 0);font-family:Arial;font-weight:normal;">
-        <a href="#eqLink#" class="reportModeHidden">#object_name#</a>
+        <a href="#eqLink#">#object_name#</a>
     </center>
-    <center class="widget-name" style="margin-bottom: 0px;max-height:22px;">
-        <a href="#eqLink#" class="reportModeHidden">#name_display#</a>
-    </center>
+    
 
    
    <div class="tuile" style="height: 100%; background-color: rgb(255 255 255 /5%);">
@@ -34,26 +32,27 @@
             </div>
         </div>
 
-        <div class="page_2" style="height:70%;margin: 0px; display: none;">
-            
-            <div class="col-xs-12 center" style="height:100%;padding: 0px!important;">
-                <div style="height:50%;">
-                    <select class="selectCalendar cursor tooltips" style="top: calc(100% - 27px);position: relative;width:80%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
-            #calendar_selector#
-          </select>
-                </div>
-                <div style="height:50%;">
+        <div class="page_2 center" style="padding-top: 10px;margin: 0px;display:none">
+            <div style="height:25%;">
+                <select class="cmd selectCalendar cursor tooltips" style="top: calc(100% - 26px);position: relative;width:70%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
+					#calendar_selector#
+				</select>
+            </div>
+            <div style="height:25%">
+                <div style="display: block;">
                     <a class='input-group-addon cursor tooltips  bt_afficher_timepicker' style=" top: 2px;margin: auto;padding: 5px 12px!important;display:block;width:70%;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
                         <span class="center fa fa-calendar" style="color:white"> 
                             <input class="in_timepicker input-sm" style="position:absolute;left:30%;top:50%;height: 0px!important;width: 0px!important; padding: 0px!important;">
                         </span>
                     </a>
                 </div>
+
             </div>
-            <div class="col-xs-12  center" style="height:30%;margin: 0px;">
-                <div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.7em;color:white!important">
+            <div style="height:50%">
+                <div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.9em;color:white!important">
                 </div>
             </div>
+            
         </div>
         <span class="cmd refresh pull-right cursor" style="position: absolute;right: 0px;top:0px" data-cmd_id="#refresh_id#">
             <i class="fas fa-sync"></i>
@@ -65,11 +64,10 @@
     <link rel="stylesheet" type="text/css" href="plugins/planification/core/template/dashboard/css/widget.css" media="all" />
 
     <script>
-        var show_name=false
-        var show_object=false
         var température=0
         var info_widget=''
         var timeoutId
+        var show_object = false
         document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .tuile').addEventListener('click', function(event) {
             var _target = null
             if (_target = event.target.closest('.img')) {
@@ -91,7 +89,6 @@
                     jeedom.cmd.execute({
                         id: '#refresh_id#'
                     });
-              
             }
             var _target = null
             if (_target = event.target.closest('.boost')) {
@@ -111,11 +108,7 @@
                     })
                 }
             }
-           /* if (_target = event.target.closest('.Auto')) {
-               jeedom.cmd.execute({
-                    id: '#auto_id#'
-                });
-            }*/
+           
             if (_target = event.target.closest('.Climatisation')) {
                 jeedom.cmd.execute({
                     id: '#climatisation_id#'
@@ -214,37 +207,24 @@
                     document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .Thermostat').style.display = 'block'
                      //mise en place de l'icone auto/manu + redimensionnement tuile
 
-                     if (document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('displayObjectName')) {
-                        if (!document.querySelector('.eqLogic[data-eqLogic_uid=#uid#]').classList.contains('hideEqLogicName')) {
-                            document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .widget-name').style.display = "none"
-                       }
-                    }
-                    if(!document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('hideEqLogicName') && !show_name){
-                        show_name=true
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number('65px'.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight-25 +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .page_1 .gauche').style.height='50%'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .page_1 .droite').style.height='50%'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top = '0px'
-                     }else{
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
-                    }
-                    
-                    if(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('displayObjectName') && !show_object){
+                     
+                     if(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('displayObjectName') && !show_object){
                       
                         show_object=true
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number('65px'.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight -25+'px!important'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .page_1 .gauche').style.height='50%'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .page_1 .droite').style.height='50%'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetTop+document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetHeight)-25 +'px'
+                        
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top = '0px'
-                    }else{
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
-                    }
+                   
+                       }else{
+                      
+                  }
+                    
+                       
                     if (planification_en_cours == "") {
                         planification_en_cours = "Aucune planification"
                     }
@@ -258,6 +238,7 @@
                    
                     switch (mode) {
                         case "Auto":
+                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .bt_afficher_timepicker').style.display = 'none'
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').classList.remove("cursor")
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').classList.remove("cursor")
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').setAttribute('title', 'Planification en cours: ' + planification_en_cours);
@@ -299,6 +280,7 @@
                             
                             break
                         case "Manuel":
+                        document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .bt_afficher_timepicker').style.display = 'block'
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img').classList.add("cursor")
                             document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .img_auto_manu').classList.add("cursor")
                             if (heure_fin != " " && heure_fin != "") {
