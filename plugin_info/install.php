@@ -18,18 +18,18 @@ function find_all_files($dir){
 
         if($value === '.' || $value === '..') {continue;}
 
-        if(is_file("$dir/$value")) {
-			$result[]="$dir/$value";
-			log::add('planification_update', 'debug',"*". $dir/$value);
+        if(is_file($dir.'/'.$value)) {
+			$result[]=$dir.'/'.$value;
+			log::add('planification_update', 'debug',"*". $dir.'/'.$value);
 			continue;
 		}
 
-        foreach(find_all_files("$dir/$value") as $value)
+        foreach(find_all_files($dir.'/'.$value) as $value)
 
         {
-
+log::add('planification_update', 'debug', $value);
             $result[]=$value;
-			log::add('planification_update', 'debug', $value);
+			
         }
 
     }
