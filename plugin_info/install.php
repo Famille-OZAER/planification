@@ -22,7 +22,7 @@ function find_all_files($dir){
 	
 			continue;
 		}else{
-			unlink ($dir.'/'.$value);
+			rmdir ($dir.'/'.$value);
 			foreach(find_all_files($dir.'/'.$value) as $value){
 			//$result[]=$value;
         }
