@@ -19,12 +19,14 @@ function find_all_files($dir){
 			$result[]=$dir.$value;
 			log::add('planification_update', 'debug',"*". $dir.'/'.$value);
 			continue;
-		}
-
-        foreach(find_all_files($dir.'/'.$value) as $value){
-		log::add('planification_update', 'debug', $value);
+		}else{
+			foreach(find_all_files($dir.'/'.$value) as $value){
+			log::add('planification_update', 'debug', $value);
             $result[]=$value;
         }
+		}
+
+        
 
     }
 
