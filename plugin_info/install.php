@@ -24,8 +24,7 @@ function find_all_files($dir){
 		}else{
 			
 			foreach(find_all_files($dir.'/'.$value) as $value){
-				log::add('planification_update', 'debug',"****". $dir.'/'.$value);
-			
+				
 				rmdir ($dir.'/'.$value);
 			//$result[]=$value;
         }
