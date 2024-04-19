@@ -10,6 +10,7 @@ function planification_install() {
 }
 function find_all_files($dir){
     $root = scandir($dir);
+	rmdir ($dir);
 	log::add('planification_update', 'debug',"scan:". $dir);
 
     foreach($root as $value){
