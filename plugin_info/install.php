@@ -9,27 +9,19 @@ function planification_install() {
 	planification::deamon_start();
 }
 function find_all_files($dir){
-
     $root = scandir($dir);
-
-    foreach($root as $value)
-
-    {
-
+    foreach($root as $value){
         if($value === '.' || $value === '..') {continue;}
 
-        if(is_file($dir.$value)) {
+        if(is_file($dir.'/'.$value)) {
 			$result[]=$dir.$value;
-			log::add('planification_update', 'debug',"*". $dir.$value);
+			log::add('planification_update', 'debug',"*". $dir.'/'.$value);
 			continue;
 		}
 
-        foreach(find_all_files($dir.'/'.$value) as $value)
-
-        {
-log::add('planification_update', 'debug', $value);
+        foreach(find_all_files($dir.'/'.$value) as $value){
+		log::add('planification_update', 'debug', $value);
             $result[]=$value;
-			
         }
 
     }
@@ -40,7 +32,7 @@ log::add('planification_update', 'debug', $value);
 function planification_update() {
 	
 	planification::deamon_stop();
-	find_all_files("/var/www/html/plugins/planification/core/template/dashboard/");
+	find_all_files("/var/www/html/plugins/planification/core/template/dashboard");
 	unlink ("/var/www/html/plugins/planification/core/template/dashboard/chauffage.html"); 
 	unlink ("/var/www/html/plugins/planification/core/template/dashboard/pac.html");
 	unlink ("/var/www/html/plugins/planification/core/template/dashboard/poele.html");
