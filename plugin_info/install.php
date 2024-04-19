@@ -18,9 +18,9 @@ function find_all_files($dir){
 
         if($value === '.' || $value === '..') {continue;}
 
-        if(is_file($dir.'/'.$value)) {
-			$result[]=$dir.'/'.$value;
-			log::add('planification_update', 'debug',"*". $dir.'/'.$value);
+        if(is_file($dir.$value)) {
+			$result[]=$dir.$value;
+			log::add('planification_update', 'debug',"*". $dir.$value);
 			continue;
 		}
 
