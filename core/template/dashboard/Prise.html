@@ -1,5 +1,5 @@
 <div class="eqLogic eqLogic-widget allowResize allowReorderCmd #custom_layout# #class#" data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" data-translate-category="#translate_category#" data-category="#category#"
-    data-tags="#tags#" style="max-height:156px!important;min-height:156px!important;min-width:150px!important;max-width:150px!important">
+    data-tags="#tags#" style="max-height:160px!important;min-height:160px!important;min-width:113px!important;max-width:113px!important">
 
     <center class="object_name" style="overflow: hidden;padding-right:22px;padding-left:12px;font-weight:300;word-break: break-all;max-height:45px;font-size:16px;background-color: rgba(0,0,0,0.6);font-family:Arial;font-weight:normal;">
         <a href="#eqLink#" class="reportModeHidden">#object_name#</a>
@@ -13,10 +13,9 @@
     <div class="tuile" style="height:100%">
         <div class="page_1 center" style="height:100%;padding-top: 10px;margin: 0px;display : none;">
 
-            <div class="center" >
-                <img class="cmd cmd-widget img" data-type="info" src='' style='height:80px' />
-                <span class="nom_eqLogic" style="display:none;position: absolute;top: 80px;width: 100%;color: black;font-weight: 300;font-size: 16px;">#name_display#</span>
-            </div>
+            <img class="cmd cmd-widget img" data-type="info" src='' style='height:80px' />
+            <span class="nom_eqLogic" style="display:none;position: absolute;top: 80px;width: 100%;color: black;font-weight: 300;font-size: 16px;">#name_display#</span>
+           
             <span>
                 <img class="cmd cmd-widget img_auto_manu" data-type="info" src='' style="position: absolute;top: 20px;left:calc(50% + 25px);height:20px" />       
             </span>
@@ -63,6 +62,8 @@
 
     </div>
    <script>
+   
+
      var show_name=false
         var show_object=false
         document.querySelector('.eqLogic[data-eqLogic_uid=#uid#] .tuile').addEventListener('click', function(event) {
@@ -148,26 +149,27 @@
                         }
                     }
                     if(!document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('hideEqLogicName') && !show_name){
+                      
                         show_name=true
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetTop+document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetHeight)+40 +'px' 
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top = '0px'
                      }else{
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
                     }
-                    
                     if(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').classList.contains('displayObjectName') && !show_object){
                       
                         show_object=true
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetTop+document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetHeight)+40 +'px' 
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top = '0px'
                     }else{
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
+
                     }
 
 

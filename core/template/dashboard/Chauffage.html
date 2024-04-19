@@ -167,8 +167,8 @@
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px!important'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px!important'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .object_name').offsetHeight +'px'
-                     
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetTop+document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetTop)+ 45 +'px'
+                        
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top = '0px'
                     }else{
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
@@ -179,7 +179,7 @@
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) +  document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px!important'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px!important'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.maxHeight = Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px!important'
-                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top.replace(/px/i, '')) + document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .widget-name').offsetHeight +'px'
+                        document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .img_auto_manu').style.top=Number(document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetTop+document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .tuile img').offsetTop)+ 45 +'px'
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"] .refresh').style.top = '0px'
                      }else{
                         document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.height=document.querySelector('.eqLogic[data-eqLogic_uid="#uid#"]').style.minHeight
