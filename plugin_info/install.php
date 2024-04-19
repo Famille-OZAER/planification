@@ -21,8 +21,8 @@ function find_all_files($dir){
 			continue;
 		}else{
 			foreach(find_all_files($dir.'/'.$value) as $value){
-			log::add('planification_update', 'debug', "**" .$value);
-            $result[]=$value;
+			//log::add('planification_update', 'debug', "**" .$value);
+            //$result[]=$value;
         }
 		}
 
