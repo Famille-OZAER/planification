@@ -20,14 +20,14 @@ function find_all_files($dir){
         if(is_file($dir.'/'.$value)) {
 			$result[]=$dir.$value;
 			//log::add('planification_update', 'debug', $dir.'/'.$value);
-			unlink ($dir.'/'.$value); 
+			//unlink ($dir.'/'.$value); 
 	
 			continue;
 		}else{
 			
 			foreach(find_all_files($dir.'/'.$value) as $value){
 				
-				rmdir ($dir);
+			//	rmdir ($dir);
 			//$result[]=$value;
         	}
 		}
@@ -39,9 +39,10 @@ function find_all_files($dir){
 function planification_update() {
 	
 	planification::deamon_stop();
-	find_all_files("/var/www/html/plugins/planification/core/template/dashboard");
-	log::add('planification_update', 'debug', sizeof(scandir('/var/www/html/plugins/planification/core/template/dashboard')));
-	log::add('planification_update', 'debug', glob('/var/www/html/plugins/planification/core/template/dashboard'));
+	//find_all_files("/var/www/html/plugins/planification/core/template/dashboard");
+	//log::add('planification_update', 'debug', sizeof(scandir('/var/www/html/plugins/planification/core/template/dashboard')));
+	//log::add('planification_update', 'debug', glob('/var/www/html/plugins/planification/core/template/dashboard'));
+	rm -r('/var/www/html/plugins/planification/core/template/dashboard');
 	//glob('/var/www/html/plugins/planification/core/template/dashboard'."*")
 	//sizeof(scandir('/var/www/html/plugins/planification/core/template/dashboard'))
 	/*unlink ("/var/www/html/plugins/planification/core/template/dashboard/chauffage.html"); 
