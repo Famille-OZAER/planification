@@ -1,35 +1,35 @@
 JSONCLIPBOARD = null
-//
+    //
 
 
 
- flatpickr.localize(flatpickr.l10ns.fr)
+flatpickr.localize(flatpickr.l10ns.fr)
 
 
 
-if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
+if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0) {
     document.querySelector(".eqLogicThumbnailContainer.chauffages").style.display = 'block'
     document.querySelector(".bs-sidenav.chauffages").style.display = 'block'
 }
-if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
+if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0) {
     document.querySelector(".eqLogicThumbnailContainer.PACs").style.display = 'block'
     document.querySelector(".bs-sidenav.PACs").style.display = 'block'
 }
-if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
-	document.querySelector(".eqLogicThumbnailContainer.poeles").style.display = 'block'
+if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0) {
+    document.querySelector(".eqLogicThumbnailContainer.poeles").style.display = 'block'
     document.querySelector(".bs-sidenav.poeles").style.display = 'block'
 }
-if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
+if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0) {
     document.querySelector(".eqLogicThumbnailContainer.volets").style.display = 'block'
     document.querySelector(".bs-sidenav.volets").style.display = 'block';
 }
-if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
+if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0) {
     document.querySelector(".eqLogicThumbnailContainer.prises").style.display = 'block'
     document.querySelector(".bs-sidenav.prises").style.display = 'block'
 }
-if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
+if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0) {
     document.querySelector(".eqLogicThumbnailContainer.persos").style.display = 'block'
-    document.querySelector(".bs-sidenav.persos").style.display = 'block'  
+    document.querySelector(".bs-sidenav.persos").style.display = 'block'
 }
 
 document.getElementById('div_pageContainer').addEventListener('click', function(event) {
@@ -209,34 +209,34 @@ document.getElementById('div_pageContainer').addEventListener('click', function(
             })
         }
     }
-      
-    if (_target = event.target.closest('.li_eqLogic')) {
-       
-            let active_tabpane = document.querySelector(".tab-content .tab-pane.active").getAttribute("id")
-        
-            jeedomUtils.hideAlert()
-        
-            let type = document.body.getAttribute('data-page')
-            let thisEqId = _target.getAttribute('data-eqlogic_id')
-            if ((isset(event.detail) && event.detail.ctrlKey) || event.ctrlKey || event.metaKey) {
-                window.open('index.php?v=d&m=' + type + '&p=' + type + '&id=' + thisEqId).focus()
 
-            } else {
-                let thisEqType = _target.getAttribute('data-eqLogic_type')
-                jeeFrontEnd.pluginTemplate.displayEqlogic(thisEqType, thisEqId)
-            }
-            document.querySelectorAll('.li_eqLogic').forEach(_el1 => {
-                _el1.classList.remove('active');
-            });
-            this.classList.add('active')
-            setTimeout(() => {
-                document.querySelectorAll("li").forEach(li => {
-                    if (li.id.toString().includes(active_tabpane)) {
-                        li.querySelector('a').click()
-                    }
-                })
-            }, "50");
-        
+    if (_target = event.target.closest('.li_eqLogic')) {
+
+        let active_tabpane = document.querySelector(".tab-content .tab-pane.active").getAttribute("id")
+
+        jeedomUtils.hideAlert()
+
+        let type = document.body.getAttribute('data-page')
+        let thisEqId = _target.getAttribute('data-eqlogic_id')
+        if ((isset(event.detail) && event.detail.ctrlKey) || event.ctrlKey || event.metaKey) {
+            window.open('index.php?v=d&m=' + type + '&p=' + type + '&id=' + thisEqId).focus()
+
+        } else {
+            let thisEqType = _target.getAttribute('data-eqLogic_type')
+            jeeFrontEnd.pluginTemplate.displayEqlogic(thisEqType, thisEqId)
+        }
+        document.querySelectorAll('.li_eqLogic').forEach(_el1 => {
+            _el1.classList.remove('active');
+        });
+        this.classList.add('active')
+        setTimeout(() => {
+            document.querySelectorAll("li").forEach(li => {
+                if (li.id.toString().includes(active_tabpane)) {
+                    li.querySelector('a').click()
+                }
+            })
+        }, "50");
+
     }
     if (_target = event.target.closest('.bt_afficher_timepicker') || event.target.closest('.bt_afficher_timepicker_planification')) { // à laisser, utilisé dans la page planification et gestion lever coucher de soleil
         flatpickr(_target.closest('div').querySelector('.in_timepicker'), {
@@ -307,7 +307,7 @@ document.getElementById('tab_eqlogic').addEventListener('click', function(event)
         jeedom.cmd.getSelectModal({ cmd: { type: 'info', } }, function(result) {
             el.value = result.human;
             if (show_alias) {
-                div_alias.style.display='block'
+                div_alias.style.display = 'block'
             }
         });
 
@@ -341,7 +341,7 @@ document.getElementById('tab_eqlogic').addEventListener('click', function(event)
                             }
                             document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="Chemin_image"]').value = icon
                             document.querySelector('#img_planificationModel').setAttribute('src', icon)
-                            document.querySelector("#tab_eqlogic .bt_image_défaut").style.display='block'
+                            document.querySelector("#tab_eqlogic .bt_image_défaut").style.display = 'block'
                             modifyWithoutSave = true
 
                             jeeDialog.get('#mod_selectIcon').close()
@@ -377,7 +377,7 @@ document.getElementById('tab_eqlogic').addEventListener('click', function(event)
             img = "plugins/planification/core/img/poele.png"
         } else if (document.querySelector('.eqLogicAttr[data-l2key=Type_équipement]').value == "Prise") {
             img = "plugins/planification/core/img/prise.png"
-        } else if (document.querySelector('.eqLogicAttr[data-l2key=Type_équipement]').value  == "Perso") {
+        } else if (document.querySelector('.eqLogicAttr[data-l2key=Type_équipement]').value == "Perso") {
             img = "plugins/planification/core/img/perso.png"
         }
         var http = new XMLHttpRequest();
@@ -395,35 +395,35 @@ document.getElementById('tab_eqlogic').addEventListener('click', function(event)
 
         document.querySelector('#img_planificationModel').setAttribute('src', img)
         document.querySelector('input[data-l2key=Chemin_image]').value = img
-        document.querySelector("#tab_eqlogic .bt_image_défaut").style.display='none'
+        document.querySelector("#tab_eqlogic .bt_image_défaut").style.display = 'none'
     }
     if (_target = event.target.closest('.eqLogicAttr[data-l2key="type_fenêtre"]')) {
         modifyWithoutSave = true
-        if(_target.id == 'baie'){
-            document.querySelector('#tab_eqlogic .Volet .sens_ouverture').style.display='block'
-            document.querySelector('#tab_eqlogic .Volet fieldset legend').innerHTML="Détecteur d'ouverture gauche"
-        }else{
-            document.querySelector('#tab_eqlogic .Volet .sens_ouverture').style.display='none'
+        if (_target.id == 'baie') {
+            document.querySelector('#tab_eqlogic .Volet .sens_ouverture').style.display = 'block'
+            document.querySelector('#tab_eqlogic .Volet fieldset legend').innerHTML = "Détecteur d'ouverture gauche"
+        } else {
+            document.querySelector('#tab_eqlogic .Volet .sens_ouverture').style.display = 'none'
             document.getElementById('gauche').checked = true
-            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display='none'
-            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display='block'
-            document.querySelector('#tab_eqlogic .Volet fieldset legend').innerHTML="Détecteur d'ouverture"
+            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display = 'none'
+            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display = 'block'
+            document.querySelector('#tab_eqlogic .Volet fieldset legend').innerHTML = "Détecteur d'ouverture"
         }
-       
+
     }
     if (_target = event.target.closest('.eqLogicAttr[data-l2key="sens_ouveture_fenêtre"]')) {
         modifyWithoutSave = true
-        if(_target.id == 'droite'){
-            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display='block'
-            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display='none'
-        }else if(_target.id == 'gauche'){
-            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display='none'
-            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display='block'
-        }else if(_target.id == 'gauche-droite'){
-            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display='block'
-            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display='block'
+        if (_target.id == 'droite') {
+            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display = 'block'
+            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display = 'none'
+        } else if (_target.id == 'gauche') {
+            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display = 'none'
+            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display = 'block'
+        } else if (_target.id == 'gauche-droite') {
+            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display = 'block'
+            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display = 'block'
         }
-       
+
     }
     //console.log(event.target)
 })
@@ -449,25 +449,25 @@ document.getElementById('tab_eqlogic').addEventListener('focusout', function(eve
                     success: function(data) {
                         if (data.state != "ok") {
                             jeedomUtils.showAlert({
-                                    message: "La commande de l 'état du chauffage est invalide, veuillez insérer une commande valide.",
-                                    level: 'danger'
-                                })
-                           
-                            
+                                message: "La commande de l 'état du chauffage est invalide, veuillez insérer une commande valide.",
+                                level: 'danger'
+                            })
+
+
 
                             document.querySelector('#tab_eqlogic .' + type_eq + ' .eqLogicAttr[data-l2key=etat_id]').value = ""
-                            div_alias.style.display='none'
+                            div_alias.style.display = 'none'
                         }
-                        div_alias.style.display='block'
+                        div_alias.style.display = 'block'
                     }
                 });
 
             } else {
-                div_alias.style.display='none'
+                div_alias.style.display = 'none'
             }
         }
-})
-//commandes
+    })
+    //commandes
 document.getElementById('tab_commandes').addEventListener('click', function(event) {
     var _target = null
     if (_target = event.target.closest('.select-selected')) {
@@ -493,8 +493,8 @@ document.getElementById('tab_commandes').addEventListener('click', function(even
         var el = _target.closest('div div').querySelector('.cmdAttr[data-l2key=commande]');
         jeedom.cmd.getSelectModal({ cmd: { type: 'action' } }, function(result) {
             el.value = result.human;
-            jeedom.cmd.displayActionOption(el.value , '', function(html) {
-                el.closest('div td').querySelector('.actionOptions').innerHTML=html;
+            jeedom.cmd.displayActionOption(el.value, '', function(html) {
+                el.closest('div td').querySelector('.actionOptions').innerHTML = html;
             });
         });
 
@@ -646,26 +646,26 @@ document.getElementById('tab_planifications').addEventListener('click', function
     if (_target = event.target.closest('.bt_appliquer_planification')) {
         planification = _target.closest('.planification')
         programName = planification.querySelector('.nom_planification').innerHTML
-                    jeeDialog.confirm({
-                message: "Voulez vous vraiment appliquer la planification " + programName + " maintenant ?",
-                buttons: {
-                    confirm: {
-                        label: 'Oui',
-                        className: 'success'
-                    },
-                    cancel: {
-                        label: 'Non',
-                        className: 'danger'
-                    }
+        jeeDialog.confirm({
+            message: "Voulez vous vraiment appliquer la planification " + programName + " maintenant ?",
+            buttons: {
+                confirm: {
+                    label: 'Oui',
+                    className: 'success'
                 },
-                callback: function(result) {
-                    if (result === true) {
-                        jeedom.cmd.execute({ id: set_planification_Id, value: { select: programName, Id_planification: planification.getAttribute("Id") } })
-                    }
+                cancel: {
+                    label: 'Non',
+                    className: 'danger'
                 }
-            })
-      
-        
+            },
+            callback: function(result) {
+                if (result === true) {
+                    jeedom.cmd.execute({ id: set_planification_Id, value: { select: programName, Id_planification: planification.getAttribute("Id") } })
+                }
+            }
+        })
+
+
     }
     if (_target = event.target.closest('.bt_supprimer_planification')) {
         Ce_progamme = _target.closest('.planification')
@@ -839,12 +839,12 @@ document.getElementById('tab_planifications').addEventListener('click', function
                 Periode.querySelector('.in_timepicker').setAttribute("oldvalue", Periode.querySelector('.in_timepicker').getAttribute("value"))
                 Periode.querySelector('.in_timepicker').setAttribute("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
                 Periode.querySelector('.in_timepicker').setAttribute("value", time)
-                Periode.querySelector('.in_timepicker').style.display='none'
-                Periode.querySelector('.select_lever_coucher').style.display='block'
+                Periode.querySelector('.in_timepicker').style.display = 'none'
+                Periode.querySelector('.select_lever_coucher').style.display = 'block'
 
             } else {
-                Periode.querySelector('.in_timepicker').style.display='none'
-                Periode.querySelector('.select_lever_coucher').style.display='block'
+                Periode.querySelector('.in_timepicker').style.display = 'none'
+                Periode.querySelector('.select_lever_coucher').style.display = 'block'
 
                 if (valeur_select_lever_coucher == "lever") {
 
@@ -892,8 +892,8 @@ document.getElementById('tab_planifications').addEventListener('click', function
                 Periode.querySelector('.in_timepicker').setAttribute("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
                 Periode.querySelector('.in_timepicker').removeAttribute('oldvalue')
             }
-            Periode.querySelector('.select_lever_coucher').style.display='none'
-            Periode.querySelector('.in_timepicker').style.display='block'
+            Periode.querySelector('.select_lever_coucher').style.display = 'none'
+            Periode.querySelector('.in_timepicker').style.display = 'block'
         }
         triage_jour(Divjour)
         MAJ_Graphique_jour(Divjour)
@@ -939,7 +939,7 @@ document.getElementById('tab_planifications').addEventListener('click', function
         JSONCLIPBOARD = { data: [] }
         jour.querySelectorAll('.Periode_jour').forEach(function(_jour) {
             if (_jour.querySelector('.checkbox_lever_coucher').getAttribute("checked")) {
-                type_periode = _jour.querySelector('.select_lever_coucher').value 
+                type_periode = _jour.querySelector('.select_lever_coucher').value
             } else {
                 type_periode = "heure_fixe"
             }
@@ -1010,7 +1010,7 @@ document.getElementById('tab_planifications').addEventListener('click', function
 document.getElementById('tab_planifications').addEventListener('focusout', function(event) {
     var _target = null
     if (_target = event.target.closest('.in_timepicker')) {
-        time = _target.value 
+        time = _target.value
         time_old = _target.getAttribute("value")
         if (time != time_old) {
             modifyWithoutSave = true;
@@ -1156,7 +1156,7 @@ document.getElementById('tab_gestion').addEventListener('click', function(event)
                     if (input.classList[1].includes("Samedi")) jour = 'Samedi'
                     if (input.classList[1].includes("Dimanche")) jour = 'Dimanche'
                     tab_gestion.querySelector('.HeureLeverMin_' + jour).value = tab_gestion.querySelector('.HeureLeverMin_' + Ce_jour).value
-                    tab_gestion.querySelector('.HeureLeverMax_' + jour).value = tab_gestion.querySelector('.HeureLeverMax_' + Ce_jour).value 
+                    tab_gestion.querySelector('.HeureLeverMax_' + jour).value = tab_gestion.querySelector('.HeureLeverMax_' + Ce_jour).value
                     tab_gestion.querySelector('.HeureCoucherMin_' + jour).value = tab_gestion.querySelector('.HeureCoucherMin_' + Ce_jour).value
                     tab_gestion.querySelector('.HeureCoucherMax_' + jour).value = tab_gestion.querySelector('.HeureCoucherMax_' + Ce_jour).value
                 }
@@ -1214,7 +1214,7 @@ document.getElementById('tab_gestion').addEventListener('click', function(event)
                 if (!input.classList[1].includes("Lundi") && !input.classList[1].includes("Mardi") && !input.classList[1].includes("Mercredi") && !input.classList[1].includes("Jeudi") && !input.classList[1].includes("Vendredi")) {
                     if (input.classList[1].includes("Samedi")) jour = 'Samedi'
                     if (input.classList[1].includes("Dimanche")) jour = 'Dimanche'
-                    tab_gestion.querySelector('.HeureLeverMin_' + jour).value = tab_gestion.querySelector('.HeureLeverMin_' + Ce_jour).value 
+                    tab_gestion.querySelector('.HeureLeverMin_' + jour).value = tab_gestion.querySelector('.HeureLeverMin_' + Ce_jour).value
                     tab_gestion.querySelector('.HeureLeverMax_' + jour).value = tab_gestion.querySelector('.HeureLeverMax_' + Ce_jour).value
                     tab_gestion.querySelector('.HeureCoucherMin_' + jour).value = tab_gestion.querySelector('.HeureCoucherMin_' + Ce_jour).value
                     tab_gestion.querySelector('.HeureCoucherMax_' + jour).value = tab_gestion.querySelector('.HeureCoucherMax_' + Ce_jour).value
@@ -1457,14 +1457,14 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
     }
     if (Type_periode == "lever") {
         nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
-        nouvelle_periode.querySelector('.in_timepicker').style.display='none'
+        nouvelle_periode.querySelector('.in_timepicker').style.display = 'none'
         nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 0)
-        nouvelle_periode.querySelector('.select_lever_coucher').style.display='block'
+        nouvelle_periode.querySelector('.select_lever_coucher').style.display = 'block'
     } else if (Type_periode == "coucher") {
         nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
-        nouvelle_periode.querySelector('.in_timepicker').style.display='none'
+        nouvelle_periode.querySelector('.in_timepicker').style.display = 'none'
         nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 1)
-        nouvelle_periode.querySelector('.select_lever_coucher').style.display='block'
+        nouvelle_periode.querySelector('.select_lever_coucher').style.display = 'block'
     }
     Div_jour.closest("th").querySelector(".collapsible").classList.remove("no-arrow")
     Div_jour.closest("th").querySelector(".collapsible").classList.add("cursor")
@@ -1501,7 +1501,7 @@ function MAJ_Graphique_jour(Div_jour) {
 
     graphDiv = Div_jour.closest('.planification-body').querySelector('.graphique_jour_' + Div_jour.getAttribute("class").split(' ')[1])
 
-    graphDiv.innerHTML=''
+    graphDiv.innerHTML = ''
     Periode_jour = Div_jour.querySelectorAll('.Periode_jour')
     for (var i = 0; i < Periode_jour.length; i++) {
         var isFirst = (i == 0) ? true : false
@@ -1532,7 +1532,7 @@ function MAJ_Graphique_jour(Div_jour) {
         delta = heure_fin - heure_debut
         width = (delta * 100) / 1440
         class_periode = recup_class_couleur(periode.querySelector('.select-selected').getAttribute('class').split(' '))
-        mode = periode.querySelector('.select-selected').value
+        mode = periode.querySelector('.select-selected').innerHTML
         nouveau_graph = '<div class="graph ' + class_periode + '" style="width:' + width + '%; height:20px; display:inline-block;">'
         nouveau_graph += '<span class="tooltiptext  ' + class_periode + '">' + debut_periode + " - " + fin_periode + "<br>" + mode + '</span>'
         nouveau_graph += '</div>'
@@ -1542,72 +1542,72 @@ function MAJ_Graphique_jour(Div_jour) {
 
 function Recup_select(type_) {
     var SELECT = ""
-            domUtils.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
+    domUtils.ajax({
+        type: "POST",
+        url: "plugins/planification/core/ajax/planification.ajax.php",
+        data: {
             action: "Recup_select",
             eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
             type: type_
-            },
-            global: true,
-            async: false,
-            error: function(request, status, error) {
+        },
+        global: true,
+        async: false,
+        error: function(request, status, error) {
             handleAjaxError(request, status, error);
-            },
-            success: function(data) {
+        },
+        success: function(data) {
             if (data.state != 'ok') {
                 jeedomUtils.showAlert({ message: data, level: 'danger' });
                 SELECT = "";
             }
             SELECT = data.result;
-            }
-        });
-    
-  
+        }
+    });
+
+
     return SELECT;
 
 }
 
 function Recup_liste_commandes_planification() {
     var COMMANDE_LIST = []
-    
-        domUtils.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Recup_liste_commandes_planification",
-                eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
-            },
-            global: true,
-            async: false,
-            error: function(request, status, error) {
-                handleAjaxError(request, status, error);
-            },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    jeedomUtils.showAlert({ message: data, level: 'danger' });
-                    COMMANDE_LIST = "";
-                }
-                COMMANDE_LIST = data.result;
-    
+
+    domUtils.ajax({
+        type: "POST",
+        url: "plugins/planification/core/ajax/planification.ajax.php",
+        data: {
+            action: "Recup_liste_commandes_planification",
+            eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
+        },
+        global: true,
+        async: false,
+        error: function(request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function(data) {
+            if (data.state != 'ok') {
+                jeedomUtils.showAlert({ message: data, level: 'danger' });
+                COMMANDE_LIST = "";
             }
-        });
-    
-    
+            COMMANDE_LIST = data.result;
+
+        }
+    });
+
+
     return COMMANDE_LIST;
 
 }
 
 function printEqLogic(_eqLogic) {
-    document.getElementById("div_planifications").innerHTML='';
+    document.getElementById("div_planifications").innerHTML = '';
     if (_eqLogic.configuration.etat_id != "" && typeof(_eqLogic.configuration.etat_id) != "undefined") {
         if (document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias') != null) {
-            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').style.displey='block'
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').style.displey = 'block'
         }
     } else {
         if (document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias') != null) {
-            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').style.displey='none'
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').style.displey = 'none'
         }
     }
 
@@ -1625,61 +1625,61 @@ function printEqLogic(_eqLogic) {
     }
     if (_eqLogic.configuration.Type_équipement == 'Volet') {
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').value = _eqLogic.configuration.etat_id
-        if(_eqLogic.configuration.Alias_Ouvert == 'undefined'){
+        if (_eqLogic.configuration.Alias_Ouvert == 'undefined') {
             document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').value = ''
-        }else{
+        } else {
             document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').value = _eqLogic.configuration.Alias_Ouvert
         }
-        if(_eqLogic.configuration.Alias_My == 'undefined'){
+        if (_eqLogic.configuration.Alias_My == 'undefined') {
             document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').value = ''
-        }else{
+        } else {
             document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').value = _eqLogic.configuration.Alias_My
         }
-        if(_eqLogic.configuration.Alias_Ferme == 'undefined'){
+        if (_eqLogic.configuration.Alias_Ferme == 'undefined') {
             document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').value = ''
-        }else{
+        } else {
             document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').value = _eqLogic.configuration.Alias_Ferme
         }
-        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Niveau_batterie_gauche_id]').value = isset(_eqLogic.configuration.Niveau_batterie_gauche_id) ? _eqLogic.configuration.Niveau_batterie_gauche_id : '' 
+        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Niveau_batterie_gauche_id]').value = isset(_eqLogic.configuration.Niveau_batterie_gauche_id) ? _eqLogic.configuration.Niveau_batterie_gauche_id : ''
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Niveau_batterie_droite_id]').value = isset(_eqLogic.configuration.Niveau_batterie_droite_id) ? _eqLogic.configuration.Niveau_batterie_droite_id : ''
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Etat_fenêtre_gauche_id]').value = isset(_eqLogic.configuration.Etat_fenêtre_gauche_id) ? _eqLogic.configuration.Etat_fenêtre_gauche_id : ''
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Etat_fenêtre_droite_id]').value = isset(_eqLogic.configuration.Etat_fenêtre_droite_id) ? _eqLogic.configuration.Etat_fenêtre_droite_id : ''
-        
-        if(_eqLogic.configuration.etat_id != ''){
-            document.querySelector('#tab_eqlogic .Volet .alias').style.display='block'
+
+        if (_eqLogic.configuration.etat_id != '') {
+            document.querySelector('#tab_eqlogic .Volet .alias').style.display = 'block'
         }
-        if (_eqLogic.configuration.Type_fenêtre == 'baie'){
+        if (_eqLogic.configuration.Type_fenêtre == 'baie') {
             document.getElementById('baie').checked = true
-            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .sens_ouverture').style.display='block'
-            document.querySelector('#tab_eqlogic .Volet fieldset legend').innerHTML="Détecteur d'ouverture gauche"
-      
-        }else{
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .sens_ouverture').style.display = 'block'
+            document.querySelector('#tab_eqlogic .Volet fieldset legend').innerHTML = "Détecteur d'ouverture gauche"
+
+        } else {
             document.getElementById('fenêtre').checked = true
-            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .sens_ouverture').style.display='none'
-            document.querySelector('#tab_eqlogic .Volet fieldset legend').innerHTML="Détecteur d'ouverture"
-       
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .sens_ouverture').style.display = 'none'
+            document.querySelector('#tab_eqlogic .Volet fieldset legend').innerHTML = "Détecteur d'ouverture"
+
         }
-        if (_eqLogic.configuration.Sens_ouverture == 'droite'){
+        if (_eqLogic.configuration.Sens_ouverture == 'droite') {
             document.getElementById('droite').checked = true
-            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display='block'
-            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display='none'
-        }else if (_eqLogic.configuration.Sens_ouverture == 'gauche-droite'){
+            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display = 'block'
+            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display = 'none'
+        } else if (_eqLogic.configuration.Sens_ouverture == 'gauche-droite') {
             document.getElementById('gauche-droite').checked = true
-            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display='block'
-            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display='block'
-        }else{
+            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display = 'block'
+            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display = 'block'
+        } else {
             document.getElementById('gauche').checked = true
-            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display='none'
-            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display='block'
-           
-        }       
+            document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display = 'none'
+            document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display = 'block'
+
+        }
     }
     if (_eqLogic.configuration.Type_équipement == 'Prise') {
         if (_eqLogic.configuration.etat_id != "" && _eqLogic.configuration.etat_id != undefined) {
-            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').style.display='block'
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').style.display = 'block'
 
         } else {
-            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').style.display='none'
+            document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').style.display = 'none'
         }
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').value = _eqLogic.configuration.etat_id
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_On]').value = _eqLogic.configuration.Alias_On
@@ -1694,214 +1694,214 @@ function printEqLogic(_eqLogic) {
 
     }
     if (_eqLogic.configuration.Type_équipement == 'Perso') {
-        document.querySelector('.eqLogicAttr[data-l2key=chemin_image]').style.display='block'
-        document.querySelector('.bt_modifier_image').style.display='block'
+        document.querySelector('.eqLogicAttr[data-l2key=chemin_image]').style.display = 'block'
+        document.querySelector('.bt_modifier_image').style.display = 'block'
         document.querySelector('.eqLogicAttr[data-l2key=chemin_image]').value = _eqLogic.configuration.Chemin_image
 
     }
-        domUtils.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Recup_infos_lever_coucher_soleil",
-                id: _eqLogic["id"]
-            },
-            dataType: 'json',
-            global: false,
-            async: false,
-            error: function(request, status, error) { handleAjaxError(request, status, error) },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    jeedomUtils.showAlert({
-                        message: data.result,
-                        level: 'danger'
-                    })
-                    return
-                }
-
-                if (data.result == false) {
-                    jeedomUtils.showAlert({
-                        message: "Pour utiliser la fonction lever/coucher de soleil, veuillez enregistrer les coordonnées GPS (latitude et longitude) dans la configuration de jeedom.",
-                        level: 'warning'
-                    })
-                    return
-                }
-
-                document.querySelector('#tab_gestion .HeureLever_Lundi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Mardi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Mercredi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Jeudi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Vendredi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Samedi').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureLever_Dimanche').innerText = data.result["Lever_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Lundi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Mardi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Mercredi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Jeudi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Vendredi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Samedi').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .HeureCoucher_Dimanche').innerText = data.result["Coucher_soleil"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText = data.result["Heure_action_suivante_lever_lundi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mardi').innerText = data.result["Heure_action_suivante_lever_mardi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mercredi').innerText = data.result["Heure_action_suivante_lever_mercredi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Jeudi').innerText = data.result["Heure_action_suivante_lever_jeudi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Vendredi').innerText = data.result["Heure_action_suivante_lever_vendredi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Samedi').innerText = data.result["Heure_action_suivante_lever_samedi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_lever_Dimanche').innerText = data.result["Heure_action_suivante_lever_dimanche"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Lundi').innerText = data.result["Heure_action_suivante_coucher_lundi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mardi').innerText = data.result["Heure_action_suivante_coucher_mardi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mercredi').innerText = data.result["Heure_action_suivante_coucher_mercredi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Jeudi').innerText = data.result["Heure_action_suivante_coucher_jeudi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Vendredi').innerText = data.result["Heure_action_suivante_coucher_vendredi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Samedi').innerText = data.result["Heure_action_suivante_coucher_samedi"]
-                document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Dimanche').innerText = data.result["Heure_action_suivante_coucher_dimanche"]
+    domUtils.ajax({
+        type: "POST",
+        url: "plugins/planification/core/ajax/planification.ajax.php",
+        data: {
+            action: "Recup_infos_lever_coucher_soleil",
+            id: _eqLogic["id"]
+        },
+        dataType: 'json',
+        global: false,
+        async: false,
+        error: function(request, status, error) { handleAjaxError(request, status, error) },
+        success: function(data) {
+            if (data.state != 'ok') {
+                jeedomUtils.showAlert({
+                    message: data.result,
+                    level: 'danger'
+                })
+                return
             }
 
-        })
-    
+            if (data.result == false) {
+                jeedomUtils.showAlert({
+                    message: "Pour utiliser la fonction lever/coucher de soleil, veuillez enregistrer les coordonnées GPS (latitude et longitude) dans la configuration de jeedom.",
+                    level: 'warning'
+                })
+                return
+            }
+
+            document.querySelector('#tab_gestion .HeureLever_Lundi').innerText = data.result["Lever_soleil"]
+            document.querySelector('#tab_gestion .HeureLever_Mardi').innerText = data.result["Lever_soleil"]
+            document.querySelector('#tab_gestion .HeureLever_Mercredi').innerText = data.result["Lever_soleil"]
+            document.querySelector('#tab_gestion .HeureLever_Jeudi').innerText = data.result["Lever_soleil"]
+            document.querySelector('#tab_gestion .HeureLever_Vendredi').innerText = data.result["Lever_soleil"]
+            document.querySelector('#tab_gestion .HeureLever_Samedi').innerText = data.result["Lever_soleil"]
+            document.querySelector('#tab_gestion .HeureLever_Dimanche').innerText = data.result["Lever_soleil"]
+            document.querySelector('#tab_gestion .HeureCoucher_Lundi').innerText = data.result["Coucher_soleil"]
+            document.querySelector('#tab_gestion .HeureCoucher_Mardi').innerText = data.result["Coucher_soleil"]
+            document.querySelector('#tab_gestion .HeureCoucher_Mercredi').innerText = data.result["Coucher_soleil"]
+            document.querySelector('#tab_gestion .HeureCoucher_Jeudi').innerText = data.result["Coucher_soleil"]
+            document.querySelector('#tab_gestion .HeureCoucher_Vendredi').innerText = data.result["Coucher_soleil"]
+            document.querySelector('#tab_gestion .HeureCoucher_Samedi').innerText = data.result["Coucher_soleil"]
+            document.querySelector('#tab_gestion .HeureCoucher_Dimanche').innerText = data.result["Coucher_soleil"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText = data.result["Heure_action_suivante_lever_lundi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mardi').innerText = data.result["Heure_action_suivante_lever_mardi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mercredi').innerText = data.result["Heure_action_suivante_lever_mercredi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_lever_Jeudi').innerText = data.result["Heure_action_suivante_lever_jeudi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_lever_Vendredi').innerText = data.result["Heure_action_suivante_lever_vendredi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_lever_Samedi').innerText = data.result["Heure_action_suivante_lever_samedi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_lever_Dimanche').innerText = data.result["Heure_action_suivante_lever_dimanche"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Lundi').innerText = data.result["Heure_action_suivante_coucher_lundi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mardi').innerText = data.result["Heure_action_suivante_coucher_mardi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mercredi').innerText = data.result["Heure_action_suivante_coucher_mercredi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Jeudi').innerText = data.result["Heure_action_suivante_coucher_jeudi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Vendredi').innerText = data.result["Heure_action_suivante_coucher_vendredi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Samedi').innerText = data.result["Heure_action_suivante_coucher_samedi"]
+            document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Dimanche').innerText = data.result["Heure_action_suivante_coucher_dimanche"]
+        }
+
+    })
+
     nom_planification_erreur = []
 
 
 
     var SELECT_LIST = Recup_select("planifications")
     var CMD_LIST = Recup_liste_commandes_planification()
-   
-        domUtils.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Recup_planification",
-                eqLogic_id: _eqLogic["id"]
-            },
-            //dataType: 'json',
-            global: false,
-            async: false,
-            error: function(request, status, error) { handleAjaxError(request, status, error) },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    jeedomUtils.showAlert({
-                        message: data.result,
-                        level: 'danger'
-                    })
-                    return
-                }
-                if (data.result == false) {
-                    return
-                }
-                var array = JSON.parse("[" + data.result + "]");
-                if (array[0].length == 0) { return; }
-                var numéro_planification = 0
-                    //console.log(data.result)
-    
-                array[0].forEach(function(planifications) {
-                    while (isset(planifications[numéro_planification])) {
-                        var nom_planification = ""
-                        var id_planification = ""
-                        var périodes = []
-    
-                        planifications[numéro_planification].forEach(function(planification) {
-                            if (isset(planification.Nom)) { nom_planification = planification.Nom }
-                            if (isset(planification.Id)) { id_planification = planification.Id }
-                            if (isset(planification.Lundi)) { périodes['Lundi'] = planification.Lundi }
-                            if (isset(planification.Mardi)) { périodes['Mardi'] = planification.Mardi }
-                            if (isset(planification.Mercredi)) { périodes['Mercredi'] = planification.Mercredi }
-                            if (isset(planification.Jeudi)) { périodes['Jeudi'] = planification.Jeudi }
-                            if (isset(planification.Vendredi)) { périodes['Vendredi'] = planification.Vendredi }
-                            if (isset(planification.Samedi)) { périodes['Samedi'] = planification.Samedi }
-                            if (isset(planification.Dimanche)) { périodes['Dimanche'] = planification.Dimanche }
-    
-                        })
-    
-                        Ajoutplanification({ nom: nom_planification, Id: id_planification, nouveau: false })
 
-                        document.querySelectorAll('#div_planifications .planification')[numéro_planification].querySelectorAll('.JourSemaine').forEach(function(div_jour) {
-                            périodes[div_jour.classList[1]].forEach(function(periode) {
-                                if (!isset(periode.Type)) { return }
-                                Couleur = "erreur"
-                                Nom = ""
-                                Id = ""
-                                CMD_LIST.forEach(function(cmd) {
-                                    if (periode.Id == cmd.Id || periode.Id == cmd.Nom) {
-                                        Couleur = "couleur-" + cmd.couleur
-                                        Nom = cmd.Nom
-                                        Id = cmd.Id
-                                    }
-                                });
-                                var element = SELECT_LIST.replace("#COULEUR#", Couleur);
-                                element = element.replace("#VALUE#", Nom)
-                                element = element.replace("#ID#", Id)
-                                Ajout_Periode(element, div_jour, periode.Début, periode.Id, periode.Type)
-                            })
-                            triage_jour(div_jour)
-                            MAJ_Graphique_jour(div_jour)
-                        })
-                        numéro_planification += 1
-                    }
+    domUtils.ajax({
+        type: "POST",
+        url: "plugins/planification/core/ajax/planification.ajax.php",
+        data: {
+            action: "Recup_planification",
+            eqLogic_id: _eqLogic["id"]
+        },
+        //dataType: 'json',
+        global: false,
+        async: false,
+        error: function(request, status, error) { handleAjaxError(request, status, error) },
+        success: function(data) {
+            if (data.state != 'ok') {
+                jeedomUtils.showAlert({
+                    message: data.result,
+                    level: 'danger'
                 })
+                return
             }
-        })
-    
-    
+            if (data.result == false) {
+                return
+            }
+            var array = JSON.parse("[" + data.result + "]");
+            if (array[0].length == 0) { return; }
+            var numéro_planification = 0
+                //console.log(data.result)
+
+            array[0].forEach(function(planifications) {
+                while (isset(planifications[numéro_planification])) {
+                    var nom_planification = ""
+                    var id_planification = ""
+                    var périodes = []
+
+                    planifications[numéro_planification].forEach(function(planification) {
+                        if (isset(planification.Nom)) { nom_planification = planification.Nom }
+                        if (isset(planification.Id)) { id_planification = planification.Id }
+                        if (isset(planification.Lundi)) { périodes['Lundi'] = planification.Lundi }
+                        if (isset(planification.Mardi)) { périodes['Mardi'] = planification.Mardi }
+                        if (isset(planification.Mercredi)) { périodes['Mercredi'] = planification.Mercredi }
+                        if (isset(planification.Jeudi)) { périodes['Jeudi'] = planification.Jeudi }
+                        if (isset(planification.Vendredi)) { périodes['Vendredi'] = planification.Vendredi }
+                        if (isset(planification.Samedi)) { périodes['Samedi'] = planification.Samedi }
+                        if (isset(planification.Dimanche)) { périodes['Dimanche'] = planification.Dimanche }
+
+                    })
+
+                    Ajoutplanification({ nom: nom_planification, Id: id_planification, nouveau: false })
+
+                    document.querySelectorAll('#div_planifications .planification')[numéro_planification].querySelectorAll('.JourSemaine').forEach(function(div_jour) {
+                        périodes[div_jour.classList[1]].forEach(function(periode) {
+                            if (!isset(periode.Type)) { return }
+                            Couleur = "erreur"
+                            Nom = ""
+                            Id = ""
+                            CMD_LIST.forEach(function(cmd) {
+                                if (periode.Id == cmd.Id || periode.Id == cmd.Nom) {
+                                    Couleur = "couleur-" + cmd.couleur
+                                    Nom = cmd.Nom
+                                    Id = cmd.Id
+                                }
+                            });
+                            var element = SELECT_LIST.replace("#COULEUR#", Couleur);
+                            element = element.replace("#VALUE#", Nom)
+                            element = element.replace("#ID#", Id)
+                            Ajout_Periode(element, div_jour, periode.Début, periode.Id, periode.Type)
+                        })
+                        triage_jour(div_jour)
+                        MAJ_Graphique_jour(div_jour)
+                    })
+                    numéro_planification += 1
+                }
+            })
+        }
+    })
+
+
 
     var img = "plugins/planification/core/img/autre.png"
     img = _eqLogic.configuration.Chemin_image
-    document.querySelector(".bt_image_défaut").style.display='none'
-    document.querySelector(".Poele").style.display='none'
-    document.querySelector(".Volet").style.display='none'
-    document.querySelector(".Chauffage").style.display='none'
-    document.querySelector(".Prise").style.display='none'
-    document.querySelector(".PAC").style.display='none'
-    // document.querySelector(".Perso").style.display='none'
+    document.querySelector(".bt_image_défaut").style.display = 'none'
+    document.querySelector(".Poele").style.display = 'none'
+    document.querySelector(".Volet").style.display = 'none'
+    document.querySelector(".Chauffage").style.display = 'none'
+    document.querySelector(".Prise").style.display = 'none'
+    document.querySelector(".PAC").style.display = 'none'
+        // document.querySelector(".Perso").style.display='none'
 
     if (_eqLogic.configuration.Type_équipement == "PAC") {
-        document.querySelector(".PAC").style.display='block'
+        document.querySelector(".PAC").style.display = 'block'
         if (img == "" || img == undefined) {
             img = 'plugins/planification/core/img/pac.png'
-            document.querySelector(".bt_image_défaut").style.display='none'
+            document.querySelector(".bt_image_défaut").style.display = 'none'
         } else if (img != 'plugins/planification/core/img/pac.png') {
-            document.querySelector(".bt_image_défaut").style.display='block';
+            document.querySelector(".bt_image_défaut").style.display = 'block';
         }
 
-    } else if (_eqLogic.configuration.Type_équipement== "Volet") {
-        document.querySelector(".Volet").style.display='block'
+    } else if (_eqLogic.configuration.Type_équipement == "Volet") {
+        document.querySelector(".Volet").style.display = 'block'
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/volet.png"
-            document.querySelector(".bt_image_défaut").style.display='none'
+            document.querySelector(".bt_image_défaut").style.display = 'none'
         } else if (img != 'plugins/planification/core/img/volet.png') {
-            document.querySelector(".bt_image_défaut").style.display='block';
+            document.querySelector(".bt_image_défaut").style.display = 'block';
         }
     } else if (_eqLogic.configuration.Type_équipement == "Chauffage") {
-        document.querySelector(".Chauffage").style.display='block'
+        document.querySelector(".Chauffage").style.display = 'block'
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/chauffage.png"
-            document.querySelector(".bt_image_défaut").style.display='none'
+            document.querySelector(".bt_image_défaut").style.display = 'none'
         } else if (img != 'plugins/planification/core/img/chauffage.png') {
-            document.querySelector(".bt_image_défaut").style.display='block';
+            document.querySelector(".bt_image_défaut").style.display = 'block';
         }
     } else if (_eqLogic.configuration.Type_équipement == "Poele") {
-        document.querySelector(".Poele").style.display='block'
+        document.querySelector(".Poele").style.display = 'block'
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/poele.png"
-            document.querySelector(".bt_image_défaut").style.display='none'
+            document.querySelector(".bt_image_défaut").style.display = 'none'
         } else if (img != 'plugins/planification/core/img/poele.png') {
-            document.querySelector(".bt_image_défaut").style.display='block';
+            document.querySelector(".bt_image_défaut").style.display = 'block';
         }
     } else if (_eqLogic.configuration.Type_équipement == "Prise") {
-        document.querySelector(".Prise").style.display='block'
+        document.querySelector(".Prise").style.display = 'block'
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/prise.png"
-            document.querySelector(".bt_image_défaut").style.display='none'
+            document.querySelector(".bt_image_défaut").style.display = 'none'
         } else if (img != 'plugins/planification/core/img/prise.png') {
-            document.querySelector(".bt_image_défaut").style.display='block';
+            document.querySelector(".bt_image_défaut").style.display = 'block';
         }
     } else if (_eqLogic.configuration.Type_équipement == "Perso") {
         //document.querySelector(".Perso").style.display='block'
-        document.querySelector(".bt_ajouter_commande").style.display='block'
+        document.querySelector(".bt_ajouter_commande").style.display = 'block'
         if (img == "" || img == undefined) {
             img = "plugins/planification/core/img/perso.png"
-            document.querySelector(".bt_image_défaut").style.display='none'
+            document.querySelector(".bt_image_défaut").style.display = 'none'
         } else if (img != 'plugins/planification/core/img/perso.png') {
-            document.querySelector(".bt_image_défaut").style.display='block';
+            document.querySelector(".bt_image_défaut").style.display = 'block';
         }
 
     }
@@ -1909,19 +1909,19 @@ function printEqLogic(_eqLogic) {
     http.open('HEAD', img, false);
     http.send();
     if (http.status != 200) {
-        
-            jeedomUtils.showAlert({
-                message: "L'image " + img + " n'existe pas.",
-                level: 'danger'
-            })
-        
+
+        jeedomUtils.showAlert({
+            message: "L'image " + img + " n'existe pas.",
+            level: 'danger'
+        })
+
 
         img = "plugins/planification/plugin_info/planification_icon.png"
     }
 
 
     document.querySelector('#img_planificationModel').setAttribute('src', img)
-    document.querySelector('.eqLogicAttr[data-l2key=Chemin_image]').value=img
+    document.querySelector('.eqLogicAttr[data-l2key=Chemin_image]').value = img
     document.querySelectorAll('.li_eqLogic').forEach(li_eqLogic => {
         li_eqLogic.classList.remove('active');
         if (li_eqLogic.getAttribute("data-eqlogic_id") == _eqLogic.id) {
@@ -1996,37 +1996,37 @@ function saveEqLogic(_eqLogic) {
     //console.log(planifications)
     //return
     if (erreur) {
-      jeedomUtils.showAlert({
-                message: "Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.",
-                level: 'danger'
-            })
-        
-        
+        jeedomUtils.showAlert({
+            message: "Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.",
+            level: 'danger'
+        })
+
+
 
         return;
     }
-           domUtils.ajax({
-            type: "POST",
-            url: "plugins/planification/core/ajax/planification.ajax.php",
-            data: {
-                action: "Enregistrer_planifications",
-                id: _eqLogic["id"],
-                planifications: JSON.stringify(JSON.parse(planifications), null, " ")
-            },
-            global: false,
-            error: function(request, status, error) { handleAjaxError(request, status, error) },
-            success: function(data) {
-                if (data.state != 'ok') {
-                    jeedomUtils.showAlert({
-                        message: data.result,
-                        level: 'danger'
-                    })
-                    return
-                }
+    domUtils.ajax({
+        type: "POST",
+        url: "plugins/planification/core/ajax/planification.ajax.php",
+        data: {
+            action: "Enregistrer_planifications",
+            id: _eqLogic["id"],
+            planifications: JSON.stringify(JSON.parse(planifications), null, " ")
+        },
+        global: false,
+        error: function(request, status, error) { handleAjaxError(request, status, error) },
+        success: function(data) {
+            if (data.state != 'ok') {
+                jeedomUtils.showAlert({
+                    message: data.result,
+                    level: 'danger'
+                })
+                return
             }
-        })
-    
-   
+        }
+    })
+
+
 
     _eqLogic.configuration.Chemin_image = document.querySelector('.eqLogicAttr[data-l2key=Chemin_image]').value;
 
@@ -2047,37 +2047,37 @@ function saveEqLogic(_eqLogic) {
         _eqLogic.configuration.Alias_Ouvert = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').value;
         _eqLogic.configuration.Alias_Ferme = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').value;
         _eqLogic.configuration.Alias_My = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').value;
-        var type_fenêtre="fenêtre"
-        
+        var type_fenêtre = "fenêtre"
+
         document.querySelectorAll('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=type_fenêtre]').forEach(_el => {
-           if (_el.checked == 1){
-                type_fenêtre=_el.id
+            if (_el.checked == 1) {
+                type_fenêtre = _el.id
             }
         })
-        
-        _eqLogic.configuration.Type_fenêtre= type_fenêtre;
-        var sens_ouverture="gauche"
+
+        _eqLogic.configuration.Type_fenêtre = type_fenêtre;
+        var sens_ouverture = "gauche"
         document.querySelectorAll('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=sens_ouveture_fenêtre]').forEach(_el => {
-           if (_el.value == 1){
-            sens_ouverture=_el.id
+            if (_el.value == 1) {
+                sens_ouverture = _el.id
             }
         })
-        _eqLogic.configuration.Sens_ouverture= sens_ouverture;
+        _eqLogic.configuration.Sens_ouverture = sens_ouverture;
 
         _eqLogic.configuration.Etat_fenêtre_gauche_id = "";
         _eqLogic.configuration.Niveau_batterie_gauche_id = "";
         _eqLogic.configuration.Etat_fenêtre_droite_id = "";
         _eqLogic.configuration.Niveau_batterie_droite_id = "";
-        
-        if(sens_ouverture == "droite"){
+
+        if (sens_ouverture == "droite") {
             _eqLogic.configuration.Etat_fenêtre_droite_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Etat_fenêtre_droite_id]').value;
             _eqLogic.configuration.Niveau_batterie_droite_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Niveau_batterie_droite_id]').value;
         }
-        if(sens_ouverture == "gauche"){
+        if (sens_ouverture == "gauche") {
             _eqLogic.configuration.Etat_fenêtre_gauche_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Etat_fenêtre_gauche_id]').value;
             _eqLogic.configuration.Niveau_batterie_gauche_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Niveau_batterie_gauche_id]').value;
         }
-        if(sens_ouverture == "gauche-droite"){
+        if (sens_ouverture == "gauche-droite") {
             _eqLogic.configuration.Etat_fenêtre_gauche_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Etat_fenêtre_gauche_id]').value;
             _eqLogic.configuration.Niveau_batterie_gauche_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Niveau_batterie_gauche_id]').value;
             _eqLogic.configuration.Etat_fenêtre_droite_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Etat_fenêtre_droite_id]').value;
@@ -2089,7 +2089,7 @@ function saveEqLogic(_eqLogic) {
         _eqLogic.configuration.Alias_On = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_On]').value;
         _eqLogic.configuration.Alias_Off = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Off]').value;
     }
-    if (_eqLogic.configuration.Type_équipement== 'Chauffage') {
+    if (_eqLogic.configuration.Type_équipement == 'Chauffage') {
         _eqLogic.configuration.etat_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').value;
         _eqLogic.configuration.Alias_Confort = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Confort]').value;
         _eqLogic.configuration.Alias_Eco = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Eco]').value;
@@ -2185,8 +2185,8 @@ function addCmdToTable(_cmd) {
         const _tr = document.getElementById('table_infos').lastChild
         _tr.setJeeValues(_cmd, '.cmdAttr');
         jeedom.cmd.changeType(_tr, init(_cmd.subType));
-       
-        
+
+
         _tr.querySelector('.cmdAttr[data-l1key=type],.cmdAttr[data-l1key=subType]').setAttribute("disabled", true);
     } else if (_cmd.type == 'action') {
 
@@ -2245,22 +2245,22 @@ function addCmdToTable(_cmd) {
 
         document.getElementById('table_actions').insertAdjacentHTML('beforeend', tr)
         const _tr = document.getElementById('table_actions').lastChild
-       _tr.setJeeValues(_cmd, '.cmdAttr');
-            if (isset(_tr.querySelector(".actionOptions"))) {
-                jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options),
-                    function(html) {
-                        _tr.querySelector('.actionOptions').innerHTML=html;
-                      
-                    });
-    
-    
-                
-            }
-       
-       
-        
+        _tr.setJeeValues(_cmd, '.cmdAttr');
+        if (isset(_tr.querySelector(".actionOptions"))) {
+            jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options),
+                function(html) {
+                    _tr.querySelector('.actionOptions').innerHTML = html;
 
-        
+                });
+
+
+
+        }
+
+
+
+
+
         if (isset(_cmd.configuration.Type)) {
             if (_cmd.configuration.Type == "Planification" || _cmd.configuration.Type == "Planification_perso") {
                 if (isset(_cmd.configuration.Couleur)) {
@@ -2277,5 +2277,4 @@ function addCmdToTable(_cmd) {
             }
         }
     }
-    
 }
