@@ -40,6 +40,7 @@ function planification_update() {
 	
 	planification::deamon_stop();
 	find_all_files("/var/www/html/plugins/planification/core/template/dashboard");
+	rmdir -p ("/var/www/html/plugins/planification/core/template/dashboard");
 	//log::add('planification_update', 'debug', sizeof(scandir('/var/www/html/plugins/planification/core/template/dashboard')));
 	//log::add('planification_update', 'debug', glob('/var/www/html/plugins/planification/core/template/dashboard'));
 	//rm ('-r /var/www/html/plugins/planification/core/template/dashboard');
