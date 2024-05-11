@@ -37,7 +37,7 @@ class planification extends eqLogic {
     system::kill('deamon_planification.php');
   }
 
-  public function Recup_infos_lever_coucher_soleil($eqLogic_id){
+  public static function Recup_infos_lever_coucher_soleil($eqLogic_id){
     $EqLogic = eqLogic::byId($eqLogic_id);
     $longitude = config::byKey("info::longitude","core");
     $latitude = config::byKey("info::latitude","core");
@@ -241,7 +241,7 @@ class planification extends eqLogic {
     return $retour;
   }
 
-  function execute_action($eqLogic,$eqLogic_cmd,$cmd){
+  static function execute_action($eqLogic,$eqLogic_cmd,$cmd){
     if(is_object($eqLogic_cmd)){
       if (is_numeric (trim($cmd, "#"))){
         $cmd=cmd::byId(trim($cmd, "#"));
@@ -282,7 +282,7 @@ class planification extends eqLogic {
     }
 
   }
-  function Recup_liste_commandes_planification($eqLogic_id) {
+  static function Recup_liste_commandes_planification($eqLogic_id) {
     $eqLogic = eqLogic::byId($eqLogic_id);
     if (!is_object($eqLogic)) {
       throw new Exception(__('Impossible de trouver l\'équipement : ', __FILE__) . $eqLogic_id);
@@ -302,7 +302,7 @@ class planification extends eqLogic {
 
   }
 
-  function Recup_planifications($all=false, $ancien_JSON = false){
+   function Recup_planifications($all=false, $ancien_JSON = false){
     $eqLogic=$this;
     $nom_fichier=dirname(__FILE__) ."/../../planifications/" . $eqLogic->getId() . ".json";
     $planifications="";
@@ -349,14 +349,14 @@ class planification extends eqLogic {
     
 
   }
-  function supp_accents( $str, $charset='utf-8' ) {
+  static function supp_accents( $str, $charset='utf-8' ) {
     $str = htmlentities( $str, ENT_NOQUOTES, $charset );
     $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
     $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
     $str = preg_replace( '#&[^;]+;#', '', $str );
     return $str;
   }
-  function add_log($level = 'debug',$Log,$eqLogic=null){
+  static function add_log($level = 'debug',$Log,$eqLogic=null){
     if (is_array($Log)) $Log = json_encode($Log);
     if(count(debug_backtrace(false, 2)) == 1){
       $function_name = debug_backtrace(false, 2)[0]['function'];

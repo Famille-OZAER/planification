@@ -894,6 +894,8 @@ document.getElementById('tab_planifications').addEventListener('click', function
             }
             Periode.querySelector('.select_lever_coucher').style.display = 'none'
             Periode.querySelector('.in_timepicker').style.display = 'block'
+            
+            Periode.querySelector('.bt_afficher_timepicker_planification').style.display = 'block'
         }
         triage_jour(Divjour)
         MAJ_Graphique_jour(Divjour)
@@ -1381,6 +1383,7 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
             }
         }
     }
+   
     if (time == "" && Type_periode == "lever") {
         if (Div_jour.classList.contains("Lundi")) {
             time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText
@@ -1421,12 +1424,18 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
     var time_int = (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1])
     div = '<div class="Periode_jour periode' + (Periode_jours.length + 1) + ' input-group" style="width:100% !important; line-height:1.4px !important;display: inline-grid">'
     div += '<div>'
-    div += '<input style="width: 28px !important;font-size: 20px!important;vertical-align: middle;padding: 5px;" title="activer/désactiver heure lever/coucher de soleil" class="checkbox_lever_coucher checkbox form-control input-sm cursor" type="checkbox">'
-    div += '<select class="select_lever_coucher select form-control input-sm" style="background-color: var(--btn-default-color) !important;width: calc(100% - 65px)!important;;display: none;" title="Type planification">'
-    div += '<option value="lever" selected>Lever de soleil</option>'
-    div += '<option value="coucher">Coucher de soleil</option>'
+    div += '<input style="width: 28px !important;font-size: 20px!important;vertical-align: middle;padding: 5px;margin:0px" title="activer/désactiver heure lever/coucher de soleil" class="checkbox_lever_coucher checkbox form-control input-sm cursor" type="checkbox">'
+    div += '<select class="select_lever_coucher select form-control input-sm" style="background-color: var(--form-bg-color) !important;width: calc(100% - 55px)!important;;display: none;">'
+  
+    if(Type_periode == "coucher"){
+        div += '<option value="lever">Lever de soleil</option>'
+        div += '<option value="coucher"selected>Coucher de soleil</option>'
+    }else{
+        div += '<option value="lever"selected>Lever de soleil</option>'
+        div += '<option value="coucher">Coucher de soleil</option>'
+    }
     div += '</select>'
-    div += '<input class="in_timepicker form-control input-sm "  time_int="' + time_int + '"  value="' + time + '" style="left:-10px;padding:0px!important;text-align:center;width:calc(100% - 80px)!important;display:inline-block;position: relative">'
+    div += '<input class="in_timepicker form-control input-sm "  time_int="' + time_int + '"  value="' + time + '" style="padding:0px!important;text-align:center;width:calc(100% - 70px)!important;display:inline-block;position: relative">'
     div += '<a class="btn btn-default bt_afficher_timepicker_planification btn-sm" style="background-color: var(--form-bg-color) !important;position: absolute;right: 26px;display: inline-block"><i class="icon far fa-clock"></i></a>'
     div += '</input>'
     div += '<a class="btn btn-default bt_supprimer_perdiode btn-sm" style="position: absolute;right: 0px;display: inline-block" title="Supprimer cette période"><i class="fa fa-minus-circle"></i></a>'
@@ -1455,17 +1464,15 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
         nouvelle_periode.querySelector('.checkbox_lever_coucher').style.display = 'none'
         nouvelle_periode.querySelector('.in_timepicker').style.width = 'calc(100% - 28px)'
     }
-    if (Type_periode == "lever") {
+    if (Type_periode != 'heure_fixe'){
         nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
         nouvelle_periode.querySelector('.in_timepicker').style.display = 'none'
-        nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 0)
-        nouvelle_periode.querySelector('.select_lever_coucher').style.display = 'block'
-    } else if (Type_periode == "coucher") {
-        nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
-        nouvelle_periode.querySelector('.in_timepicker').style.display = 'none'
-        nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 1)
+        nouvelle_periode.querySelector('.bt_afficher_timepicker_planification').style.display = 'none'
+    
         nouvelle_periode.querySelector('.select_lever_coucher').style.display = 'block'
     }
+       
+    
     Div_jour.closest("th").querySelector(".collapsible").classList.remove("no-arrow")
     Div_jour.closest("th").querySelector(".collapsible").classList.add("cursor")
 }
@@ -1619,9 +1626,11 @@ function printEqLogic(_eqLogic) {
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').value = _eqLogic.configuration.Duree_mode_manuel_par_defaut
     }
     if (_eqLogic.configuration.Type_équipement == 'PAC') {
-        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').value = _eqLogic.configuration.temperature_id
-        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').value = _eqLogic.configuration.Duree_mode_manuel_par_defaut
-
+        console.log(_eqLogic.configuration)
+        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_ambiante_id]').value =  isset(_eqLogic.configuration.temperature_ambiante_id) ? _eqLogic.configuration.temperature_ambiante_id : ''
+        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').value =  isset(_eqLogic.configuration.Duree_mode_manuel_par_defaut) ? _eqLogic.configuration.Duree_mode_manuel_par_defaut : ''
+        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=mode_id]').value =  isset(_eqLogic.configuration.mode_id) ? _eqLogic.configuration.mode_id : ''
+        document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=delta_chauffage_eco]').value =  isset(_eqLogic.configuration.delta_chauffage_eco) ? _eqLogic.configuration.delta_chauffage_eco : ''
     }
     if (_eqLogic.configuration.Type_équipement == 'Volet') {
         document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').value = _eqLogic.configuration.etat_id
@@ -2038,9 +2047,10 @@ function saveEqLogic(_eqLogic) {
         _eqLogic.configuration.Duree_mode_manuel_par_defaut = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').value;
     }
     if (_eqLogic.configuration.Type_équipement == 'PAC') {
-        _eqLogic.configuration.temperature_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').value;
+        _eqLogic.configuration.temperature_ambiante_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_ambiante_id]').value;
         _eqLogic.configuration.Duree_mode_manuel_par_defaut = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').value;
-
+        _eqLogic.configuration.mode_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=mode_id]').value;
+        _eqLogic.configuration.delta_chauffage_eco = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=delta_chauffage_eco]').value;
     }
     if (_eqLogic.configuration.Type_équipement == 'Volet') {
         _eqLogic.configuration.etat_id = document.querySelector('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').value;

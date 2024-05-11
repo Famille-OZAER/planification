@@ -367,16 +367,59 @@
 							<div class="form-group" style="display : block;" >
 								<label class="col-sm-4 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 								<div class="col-sm-3">
-									<input type="number" class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle."/>
+									<input type="number" class="eqLogicAttr form-control" placeholder="0"data-l1key="configuration_PAC" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle."/>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Commande de température}}</label>
+								<label class="col-sm-4 control-label">{{Delta température mode chauffage ECO}}</label>
+								<div class="col-sm-3 input-group">
+									<input  type="number" class="eqLogicAttr form-control" placeholder="3" data-l1key="configuration_PAC" data-l2key="delta_chauffage_eco"/>
+									
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Commande de température ambiante}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_PAC" data-l2key="temperature_id"/>
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_PAC" data-l2key="temperature_ambiante_id"/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info_numeric"><i class="fa fa-tasks"></i></a>
 									</span>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Commande du mode réel}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_PAC" data-l2key="mode_id"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+							<div class="alias" style="display:none">
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Alias du mode Climatisation:}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control " data-l1key="configuration_PAC" data-l2key="Alias_Climatisation"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Alias du mode Ventilation:}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Alias_Ventilation"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Alias du mode Chauffage:}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Alias_Chauffage"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label">{{Alias du mode Eteint:}}</label>
+									<div class="col-sm-6 input-group">
+										<input class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Alias_Eteint"/>
+									</div>
 								</div>
 							</div>
 						</div>
