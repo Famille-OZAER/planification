@@ -1,2066 +1,2656 @@
 JSONCLIPBOARD = null
-document.addEventListener("click", closeAllSelect);
-if (document.querySelectorAll("div .chauffages .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.chauffages").style.display = 'block'
-    document.querySelector(".bs-sidenav.chauffages").style.display = 'block'
-}
-if (document.querySelectorAll("div .PACs .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.PACs").style.display = 'block'
-    document.querySelector(".bs-sidenav.PACs").style.display = 'block'
-}
-if (document.querySelectorAll("div .poeles .eqLogicDisplayCard").length != 0){
-	document.querySelector(".eqLogicThumbnailContainer.poeles").style.display = 'block'
-    document.querySelector(".bs-sidenav.poeles").style.display = 'block'
-}
-if (document.querySelectorAll("div .volets .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.volets").style.display = 'block'
-    document.querySelector(".bs-sidenav.volets").style.display = 'block';
-}
-if (document.querySelectorAll("div .prises .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.prises").style.display = 'block'
-    document.querySelector(".bs-sidenav.prises").style.display = 'block'
-}
-if (document.querySelectorAll("div .persos .eqLogicDisplayCard").length != 0){
-    document.querySelector(".eqLogicThumbnailContainer.persos").style.display = 'block'
-    document.querySelector(".bs-sidenav.persos").style.display = 'block'  
-}
-$(".li_eqLogic").on('click', function(event) {
-    $.hideAlert()
-    if (event.ctrlKey) {
-        var type = $('body').attr('data-page')
-        var url = 'index.php?v=d&m=' + type + '&p=' + type + '&id=' + $(this).attr('data-eqlogic_id')
-        window.open(url).focus()
-    } else {
-        jeedom.eqLogic.cache.getCmd = Array()
-        if ($('.eqLogicThumbnailDisplay').html() != undefined) {
-            $('.eqLogicThumbnailDisplay').hide()
-        }
-        $('.eqLogic').hide()
-        if ('function' == typeof(prePrintEqLogic)) {
-            prePrintEqLogic($(this).attr('data-eqLogic_id'))
-        }
-        if (isset($(this).attr('data-eqLogic_type')) && isset($('.' + $(this).attr('data-eqLogic_type')))) {
-            $('.' + $(this).attr('data-eqLogic_type')).show()
-        } else {
-            $('.eqLogic').show()
-        }
-        if ($('.li_eqLogic').length != 0) {
-            $('.li_eqLogic').removeClass('active');
-        }
-        if ($('.li_eqLogic[data-eqLogic_id=' + $(this).attr('data-eqLogic_id') + ']').html() != undefined) {
-            $('.li_eqLogic[data-eqLogic_id=' + $(this).attr('data-eqLogic_id') + ']').addClass('active');
-        }
-        $(this).addClass('active')
-        $('.nav-tabs a:not(.eqLogicAction)').first().click()
-        $.showLoading()
-        jeedom.eqLogic.print({
-            type: isset($(this).attr('data-eqLogic_type')) ? $(this).attr('data-eqLogic_type') : eqType,
-            id: $(this).attr('data-eqLogic_id'),
-            status: 1,
-            getCmdState: 1,
-            error: function(error) {
-                $.hideLoading()
-                $.fn.showAlert({
-                    message: error.message,
-                    level: 'danger'
-                })
-            },
-            success: function(data) {
-                $('body .eqLogicAttr').value('')
-                if (isset(data) && isset(data.timeout) && data.timeout == 0) {
-                    data.timeout = ''
-                }
-                $('body').setValues(data, '.eqLogicAttr')
-                if (!isset(data.category.opening)) $('input[data-l2key="opening"]').prop('checked', false)
+flatpickr.localize(flatpickr.l10ns.fr)
+var typesEquipements = ['chauffages', 'PACs', 'volets', 'prises', 'persos'];
 
-                if ('function' == typeof(printEqLogic)) {
-                    printEqLogic(data)
-                }
-                $('.cmd').remove()
-                for (var i in data.cmd) {
-                    if (data.cmd[i].type == 'info') {
-                        data.cmd[i].state = String(data.cmd[i].state).replace(/<[^>]*>?/gm, '');
-                        data.cmd[i]['htmlstate'] = '<span class="cmdTableState"';
-                        data.cmd[i]['htmlstate'] += 'data-cmd_id="' + data.cmd[i].id + '"';
-                        data.cmd[i]['htmlstate'] += 'title="{{Date de valeur}} : ' + data.cmd[i].valueDate + '<br/>{{Date de collecte}} : ' + data.cmd[i].collectDate;
-                        if (data.cmd[i].state.length > 50) {
-                            data.cmd[i]['htmlstate'] += '<br/>' + data.cmd[i].state.replaceAll('"', '&quot;');
-                        }
-                        data.cmd[i]['htmlstate'] += '" >';
-                        data.cmd[i]['htmlstate'] += data.cmd[i].state.substring(0, 50) + ' ' + data.cmd[i].unite;
-                        data.cmd[i]['htmlstate'] += '<span>';
-                    } else {
-                        data.cmd[i]['htmlstate'] = '';
-                    }
-                    if (typeof addCmdToTable == 'function') {
-                        addCmdToTable(data.cmd[i])
-                    } else {
-                        addCmdToTableDefault(data.cmd[i]);
-                    }
-                }
-                $('.cmdTableState').each(function() {
-                    jeedom.cmd.addUpdateFunction($(this).attr('data-cmd_id'), function(_options) {
-                        _options.value = String(_options.value).replace(/<[^>]*>?/gm, '');
-                        let cmd = $('.cmdTableState[data-cmd_id=' + _options.cmd_id + ']')
-                        let title = '{{Date de collecte}} : ' + _options.collectDate + ' - {{Date de valeur}} ' + _options.valueDate;
-                        if (_options.value.length > 50) {
-                            title += ' - ' + _options.value;
-                        }
-                        cmd.attr('title', title)
-                        cmd.empty().append(_options.value.substring(0, 50) + ' ' + _options.unit);
-                        cmd.css('color', 'var(--logo-primary-color)');
-                        setTimeout(function() {
-                            cmd.css('color', '');
-                        }, 1000);
-                    });
-                })
-                $('#div_pageContainer').on({
-                    'change': function(event) {
-                        jeedom.cmd.changeType($(this).closest('.cmd'))
-                    }
-                }, '.cmd .cmdAttr[data-l1key=type]')
+document.getElementById('div_pageContainer').addEventListener('click', function(event) {
+  var _target = null
+  closeAllSelect(event.target)
 
-                $('#div_pageContainer').on({
-                    'change': function(event) {
-                        jeedom.cmd.changeSubType($(this).closest('.cmd'))
-                    }
-                }, '.cmd .cmdAttr[data-l1key=subType]')
 
-                jeedomUtils.addOrUpdateUrl('id', data.id)
-                $.hideLoading()
-                modifyWithoutSave = false
-                setTimeout(function() {
-                    modifyWithoutSave = false
-                }, 1000)
+  if (event.target.closest('.ajouter_eqlogic')) {
+    const dialog_message = `
+                <form class="form-horizontal" onsubmit="return false;">
+                    <div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="Type_équipement" id="Volet" value="Volet" checked="checked"> {{Volet}}
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="Type_équipement" id="PAC" value="PAC"> {{Pompe à chaleur}}
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="Type_équipement" id="Prise" value="Prise"> {{Prise}}
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="Type_équipement" id="Chauffage" value="Chauffage"> {{Chauffage avec fil pilote}}
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="Type_équipement" id="Perso" value="Perso"> {{Perso}}
+                            </label>
+                        </div>
+                        <br>
+                        <div class="input">
+                            <input class="col-sm-8" type="text" placeholder="Nom de l'équipement" name="nom" id="nom">
+                        </div>
+                        <br>
+                    </div>
+                </form>`;
+
+    jeeDialog.dialog({
+      id: 'mod_ajout_équipement',
+      title: '{{Choisissez le type d\'équipement que souhaitez ajouter}}',
+      message: dialog_message,
+      width: 650,
+      height: 320,
+      buttons: {
+        confirm: {
+          label: '{{Valider}}',
+          className: 'success',
+          callback: {
+            click: function() {
+              const nom = document.querySelector("input[name='nom']").value.trim();
+              if (!nom) {
+                jeedomUtils.showAlert({
+                  message: "Le nom de l'équipement ne peut pas être vide.",
+                  level: 'warning',
+                  timeout: 2000,
+                  emptyBefore: true,
+                });
+                return;
+              }
+              const type_equipement = document.querySelector("input[name='Type_équipement']:checked").value;
+              domUtils.ajax({
+                type: "POST",
+                url: "plugins/planification/core/ajax/planification.ajax.php",
+                data: {
+                  action: "Ajout_equipement",
+                  Nom: nom,
+                  Type_équipement: type_equipement,
+                },
+                global: true,
+                async: false,
+                error: (request, status, error) => handleAjaxError(request, status, error),
+                success: (data) => {
+                  if (data.state !== 'ok') {
+                    jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+                  } else {
+                    window.location.href = `index.php?v=d&p=planification&m=planification&id=${data.result}`;
+                  }
+                }
+              });
             }
-        })
-    }
-    return false
-})
-
-$('.ajouter_eqlogic').on('click', function() {
-    var dialog_title = '{{Choisissez le type d\'équipement que souhaitez ajouter}}';
-
-    var dialog_message =
-
-        '<form class="form-horizontal onsubmit="return false;"> ' +
-        '<div> <div class="radio"> <label > ' +
-        '<input type="radio" name="Type_équipement" id="Volet" value="Volet" checked="checked"> {{Volet}} </label> ' +
-        '</div>' +
-        '<div class="radio"> <label > ' +
-        '<input type="radio" name="Type_équipement" id="PAC" value="PAC"> {{Pompe à chaleur}}</label> ' +
-        '</div> ' +
-        '<div class="radio"> <label > ' +
-        '<input type="radio" name="Type_équipement" id="Poele" value="Poele"> {{Poêle à granules}}</label> ' +
-        '</div> ' +
-        '<div class="radio"> <label > ' +
-        '<input type="radio" name="Type_équipement" id="Prise" value="Prise"> {{Prise}}</label> ' +
-        '</div> ' +
-        '<div class="radio"> <label > ' +
-        '<input type="radio" name="Type_équipement" id="Chauffage" value="Chauffage"> {{Chauffage avec fil pilote}}</label> ' +
-        '</div>' +
-        '</div> ' +
-        '<div class="radio"> <label > ' +
-        '<input type="radio" name="Type_équipement" id="Perso" value="Perso"> {{Perso}}</label> ' +
-        '</div> ' +
-        '</br> ' +
-        '<div class="input">' +
-        '<input class="col-sm-8" type="text" placeholder="Nom de l\'équipement" name="nom" id="nom" >  ' +
-
-        '</div> <br>' +
-        '</div>' +
-        '</form>';
-    bootbox.dialog({
-        title: dialog_title,
-        message: dialog_message,
-        buttons: {
-            "{{Annuler}}": {
-                className: "btn-danger",
-                callback: function() {}
-            },
-            success: {
-                label: "{{Valider}}",
-                className: "btn-success",
-
-                callback: function() {
-                    if ($("input[name='nom']").val() == "") {
-                        $('#div_alert').showAlert({ message: "Le nom de l'équipement ne peut pas être vide.", level: 'danger' });
-                        return;
-                    }
-                    $.ajax({
-                        type: "POST",
-                        url: "plugins/planification/core/ajax/planification.ajax.php",
-                        data: {
-                            action: "Ajout_equipement",
-                            nom: $("input[name='nom']").val(),
-                            type: $("input[name='Type_équipement']:checked").val()
-                        },
-                        global: true,
-                        async: false,
-                        error: function(request, status, error) {
-                            handleAjaxError(request, status, error);
-                        },
-                        success: function(data) {
-                            if (data.state != 'ok') {
-                                $('#div_alert').showAlert({ message: data.result, level: 'danger' });
-
-                            }
-                            window.location.href = 'index.php?v=d&p=planification&m=planification&id=' + data.result;
-
-                        }
-                    });
-                }
-            }
+          }
         },
-    })
-})
-$('.sante').on('click', function() {
-    $('#md_modal').dialog({ title: "{{Santé Planification}}" });
-    $('#md_modal').load('index.php?v=d&plugin=planification&modal=health').dialog('open');
-});
-$('.dupliquer_equipement').off('click').on('click', function() {
-        if ($('.eqLogicAttr[data-l1key=id]').value() != undefined && $('.eqLogicAttr[data-l1key=id]').value() != '') {
-            bootbox.prompt({
-                size: 'small',
-                value: $('.eqLogicAttr[data-l1key=name]').value() + "_copie",
-                title: '{{Nom de la copie de l\'équipement ?}}',
-                callback: function(result) {
-                    if (result !== null) {
-                        var id_source = $('.eqLogicAttr[data-l1key=id]').value()
-                        jeedom.eqLogic.copy({
-                            id: id_source,
-                            name: result,
-                            error: function(error) {
-                                $('#div_alert').showAlert({ message: error.message, level: 'danger' });
-                            },
-                            success: function(data) {
-                                modifyWithoutSave = false
-                                var id_cible = data.id
-                                $.ajax({
-                                    type: "POST",
-                                    url: "plugins/planification/core/ajax/planification.ajax.php",
-                                    data: {
-                                        action: "Copy_JSON",
-                                        id_source: id_source,
-                                        id_cible: id_cible
-                                    },
-                                    global: false,
-                                    error: function(request, status, error) { handleAjaxError(request, status, error) },
-                                    success: function(data) {
-                                        if (data.state != 'ok') {
-                                            bootbox.hideAll()
-                                            $('#div_alert').showAlert({
-                                                message: data.result,
-                                                level: 'danger'
-
-                                            })
-                                            return
-                                        }
-                                    }
-                                })
-                                var vars = getUrlVars()
-                                var url = 'index.php?'
-                                for (var i in vars) {
-                                    if (i != 'id' && i != 'saveSuccessFull' && i != 'removeSuccessFull') {
-                                        url += i + '=' + vars[i].replace('#', '') + '&'
-                                    }
-                                }
-                                url += 'id=' + data.id + '&saveSuccessFull=1'
-                                loadPage(url)
-                                bootbox.hideAll()
-                            }
-                        })
-                        return false
-                    }
-                }
-            })
+        cancel: {
+          label: '{{Annuler}}',
+          className: 'warning',
+          callback: { click: function() { jeeDialog.get('#mod_ajout_équipement').close(); } }
         }
-    })
-    //équipement
-$('#tab_eqlogic').on('click', '.list_Cmd_info_numeric', function() {
-    //var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=temperature_id]');
-    var el = $(this).closest('div').find('input')
-    jeedom.cmd.getSelectModal({ cmd: { type: 'info', subType: "numeric" } }, function(result) {
-        el.value(result.human);
+      },
+      onClose: function() {
+        jeeDialog.get('#mod_ajout_équipement').destroy();
+      }
     });
-});
-$('#tab_eqlogic').on('click', '.list_Cmd_info_binary', function() {
-    //var el = $(this).closest('div').find('.eqLogicAttr[data-l2key=etat_allume_id]');
-    var el = $(this).closest('div').find('input')
-    jeedom.cmd.getSelectModal({ cmd: { type: 'info', subType: "binary" } }, function(result) {
-        el.value(result.human);
+  }
+  if (event.target.closest('.sante')) {
+    jeeDialog.dialog({
+      id: 'mod_ajout_équipement',
+      title: '{{Santé Planification}}',
+      width: Math.min(window.innerWidth - 50, window.innerHeight - 150),
+      height: window.innerHeight - 150,
+      contentUrl: "index.php?v=d&plugin=planification&modal=health",
+      buttons: {},
+      onClose: function() {
+        jeeDialog.get('#mod_ajout_équipement').destroy();
+      }
     });
-});
+  }
 
-$('#tab_eqlogic').on('click', '.list_Cmd_info', function() {
-    var div_alias = $(this).closest('.option').find(".alias")
-    var el = $(this).closest('div').find('input')
-
-    jeedom.cmd.getSelectModal({ cmd: { type: 'info', } }, function(result) {
-        el.value(result.human);
-        div_alias.show()
+  if (event.target.closest('.restart_demon')) {
+    jeedom.plugin.deamonStart({
+      id: 'planification',
+      forceRestart: 1,
+      error: (error) => {
+        jeedomUtils.showAlert({
+          message: "Problème lors du redémarrage du démon.",
+          level: 'danger'
+        });
+      },
+      success: () => {
+        jeedomUtils.showAlert({
+          message: "Démon redémarré avec succès.",
+          level: 'warning'
+        });
+      }
     });
+  }
 
-});
-$('#tab_eqlogic').on('focusout', '.cmdAction', function() {
-    var div_alias = $(this).closest('.option').find(".alias")
-    var type_eq = $(this).closest(".option")[0].classList[1]
-    if ($(this).value() != "") {
-        $.ajax({
-            type: "POST",
-            url: "core/ajax/cmd.ajax.php",
-            data: {
-                action: 'byHumanName',
-                humanName: $('#tab_eqlogic .' + type_eq + ' .eqLogicAttr[data-l2key=etat_id]').val()
-            },
-            global: true,
-            async: false,
-            error: function(request, status, error) {
+  if ( event.target.closest('.dupliquer_equipement')) {
+    const eqLogicId = document.querySelector('.eqLogicAttr[data-l1key=id]').value;
+    const eqLogicName = document.querySelector('.eqLogicAttr[data-l1key=name]').value;
 
-                return "erreur"
-            },
-            success: function(data) {
-                if (data.state != "ok") {
-                    $('#div_alert').showAlert({
-                        message: "La commande de l 'état du chauffage est invalide, veuillez insérer une commande valide.",
+    if (eqLogicId && eqLogicId.trim() !== '') {
+      jeeDialog.prompt({
+        title: '{{Nom de la copie de l\'équipement ?}}',
+        value: `${eqLogicName}_copie`,
+        callback: (result) => {
+          if (result !== null && result.trim() !== '') {
+            const id_source = eqLogicId;
+
+            jeedom.eqLogic.copy({
+              id: id_source,
+              name: result,
+              error: (error) => {
+                jeedomUtils.showAlert({ message: error.message, level: 'danger' });
+              },
+              success: (data) => {
+                modifyWithoutSave = false;
+                const id_cible = data.id;
+
+                domUtils.ajax({
+                  type: "POST",
+                  url: "plugins/planification/core/ajax/planification.ajax.php",
+                  data: {
+                    action: "Copy_JSON",
+                    id_source: id_source,
+                    id_cible: id_cible
+                  },
+                  global: true,
+                  async: false,
+                  error: (request, status, error) => {
+                    handleAjaxError(request, status, error);
+                  },
+                  success: (data) => {
+                    if (data.state !== 'ok') {
+                      jeedomUtils.showAlert({
+                        message: data.result,
                         level: 'danger'
-                    })
-
-                    $('#tab_eqlogic .' + type_eq + ' .eqLogicAttr[data-l2key=etat_id]').value("")
-                    div_alias.hide()
-                }
-                div_alias.show()
-            }
-        });
-
-    } else {
-        div_alias.hide()
-    }
-});
-$("#tab_eqlogic .bt_modifier_image").on('click', function() {
-
-
-    if ($("#mod_selectIcon").length == 0) {
-        $('#div_pageContainer').append('<div id="mod_selectIcon"></div>')
-        $("#mod_selectIcon").dialog({
-            title: '{{Choisissez une icône perso}}',
-            closeText: '',
-            autoOpen: false,
-            modal: true,
-            height: (jQuery(window).height() - 150),
-            width: 1500,
-            open: function() {
-                if ((jQuery(window).width() - 50) < 1500) {
-                    $('#mod_selectIcon').dialog({ width: jQuery(window).width() - 50 })
-                }
-                $('body').css({ overflow: 'hidden' });
-                setTimeout(function() { initTooltips($("#mod_selectIcon")) }, 500)
-            },
-            beforeClose: function(event, ui) {
-                $('body').css({ overflow: 'inherit' })
-            }
-        });
-    }
-    var url = 'index.php?v=d&plugin=planification&modal=selectIcon&show_img=1&show_icon=0&tab_img=1&selectIcon=' + $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="Chemin_image"]').value()
-    console.log(url)
-
-
-    $('#mod_selectIcon').empty().load(url, function() {
-        $("#mod_selectIcon").dialog('option', 'buttons', {
-            "Annuler": function() {
-                $(this).dialog("close")
-            },
-            "Valider": function() {
-                var icon = $('.iconSelected .iconSel .img-responsive').attr('src')
-                if (icon == undefined) {
-                    icon = ''
-                }
-                $('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="chemin_image"]').val(icon)
-                $('#img_planificationModel').attr('src', icon)
-                $("#tab_eqlogic .bt_image_défaut").show()
-                modifyWithoutSave = true
-                $(this).dialog("close")
-            }
-        });
-        $('#mod_selectIcon').dialog('open')
-    });
-
-});
-$("#tab_eqlogic .bt_image_défaut").on('click', function() {
-    modifyWithoutSave = true
-    if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "PAC") {
-        img = 'plugins/planification/core/img/pac.png'
-    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Volet") {
-        img = "plugins/planification/core/img/volet.png"
-    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Chauffage") {
-        img = "plugins/planification/core/img/chauffage.png"
-    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Poele") {
-        img = "plugins/planification/core/img/poele.png"
-    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Prise") {
-        img = "plugins/planification/core/img/prise.png"
-    } else if ($('.eqLogicAttr[data-l2key=Type_équipement]').value() == "Perso") {
-        img = "plugins/planification/core/img/perso.png"
-    }
-    var http = new XMLHttpRequest();
-    http.open('HEAD', img, false);
-    http.send();
-    if (http.status != 200) {
-        $('#div_alert').showAlert({
-            message: "L'image " + img + " n'existe pas.",
-            level: 'danger'
-        })
-
-        img = "plugins/planification/plugin_info/planification_icon.png"
-    }
-
-
-    $('#img_planificationModel').attr('src', img)
-    $('.image_perso .eqLogicAttr[data-l2key=chemin_image]').value(img)
-    $("#tab_eqlogic .bt_image_défaut").hide()
-});
-//commandes
-$('#tab_commandes').on('click', '.select-selected', function(e) {
-    modifyWithoutSave = false;
-    e.stopPropagation();
-    closeAllSelect(this);
-    this.nextSibling.classList.toggle("select-hide");
-    this.classList.toggle("select-arrow-active");
-});
-$('#tab_commandes').on('click', '.select-items div', function() {
-    modifyWithoutSave = true;
-    select = this.parentNode.previousSibling;
-    select.innerHTML = this.innerHTML;
-    select.classList.remove(recup_class_couleur(select.classList))
-    select.classList.add(recup_class_couleur(this.classList))
-    select.setAttribute("Id", this.getAttribute("Id"))
-    y = this.parentNode.getElementsByClassName("same-as-selected");
-    for (k = 0; k < y.length; k++) {
-        y[k].classList.remove("same-as-selected")
-    }
-    this.classList.add("same-as-selected")
-    select.click();
-});
-$('#tab_commandes').on('click', '.listCmdAction', function() {
-    //$("body").delegate(".listCmdAction", 'click', function() {
-    var el = $(this).closest('div div').find('.cmdAttr[data-l2key=commande]');
-    jeedom.cmd.getSelectModal({ cmd: { type: 'action' } }, function(result) {
-        el.value(result.human);
-        jeedom.cmd.displayActionOption(el.value(), '', function(html) {
-            el.closest('div td').find('.actionOptions').html(html);
-        });
-    });
-});
-$('#tab_commandes').on('click', '.listAction', function() {
-    var el = $(this).closest('div div').find('.cmdAttr[data-l2key=commande]');
-    jeedom.getSelectActionModal({}, function(result) {
-        el.value(result.human);
-        jeedom.cmd.displayActionOption(el.value(), '', function(html) {
-            el.closest('div td').find('.actionOptions').html(html);
-            taAutosize();
-        });
-    });
-});
-$('#tab_commandes').on('focusout', '.cmdAction', function() {
-    var el = $(this);
-
-    var expression = el.closest('td').getValues('.expressionAttr');
-    jeedom.cmd.displayActionOption(el.value(), expression[0].options, function(html) {
-        el.closest('div td').find('.actionOptions').html(html);
-        taAutosize();
-    });
-});
-$('#tab_commandes').on('click', '.bt_ajouter_commande', function(e) {
-    var SELECT_LIST = Recup_select("commandes");
-    var tr = ''
-    tr += '<tr class="cmd">'
-    tr += '<td>'
-    tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
-    tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
-    tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
-    tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom}} "</td>'
-    tr += '</td>'
-
-    tr += '<td>'
-    tr += '<div class="input-group" style=" width:100%;">'
-    tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>'
-    tr += '<span class="input-group-btn">';
-    tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>'
-    tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>'
-    tr += '</span>'
-    tr += '</div>'
-    tr += '<div class="actionOptions">'
-    tr += '</div>'
-    tr += '</td>'
-    tr += '<td>'
-    tr += '<div class="custom-select">'
-    tr += SELECT_LIST
-    tr += '</div>'
-    tr += '</td>'
-    tr += '<td>'
-    tr += '</td>'
-    tr += '</tr>'
-
-    $('#table_actions tbody').append(tr)
-    $('#table_actions tbody tr:last .cmdAttr[data-l1key=type]').value(init("action"))
-    jeedom.cmd.changeType($('#table_actions tbody tr:last'), init("other"))
-    couleur = "orange"
-    $('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#", "couleur-" + couleur)
-    $('#table_actions tbody tr:last .select-items ').find("." + "couleur-" + couleur)[0].classList.add("same-as-selected")
-    $('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML = couleur
-
-
-});
-$("#tab_commandes #table_actions").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true });
-$("#tab_commandes #table_infos").sortable({ axis: "y", cursor: "move", items: ".cmd", distance: 30, placeholder: "highlight", tolerance: "intersect", forcePlaceholderSize: true });
-
-
-
-//planifications:
-$("#tab_planifications #div_planifications").sortable({
-    axis: "y",
-    cursor: "move",
-    items: ".planification",
-    handle: ".panel-heading",
-    placeholder: "ui-state-highlight",
-    tolerance: "intersect",
-    forcePlaceholderSize: true
-});
-$("#tab_planifications").on('click', '.bt_ajouter_planification', function() {
-    bootbox.prompt({
-        title: "Veuillez inserer le nouveau nom de la planification à ajouter.",
-        buttons: {
-            confirm: { label: 'Ajouter', className: 'btn-success' },
-            cancel: { label: 'Annuler', className: 'btn-danger' }
-        },
-        callback: function(resultat) {
-            if (resultat !== null && resultat != '') {
-                modifyWithoutSave = true;
-                Ajoutplanification({ nom: resultat })
-            }
-        }
-    })
-});
-$("#tab_planifications").on('click', '.bt_supprimer_planification', function() {
-    Ce_progamme = $(this).closest('.planification')
-    bootbox.confirm({
-        message: "Voulez vous vraiment supprimer cette planification ?",
-        buttons: {
-            confirm: {
-                label: 'Oui',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'Non',
-                className: 'btn-danger'
-            }
-        },
-        callback: function(result) {
-            if (result === true) {
-                modifyWithoutSave = true;
-                Ce_progamme.remove()
-            }
-        }
-    })
-});
-$('#tab_planifications').on('click', '.bt_dupliquer_planification', function() {
-    var planification = $(this).closest('.planification').clone()
-
-    bootbox.prompt({
-        title: "Veuillez inserer le nom pour la planification dupliquée.",
-        buttons: {
-            confirm: { label: 'Dupliquer', className: 'btn-success' },
-            cancel: { label: 'Annuler', className: 'btn-danger' }
-        },
-        callback: function(resultat) {
-            if (resultat !== null && resultat != '') {
-                modifyWithoutSave = true;
-                var random = Math.floor((Math.random() * 1000000) + 1)
-                planification.find('a[data-toggle=collapse]').attr('href', '#collapse' + random)
-                planification.find('.panel-collapse.collapse').attr('id', 'collapse' + random)
-                planification.find('.nom_planification').html(resultat)
-                $(planification).attr('id', uniqId())
-                $('#div_planifications').append(planification)
-                $('.collapse').collapse()
-            }
-        }
-    })
-});
-$('#tab_planifications').on('click', '.bt_appliquer_planification', function() {
-    planification = $(this).closest('.planification')
-    programName = planification.find('.nom_planification').html()
-    bootbox.confirm({
-        message: "Voulez vous vraiment appliquer la planification " + programName + " maintenant ?",
-        buttons: {
-            confirm: {
-                label: 'Oui',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'Non',
-                className: 'btn-danger'
-            }
-        },
-        callback: function(result) {
-            if (result === true) {
-                jeedom.cmd.execute({ id: set_planification_Id, value: { select: programName, Id_planification: planification.attr("Id") } })
-            }
-        }
-    })
-});
-$('#tab_planifications').on('click', '.bt_renommer_planification', function() {
-    var el = $(this)
-    bootbox.prompt({
-        title: "Veuillez inserer le nouveau nom pour la planification:" + $(this).closest('.planification').find('.nom_planification').html() + ".",
-        buttons: {
-            confirm: { label: 'Modifier', className: 'btn-success' },
-            cancel: { label: 'Annuler', className: 'btn-danger' }
-        },
-        callback: function(resultat) {
-            if (resultat !== null && resultat != '') {
-                modifyWithoutSave = true;
-                el.closest('.panel.panel-default').find('span.nom_planification').text(resultat)
-            }
-        }
-    })
-});
-$('#tab_planifications').on('click', '.bt_supprimer_perdiode', function() {
-    Divjour = $(this).closest('.JourSemaine')
-    $(this).closest('.Periode_jour').remove()
-    modifyWithoutSave = true;
-    MAJ_Graphique_jour(Divjour)
-});
-$('#tab_planifications').on('click', '.bt_ajout_periode', function() {
-    modifyWithoutSave = true;
-    $(this).closest("th").find(".collapsible")[0].classList.add("active")
-    $(this).closest("th").find(".collapsible")[0].classList.add("cursor")
-    $(this).closest("th").find(".collapsible")[0].classList.remove("no-arrow")
-    Divjour = $(this).closest('th').find('.JourSemaine')
-
-
-    var SELECT_LIST = Recup_select("planifications")
-    var CMD_LIST = Recup_liste_commandes_planification()
-    Couleur = "erreur"
-    Nom = ""
-    Couleur = "couleur-" + CMD_LIST[0].couleur
-    Nom = CMD_LIST[0].Nom
-    Id = CMD_LIST[0].Id
-    var element = SELECT_LIST.replace("#COULEUR#", Couleur);
-    element = element.replace("#VALUE#", Nom)
-    element = element.replace("#ID#", Id)
-    Ajout_Periode(element, Divjour)
-
-    MAJ_Graphique_jour(Divjour)
-    Divjour.css("max-height", "fit-content")
-    Divjour.css("overflow", "visible")
-    DivprogramDays = $(this).closest('.div_programDays')
-    DivprogramDays.css("overflow", "visible")
-    DivprogramDays.css("max-height", "fit-content")
-    Divplanification = $(this).closest('.planification-body')
-    Divplanification.css("overflow", "visible")
-    Divplanification.css("max-height", "fit-content")
-});
-$('#tab_planifications').on('click', '.bt_copier_jour', function() {
-    var jour = $(this).closest('th').find('.JourSemaine')
-    JSONCLIPBOARD = { data: [] }
-    jour.find('.Periode_jour').each(function() {
-        if ($(this).find('.checkbox_lever_coucher').prop("checked")) {
-            type_periode = $(this).find('.select_lever_coucher').val()
-        } else {
-            type_periode = "heure_fixe"
-        }
-
-
-        debut_periode = $(this).find('.clock-timepicker').val()
-        Id = $(this).find('.select-selected').attr("id")
-        Nom = $(this).find('.select-selected span')[0].innerHTML
-        Couleur = recup_class_couleur($(this).find('.select-selected')[0].classList)
-        JSONCLIPBOARD.data.push({ type_periode, debut_periode, Id, Nom, Couleur })
-    })
-});
-$('#tab_planifications').on('click', '.bt_coller_jour', function() {
-    if (JSONCLIPBOARD == null) return
-    modifyWithoutSave = true;
-    Divjour = $(this).closest('th').find('.JourSemaine')
-    Divjour.find('.Periode_jour').each(function() {
-        $(this).remove()
-    })
-    var SELECT_LIST = Recup_select("planifications")
-    JSONCLIPBOARD.data.forEach(function(periode) {
-
-        Type_periode = periode["type_periode"]
-
-        Couleur = periode["Couleur"]
-        Nom = periode["Nom"]
-        Id = periode["Id"]
-        var element = SELECT_LIST.replace("#COULEUR#", Couleur);
-        element = element.replace("#VALUE#", Nom)
-        element = element.replace("#ID#", Id)
-        Ajout_Periode(element, Divjour, periode.debut_periode, null, Type_periode)
-
-    })
-    Divjour.css("overflow", "visible")
-    Divjour.css("max-height", "fit-content")
-    $(this).closest("th").find(".collapsible")[0].classList.add("active")
-    $(this).closest("th").find(".collapsible")[0].classList.add("cursor")
-    $(this).closest("th").find(".collapsible")[0].classList.remove("no-arrow")
-    MAJ_Graphique_jour(Divjour)
-});
-$('#tab_planifications').on('click', '.bt_vider_jour', function() {
-    modifyWithoutSave = true;
-    $(this).closest("th").find(".collapsible")[0].classList.remove("active")
-    $(this).closest("th").find(".collapsible")[0].classList.remove("cursor")
-    $(this).closest("th").find(".collapsible")[0].classList.add("no-arrow")
-    Divjour = $(this).closest('th').find('.JourSemaine')
-    Divjour.css("overflow", "hidden")
-    Divjour.css("max-height", 0)
-    Divjour.find('.Periode_jour').each(function() {
-        $(this).remove()
-    })
-    MAJ_Graphique_jour(Divjour)
-});
-$('#tab_planifications').on('click', '.collapsible', function() {
-    this.classList.toggle("active");
-    var Divjour = $(this).closest("th").find(".JourSemaine")
-
-    if (Divjour.css("overflow") == "visible") {
-        Divjour.css("max-height", "0px")
-        Divjour.css("overflow", "hidden")
-    } else {
-        Divjour.css("overflow", "visible")
-        Divjour.css("max-height", "fit-content")
-    }
-});
-$('#tab_planifications').on('click', '.planification_collapsible', function() {
-    this.classList.toggle("active");
-
-    var DivPlanification = $(this).closest(".planification").find(".planification-body")
-
-
-    if (DivPlanification.css("overflow") == "visible") {
-        DivPlanification.css("max-height", "0px")
-        DivPlanification.css("overflow", "hidden")
-    } else {
-        DivPlanification.css("overflow", "visible")
-        DivPlanification.css("max-height", "fit-content")
-    }
-    var DivProgrammation = $(this).closest(".planification").find(".planification-body").find(".div_programDays")
-    if (DivProgrammation.css("overflow") == "visible") {
-        DivProgrammation.css("max-height", "0px")
-        DivProgrammation.css("overflow", "hidden")
-    } else {
-        DivProgrammation.css("overflow", "visible")
-        DivProgrammation.css("max-height", "fit-content")
-    }
-    var DivgraphJours = $(this).closest(".planification").find(".planification-body").find(".graphJours")
-    if (DivgraphJours.css("overflow") == "visible") {
-        DivgraphJours.css("max-height", "0px")
-        DivgraphJours.css("overflow", "hidden")
-    } else {
-        DivgraphJours.css("overflow", "visible")
-        DivgraphJours.css("max-height", "fit-content")
-    }
-
-});
-$('#tab_planifications').on('click', '.select-selected', function(e) {
-    /* When the select box is clicked, close any other select boxes,
-    and open/close the current select box: */
-    modifyWithoutSave = true;
-    e.stopPropagation();
-    closeAllSelect(this);
-    this.nextSibling.classList.toggle("select-hide");
-    this.classList.toggle("select-arrow-active");
-});
-$('#tab_planifications').on('click', '.select-items div', function() {
-    modifyWithoutSave = true;
-    select = this.parentNode.previousSibling;
-    select.innerHTML = this.innerHTML;
-    select.classList.remove(recup_class_couleur(select.classList))
-    select.classList.add(recup_class_couleur(this.classList))
-    select.setAttribute("Id", this.getAttribute("Id"))
-    y = this.parentNode.getElementsByClassName("same-as-selected");
-    for (k = 0; k < y.length; k++) {
-        y[k].classList.remove("same-as-selected")
-    }
-    this.classList.add("same-as-selected")
-
-    MAJ_Graphique_jour($(this).closest('.JourSemaine'))
-    select.click();
-});
-$('#tab_planifications').on('change', '.select_lever_coucher', function() {
-    //$("body").delegate( '.select_lever_coucher',"change" ,function () {
-    modifyWithoutSave = true;
-    var Divjour = $(this).closest('.JourSemaine')
-    var Periode = $(this).closest('.Periode_jour')
-    var numero_cette_periode = 0
-    var autre_valeur_select_lever_coucher = ""
-    Periode.prop("classList").forEach(function(classe) {
-        if (classe.includes("periode")) {
-            numero_cette_periode = classe.substr(7, classe.length - 7)
-        }
-    })
-
-    Divjour.find('.checkbox_lever_coucher').each(function(checkbox) {
-        if ($(this).is(':checked')) {
-            var cette_periode = $(this).closest('.Periode_jour')
-            cette_periode.prop("classList").forEach(function(classe) {
-                if (classe.includes("periode")) {
-                    if (classe.substr(7, classe.length - 7) != numero_cette_periode) {
-                        autre_valeur_select_lever_coucher = cette_periode.find('.select_lever_coucher').value()
+                      });
+                      return;
                     }
-                }
-            })
-        }
-    })
+                  }
+                });
 
-    if (this.value == "lever" && autre_valeur_select_lever_coucher == "lever") {
-        modifyWithoutSave = false;
-        Periode.find('.select_lever_coucher').prop('selectedIndex', 1)
-    }
-    if (this.value == "coucher" && autre_valeur_select_lever_coucher == "coucher") {
-        modifyWithoutSave = false;
-        Periode.find('.select_lever_coucher').prop('selectedIndex', 0)
-    }
-    if (Periode.find('.select_lever_coucher').prop('selectedIndex') == 0) {
-        if ($(Divjour).classList.contains("Lundi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText
-        } else if ($(Divjour).classList.contains("Mardi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mardi')[0].innerText
-        } else if ($(Divjour).classList.contains("Mercredi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mercredi')[0].innerText
-        } else if ($(Divjour).classList.contains("Jeudi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Jeudi')[0].innerText
-        } else if ($(Divjour).classList.contains("Vendredi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Vendredi')[0].innerText
-        } else if ($(Divjour).classList.contains("Samedi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Samedi')[0].innerText
-        } else if ($(Divjour).classList.contains("Dimanche")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Dimanche')[0].innerText
+                const vars = getUrlVars();
+                let url = 'index.php?';
+                Object.keys(vars).forEach((key) => {
+                  if (!['id', 'saveSuccessFull', 'removeSuccessFull'].includes(key)) {
+                    url += `${key}=${vars[key].replace('#', '')}&`;
+                  }
+                });
+                url += `id=${data.id}&saveSuccessFull=1`;
+
+                jeedomUtils.loadPage(url);
+              }
+            });
+          }
         }
+      });
+    }
+  }   
+  if (event.target.closest('.li_eqLogic')) {
+    const _target = event.target.closest('.li_eqLogic');
+    const activeTabpaneId = document.querySelector(".tab-content .tab-pane.active").id;
+
+    jeedomUtils.hideAlert();
+
+    const type = document.body.dataset.page;
+    const eqLogicId = _target.dataset.eqlogic_id;
+
+    if (event.ctrlKey || event.metaKey) {
+      window.open(`index.php?v=d&m=${type}&p=${type}&id=${eqLogicId}`).focus();
     } else {
-        if ($(Divjour).classList.contains("Lundi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Lundi')[0].innerText
-        } else if ($(Divjour).classList.contains("Mardi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mardi')[0].innerText
-        } else if ($(Divjour).classList.contains("Mercredi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mercredi')[0].innerText
-        } else if ($(Divjour).classList.contains("Jeudi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Jeudi')[0].innerText
-        } else if ($(Divjour).classList.contains("Vendredi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Vendredi')[0].innerText
-        } else if ($(Divjour).classList.contains("Samedi")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Samedi')[0].innerText
-        } else if ($(Divjour).classList.contains("Dimanche")) {
-            time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Dimanche')[0].innerText
-        }
+      const eqLogicType = _target.dataset.eqlogic_type;
+      jeeFrontEnd.pluginTemplate.displayEqlogic(eqLogicType, eqLogicId);
     }
-    Periode.find('.clock-timepicker').attr("oldvalue", Periode.find('.clock-timepicker').attr("value"))
-    Periode.find('.clock-timepicker').attr("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
-    Periode.find('.clock-timepicker').attr("value", time)
-    triage_jour(Divjour)
-    MAJ_Graphique_jour(Divjour)
+
+    document.querySelectorAll('.li_eqLogic').forEach((el) => el.classList.remove('active'));
+    _target.classList.add('active');
+
+    setTimeout(() => {
+      document.querySelectorAll("li").forEach((li) => {
+        if (li.id.includes(activeTabpaneId)) {
+          li.querySelector('a').click();
+        }
+      });
+    }, 50);
+  }
+  if (event.target.closest('.bt_afficher_timepicker') || event.target.closest('.bt_afficher_timepicker_planification')) {
+    flatpickr(_target.closest('div').querySelector('.in_timepicker'), {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      minuteIncrement: 1,
+      allowInput: true,
+      clickOpens: false,
+      onChange: function(selectedDates, dateStr, instance) {},
+      onOpen: function(selectedDates, dateStr, instance) {
+        if (instance.element.value !== '') {
+          instance.hourElement.value = instance.element.value.substring(0, 2);
+          instance.minuteElement.value = instance.element.value.substring(3, 5);
+        } else {
+          instance.hourElement.value = '00';
+          instance.minuteElement.value = '00';
+        }
+      },
+      onClose: function(selectedDates, dateStr, instance) {
+        if (event.target.closest('.bt_afficher_timepicker_planification')) {
+          const time = instance.element.value;
+          const time_old = instance.element.getAttribute("value");
+
+          if (time !== time_old) {
+            modifyWithoutSave = true;
+            instance.element.setAttribute("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]));
+            instance.element.setAttribute("value", time);
+
+            const Divjour = event.target.closest('.JourSemaine');
+            triage_jour(Divjour.closest('.JourSemaine'));
+            MAJ_Graphique_jour(Divjour.closest('.JourSemaine'));
+          }
+        }
+        instance.destroy();
+      },
+      onValueUpdate: function(selectedDates, dateStr, instance) {}
+    });
+    _target.closest("div").querySelector('.in_timepicker')._flatpickr.open();
+  }
+})
+document.getElementById('tab_eqlogic').addEventListener('click', function(event) {
+  const handleCmdInfoSelection = (type, subType = "",show_alias = false) => {
+    const el = event.target.closest('div').querySelector('input');
+    if (subType !=''){
+      jeedom.cmd.getSelectModal({ cmd: { type, subType } }, function(result) {
+        el.value = result.human;
+      });
+    }else{
+      jeedom.cmd.getSelectModal({ cmd: { type} }, function(result) {
+        el.value = result.human;
+        if (show_alias){
+        
+          if( el.value != ''){
+            target.closest('.option').querySelector('.alias').style.display='block'
+          }else{
+            target.closest('.option').querySelector('.alias').style.display='none'
+          }
+        }
+      });
+    }
+    
+  };
+
+  const toggleImage = (iconPath) => {
+    const http = new XMLHttpRequest();
+    http.open('HEAD', iconPath, false);
+    http.send();
+    const exists = http.status === 200;
+    return exists ? iconPath : "plugins/planification/plugin_info/planification_icon.png";
+  };
+
+  const target = event.target;
+  
+  if (target.closest('.list_Cmd_info_numeric')) {
+    handleCmdInfoSelection('info', 'numeric');
+  } else if (target.closest('.list_Cmd_info_binary')) {
+    handleCmdInfoSelection('info', 'binary');
+  } else if (target.closest('.list_Cmd_info')) {
+      handleCmdInfoSelection('info','',true);
+      
+    
+  } else if (target.closest('.bt_modifier_image')) {
+    const objectId = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key=id]').value;
+    const url = `index.php?v=d&plugin=planification&modal=selectIcon&object_id=${objectId}`;
+
+    jeeDialog.dialog({
+      id: 'mod_selectIcon',
+      title: '{{Choisir une illustration}}',
+      width: Math.min(window.innerWidth - 50, window.innerHeight - 150),
+      height: window.innerHeight - 150,
+      buttons: {
+        confirm: {
+          label: '{{Appliquer}}',
+          className: 'success',
+          callback: () => {
+            const icon = document.querySelector('#mod_selectIcon .iconSelected .iconSel img')?.getAttribute('src') || '';
+            document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key=configuration][data-l2key="Chemin_image"]').value = icon;
+            document.querySelector('#img_planificationModel').setAttribute('src', icon);
+            document.querySelector("#tab_eqlogic .bt_image_défaut").style.display = 'block';
+            jeeDialog.get('#mod_selectIcon').close();
+          }
+        },
+        cancel: {
+          label: '{{Annuler}}',
+          className: 'warning',
+          callback: () => jeeDialog.get('#mod_selectIcon').close(),
+        }
+      },
+      onClose: () => jeeDialog.get('#mod_selectIcon').destroy(),
+      contentUrl: url
+    });
+  } else if (target.closest('.bt_image_défaut')) {
+    const typeEquipement = document.querySelector('.eqLogicAttr[data-l2key=Type_équipement]').value;
+    const typeIcons = {
+      "PAC": 'plugins/planification/core/img/pac.png',
+      "Volet": 'plugins/planification/core/img/volet.png',
+      "Chauffage": 'plugins/planification/core/img/chauffage.png',
+      "Prise": 'plugins/planification/core/img/prise.png',
+      "Perso": 'plugins/planification/core/img/perso.png'
+    };
+
+    const defaultIcon = typeIcons[typeEquipement] || "plugins/planification/plugin_info/planification_icon.png";
+    const finalIconPath = toggleImage(defaultIcon);
+
+    document.querySelector('#img_planificationModel').setAttribute('src', finalIconPath);
+    document.querySelector('input[data-l2key=Chemin_image]').value = finalIconPath;
+    document.querySelector("#tab_eqlogic .bt_image_défaut").style.display = 'none';
+  }
 });
-$('#tab_planifications').on('click', '.checkbox_lever_coucher', function() {
-    //$("body").delegate( '.checkbox_lever_coucher',"change" ,function () {
+document.getElementById('tab_eqlogic').addEventListener('focusout', function(event) {
+  let _target = event.target.closest('.cmdAction');
 
-    var Divjour = $(this).closest('.JourSemaine ')
-    var Periode = $(this).closest('.Periode_jour')
-    var numero_cette_periode = 0
-    var numero_autre_periode = 0
-    var valeur_select_lever_coucher = ""
-    var autre_valeur_select_lever_coucher = ""
+  if (_target) {
+    const div_alias = _target.closest('.option').querySelector(".alias");
+    const type_eq = _target.closest(".option").classList[1];
+    const etatElement = document.querySelector(`#tab_eqlogic .${type_eq} .eqLogicAttr[data-l2key=etat_id]`);
 
-    var nb_checked = 0
-    Divjour.find('.checkbox_lever_coucher').each(function() { if ($(this).prop("checked")) { nb_checked += 1 } })
+    if (_target.value.trim() !== "" && etatElement) {
+      domUtils.ajax({
+        type: "POST",
+        url: "core/ajax/cmd.ajax.php",
+        data: {
+          action: 'byHumanName',
+          humanName: etatElement.value
+        },
+        global: true,
+        async: false,
+        error: function(request, status, error) {
+          return "erreur";
+        },
+        success: function(data) {
+          if (data.state !== "ok") {
+            jeedomUtils.showAlert({
+              message: "La commande de l'état du chauffage est invalide, veuillez insérer une commande valide.",
+              level: 'danger'
+            });
+
+            etatElement.value = "";
+            div_alias.style.display = 'none';
+          } else {
+            div_alias.style.display = 'block';
+          }
+        }
+      });
+    } else {
+      div_alias.style.display = 'none';
+    }
+  }
+});
+document.getElementById('tab_planifications').addEventListener('click', function(event) {
+  if (event.target.closest('.bt_ajouter_planification')) {
+    const _target = event.target.closest('.bt_ajouter_planification');
+
+    jeeDialog.prompt({
+      title: "Veuillez insérer le nouveau nom de la planification à ajouter.",
+      buttons: {
+        confirm: { label: 'Ajouter', className: 'success' },
+        cancel: { label: 'Annuler', className: 'danger' }
+      },
+      callback: (resultat) => {
+        if (resultat && resultat.trim() !== '') {
+          modifyWithoutSave = true;    
+          Ajoutplanification({ nom: resultat });    
+          const lastPlanification = document.querySelector('#div_planifications .planification:last-of-type');
+          AjoutGestionPlanification({ 
+            nom: resultat, 
+            Id: lastPlanification?.getAttribute('id') 
+          });
+        }
+      }
+    });
+  }
+  if (event.target.closest('.bt_renommer_planification')) {
+    const _target = event.target.closest('.bt_renommer_planification');
+    const planificationElement = _target.closest('.planification');
+    const planificationName = planificationElement.querySelector("span.nom_planification").innerHTML;
+
+    jeeDialog.prompt({
+      title: `Veuillez insérer le nouveau nom pour la planification : ${planificationName}.`,
+      buttons: {
+        confirm: { label: 'Modifier', className: 'success' },
+        cancel: { label: 'Annuler', className: 'danger' }
+      },
+      callback: (resultat) => {
+        if (resultat && resultat.trim() !== '') {
+          modifyWithoutSave = true;
+          planificationElement.querySelector("span.nom_planification").innerHTML = resultat;
+
+          const gestionPlanificationsElement = document.querySelector(`#Gestion_planifications .${planificationElement.getAttribute('id')}`);
+          if (gestionPlanificationsElement) {
+            gestionPlanificationsElement.querySelector(".Nom_planification").innerHTML = resultat;
+          }
+          
+        }
+      }
+    });
+  }
+
+  if (event.target.closest('.bt_dupliquer_planification')) {
+    const _target = event.target.closest('.bt_dupliquer_planification');
+    const planification = _target.closest('.planification').cloneNode(true);
+
+    jeeDialog.prompt({
+      title: "Veuillez insérer le nom pour la planification dupliquée.",
+      buttons: {
+        confirm: { label: 'Dupliquer', className: 'success' },
+        cancel: { label: 'Annuler', className: 'danger' }
+      },
+      callback: (resultat) => {
+        if (resultat && resultat.trim() !== '') {
+          modifyWithoutSave = true;
+          planification.querySelector('.nom_planification').innerHTML = resultat;
+          planification.setAttribute('id', jeedomUtils.uniqId());
+          document.querySelector('#div_planifications').appendChild(planification);
+          const lastPlanification = document.querySelector('#div_planifications .planification:last-of-type');
+          AjoutGestionPlanification({ 
+            nom: resultat, 
+            Id: lastPlanification.getAttribute('id') 
+          });
+        }
+      }
+    });
+  }
+  if (event.target.closest('.bt_appliquer_planification')) {
+    const _target = event.target.closest('.bt_appliquer_planification');
+    const planification = _target.closest('.planification');
+    const programName = planification.querySelector('.nom_planification').innerHTML;
+    const planificationId = planification.getAttribute("Id");
+
+    jeeDialog.confirm({
+      message: `Voulez-vous vraiment appliquer la planification "${programName}" maintenant ?`,
+      buttons: {
+        confirm: { label: 'Oui', className: 'success' },
+        cancel: { label: 'Non', className: 'danger' }
+      },
+      callback: (result) => {
+        if (result) {
+          jeedom.cmd.execute({
+            id: set_planification_Id,
+            value: { select: programName, Id_planification: planificationId }
+          });
+        }
+      }
+    });
+  }
+  if (event.target.closest('.bt_supprimer_planification')) {
+    const _target = event.target.closest('.bt_supprimer_planification');
+    const planificationElement = _target.closest('.planification');
+    const planificationId = planificationElement.getAttribute('id');
+
+    jeeDialog.confirm({
+      message: "Voulez-vous vraiment supprimer cette planification ?",
+      buttons: {
+        confirm: { label: 'Oui', className: 'success' },
+        cancel: { label: 'Non', className: 'danger' }
+      },
+      callback: (result) => {
+        if (result) {
+          modifyWithoutSave = true;
+          document.querySelector(`#tab_Gestion_planifications .${planificationId}`)?.remove();
+          planificationElement.remove();
+        }
+      }
+    });
+  }
+  if (event.target.closest('.planification_collapsible')) {
+    const _target = event.target.closest('.planification_collapsible');
+    _target.classList.toggle("active");
+
+    const planificationBody = _target.closest(".planification").querySelectorAll(".planification-body, .div_programDays, .graphJours");
+
+    planificationBody.forEach(section => {
+      const isVisible = section.style.overflow === "visible";
+      section.style.overflow = isVisible ? "hidden" : "visible";
+      section.style.maxHeight = isVisible ? "0px" : "fit-content";
+    });
+  }
+  if (event.target.closest('.select-selected')) {
+    const _target = event.target.closest('.select-selected');
+    modifyWithoutSave = true;
+
+    event.stopPropagation();
+    closeAllSelect(_target);
+    _target.nextElementSibling.classList.toggle("select-hide");
+    _target.classList.toggle("select-arrow-active");
+  }
+  if (event.target.closest('.select-items div')) {
+    const _target = event.target.closest('.select-items div');
+    modifyWithoutSave = true;
+
+    const select = _target.parentNode.previousSibling;
+    select.innerHTML = _target.innerHTML;
+    select.classList.remove(recup_class_couleur(select.classList));
+    select.classList.add(recup_class_couleur(_target.classList));
+    select.setAttribute("Id", _target.getAttribute("Id"));
+    Array.from(_target.parentNode.getElementsByClassName("same-as-selected")).forEach((item) => {
+      item.classList.remove("same-as-selected");
+    });
+    _target.classList.add("same-as-selected");
+    const jourSemaine = _target.closest('.JourSemaine');
+    if (jourSemaine) {
+      MAJ_Graphique_jour(jourSemaine);
+    }
+    select.click();
+  }
+  if (event.target.closest('.checkbox_lever_coucher')) {
+    const _target = event.target.closest('.checkbox_lever_coucher');
+    const Divjour = _target.closest('.JourSemaine');
+    const Periode = _target.closest('.Periode_jour');
+    let numero_cette_periode = 0, numero_autre_periode = 0;
+    let autre_valeur_select_lever_coucher = "";
+    const nb_checked = Array.from(Divjour.querySelectorAll('.checkbox_lever_coucher'))
+    .filter(lever_coucher => lever_coucher.getAttribute("checked") === 'true').length;
 
     if (nb_checked > 2) {
-        $(this).prop("checked", false)
-        return
-    }
-    modifyWithoutSave = true;
-    Periode.prop("classList").forEach(function(classe) {
-        if (classe.includes("periode")) {
-            numero_cette_periode = classe.substr(7, classe.length - 7)
-        }
-    })
-
-    valeur_select_lever_coucher = Periode.find('.select_lever_coucher').value()
-
-    var time = '00:00'
-    if ($(this).is(':checked')) {
-        if (nb_checked == 2) {
-            Divjour.find('.checkbox_lever_coucher').each(function() {
-                if ($(this).is(':checked')) {
-                    var cette_periode = $(this).closest('.Periode_jour')
-                    cette_periode.prop("classList").forEach(function(classe) {
-                        if (classe.includes("periode")) {
-                            if (classe.substr(7, classe.length - 7) != numero_cette_periode) {
-                                autre_valeur_select_lever_coucher = cette_periode.find('.select_lever_coucher').value()
-                                numero_autre_periode = classe.substr(7, classe.length - 7)
-                            }
-                        }
-                    })
-                }
-            })
-            if ((numero_cette_periode > numero_autre_periode && autre_valeur_select_lever_coucher == "coucher") || (numero_cette_periode < numero_autre_periode && autre_valeur_select_lever_coucher == "lever")) {
-                $(this).prop("checked", false)
-                return
-            }
-            if (autre_valeur_select_lever_coucher == "coucher") {
-                Periode.find('.select_lever_coucher').prop("selectedIndex", 0)
-                if ($(Divjour).classList.contains("Lundi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText
-                } else if ($(Divjour).classList.contains("Mardi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mardi')[0].innerText
-                } else if ($(Divjour).classList.contains("Mercredi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mercredi')[0].innerText
-                } else if ($(Divjour).classList.contains("Jeudi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Jeudi')[0].innerText
-                } else if ($(Divjour).classList.contains("Vendredi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Vendredi')[0].innerText
-                } else if ($(Divjour).classList.contains("Samedi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Samedi')[0].innerText
-                } else if ($(Divjour).classList.contains("Dimanche")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Dimanche')[0].innerText
-                }
-            } else if (autre_valeur_select_lever_coucher == "lever") {
-                Periode.find('.select_lever_coucher').prop("selectedIndex", 1)
-                if ($(Divjour).classList.contains("Lundi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Lundi')[0].innerText
-                } else if ($(Divjour).classList.contains("Mardi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mardi')[0].innerText
-                } else if ($(Divjour).classList.contains("Mercredi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mercredi')[0].innerText
-                } else if ($(Divjour).classList.contains("Jeudi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Jeudi')[0].innerText
-                } else if ($(Divjour).classList.contains("Vendredi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Vendredi')[0].innerText
-                } else if ($(Divjour).classList.contains("Samedi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Samedi')[0].innerText
-                } else if ($(Divjour).classList.contains("Dimanche")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Dimanche')[0].innerText
-                }
-            }
-            Periode.find('.clock-timepicker').attr("oldvalue", Periode.find('.clock-timepicker').attr("value"))
-            Periode.find('.clock-timepicker').attr("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
-            Periode.find('.clock-timepicker').attr("value", time)
-            Periode.find('.clock-timepicker').hide()
-            Periode.find('.select_lever_coucher').show()
-
-        } else {
-            Periode.find('.clock-timepicker').hide()
-            Periode.find('.select_lever_coucher').show()
-
-            if (valeur_select_lever_coucher == "lever") {
-
-                if ($(Divjour).classList.contains("Lundi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Lundi')[0].innerText
-                } else if ($(Divjour).classList.contains("Mardi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mardi')[0].innerText
-                } else if ($(Divjour).classList.contains("Mercredi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Mercredi')[0].innerText
-                } else if ($(Divjour).classList.contains("Jeudi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Jeudi')[0].innerText
-                } else if ($(Divjour).classList.contains("Vendredi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Vendredi')[0].innerText
-                } else if ($(Divjour).classList.contains("Samedi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Samedi')[0].innerText
-                } else if ($(Divjour).classList.contains("Dimanche")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_lever_Dimanche')[0].innerText
-                }
-
-            } else {
-                if ($(Divjour).classList.contains("Lundi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Lundi')[0].innerText
-                } else if ($(Divjour).classList.contains("Mardi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mardi')[0].innerText
-                } else if ($(Divjour).classList.contains("Mercredi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Mercredi')[0].innerText
-                } else if ($(Divjour).classList.contains("Jeudi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Jeudi')[0].innerText
-                } else if ($(Divjour).classList.contains("Vendredi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Vendredi')[0].innerText
-                } else if ($(Divjour).classList.contains("Samedi")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Samedi')[0].innerText
-                } else if ($(Divjour).classList.contains("Dimanche")) {
-                    time = $('#tab_gestion ').find('.Heure_prochaine_action_coucher_Dimanche')[0].innerText
-                }
-            }
-            Periode.find('.clock-timepicker').attr("oldvalue", Periode.find('.clock-timepicker').attr("value"))
-            Periode.find('.clock-timepicker').attr("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
-            Periode.find('.clock-timepicker').attr("value", time)
-        }
+      _target.setAttribute("checked", false);
+      _target.checked = false;
+      return;
     } else {
-        time = Periode.find('.clock-timepicker').attr("oldvalue")
-
-        if (typeof(time) != "undefined") {
-            Periode.find('.clock-timepicker').attr("value", time)
-            Periode.find('.clock-timepicker').attr("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
-            Periode.find('.clock-timepicker').removeAttr('oldvalue')
-        }
-        Periode.find('.select_lever_coucher').hide()
-        Periode.find('.clock-timepicker').show()
+      _target.setAttribute("checked", _target.checked);
     }
-    triage_jour(Divjour)
-    MAJ_Graphique_jour(Divjour)
-});
-$('#tab_planifications').on('click', '.clock-timepicker', function() {
-    Divjour = $(this).closest('.JourSemaine ')
-    $(this).datetimepicker({
-        step: 5,
-        theme: 'dark',
-        datepicker: false,
-        format: 'H:i',
-        onClose: function(dp, $input) {
-            $('.clock-timepicker').datetimepicker('destroy')
-        },
-        onSelectTime: function(dp, $input) {
-            modifyWithoutSave = true;
-            time = $input.val()
-            $($input).attr("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
-            $($input).attr("value", time)
-            triage_jour($(Divjour))
-            MAJ_Graphique_jour($(Divjour).closest('.JourSemaine'));
-        }
-    });
-    $(this).datetimepicker('show');
-});
-$('#tab_planifications').on("blur", ".clock-timepicker", function() {
+
     modifyWithoutSave = true;
-    time = $(this).val()
-    $(this).attr("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]))
-    $(this).attr("value", time)
-    Divjour = $(this).closest('.JourSemaine ')
-    triage_jour($(Divjour))
-    MAJ_Graphique_jour($(Divjour).closest('.JourSemaine'));
-});
-$('#tab_planifications').on("keydown", ".clock-timepicker", function() {
-    modifyWithoutSave = true;
-    $('.clock-timepicker').datetimepicker('destroy')
-});
-//gestion lever coucher de soleil
-$('#tab_gestion').on("change", ".selection_jour", function() {
-    $('#tab_gestion ').find('.Lundi').css("display", "none")
-    $('#tab_gestion ').find('.Mardi').css("display", "none")
-    $('#tab_gestion ').find('.Mercredi').css("display", "none")
-    $('#tab_gestion ').find('.Jeudi').css("display", "none")
-    $('#tab_gestion ').find('.Vendredi').css("display", "none")
-    $('#tab_gestion ').find('.Samedi').css("display", "none")
-    $('#tab_gestion ').find('.Dimanche').css("display", "none")
-    $('#tab_gestion ').find('.bt_copier_lever_coucher').css("display", "inline-block")
-    switch ($(this).val()) {
-        case 'Lundi':
-            $('#tab_gestion ').find('.Lundi').css("display", "block")
-            break
-        case 'Mardi':
-            $('#tab_gestion ').find('.Mardi').css("display", "block")
-            break
-        case 'Mercredi':
-            $('#tab_gestion ').find('.Mercredi').css("display", "block")
-            break
-        case 'Jeudi':
-            $('#tab_gestion ').find('.Jeudi').css("display", "block")
-            break
-        case 'Vendredi':
-            $('#tab_gestion ').find('.Vendredi').css("display", "block")
-            break
-        case 'Samedi':
-            $('#tab_gestion ').find('.Samedi').css("display", "block")
-            break
-        case 'Dimanche':
-            $('#tab_gestion ').find('.Dimanche').css("display", "block")
-            $('#tab_gestion ').find('.bt_copier_lever_coucher').css("display", "none")
-            break
-    }
 
 
-});
-$('#tab_gestion').on("click", ".bt_copier_lever_coucher", function() {
+    numero_cette_periode = Array.from(Periode.classList)
+      .find(classe => classe.includes("periode"))?.substr(7) || 0;
 
-        if ($('#tab_gestion .Lundi').style("display") == "block") {
-            jour = "Lundi"
-            $('#tab_gestion .HeureLeverMin_Mardi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Mardi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Mardi').val($('#tab_gestion .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Mardi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Mercredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Mercredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Mercredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Mercredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Jeudi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Jeudi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Jeudi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Jeudi').val($('#tab_gestion  .HeureCoucherMax' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Vendredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Vendredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Vendredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Vendredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
+    const valeur_select_lever_coucher = Periode.querySelector('.select_lever_coucher').value;
+    let time = '00:00';
+    const tab_gestion = document.querySelector('#tab_gestion_heures_lever_coucher');
 
-        }
-        if ($('#tab_gestion .Mardi').style("display") == "block") {
-            jour = "Mardi"
-            $('#tab_gestion .HeureLeverMin_Mercredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Mercredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Mercredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Mercredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Jeudi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Jeudi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Jeudi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Jeudi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Vendredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Vendredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Vendredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Vendredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-
-        }
-        if ($('#tab_gestion .Mercredi').style("display") == "block") {
-            jour = "Mercredi"
-            $('#tab_gestion .HeureLeverMin_Jeudi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Jeudi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Jeudi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Jeudi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Vendredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Vendredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Vendredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Vendredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-        }
-        if ($('#tab_gestion .Jeudi').style("display") == "block") {
-            jour = "Jeudi"
-            $('#tab_gestion .HeureLeverMin_Vendredi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Vendredi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Vendredi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Vendredi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-
-        }
-        if ($('#tab_gestion .Vendredi').style("display") == "block") {
-            jour = "Vendredi"
-            $('#tab_gestion .HeureLeverMin_Samedi').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Samedi').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Samedi').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Samedi').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-
-        }
-        if ($('#tab_gestion .Samedi').style("display") == "block") {
-            jour = "Samedi"
-            $('#tab_gestion .HeureLeverMin_Dimanche').val($('#tab_gestion  .HeureLeverMin_' + jour).val())
-            $('#tab_gestion .HeureLeverMax_Dimanche').val($('#tab_gestion  .HeureLeverMax_' + jour).val())
-            $('#tab_gestion .HeureCoucherMin_Dimanche').val($('#tab_gestion  .HeureCoucherMin_' + jour).val())
-            $('#tab_gestion .HeureCoucherMax_Dimanche').val($('#tab_gestion  .HeureCoucherMax_' + jour).val())
-
-        }
-        console.log(jour)
-    })
-    //fonctions
-function closeAllSelect(elmnt) {
-    var x, y, i, arrNo = [];
-    x = document.getElementsByClassName("select-items");
-    y = document.getElementsByClassName("select-selected");
-    for (i = 0; i < y.length; i++) {
-        if (elmnt == y[i]) {
-            arrNo.push(i)
-        } else {
-            y[i].classList.remove("select-arrow-active");
-        }
-    }
-    for (i = 0; i < x.length; i++) {
-        if (arrNo.indexOf(i)) {
-            x[i].classList.add("select-hide");
-        }
-    }
-}
-
-function recup_class_couleur(classes) {
-    var class_color = "erreur"
-    try {
-        for (classe in classes) {
-            if (classes[classe].includes("couleur")) {
-                class_color = classes[classe]
-                break
+    if (_target.checked) {
+      if (nb_checked === 1) {
+        Divjour.querySelectorAll('.checkbox_lever_coucher').forEach(_periode => {
+          if (_periode.getAttribute("checked")) {
+            const cette_periode = _periode.closest('.Periode_jour');
+            const autreClasse = Array.from(cette_periode.classList).find(classe => classe.includes("periode"));
+            if (autreClasse && autreClasse.substr(7) !== numero_cette_periode) {
+              autre_valeur_select_lever_coucher = cette_periode.querySelector('.select_lever_coucher').value;
+              numero_autre_periode = autreClasse.substr(7);
             }
+          }
+        });
+        if ((numero_cette_periode > numero_autre_periode && autre_valeur_select_lever_coucher === "coucher") ||
+            (numero_cette_periode < numero_autre_periode && autre_valeur_select_lever_coucher === "lever")) {
+          return;
         }
-    } catch (err) {}
+        const adjustSelectAndTime = (type) => {
+          Periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", type === "lever" ? 0 : 1);
+          Periode.querySelector('.select_lever_coucher').value = type;
+          time = tab_gestion.querySelector(`.Heure_action_suivante_${type}.${Divjour.classList[1]}`).innerText;
+        };
 
-    return class_color
+        autre_valeur_select_lever_coucher === "coucher" ? adjustSelectAndTime("lever") : adjustSelectAndTime("coucher");
+      }
+
+      Periode.querySelector('.in_timepicker').style.display = 'none';
+      Periode.querySelector('.bt_afficher_timepicker_planification').style.display = 'none';
+      Periode.querySelector('.select_lever_coucher').style.display = 'block';
+
+      const timePicker = Periode.querySelector('.in_timepicker');
+      timePicker.setAttribute("oldvalue", timePicker.getAttribute("value"));
+      timePicker.setAttribute("time_int", convertTimeToInt(time));
+      timePicker.setAttribute("value", time);
+    } else {
+      const timePicker = Periode.querySelector('.in_timepicker');
+      time = timePicker.getAttribute("oldvalue") || time;
+      timePicker.setAttribute("value", time);
+      timePicker.setAttribute("time_int", convertTimeToInt(time));
+      timePicker.removeAttribute('oldvalue');
+
+      Periode.querySelector('.select_lever_coucher').style.display = 'none';
+      timePicker.style.display = 'block';
+      Periode.querySelector('.bt_afficher_timepicker_planification').style.display = 'block';
+    }
+    triage_jour(Divjour);
+    MAJ_Graphique_jour(Divjour);
+  }    
+  if (event.target.closest('.bt_supprimer_perdiode')) {
+    const _target = event.target.closest('.bt_supprimer_perdiode');
+    const Divjour = _target.closest('.JourSemaine');
+
+    _target.closest('.Periode_jour').remove();
+    modifyWithoutSave = true;
+    MAJ_Graphique_jour(Divjour);
+  }
+  if (event.target.closest('.bt_ajout_periode')) {
+    const _target = event.target.closest('.bt_ajout_periode');
+    const collapsibleElement = _target.closest("th").querySelector(".collapsible");
+    const Divjour = _target.closest('th').querySelector('.JourSemaine');
+    const DivprogramDays = _target.closest('.div_programDays');
+    const Divplanification = _target.closest('.planification-body');
+
+    collapsibleElement.classList.add("active", "cursor");
+    collapsibleElement.classList.remove("no-arrow");
+
+    const SELECT_LIST = Recup_select("planifications");
+    const CMD_LIST = Recup_liste_commandes_planification();
+    const Couleur = `couleur-${CMD_LIST[0].couleur}`;
+    const Nom = CMD_LIST[0].Nom;
+    const Id = CMD_LIST[0].Id;
+
+    let element = SELECT_LIST.replace("#COULEUR#", Couleur)
+    .replace("#VALUE#", Nom)
+    .replace("#ID#", Id);
+
+    Ajout_Periode(element, Divjour, null, null, 'heure_fixe', document.querySelector('.eqLogicAttr[data-l2key=Type_équipement]').value);
+
+    MAJ_Graphique_jour(Divjour);
+    Divjour.style.maxHeight = "fit-content";
+    Divjour.style.overflow = "visible";
+    DivprogramDays.style.overflow = "visible";
+    DivprogramDays.style.maxHeight = "fit-content";
+    Divplanification.style.overflow = "visible";
+    Divplanification.style.maxHeight = "fit-content";
+  }
+  if (event.target.closest('.bt_copier_jour')) {
+    const _target = event.target.closest('.bt_copier_jour');
+    const jour = _target.closest('th').querySelector('.JourSemaine');
+    const JSONCLIPBOARD = { data: [] };
+
+    jour.querySelectorAll('.Periode_jour').forEach((_jour) => {
+      const checkbox = _jour.querySelector('.checkbox_lever_coucher');
+      const type_periode = checkbox.getAttribute("checked") ? _jour.querySelector('.select_lever_coucher').value : "heure_fixe";
+
+      const debut_periode = _jour.querySelector('.in_timepicker').value;
+      const Id = _jour.querySelector('.select-selected').getAttribute("id");
+      const Nom = _jour.querySelector('.select-selected span').innerHTML;
+      const Couleur = recup_class_couleur(_jour.querySelector('.select-selected').classList);
+
+      JSONCLIPBOARD.data.push({ type_periode, debut_periode, Id, Nom, Couleur });
+    });
+  }
+  if (event.target.closest('.bt_coller_jour')) {
+    const _target = event.target.closest('.bt_coller_jour');
+    if (!JSONCLIPBOARD) return;
+
+    modifyWithoutSave = true;
+
+    const Divjour = _target.closest('th').querySelector('.JourSemaine');
+
+
+    Divjour.querySelectorAll('.Periode_jour').forEach((_periode) => _periode.remove());
+
+
+    const SELECT_LIST = Recup_select("planifications");
+    JSONCLIPBOARD.data.forEach((periode) => {
+      const { type_periode, Couleur, Nom, Id, debut_periode } = periode;
+
+      let element = SELECT_LIST.replace("#COULEUR#", Couleur)
+      .replace("#VALUE#", Nom)
+      .replace("#ID#", Id);
+
+      Ajout_Periode(element, Divjour, debut_periode, null, type_periode, 
+                    document.querySelector('.eqLogicAttr[data-l2key=Type_équipement]').value);
+    });
+
+    Divjour.style.overflow = "visible";
+    Divjour.style.maxHeight = "fit-content";
+
+    const collapsibleElement = _target.closest("th").querySelector(".collapsible");
+    collapsibleElement.classList.add("active", "cursor");
+    collapsibleElement.classList.remove("no-arrow");
+
+    MAJ_Graphique_jour(Divjour);
+  }
+  if (event.target.closest('.bt_vider_jour')) {
+    const _target = event.target.closest('.bt_vider_jour');
+    const collapsibleElement = _target.closest("th").querySelector(".collapsible");
+    const Divjour = _target.closest('th').querySelector('.JourSemaine');
+
+    modifyWithoutSave = true;
+    collapsibleElement.classList.remove("active", "cursor");
+    collapsibleElement.classList.add("no-arrow");
+
+    Divjour.style.overflow = "hidden";
+    Divjour.style.maxHeight = "0";
+
+    Divjour.querySelectorAll('.Periode_jour').forEach((_periode) => _periode.remove());
+
+    MAJ_Graphique_jour(Divjour);
+  }
+  if (event.target.closest('.collapsible')) {
+    const _target = event.target.closest('.collapsible');
+    const Divjour = _target.closest("th").querySelector(".JourSemaine");
+
+    _target.classList.toggle("active");
+
+    const isVisible = Divjour.style.overflow === "visible";
+    Divjour.style.overflow = isVisible ? "hidden" : "visible";
+    Divjour.style.maxHeight = isVisible ? "0px" : "fit-content";
+  }
+
+});
+document.getElementById('tab_planifications').addEventListener('focusout', function(event) {
+  const _target = event.target.closest('.in_timepicker');
+  if (_target) {
+    const time = _target.value;
+    const time_old = _target.getAttribute("value");
+    if (time !== time_old) {
+      modifyWithoutSave = true;
+      _target.setAttribute("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]));
+      _target.setAttribute("value", time);
+
+      const Divjour = _target.closest('.JourSemaine');
+      triage_jour(Divjour);
+      MAJ_Graphique_jour(Divjour);
+    }
+  }
+});
+document.getElementById('tab_planifications').addEventListener('change', function(event) {
+  const _target = event.target.closest('.select_lever_coucher');
+  if (_target) {
+    modifyWithoutSave = true;
+    const Divjour = _target.closest('.JourSemaine');
+    const Periode = _target.closest('.Periode_jour');
+    let numero_cette_periode = 0;
+    let autre_valeur_select_lever_coucher = "";
+
+    Periode.classList.forEach((classe) => {
+      if (classe.includes("periode")) {
+        numero_cette_periode = classe.substr(7);
+      }
+    });
+
+    Divjour.querySelectorAll('.checkbox_lever_coucher').forEach((checkbox) => {
+      if (checkbox.getAttribute("checked") === 'true') {
+        const cette_periode = checkbox.closest('.Periode_jour');
+        cette_periode.classList.forEach((classe) => {
+          if (classe.includes("periode") && classe.substr(7) !== numero_cette_periode) {
+            autre_valeur_select_lever_coucher = cette_periode.querySelector('.select_lever_coucher').value;
+          }
+        });
+      }
+    });
+
+    if (_target.value === "lever" && autre_valeur_select_lever_coucher === "lever") {
+      modifyWithoutSave = false;
+      Periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 1);
+      Periode.querySelector('.select_lever_coucher').value = 'coucher';
+    } else if (_target.value === "coucher" && autre_valeur_select_lever_coucher === "coucher") {
+      modifyWithoutSave = false;
+      Periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 0);
+      Periode.querySelector('.select_lever_coucher').value = 'lever';
+    }
+
+    let time;
+    const timepicker = Periode.querySelector('.in_timepicker');
+    const dayClasses = {
+      "Lundi": ".Heure_action_suivante_Lever.Lundi",
+      "Mardi": ".Heure_action_suivante_Lever.Mardi",
+      "Mercredi": ".Heure_action_suivante_Lever.Mercredi",
+      "Jeudi": ".Heure_action_suivante_Lever.Jeudi",
+      "Vendredi": ".Heure_action_suivante_Lever.Vendredi",
+      "Samedi": ".Heure_action_suivante_Lever.Samedi",
+      "Dimanche": ".Heure_action_suivante_Lever.Dimanche"
+    };
+
+    for (const day in dayClasses) {
+      if (Divjour.classList.contains(day)) {
+        time = document.querySelector(`#tab_gestion_heures_lever_coucher ${dayClasses[day]}`).innerText;
+      }
+    }
+
+    if (_target.value !== 'lever') {
+      timepicker.setAttribute("selectedIndex", 1);
+    }
+
+    timepicker.setAttribute("oldvalue", timepicker.getAttribute("value"));
+    timepicker.setAttribute("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]));
+    timepicker.setAttribute("value", time);
+
+    triage_jour(Divjour);
+    MAJ_Graphique_jour(Divjour);
+  }
+});
+document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('change', function(event) {
+  const adjustTimeForLeverCoucher = (_target, selector) => {
+    _target=_target.closest(".well")
+
+    adjustNextActionTime(
+      _target.querySelector(`.Heure${selector}`).innerText,
+      _target.querySelector(`.Heure${selector}Min`).value,
+      _target.querySelector(`.Heure${selector}Max`).value,
+      _target.querySelector(`.Heure_action_suivante_${selector}`),
+    );
+  };
+
+  const toggleDaysDisplay = (selectedDay) => {
+    const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+    const tabGestion = document.getElementById('tab_gestion_heures_lever_coucher');
+
+    days.forEach(day => {
+      const displayStyle = day === selectedDay ? "block" : "none";
+      tabGestion.querySelector(`.${day}`).style.display = displayStyle;
+    });
+
+    tabGestion.querySelector('.bt_copier_lever_coucher').style.display = selectedDay === 'Dimanche' ? "none" : "inline-block";
+  };
+
+  const _target = event.target;
+
+  if (_target.closest('.HeureLeverMin') || _target.closest('.HeureLeverMax')) {
+    adjustTimeForLeverCoucher(_target, 'Lever');
+  }
+
+  if (_target.closest('.HeureCoucherMin') || _target.closest('.HeureCoucherMax')) {
+    adjustTimeForLeverCoucher(_target, 'Coucher');
+  }
+
+  if (_target.closest('.selection_jour')) {
+    toggleDaysDisplay(_target.value);
+  }
+});
+document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('click', function(event) {
+  const _target = event.target.closest('.bt_copier_lever_coucher');
+  if (!_target) return;
+
+  const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+  const tabGestion = document.getElementById('tab_gestion_heures_lever_coucher');
+  let Ce_jour, jour_min;
+
+  jours.forEach((jour, index) => {
+    if (tabGestion.querySelector(`.${jour}`).style.display === "block") {
+      Ce_jour = jour;
+      jour_min = jours[index + 1] || null; 
+    }
+  });
+
+  if (!Ce_jour || !jour_min) return; 
+
+  let jour_trouvé = false;
+  tabGestion.querySelectorAll('.in_timepicker').forEach((input) => {
+    const jour_courant = input.classList[2];
+    if (jour_courant === jour_min || jour_trouvé) {
+      jour_trouvé = true;
+      ['HeureLeverMin', 'HeureLeverMax', 'HeureCoucherMin', 'HeureCoucherMax'].forEach((classe) => {
+        tabGestion.querySelector(`.${classe}.${jour_courant}`).value = 
+          tabGestion.querySelector(`.${classe}.${Ce_jour}`).value;
+      });
+    }
+  });
+});
+document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('click', function(event) {
+  const _target = event.target.closest('.bt_copier_lever_coucher');
+  if (_target) {
+    let jour_trouvé = false;
+    let Ce_jour = "", jour_min = "";
+
+    const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    jours.forEach((jour, index) => {
+      const jourElement = document.querySelector(`#tab_gestion_heures_lever_coucher .${jour}`);
+      if (jourElement.style.display === "block") {
+        Ce_jour = jour;
+        jour_min = jours[(index + 1) % jours.length];
+      }
+    });
+
+    document.querySelector('#tab_gestion_heures_lever_coucher').querySelectorAll('.in_timepicker').forEach(function(input) {
+      if (input.classList[2] === jour_min || jour_trouvé) {
+        jour_trouvé = true;
+        const tab_gestion = document.querySelector('#tab_gestion_heures_lever_coucher');
+
+        ["HeureLeverMin", "HeureLeverMax", "HeureCoucherMin", "HeureCoucherMax"].forEach((timeClass) => {
+          tab_gestion.querySelector(`.${timeClass}.${input.classList[2]}`).value = 
+            tab_gestion.querySelector(`.${timeClass}.${Ce_jour}`).value;
+        });
+      }
+    });
+  }
+});
+document.getElementById('tab_commandes').addEventListener('click', function(event) {
+  let _target;
+
+  if (_target = event.target.closest('.select-selected')) {
+    modifyWithoutSave = false;
+    event.stopPropagation();
+    closeAllSelect(_target);
+    _target.nextSibling.classList.toggle("select-hide");
+    _target.classList.toggle("select-arrow-active");
+  } else if (_target = event.target.closest('.select-items div')) {
+    modifyWithoutSave = true;
+    const select = _target.parentNode.previousSibling;
+    select.innerHTML = _target.innerHTML;
+    select.classList.remove(recup_class_couleur(select.classList));
+    select.classList.add(recup_class_couleur(_target.classList));
+    select.setAttribute("Id", _target.getAttribute("Id"));
+
+    const y = _target.parentNode.getElementsByClassName("same-as-selected");
+    Array.from(y).forEach(item => item.classList.remove("same-as-selected"));
+
+    _target.classList.add("same-as-selected");
+    select.click();
+  } else if (_target = event.target.closest('.listCmdAction')) {
+    const el = _target.closest('div div').querySelector('.cmdAttr[data-l2key=commande]');
+    jeedom.cmd.getSelectModal({ cmd: { type: 'action' } }, function(result) {
+      el.value = result.human;
+      jeedom.cmd.displayActionOption(el.value, '', function(html) {
+        el.closest('div td').querySelector('.actionOptions').innerHTML = html;
+      });
+    });
+  } else if (_target = event.target.closest('.listAction')) {
+    const el = _target.closest('div div').querySelector('.cmdAttr[data-l2key=commande]');
+    jeedom.getSelectActionModal({}, function(result) {
+      el.value = result.human;
+      jeedom.cmd.displayActionOption(el.value, '', function(html) {
+        el.closest('div td').querySelector('.actionOptions').innerHTML = html;
+      });
+    });
+  } else if (_target = event.target.closest('.tester')) {
+    jeedom.cmd.execute({ id: _target.closest('.cmd').getAttribute('data-cmd_id') });
+  }
+});
+document.getElementById('tab_commandes').addEventListener('focusout', function(event) {
+  const _target = event.target.closest('.cmdAction');
+  if (_target) {
+    jeedom.cmd.displayActionOption(_target.value, _target.value.options, function(html) {
+      _target.closest('div td').querySelector('.actionOptions').innerHTML = html;
+    });
+  }
+});
+document.getElementById('menu_tab_Gestion_planifications').addEventListener('click', function(event) {
+  const textareas = document.querySelectorAll('textarea');
+
+  textareas.forEach((textarea) => {
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  });
+});
+document.getElementById('tab_Gestion_planifications').addEventListener('click', function(event) {
+  let _target;
+
+  if (_target = event.target.closest('.listCmdInfoWindow')) {
+    const textarea = _target.closest('div').querySelector('textarea');
+
+    jeedom.cmd.getSelectModal({ cmd: { type: 'info' } }, function(result) {
+      textarea.value += result.human;
+      textarea.style.height = `${textarea.scrollHeight}px`;
+
+      const evaluation = textarea.closest('.GestionPlanification').querySelector('.Evaluation');
+      const resultEvaluation = textarea.closest('.GestionPlanification').querySelector('.RésultatEvaluation');
+
+      evaluation.classList.add("alert-info");
+      resultEvaluation.classList.add("alert-info");
+
+      jeedom.scenario.testExpression({
+        expression: textarea.value,
+        error: function(error) {
+          jeedomUtils.showAlert({
+            message: error.message,
+            level: 'danger'
+          });
+        },
+        success: function(data) {
+          if (data.correct === 'nok') {
+            evaluation.innerHTML = "Attention : il doit y avoir un souci avec l'expression";
+            resultEvaluation.innerHTML = "";
+            evaluation.classList.add("alert-danger");
+            textarea.closest('.GestionPlanification').querySelector('.ConditionId').innerHTML = '';
+            textarea.closest('.GestionPlanification').querySelector('.ConditionId').classList.remove("alert-info");
+          } else {
+            domUtils.ajax({
+              type: "POST",
+              url: "plugins/planification/core/ajax/planification.ajax.php",
+              data: {
+                action: "fromHumanReadable",
+                expression: textarea.value
+              },
+              global: false,
+              async: false,
+              error: function(request, status, error) {
+                handleAjaxError(request, status, error);
+              },
+              success: function(data) {
+                if (data.state !== 'ok') {
+                  jeedomUtils.showAlert({
+                    message: data.result,
+                    level: 'danger'
+                  });
+                  return;
+                }
+                const conditionId = textarea.closest('.GestionPlanification').querySelector('.ConditionId');
+                conditionId.innerHTML = data.result;
+                if (evaluation.innerHTML !== '') {
+                  conditionId.classList.add("alert-info");
+                }
+              }
+            });
+
+            evaluation.innerHTML = data.evaluate;
+            resultEvaluation.innerHTML = data.result;
+            evaluation.classList.add("alert-info");
+            evaluation.classList.remove("alert-danger");
+
+            if (data.result) {
+              resultEvaluation.classList.remove("alert-danger");
+              resultEvaluation.classList.add("alert-success");
+            } else {
+              resultEvaluation.classList.add("alert-danger");
+              resultEvaluation.classList.remove("alert-success");
+            }
+          }
+        }
+      });
+    });
+  }
+
+  if (_target = event.target.closest('.bt_vider_textarea')) {
+    modifyWithoutSave = true;
+    let el = _target.closest('div').querySelector('input') || _target.closest('div').querySelector('textarea');
+    el.value = '';
+
+    const gestionPlanification = _target.closest('.GestionPlanification');
+    gestionPlanification.querySelector('.ConditionId').innerHTML = '';
+    gestionPlanification.querySelector('.Evaluation').innerHTML = '';
+    gestionPlanification.querySelector('.RésultatEvaluation').innerHTML = '';
+
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach((textarea) => {
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    });
+  }
+});
+document.getElementById('tab_Gestion_planifications').addEventListener('keypress', function(event) {
+  const _target = event.target.closest('textarea');
+  if (_target) {
+    modifyWithoutSave = true;
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach((textarea) => {
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    });
+  }
+});
+document.getElementById('tab_Gestion_planifications').addEventListener('change', function(event) {
+  const textareas = document.querySelectorAll('textarea');
+
+  textareas.forEach((textarea) => {
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  });
+});
+document.getElementById('tab_Ouvrants').addEventListener('click', function(event) {
+  let _target;
+
+  if (_target = event.target.closest('.ajoutOuvrant')) {
+    ajoutOuvrant();
+  }
+
+  if (_target = event.target.closest('.bt_removeAction')) {
+    const type = _target.getAttribute('data-type');
+    const closestElement = _target.closest(`.${type}`);
+    if (closestElement) {
+      closestElement.remove();
+    }
+  }
+
+  if (_target = event.target.closest('.listCmdInfoWindow')) {
+    let el = _target.closest('div').querySelector('input') || _target.closest('div').querySelector('textarea');
+
+    jeedom.cmd.getSelectModal({ cmd: { type: 'info' } }, function(result) {
+      if (el.tagName.toLowerCase() === 'textarea') {
+        el.value += result.human;
+      } else {
+        el.value = result.human;
+      }
+    });
+  }
+});
+document.getElementById('tab_Paramètres').addEventListener('click', function(event) {
+  let _target;
+
+  if (_target = event.target.closest('.expressionAttr[data-l2key="Type_équipement_pilote"]')) {
+    modifyWithoutSave = true;
+    if (_target.value !== '') {
+     
+      if (_target.options[_target.selectedIndex].text !== 'Aucun') {
+        document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'block';
+
+        let options = '';
+        jeedom.eqLogic.byType({
+          type: _target.options[_target.selectedIndex].text,
+          error: function(error) {
+            jeedomUtils.showAlert({ message: error.message, level: 'danger' });
+          },
+          success: function(eqLogics) {
+            modifyWithoutSave = false;
+
+            eqLogics.forEach(function(eqLogic) {
+              options += `<option id="#${eqLogic.id}#">{{${eqLogic.name}}}</option>`;
+            });
+            document.querySelector('#tab_Paramètres .expressionAttr[data-l2key="Equipement_pilote"]').innerHTML = options;
+          }
+        });
+      } else {
+        document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'none';
+        document.querySelector('#tab_Paramètres .expressionAttr[data-l2key="Equipement_pilote"]').innerHTML = '';
+      }
+    } else {
+      if (_target.options[_target.selectedIndex] === undefined) {
+        document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'none';
+      } else if (_target.options[_target.selectedIndex].text !== 'Aucun') {
+        document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'block';
+      } else {
+        document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'none';
+      }
+    }
+  }
+
+  if (_target = event.target.closest('.btn_numeric')) {
+    const el = _target.closest('.numeric-updown').querySelector('input');
+    if (_target.classList.contains('up') && parseInt(el.value) < parseInt(el.max)) {
+      modifyWithoutSave = true;
+      el.value = parseInt(el.value) + 1;
+      el.setAttribute("value", el.value);
+    }
+    if (_target.classList.contains('down') && parseInt(el.value) > parseInt(el.min)) {
+      modifyWithoutSave = true;
+      el.value = parseInt(el.value) - 1;
+      el.setAttribute("value", el.value);
+    }
+  }
+});
+document.getElementById('tab_commandes').addEventListener('dblclick', function(event) {
+  event.preventDefault();
+  event.stopPropagation();
+});
+document.getElementById('tab_Paramètres').addEventListener('dblclick', function(event) {
+  event.preventDefault();
+  event.stopPropagation();
+});
+
+set_sortable(document.getElementById('div_planifications'),'.planification','.planification-body')
+set_sortable(document.getElementById('div_GestionPlanifications'),'.GestionPlanification','.input-group')
+set_sortable(document.getElementById('table_infos'),'tbody','')
+set_sortable(document.getElementById('table_actions'),'tbody','.input-group,custom-select')
+afficherSectionsParType(typesEquipements);
+
+function afficherSectionsParType(types) {
+  types.forEach(type => {
+    const container = document.querySelector(`.eqLogicThumbnailContainer.${type}`);
+    const sidenav = document.querySelector(`.bs-sidenav.${type}`);
+    const cards = document.querySelectorAll(`div .${type} .eqLogicDisplayCard`);
+    if (cards.length !== 0) {
+      if (container) container.style.display = 'block';
+      if (sidenav) sidenav.style.display = 'block';
+    }
+  });
+}
+function set_sortable(Element_id,draggable,filter){
+  new Sortable(Element_id, {
+    delay: 500,
+    draggable: draggable,
+    direction: 'vertical',
+    filter: filter,
+    preventOnFilter: false,
+    chosenClass: 'dragSelected',
+    animation: 150,
+    ghostClass: 'blue-background-class',
+    onUpdate: function(evt) {
+      jeeFrontEnd.modifyWithoutSave = true
+    }
+  })
+}
+function adjustNextActionTime(Heure_lever_coucher,nouvelle_heure_début,nouvelle_heure_fin,nextActionTimeElement) { 
+  const date_heure_début = new Date('1970-01-01T' + nouvelle_heure_début);
+  const date_heure_fin = new Date('1970-01-01T' + nouvelle_heure_fin);
+  const Date_heure_lever_coucher = new Date('1970-01-01T' + Heure_lever_coucher);
+  nextActionTimeElement.innerText = Heure_lever_coucher; 
+  if (date_heure_début > Date_heure_lever_coucher) { 
+    nextActionTimeElement.innerText = nouvelle_heure_début; 
+  } 
+
+  if (date_heure_fin < Date_heure_lever_coucher) { 
+    nextActionTimeElement.innerText = nouvelle_heure_fin; 
+  } 
+
+}
+function convertTimeToInt(time) {
+  const [hours, minutes] = time.split(':').map(Number);
+  return (hours * 60) + minutes;
+}
+function closeAllSelect(elmnt) {
+  const x = document.getElementsByClassName("select-items");
+  const y = document.getElementsByClassName("select-selected");
+  const arrNo = [];
+
+  for (let i = 0; i < y.length; i++) {
+    if (elmnt === y[i]) {
+      arrNo.push(i);
+    } else {
+      y[i].classList.remove("select-arrow-active");
+    }
+  }
+
+  for (let i = 0; i < x.length; i++) {
+    if (!arrNo.includes(i)) {
+      x[i].classList.add("select-hide");
+    }
+  }
+}
+function recup_class_couleur(classes) {
+  let class_color = "erreur";
+  try {
+    for (let classe in classes) {
+      if (classes[classe].includes("couleur")) {
+        class_color = classes[classe];
+        break;
+      }
+    }
+  } catch (err) {
+    // Ignorer l'erreur
+  }
+
+  return class_color;
+}
+function ajoutOuvrant() {
+  const div = `
+            <div class="Ouvrant">
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">{{Ouvrant}}</label>
+                    <div class="col-sm-11">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <a class="btn btn-default bt_removeAction roundedLeft" data-type="Ouvrant">
+                                    <i class="fas fa-minus-circle bt_removeAction" data-type="Ouvrant"></i>
+                                </a>
+                            </span>
+                            <input class="expressionAttr form-control cmdInfo" data-l1key="Ouvrants" data-l2key="Commande" />
+                            <span class="input-group-btn">
+                                <a class="btn btn-default listCmdInfoWindow roundedRight">
+                                    <i class="fas fa-list-alt"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{{Éteindre si ouvert plus de}} <sub>(min.)</sub></label>
+                    <div class="col-sm-1">
+                        <input class="expressionAttr form-control cmdInfo" data-l1key="Ouvrants" placeholder=1 data-l2key="Délai_ouverture" />
+                    </div>
+                    <label class="col-sm-2 control-label">{{Rallumer si fermé depuis}} <sub>(min.)</sub></label>
+                    <div class="col-sm-1">
+                        <input class="expressionAttr form-control cmdInfo" data-l1key="Ouvrants" placeholder=1 data-l2key="Délai_fermeture" />
+                    </div>
+                    <label class="col-sm-2 control-label">{{Envoyer une alerte}}</label>
+                    <div class="col-sm-1">
+                        <input type="checkbox" class="expressionAttr" data-l1key="Ouvrants" data-l2key="Alerte" />
+                    </div>
+                </div>
+            </div>
+        `;
+  document.querySelector('#div_ouvrants').insertAdjacentHTML('beforeend', div);
+}
+function AjoutGestionPlanification(planification) {
+  if (init(planification.nom) === '') return;
+  if (init(planification.Id) === '') return;
+
+  const div = `
+            <div class="GestionPlanification ${planification.Id}" style="padding: 20px; margin-bottom: 10px; background-color: rgb(var(--bg-color));">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="col-sm-12 Nom_planification">${planification.nom}</label>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-btn" style="vertical-align: top !important;">
+                            <a class="btn btn-default bt_vider_textarea roundedLeft" data-type="GestionPlanification">
+                                <i class="fas fa-trash bt_vider_textarea" data-type="GestionPlanification"></i>
+                            </a>
+                        </span>
+                        <textarea class="expressionAttr form-control cmdInfo" data-l1key="Gestion_planifications" data-l2key="Conditions" 
+                            PlanificationId="${planification.Id}" NomPlanification="${planification.nom}" 
+                            style="height: 32px !important; overflow: hidden !important; resize: none !important;"></textarea>
+                        <span class="input-group-btn" style="vertical-align: top !important;">
+                            <a class="btn btn-default listCmdInfoWindow roundedRight">
+                                <i class="fas fa-list-alt"></i>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="input-group" style="padding-left: 32px;">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" class="expressionAttr" data-l1key="Gestion_planifications" data-l2key="Stop" />
+                            Arrêter si les conditions sont remplies
+                        </label>
+                    </div>
+                    <div class="input-group" style="padding-left: 32px;">
+                        <label>Test de l'expression:<label class='ConditionId' style="margin: 0px !important; width: auto; padding: 0px !important;"></label></label>
+                    </div>
+                    <div class="input-group" style="padding-left: 32px;">
+                        <label>Evaluation de l'expression:<label class='Evaluation' style="margin: 0px !important; width: auto; padding: 0px !important;"></label></label>
+                    </div>
+                    <div class="input-group" style="padding-left: 32px;">
+                        <label>Resultat de l'expression:<label class='RésultatEvaluation'></label></label>
+                    </div>
+                </div>
+            </div>
+        `;
+
+  document.querySelector('#div_GestionPlanifications').insertAdjacentHTML('beforeend', div);
+  const textarea = document.querySelector('#div_GestionPlanifications').lastElementChild.querySelector('textarea');
+  textarea.addEventListener('input', function() {
+    textarea.style.height = `${textarea.scrollHeight}px`;
+    const evaluation = textarea.closest('.GestionPlanification').querySelector('.Evaluation');
+    const resultEvaluation = textarea.closest('.GestionPlanification').querySelector('.RésultatEvaluation');
+    const conditionId = textarea.closest('.GestionPlanification').querySelector('.ConditionId');
+
+    if (textarea.value !== '') {
+      evaluation.classList.add("alert-info");
+      resultEvaluation.classList.add("alert-info");
+
+      jeedom.scenario.testExpression({
+        expression: textarea.value,
+        error: function(error) {
+          jeedomUtils.showAlert({
+            message: error.message,
+            level: 'danger'
+          });
+        },
+        success: function(data) {
+          if (data.correct === 'nok') {
+            evaluation.innerHTML = "Attention : il doit y avoir un souci avec l'expression";
+            resultEvaluation.innerHTML = "";
+            evaluation.classList.add("alert-danger");
+            conditionId.innerHTML = '';
+            conditionId.classList.remove("alert-info");
+          } else {
+            domUtils.ajax({
+              type: "POST",
+              url: "plugins/planification/core/ajax/planification.ajax.php",
+              data: {
+                action: "fromHumanReadable",
+                expression: textarea.value
+              },
+              global: false,
+              async: false,
+              error: function(request, status, error) {
+                handleAjaxError(request, status, error);
+              },
+              success: function(data) {
+                if (data.state !== 'ok') {
+                  jeedomUtils.showAlert({
+                    message: data.result,
+                    level: 'danger'
+                  });
+                  return;
+                }
+                conditionId.innerHTML = data.result;
+                if (evaluation.innerHTML !== '') {
+                  conditionId.classList.add("alert-info");
+                }
+              }
+            });
+            evaluation.innerHTML = data.evaluate;
+            resultEvaluation.innerHTML = data.result;
+            evaluation.classList.add("alert-info");
+            evaluation.classList.remove("alert-danger");
+            resultEvaluation.classList.toggle("alert-success", data.result);
+            resultEvaluation.classList.toggle("alert-danger", !data.result);
+          }
+        }
+      });
+    } else {
+      evaluation.innerHTML = "";
+      resultEvaluation.innerHTML = "";
+      conditionId.innerHTML = '';
+      evaluation.classList.remove("alert-danger", "alert-info");
+      resultEvaluation.classList.remove("alert-danger", "alert-info");
+      conditionId.classList.remove("alert-info");
+    }
+  });
+
+  textarea.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  });
 }
 function Ajoutplanification(_planification) {
-    var JOURS = ['{{Lundi}}', '{{Mardi}}', '{{Mercredi}}', '{{Jeudi}}', '{{Vendredi}}', '{{Samedi}}', '{{Dimanche}}']
-    if (init(_planification.nom) == '') return
-    if (init(_planification.Id) == '') { _planification.Id = jeedomUtils.uniqId(); }
-    var random = Math.floor((Math.random() * 1000000) + 1)
-    var div = '<div class="planification panel panel-default" Id=' + _planification.Id + '>'
-    div += '<div class="panel-heading">'
-    div += '<h3 class="panel-title" style="padding-bottom: 4px;">'
-    div += '<div class="planification_collapsible cursor" style="height:32px;padding-top: 10px;width: calc(100% - 345px)">'
-    div += '<span class="nom_planification">' + _planification.nom + '</span>'
-    div += '<span class="input-group-btn pull-right" style="top: -5px!important;">'
-    div += '<a class="btn btn-sm bt_renommer_planification btn-warning roundedLeft"><i class="fas fa-copy"></i> {{Renommer}}</a>'
-    div += '<a class="btn btn-sm bt_dupliquer_planification btn-primary roundedLeft"><i class="fas fa-copy"></i> {{Dupliquer}}</a>'
-    div += '<a class="btn btn-sm bt_appliquer_planification btn-success" title="Appliquez la planification maintenant"><i class="fas fa-check-circle"></i> {{Appliquer}}</a>'
-    div += '<a class="btn btn-sm bt_supprimer_planification btn-danger roundedRight"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>'
-    div += '</span>'
-    div += '</div>'
-    div += '</h3>'
-    div += '</div>'
-    div += '<div class="planification-body" style=" background-color: rgb(var(--defaultBkg-color))  !important;>'
-    div += '<form class="form-horizontal" role="form">'
-    div += '<div class="div_programDays" style="width:100%">'
-    div += '<table style="width:100%">'
-    div += '<tr>'
-    JOURS.forEach(function(jour) {
-        div += '<th style="width:14%;text-align: center;vertical-align: top;">'
-        div += '<div class="collapsible no-arrow">'
-        div += jour
-        div += '</div>'
-        div += '<div class="input-group" style="display:inline-flex">'
-        div += '<span>'
-        div += '<span><i class="fa fa-plus-circle cursor bt_ajout_periode" title="{{Ajouter une période}}"></i> </span>'
-        div += '<span><i class="fas fa-sign-out-alt cursor bt_copier_jour" title="{{Copier le jour}}"></i> </span>'
-        div += '<span><i class="fas fa-sign-in-alt cursor bt_coller_jour" title="{{Coller le jour}}"></i> </span>'
-        div += '<span><i class="fa fa-minus-circle cursor bt_vider_jour" title="{{Vider le jour}}"></i> </span>'
-        div += '</span>'
-        div += '</div>'
-        div += '<br></br>'
+  const JOURS = ['{{Lundi}}', '{{Mardi}}', '{{Mercredi}}', '{{Jeudi}}', '{{Vendredi}}', '{{Samedi}}', '{{Dimanche}}'];
+  if (init(_planification.nom) === '') return;
+  if (init(_planification.Id) === '') { _planification.Id = jeedomUtils.uniqId(); }
+  const random = Math.floor((Math.random() * 1000000) + 1);
 
-        div += '<div class="JourSemaine ' + jour + '" style="width:100%; float:left">'
+  let div = `
+            <div class="planification panel panel-default" Id="${_planification.Id}" style="border-color: var(--logo-primary-color) !important;">
+                <div class="panel-heading">
+                    <h3 class="panel-title" style="padding-bottom: 4px;">
+                        <div class="planification_collapsible cursor" style="height:32px; padding-top: 10px; width: calc(100% - 345px);">
+                            <span class="nom_planification">${_planification.nom}</span>
+                            <span class="input-group-btn pull-right" style="top: -5px!important;">
+                                <a class="btn btn-sm bt_renommer_planification btn-warning roundedLeft"><i class="fas fa-copy"></i> {{Renommer}}</a>
+                                <a class="btn btn-sm bt_dupliquer_planification btn-primary roundedLeft"><i class="fas fa-copy"></i> {{Dupliquer}}</a>
+                                <a class="btn btn-sm bt_appliquer_planification btn-success" title="Appliquez la planification maintenant"><i class="fas fa-check-circle"></i> {{Appliquer}}</a>
+                                <a class="btn btn-sm bt_supprimer_planification btn-danger roundedRight"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
+                            </span>
+                        </div>
+                    </h3>
+                </div>
+                <div class="planification-body" style="background-color: rgb(var(--defaultBkg-color)) !important;">
+                    <form class="form-horizontal" role="form">
+                        <div class="div_programDays" style="width:100%;">
+                            <table style="width:100%;">
+                                <tr>
+        `;
 
-        div += '</div>'
-        div += '</td>'
-    })
-    div += '</tr>'
-    div += '</table>'
+  JOURS.forEach(jour => {
+    div += `
+                <th style="width:14%; text-align: center; vertical-align: top;">
+                    <div class="collapsible no-arrow">${jour}</div>
+                    <div class="input-group" style="display:inline-flex;">
+                        <span>
+                            <i class="fa fa-plus-circle cursor bt_ajout_periode" title="{{Ajouter une période}}"></i>
+                            <i class="fas fa-sign-out-alt cursor bt_copier_jour" title="{{Copier le jour}}"></i>
+                            <i class="fas fa-sign-in-alt cursor bt_coller_jour" title="{{Coller le jour}}"></i>
+                            <i class="fa fa-minus-circle cursor bt_vider_jour" title="{{Vider le jour}}"></i>
+                        </span>
+                    </div>
+                    <br>
+                    <div class="JourSemaine ${jour}" style="width:100%; float:left;"></div>
+                </th>
+            `;
+  });
 
-    div += '</div>'
-        //graphiques:
-    div += '<div class="graphJours" style="width:100%; clear:left">'
-    div += '<br></br>'
+  div += `
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="graphJours" style="width:100%; clear:left;">
+                            <br>
 
-    div += '<div style="width:80px; display:inline-block;"></div>'
-    div += '<div style="width:calc(100% - 80px); display:inline-block;">'
-    div += '<div style="width: 25%; height:18px; display:inline-block;">00:00</div>'
-    div += '<div style="width: 25%; height:18px; display:inline-block; position:inherit;">06:00</div>'
-    div += '<div style="width: 25%; height:18px; display:inline-block; position:inherit;">12:00</div>'
-    div += '<div style="width: 25%; height:18px; display:inline-block;">18:00</div>'
-    div += '</div>'
-    JOURS.forEach(function(jour) {
-        div += '<div class="nom_graphique" style="width:80px; display:inline-block;">'
-        div += jour
-        div += '</div>'
-        div += '<div class="graphique_jour_' + jour + '" style="width:calc(100% - 80px); display:inline-block;">'
-        div += '</div>'
-    })
-    div += '</div>'
-    div += '</div>'
-    div += '</form>'
-    div += '</div>'
-    div += '</div>'
+                            <div style="width:calc(100% - 20px); display:inline-flex;">
+                                <div class="nom_graphique" style="width:80px; display:inline-block;"></div>
+                                <div style="width: 25%; height:18px; display:inline-block;">00:00</div>
+                                <div style="width: 25%; height:18px; display:inline-block; position:inherit;">06:00</div>
+                                <div style="width: 25%; height:18px; display:inline-block; position:inherit;">12:00</div>
+                                <div style="width: 25%; height:18px; display:inline-block;">18:00</div>
+                            </div>
+        `;
 
-    document.getElementById('div_planifications').innerHTML =div
+  JOURS.forEach(jour => {
+    div += `
+                            <div style="width:calc(100% - 20px);display:inline-flex;margin-top: 1px;"">
+                                <div class="nom_graphique" style="width:80px; display:inline-block;">${jour}</div>
+                                <div class="graphique_jour_${jour}" style="width:calc(100% - 20px);height: 22px;margin: 1px;display: inline-flex;"></div>
+                            </div>
+            `;
+  });
 
+  div += `
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+
+  document.getElementById('div_planifications').insertAdjacentHTML('beforeend', div);
 }
-function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = null, Type_periode = false) {
-    console.log(Div_jour)
-    Periode_jours = Div_jour.querySelectorAll('.Periode_jour')
-    prochain_debut = "00:00"
-    if (Periode_jours.length > 0) {
-        periode_precedente = Periode_jours[Periode_jours.length - 1]
-        dernier_debut = periode_precedente.querySelector('.in_timepicker').value
+function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = null, Type_periode = false, type_eqlogic) {
+  const Periode_jours = Div_jour.querySelectorAll('.Periode_jour');
+  let prochain_debut = "00:00";
 
-        prochain_debut_int = parseInt(dernier_debut.split(':')[0]) * 60 + parseInt(dernier_debut.split(':')[1]) + 1
-        heures = Math.trunc(prochain_debut_int / 60)
-        heures_str = "0" + heures
-        heures_str = heures_str.substr(heures_str.length - 2)
-        minutes_str = "0" + (prochain_debut_int - (heures * 60))
-        minutes_str = minutes_str.substr(minutes_str.length - 2)
-        prochain_debut = heures_str + ":" + minutes_str
+  if (Periode_jours.length > 0) {
+    const periode_precedente = Periode_jours[Periode_jours.length - 1];
+    const dernier_debut = periode_precedente.querySelector('.in_timepicker').value;
 
-        if (time == null) {
-            time_int = parseInt(parseInt(dernier_debut.split(':')[0] * 60) + parseInt(dernier_debut.split(':')[1]))
+    let prochain_debut_int = parseInt(dernier_debut.split(':')[0]) * 60 + parseInt(dernier_debut.split(':')[1]) + 1;
+    let heures_str = ("0" + Math.trunc(prochain_debut_int / 60)).slice(-2);
+    let minutes_str = ("0" + (prochain_debut_int % 60)).slice(-2);
+    prochain_debut = `${heures_str}:${minutes_str}`;
 
-            if (time_int == 1439) {
-                time = ""
-            } else if (time_int >= 1425) {
-                time = 23 + ':' + 59
-            } else if (dernier_debut == "") {
-                time = ""
-            } else {
-                time = prochain_debut
-            }
+    if (time === null) {
+      const time_int = parseInt(dernier_debut.split(':')[0]) * 60 + parseInt(dernier_debut.split(':')[1]);
 
-        } else if (Mode_periode == null) {
-            last_timeStart = (parseInt(dernier_debut.split(':')[0]) * 60) + parseInt(dernier_debut.split(':')[1])
-            heure_debut = (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1])
-            if (heure_debut <= last_timeStart) {
-                time = prochain_debut
-            }
-        }
+      if (time_int === 1439) {
+        time = "";
+      } else if (time_int >= 1425) {
+        time = "23:59";
+      } else if (dernier_debut === "") {
+        time = "";
+      } else {
+        time = prochain_debut;
+      }
+    } else if (Mode_periode === null) {
+      const last_timeStart = parseInt(dernier_debut.split(':')[0]) * 60 + parseInt(dernier_debut.split(':')[1]);
+      const heure_debut = parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
+      if (heure_debut <= last_timeStart) {
+        time = prochain_debut;
+      }
     }
-    if (time == "" && Type_periode == "lever") {
-        if (Div_jour.classList.contains("Lundi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText
-        } else if (Div_jour.classList.contains("Mardi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mardi').innerText
-        } else if (Div_jour.classList.contains("Mercredi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Mercredi').innerText
-        } else if (Div_jour.classList.contains("Jeudi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Jeudi').innerText
-        } else if (Div_jour.classList.contains.containsClass("Vendredi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Vendredi').innerText
-        } else if (Div_jour.classList.contains("Samedi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Samedi').innerText
-        } else if (Div_jour.classList.contains("Dimanche")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_lever_Dimanche').innerText
-        }
-    } else if (time == "" && Type_periode == "coucher") {
+  }
 
-        if (Div_jour.classList.contains("Lundi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Lundi').innerText
-        } else if (Div_jour.classList.contains("Mardi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mardi').innerText
-        } else if (Div_jour.classList.contains("Mercredi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Mercredi').innerText
-        } else if (Div_jour.classList.contains("Jeudi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Jeudi').innerText
-        } else if (Div_jour.classList.contains("Vendredi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Vendredi').innerText
-        } else if (Div_jour.classList.contains("Samedi")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Samedi').innerText
-        } else if (Div_jour.classList.contains("Dimanche")) {
-            time = document.querySelector('#tab_gestion .Heure_action_suivante_coucher_Dimanche').innerText
-        }
-    } else if (time == null) {
-        time = '00:00'
-    }
+  if (time === "" && Type_periode === "lever") {
+    time = document.querySelector(`#tab_gestion_heures_lever_coucher .Heure_action_suivante_Lever.${Div_jour.classList[1]}`).innerText;
+  } else if (time === "" && Type_periode === "coucher") {
+    time = document.querySelector(`#tab_gestion_heures_lever_coucher .Heure_action_suivante_Coucher.${Div_jour.classList[1]}`).innerText;
+  } else if (time === null) {
+    time = "00:00";
+  }
 
-    var time_int = (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1])
-    div = '<div class="Periode_jour periode' + (Periode_jours.length + 1) + ' input-group" style="width:100% !important; line-height:1.4px !important;display: inline-grid">'
-    div += '<div>'
-    div += '<input style="width: 28px !important;font-size: 20px!important;vertical-align: middle;padding: 5px;" title="activer/désactiver heure lever/coucher de soleil" class="checkbox_lever_coucher checkbox form-control input-sm cursor" type="checkbox">'
-    div += '<select class="select_lever_coucher select form-control input-sm" style="background-color: var(--btn-default-color) !important;width: calc(100% - 65px)!important;;display: none;" title="Type planification">'
-    div += '<option value="lever" selected>Lever de soleil</option>'
-    div += '<option value="coucher">Coucher de soleil</option>'
-    div += '</select>'
-    div += '<input class="in_timepicker form-control input-sm "  time_int="' + time_int + '"  value="' + time + '" style="left:-10px;padding:0px!important;text-align:center;width:calc(100% - 80px)!important;display:inline-block;position: relative">'
-    div += '<a class="btn btn-default bt_afficher_timepicker_planification btn-sm" style="background-color: var(--form-bg-color) !important;position: absolute;right: 26px;display: inline-block"><i class="icon far fa-clock"></i></a>'
-    div += '</input>'
-    div += '<a class="btn btn-default bt_supprimer_perdiode btn-sm" style="position: absolute;right: 0px;display: inline-block" title="Supprimer cette période"><i class="fa fa-minus-circle"></i></a>'
-    div += '</div>'
-    div += '<div class="custom-select">'
-    div += PROGRAM_MODE_LIST
-    div += '</div>'
-    div += '</div>'
-    Div_jour.insertAdjacentHTML('beforeend', div)
-    nouvelle_periode = Div_jour.querySelectorAll(".Periode_jour")[Div_jour.querySelectorAll(".Periode_jour").length - 1]
+  const time_int = parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
+  let div = `
+            <div class="Periode_jour periode${Periode_jours.length + 1} input-group" style="width:100% !important; line-height:1.4px !important; display: inline-grid;">
+                <div style="display:flex;">
+                    <input style="width:28px !important; font-size:20px!important; vertical-align:middle; padding:5px; margin:0px;" 
+                        title="activer/désactiver heure lever/coucher de soleil" class="checkbox_lever_coucher checkbox form-control input-sm cursor" type="checkbox">
+                    <select class="select_lever_coucher select form-control input-sm" 
+                            style="background-color: var(--form-bg-color) !important; width:80%!important; display:none; text-align:center;">
+        `;
 
+  if (Type_periode === "coucher") {
+    div += `<option value="lever">Lever de soleil</option><option value="coucher" selected>Coucher de soleil</option>`;
+  } else if (Type_periode === "lever") {
+    div += `<option value="lever" selected>Lever de soleil</option><option value="coucher">Coucher de soleil</option>`;
+  } else {
+    div += `<option value="lever">Lever de soleil</option><option value="coucher">Coucher de soleil</option>`;
+  }
 
+  div += `
+                    </select>
+                    <input class="in_timepicker form-control input-sm" time_int="${time_int}" value="${time}" 
+                        style="padding:0px!important; text-align:center; width:80%!important; display:inline-block; position:relative;">
+                    <a class="btn btn-default bt_afficher_timepicker_planification btn-sm" 
+                    style="background-color: var(--form-bg-color) !important; padding:5px;"><i class="icon far fa-clock"></i></a>
+                    <a class="btn btn-default bt_supprimer_perdiode btn-sm" style="padding:5px;" title="Supprimer cette période">
+                        <i class="fa fa-minus-circle"></i>
+                    </a>
+                </div>
+                <div class="custom-select">
+                    ${PROGRAM_MODE_LIST}
+                </div>
+            </div>
+        `;
 
+  Div_jour.insertAdjacentHTML('beforeend', div);
+  const nouvelle_periode = Div_jour.querySelectorAll(".Periode_jour")[Periode_jours.length];
 
+  if (Mode_periode !== null) {
+    nouvelle_periode.querySelectorAll('.select-items div').forEach((item) => {
+      if (item.id === nouvelle_periode.querySelector('.select-selected').getAttribute("id")) {
+        item.classList.add('same-as-selected');
+      }
+    });
+  } else {
+    nouvelle_periode.querySelector('.select-items div').classList.add('same-as-selected');
+  }
 
-    if (Mode_periode != null) {
-        for (var i = 0; i < nouvelle_periode.querySelectorAll('.select-items div').length; i++) {
-            if (nouvelle_periode.querySelectorAll('.select-items div')[i].id == nouvelle_periode.querySelector('.select-selected').getAttribute("id")) {
-                nouvelle_periode.querySelectorAll('.select-items div')[i].classList.add('same-as-selected')
-            }
-        }
-    } else {
-        nouvelle_periode.querySelector('.select-items div').classList.add('same-as-selected')
-    }
-    if (document.querySelector('#tab_gestion .Heure_action_suivante_lever_Lundi').innerText == "") {
-        nouvelle_periode.querySelector('.checkbox_lever_coucher').style.display = 'none'
-        nouvelle_periode.querySelector('.in_timepicker').style.width = 'calc(100% - 28px)'
-    }
-    if (Type_periode == "lever") {
-        nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
-        nouvelle_periode.querySelector('.in_timepicker').style.display='none'
-        nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 0)
-        nouvelle_periode.querySelector('.select_lever_coucher').style.display='block'
-    } else if (Type_periode == "coucher") {
-        nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true)
-        nouvelle_periode.querySelector('.in_timepicker').style.display='none'
-        nouvelle_periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 1)
-        nouvelle_periode.querySelector('.select_lever_coucher').style.display='block'
-    }
-    Div_jour.closest("th").querySelector(".collapsible").classList.remove("no-arrow")
-    Div_jour.closest("th").querySelector(".collapsible").classList.add("cursor")
+  if (type_eqlogic !== "Volet") {
+    nouvelle_periode.querySelector('.checkbox_lever_coucher').style.display = 'none';
+    nouvelle_periode.querySelector('.in_timepicker').style.width = 'calc(100% - 28px)!important';
+  }
+
+  if (Type_periode !== 'heure_fixe') {
+    nouvelle_periode.querySelector('.checkbox_lever_coucher').setAttribute('checked', true);
+    nouvelle_periode.querySelector('.in_timepicker').style.display = 'none';
+    nouvelle_periode.querySelector('.bt_afficher_timepicker_planification').style.display = 'none';
+    nouvelle_periode.querySelector('.select_lever_coucher').style.display = 'block';
+  }
+
+  Div_jour.closest("th").querySelector(".collapsible").classList.remove("no-arrow");
+  Div_jour.closest("th").querySelector(".collapsible").classList.add("cursor");
 }
-
 function triage_jour(Div_jour) {
-    var div = ""
-    Array.prototype.map.call(Div_jour.querySelectorAll(".in_timepicker"), function(période) {
-        return { val: période.getAttribute("time_int"), el: période.closest(".Periode_jour ") };
-    }).sort(function(a, b) {
-        return a.val - b.val;
-    }).map(function(map) {
-        div += map.el.outerHTML
-    })
-    Div_jour.innerHTML=div
-    Div_jour.querySelectorAll('.checkbox_lever_coucher').forEach(function(checkbox) {
+  let div = "";
 
-        if (checkbox.getAttribute("checked") == 'true') {
-            checkbox.checked = true
-        } else {
-            checkbox.checked = false
-        }
-    })
-    Div_jour.querySelectorAll('.select_lever_coucher').forEach(function(lever_coucher) {
-        if (lever_coucher.getAttribute("selectedIndex") == '0') {
-            lever_coucher.value = 'lever'
-        } else if (lever_coucher.getAttribute("selectedIndex") == '1') {
-            lever_coucher.value = 'coucher'
-        }
-    })
+  Array.from(Div_jour.querySelectorAll(".in_timepicker"))
+    .map(période => {
+    return { val: période.getAttribute("time_int"), el: période.closest(".Periode_jour") };
+  })
+    .sort((a, b) => a.val - b.val)
+    .forEach(map => {
+    div += map.el.outerHTML;
+  });
+
+  Div_jour.innerHTML = div;
+
+  Div_jour.querySelectorAll('.checkbox_lever_coucher').forEach(checkbox => {
+    checkbox.checked = checkbox.getAttribute("checked") === 'true';
+  });
+
+  Div_jour.querySelectorAll('.select_lever_coucher').forEach(lever_coucher => {
+    const selectedIndex = lever_coucher.getAttribute("selectedIndex");
+    lever_coucher.value = selectedIndex === '0' ? 'lever' : selectedIndex === '1' ? 'coucher' : lever_coucher.value;
+  });
 }
-
 function MAJ_Graphique_jour(Div_jour) {
+  const graphDiv = Div_jour.closest('.planification-body').querySelector('.graphique_jour_' + Div_jour.getAttribute("class").split(' ')[1]);
 
-    graphDiv = Div_jour.closest('.planification-body').querySelector('.graphique_jour_' + Div_jour.getAttribute("class").split(' ')[1])
+  graphDiv.innerHTML = '';
+  const Periode_jour = Div_jour.querySelectorAll('.Periode_jour');
 
-    graphDiv.innerHTML = ""
-    Periode_jour = Div_jour.querySelectorAll('.Periode_jour')
-    for (var i = 0; i < Periode_jour.length; i++) {
-        var isFirst = (i == 0) ? true : false
-        var isLast = (i == Periode_jour.length - 1) ? true : false
-        var periode = Periode_jour[i]
-        var debut_periode = periode.querySelector('.in_timepicker').getAttribute("value")
-        var heure_debut = (parseInt(debut_periode.split(':')[0]) * 60) + parseInt(debut_periode.split(':')[1])
-        var delta, class_periode, mode, nouveau_graph, heure_fin, width, fin_periode, fin_periode
-        if (isFirst && heure_debut != 0) {
-            heure_fin = heure_debut
-            delta = heure_fin
-            width = (delta * 100) / 1440
-            class_periode = ""
-            mode = "Aucun"
-            nouveau_graph = '<div class="graph ' + class_periode + '" style="width:' + width + '%; height:20px; display:inline-block;">'
-            nouveau_graph += '<span class="tooltiptext  ' + class_periode + '">' + debut_periode + " - 23:59<br>" + mode + '</span>'
-            nouveau_graph += '</div>'
-            graphDiv.append(domUtils.DOMparseHTML(nouveau_graph))
-        }
-        if (isLast) {
-            heure_fin = 1439
-            fin_periode = "23:59"
-        } else {
+  for (let i = 0; i < Periode_jour.length; i++) {
+    const isFirst = (i === 0);
+    const isLast = (i === Periode_jour.length - 1);
+    const periode = Periode_jour[i];
+    const debut_periode = periode.querySelector('.in_timepicker').getAttribute("value");
+    const heure_debut = (parseInt(debut_periode.split(':')[0]) * 60) + parseInt(debut_periode.split(':')[1]);
 
-            fin_periode = Periode_jour[i + 1].querySelector('.in_timepicker').getAttribute("value")
-            heure_fin = (parseInt(fin_periode.split(':')[0]) * 60) + parseInt(fin_periode.split(':')[1])
-        }
-        delta = heure_fin - heure_debut
-        width = (delta * 100) / 1440
-        class_periode = recup_class_couleur(periode.querySelector('.select-selected').getAttribute('class').split(' '))
-        mode = periode.querySelector('.select-selected').value
-        nouveau_graph = '<div class="graph ' + class_periode + '" style="width:' + width + '%; height:20px; display:inline-block;">'
-        nouveau_graph += '<span class="tooltiptext  ' + class_periode + '">' + debut_periode + " - " + fin_periode + "<br>" + mode + '</span>'
-        nouveau_graph += '</div>'
-        graphDiv.innerHTML=nouveau_graph
+    let heure_fin, delta, width, class_periode, mode, nouveau_graph, fin_periode;
+
+    if (isFirst && heure_debut !== 0) {
+      heure_fin = heure_debut;
+      delta = heure_fin;
+      width = (delta * 100) / 1440;
+      class_periode = "";
+      mode = "Aucun";
+      nouveau_graph = `
+                    <div class="graph ${class_periode}" style="width:${width}%; height:20px; display:inline-block;">
+                        <span class="tooltiptext ${class_periode}">${debut_periode} - 23:59<br>${mode}</span>
+                    </div>`;
+      graphDiv.innerHTML += nouveau_graph;
     }
+
+    if (isLast) {
+      heure_fin = 1439;
+      fin_periode = "23:59";
+    } else {
+      fin_periode = Periode_jour[i + 1].querySelector('.in_timepicker').getAttribute("value");
+      heure_fin = (parseInt(fin_periode.split(':')[0]) * 60) + parseInt(fin_periode.split(':')[1]);
+    }
+
+    delta = heure_fin - heure_debut;
+    width = (delta * 100) / 1440;
+    class_periode = recup_class_couleur(
+      periode.querySelector('.select-selected').getAttribute('class').split(' ')
+    );
+    mode = periode.querySelector('.select-selected').innerHTML;
+    nouveau_graph = `
+                <div class="graph ${class_periode}" style="width:${width}%; height: calc(100%);; display:inline-block;">
+                    <span class="tooltiptext ${class_periode}">${debut_periode} - ${fin_periode}<br>${mode}</span>
+                </div>`;
+    graphDiv.innerHTML += nouveau_graph;
+  }
 }
 function Recup_select(type_) {
-    var SELECT = ""
-    $.ajax({
-        type: "POST",
-        url: "plugins/planification/core/ajax/planification.ajax.php",
-        data: {
-            action: "Recup_select",
-            eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
-            type: type_
-        },
-        global: true,
-        async: false,
-        error: function(request, status, error) {
-            handleAjaxError(request, status, error);
-        },
-        success: function(data) {
-            if (data.state != 'ok') {
-                $.showAlert({ message: data, level: 'danger' });
-                SELECT = "";
-            }
-            SELECT = data.result;
-        }
-    });
-    return SELECT;
+  let SELECT = "";
 
+  domUtils.ajax({
+    type: "POST",
+    url: "plugins/planification/core/ajax/planification.ajax.php",
+    data: {
+      action: "Recup_select",
+      eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
+      type: type_
+    },
+    global: true,
+    async: false,
+    error: function(request, status, error) {
+      handleAjaxError(request, status, error);
+    },
+    success: function(data) {
+      if (data.state !== 'ok') {
+        jeedomUtils.showAlert({ message: data, level: 'danger' });
+        SELECT = "";
+      } else {
+        SELECT = data.result;
+      }
+    }
+  });
+
+  return SELECT;
 }
 function Recup_liste_commandes_planification() {
-    var COMMANDE_LIST = []
-    $.ajax({
-        type: "POST",
-        url: "plugins/planification/core/ajax/planification.ajax.php",
-        data: {
-            action: "Recup_liste_commandes_planification",
-            eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
-        },
-        global: true,
-        async: false,
-        error: function(request, status, error) {
-            handleAjaxError(request, status, error);
-        },
-        success: function(data) {
-            if (data.state != 'ok') {
-                $.showAlert({ message: data, level: 'danger' });
-                COMMANDE_LIST = "";
-            }
-            COMMANDE_LIST = data.result;
+  let COMMANDE_LIST = [];
 
-        }
-    });
-    return COMMANDE_LIST;
+  domUtils.ajax({
+    type: "POST",
+    url: "plugins/planification/core/ajax/planification.ajax.php",
+    data: {
+      action: "Recup_liste_commandes_planification",
+      eqLogic_id: document.querySelector('.eqLogicAttr[data-l1key=id]').value,
+    },
+    global: true,
+    async: false,
+    error: function(request, status, error) {
+      handleAjaxError(request, status, error);
+    },
+    success: function(data) {
+      if (data.state !== 'ok') {
+        jeedomUtils.showAlert({ message: data, level: 'danger' });
+        COMMANDE_LIST = [];
+      } else {
+        COMMANDE_LIST = data.result;
+      }
+    }
+  });
 
+  return COMMANDE_LIST;
 }
+function test_Json(Json){
+  try {
+    JSON.parse(Json); 
+    return true; 
+  } catch (error) {
+    return error; 
+  }
+}
+
 function printEqLogic(_eqLogic) {
-    $('#div_planifications').empty()
-    $('#table_cmd_planification tbody').empty()
-    if (_eqLogic.configuration.etat_id != "" && typeof(_eqLogic.configuration.etat_id) != "undefined") {
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').show()
+  // Masquer les éléments spécifiques
+[".bt_image_défaut", ".Volet", ".Chauffage", ".Prise", ".PAC"].forEach(selector => {
+  document.querySelectorAll(selector).forEach(block => {
+      block.style.display = (selector === '.' + _eqLogic.configuration.Type_équipement) ? 'block' : 'none';
+  });
+});
+// Réinitialiser le contenu de certains div
+["div_planifications", "div_GestionPlanifications", "div_ouvrants"].forEach(id => {
+  document.getElementById(id).innerHTML = '';
+});
+document.getElementById("menu_tab_gestion").classList.add("hidden");
+
+let img = _eqLogic.configuration.Chemin_image || "plugins/planification/core/img/autre.png";
+
+// Initialize variables
+const nom_planification_erreur = [];
+const SELECT_LIST = Recup_select("planifications");
+const CMD_LIST = Recup_liste_commandes_planification();
+
+const eqLogicConfig = _eqLogic.configuration;
+document.querySelector('#tab_eqlogic .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').value = eqLogicConfig.Duree_mode_manuel_par_defaut || 0;
+document.querySelector('#tab_eqlogic .eqLogicAttr[data-l2key=affichage_heure]').checked = eqLogicConfig.affichage_heure === "1";
+
+if (_eqLogic.configuration.Type_équipement === 'PAC') { 
+  const eqConfig = _eqLogic.configuration;
+  const imgPath = 'plugins/planification/core/img/pac.png';
+  img = eqConfig.Chemin_image || imgPath;
+
+  // Gérer l'affichage de l'image
+  document.querySelector(".bt_image_défaut").style.display = (img === imgPath) ? 'none' : 'block';
+
+  // Mettre à jour les champs PAC
+ 
+  document.querySelector('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=Temperature_ambiante_id]').value = eqConfig.Temperature_ambiante_id || '';
+  document.querySelector('#tab_eqlogic .PAC .eqLogicAttr[data-l2key=Mode_id]').value = eqConfig.Mode_id || '';
+
+  // Afficher la section alias si Mode_id est défini
+  document.querySelector('#tab_eqlogic .alias').style.display = eqConfig.Mode_id ? 'block' : 'none';
+}
+  
+
+if (_eqLogic.configuration.Type_équipement === 'Volet') {
+  const eqConfig = _eqLogic.configuration;
+
+  // AJAX request for sunrise/sunset data
+  domUtils.ajax({
+      type: "POST",
+      url: "plugins/planification/core/ajax/planification.ajax.php",
+      data: { action: "Recup_infos_lever_coucher_soleil", id: _eqLogic["id"] },
+      dataType: 'json',
+      global: false,
+      async: false,
+      error: handleAjaxError,
+      success: (data) => {
+          if (data.state !== 'ok') {
+              jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+              return;
+          }
+          if (!data.result) {
+              jeedomUtils.showAlert({
+                  message: "Pour utiliser la fonction lever/coucher de soleil, veuillez enregistrer les coordonnées GPS (latitude et longitude) dans la configuration de jeedom.",
+                  level: 'warning'
+              });
+              return;
+          }
+          
+          // Update DOM with result values
+          const updateElements = (selector, key, defaultValue = "00:00") => {
+              document.querySelectorAll(selector).forEach(element => {
+                  const value = data.result[key + element.classList[2]?.toLowerCase()] ?? defaultValue;
+                  element[selector.includes("Min") || selector.includes("Max") ? 'value' : 'innerText'] = value;
+              });
+          };
+
+          updateElements('#tab_gestion_heures_lever_coucher .HeureLever', "Lever_soleil", "00:00");
+          updateElements('#tab_gestion_heures_lever_coucher .Heure_action_suivante_Lever', "Heure_action_suivante_lever_", "00:00");
+          updateElements('#tab_gestion_heures_lever_coucher .HeureCoucher', "Coucher_soleil", "23:59");
+          updateElements('#tab_gestion_heures_lever_coucher .Heure_action_suivante_Coucher', "Heure_action_suivante_coucher_", "00:00");
+      }
+  });
+
+  // Show menu tab
+  document.getElementById("menu_tab_gestion").classList.remove("hidden");
+
+  // Image logic
+  const imgPath = "plugins/planification/core/img/volet.png";
+   img = _eqLogic.configuration.Chemin_image || imgPath;
+  document.querySelector(".bt_image_défaut").style.display = (img || imgPath) === imgPath ? 'none' : 'block';
+
+  // Update values based on configuration
+  const configKeys = ['Alias_Ouvert', 'Alias_My', 'Alias_Ferme', 'Niveau_batterie_gauche_id', 'Niveau_batterie_droite_id', 'Etat_fenêtre_gauche_id', 'Etat_fenêtre_droite_id'];
+  configKeys.forEach(key => {
+      document.querySelector(`#tab_eqlogic .${eqConfig.Type_équipement} .eqLogicAttr[data-l2key=${key}]`).value =eqConfig[key] !== undefined ? eqConfig[key] : ''
+  });
+
+  if (eqConfig.etat_id) {
+      document.querySelector('#tab_eqlogic .Volet .alias').style.display = 'block';
+  }
+
+  // Manage window type
+  const isBaie = eqConfig.Type_fenêtre === 'baie';
+  document.getElementById(isBaie ? 'baie' : 'fenêtre').checked = true;
+  document.querySelector(`#tab_eqlogic .${eqConfig.Type_équipement} .sens_ouverture`).style.display = isBaie ? 'block' : 'none';
+  document.querySelector('#tab_eqlogic .Volet fieldset legend').innerText = isBaie ? "Détecteur d'ouverture gauche" : "Détecteur d'ouverture";
+
+  // Manage opening direction
+  const direction = eqConfig.Sens_ouverture || 'gauche';
+  document.getElementById(direction).checked = true;
+  document.querySelector('#tab_eqlogic .Volet .ouverture_gauche').style.display = direction === 'droite' ? 'none' : 'block';
+  document.querySelector('#tab_eqlogic .Volet .ouverture_droite').style.display = ['droite', 'gauche-droite'].includes(direction) ? 'block' : 'none';
+}
+  
+if (_eqLogic.configuration.Type_équipement === 'Prise') {
+  const eqConfig = _eqLogic.configuration;
+
+  // Handle image display
+  const imgPath = "plugins/planification/core/img/prise.png";
+  img = eqConfig.Chemin_image || imgPath;
+  document.querySelector(".bt_image_défaut").style.display = (img === imgPath) ? 'none' : 'block';
+
+  // Toggle alias visibility based on etat_id
+  document.querySelector(`#tab_eqlogic .${eqConfig.Type_équipement} .alias`).style.display = eqConfig.etat_id ? 'block' : 'none';
+  ['etat_id', 'Alias_On', 'Alias_Off'].forEach(key => {
+    
+    document.querySelector(`#tab_eqlogic .${eqConfig.Type_équipement} .eqLogicAttr[data-l2key=${key}]`).value = 
+    eqConfig[key] !== 'undefined' || undefined ? eqConfig[key] : '';
+
+      
+  });
+}
+  
+  if (_eqLogic.configuration.Type_équipement === 'Chauffage') {
+    const eqConfig = _eqLogic.configuration;
+
+    // Handle image display logic
+    const imgPath = "plugins/planification/core/img/chauffage.png";
+    img = eqConfig.Chemin_image || imgPath;
+    document.querySelector(".bt_image_défaut").style.display = (img === imgPath) ? 'none' : 'block';
+    ['etat_id', 'Alias_Confort', 'Alias_Eco', 'Alias_Hg', 'Alias_Arret'].forEach(key => {
+        document.querySelector(`#tab_eqlogic .${eqConfig.Type_équipement} .eqLogicAttr[data-l2key=${key}]`).value = eqConfig[key] !== undefined ? eqConfig[key] : ''
+    });
+  }
+  domUtils.ajax({
+    type: "POST",
+    url: "plugins/planification/core/ajax/planification.ajax.php",
+    data: {
+      action: "Recup_Json",
+      eqLogic_id: _eqLogic["id"]
+    },
+
+    global: true,
+    async: false,
+    error: function(request, status, error) { handleAjaxError(request, status, error) },
+    success: function(data) {
+      if (data.state != 'ok') {
+        jeedomUtils.showAlert({
+          message: data.result,
+          level: 'danger'
+        })
+        return
+      }
+      if (data.result == false) {
+        return
+      }
+      var array = JSON.parse("[" + data.result + "]");
+      if (array[0].length == 0) { return; }
+      var numéro_planification = 0
+
+      array[0].forEach(function(Json) {
+        var branche_json=''      
+
+        if (isset(Json["Planifications"])){
+          var branche_json=Json["Planifications"][0]
+          while (isset(branche_json[numéro_planification])) {
+
+            var nom_planification = ""
+      var id_planification = ""
+      var périodes = []
+
+      branche_json[numéro_planification].forEach(planification => {
+        nom_planification = planification.Nom || nom_planification;
+        id_planification = planification.Id || id_planification;
+        ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].forEach(day => {
+            périodes[day] = planification[day] || périodes[day];
+        });
+      });
+
+      const planificationData = { nom: nom_planification, Id: id_planification };
+      Ajoutplanification(planificationData);
+      AjoutGestionPlanification(planificationData);
+      
+      document.querySelectorAll(`#div_planifications .planification`)[numéro_planification].querySelectorAll('.JourSemaine').forEach(div_jour => {
+        périodes[div_jour.classList[1]].forEach(periode => {
+          if (!periode?.Type) return;
+
+          const cmdMatch = CMD_LIST.find(cmd => periode.Id === cmd.Id || periode.Id === cmd.Nom);
+          const Couleur = cmdMatch ? `couleur-${cmdMatch.couleur}` : "erreur";
+          const Nom = cmdMatch?.Nom || "";
+          const Id = cmdMatch?.Id || "";
+
+          let element = SELECT_LIST.replace("#COULEUR#", Couleur)
+                                  .replace("#VALUE#", Nom)
+                                  .replace("#ID#", Id);
+
+          Ajout_Periode(element, div_jour, periode.Début, periode.Id, periode.Type, _eqLogic.configuration.Type_équipement);
+        });
+
+        triage_jour(div_jour);
+        MAJ_Graphique_jour(div_jour);
+      });
+      numéro_planification += 1
+    }
+
+
+    if (_eqLogic.configuration.etat_id) {
+      const aliasElement = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .alias`);
+      if (aliasElement) {
+          aliasElement.style.display = 'block';
+      }
     } else {
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').hide()
+      const aliasElement = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .alias`);
+      if (aliasElement) {
+          aliasElement.style.display = 'none';
+      }
     }
+  
 
-    if (_eqLogic.configuration.Type_équipement == 'Poele') {
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_allume_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_boost_id]').val(_eqLogic.configuration.etat_boost_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val(_eqLogic.configuration.temperature_consigne_par_defaut);
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
-    }
-    if (_eqLogic.configuration.Type_équipement == 'PAC') {
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').val(_eqLogic.configuration.temperature_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val(_eqLogic.configuration.Duree_mode_manuel_par_defaut)
 
-    }
-    if (_eqLogic.configuration.Type_équipement == 'Volet') {
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val(_eqLogic.configuration.Alias_Ouvert)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val(_eqLogic.configuration.Alias_Ferme)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').val(_eqLogic.configuration.Alias_My)
-    }
-    if (_eqLogic.configuration.Type_équipement == 'Prise') {
-        if (_eqLogic.configuration.etat_id != "" && _eqLogic.configuration.etat_id != undefined) {
-            $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').show()
+          document.querySelectorAll('.tab-pane').forEach(function(onglet){
 
-        } else {
-            $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .alias').hide()
-        }
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_On]').val(_eqLogic.configuration.Alias_On)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Off]').val(_eqLogic.configuration.Alias_Off)
-
-    }
-    if (_eqLogic.configuration.Type_équipement == 'Chauffage') {
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val(_eqLogic.configuration.etat_id)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Confort]').val(_eqLogic.configuration.Alias_Confort)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Eco]').val(_eqLogic.configuration.Alias_Eco)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Hg]').val(_eqLogic.configuration.Alias_Hg)
-        $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Arret]').val(_eqLogic.configuration.Alias_Arret)
-
-    }
-    if (_eqLogic.configuration.Type_équipement == 'Perso') {
-        $('.eqLogicAttr[data-l2key=chemin_image]').show()
-        $('.bt_modifier_image').show()
-        $('.eqLogicAttr[data-l2key=chemin_image]').val(_eqLogic.configuration.Chemin_image)
-
-    }
-    $.ajax({
-        type: "POST",
-        url: "plugins/planification/core/ajax/planification.ajax.php",
-        data: {
-            action: "Recup_infos_lever_coucher_soleil",
-            id: _eqLogic["id"]
-        },
-        dataType: 'json',
-        global: false,
-        async: false,
-        error: function(request, status, error) { handleAjaxError(request, status, error) },
-        success: function(data) {
-            if (data.state != 'ok') {
-                $('#div_alert').showAlert({
-                    message: data.result,
-                    level: 'danger'
-                })
-                return
+            if (onglet.classList.length === 1 || onglet.classList[1] === 'active') {
+              return;
             }
 
-            if (data.result == false) {
-                $('#div_alert').showAlert({
-                    message: "Pour utiliser la fonction lever/coucher de soleil, veuillez enregistrer les coordonnées GPS (latitude et longitude) dans la configuration de jeedom.",
-                    level: 'warning'
-                })
-                return
+
+           onglet = onglet.classList[1];
+
+            if (Json?.[onglet]) {
+              branche_json = Json[onglet][0];  
+              
+              if (onglet === 'Ouvrants') {
+                  let numéro_ouvrant = 0;
+                  while (branche_json[numéro_ouvrant]) {
+                      ajoutOuvrant();
+                      numéro_ouvrant++;
+                  }
+              }
+            }else{
+              return
             }
-            $('#tab_gestion ').find('.HeureLever_Lundi')[0].innerText = data.result["Lever_soleil"]
-            $('#tab_gestion ').find('.HeureLever_Mardi')[0].innerText = data.result["Lever_soleil"]
-            $('#tab_gestion ').find('.HeureLever_Mercredi')[0].innerText = data.result["Lever_soleil"]
-            $('#tab_gestion ').find('.HeureLever_Jeudi')[0].innerText = data.result["Lever_soleil"]
-            $('#tab_gestion ').find('.HeureLever_Vendredi')[0].innerText = data.result["Lever_soleil"]
-            $('#tab_gestion ').find('.HeureLever_Samedi')[0].innerText = data.result["Lever_soleil"]
-            $('#tab_gestion ').find('.HeureLever_Dimanche')[0].innerText = data.result["Lever_soleil"]
-            $('#tab_gestion ').find('.HeureCoucher_Lundi')[0].innerText = data.result["Coucher_soleil"]
-            $('#tab_gestion ').find('.HeureCoucher_Mardi')[0].innerText = data.result["Coucher_soleil"]
-            $('#tab_gestion ').find('.HeureCoucher_Mercredi')[0].innerText = data.result["Coucher_soleil"]
-            $('#tab_gestion ').find('.HeureCoucher_Jeudi')[0].innerText = data.result["Coucher_soleil"]
-            $('#tab_gestion ').find('.HeureCoucher_Vendredi')[0].innerText = data.result["Coucher_soleil"]
-            $('#tab_gestion ').find('.HeureCoucher_Samedi')[0].innerText = data.result["Coucher_soleil"]
-            $('#tab_gestion ').find('.HeureCoucher_Dimanche')[0].innerText = data.result["Coucher_soleil"]
-            $('#tab_gestion ').find('.Heure_action_suivante_lever_Lundi')[0].innerText = data.result["Heure_prochaine_action_lever_lundi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_lever_Mardi')[0].innerText = data.result["Heure_prochaine_action_lever_mardi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_lever_Mercredi')[0].innerText = data.result["Heure_prochaine_action_lever_mercredi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_lever_Jeudi')[0].innerText = data.result["Heure_prochaine_action_lever_jeudi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_lever_Vendredi')[0].innerText = data.result["Heure_prochaine_action_lever_vendredi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_lever_Samedi')[0].innerText = data.result["Heure_prochaine_action_lever_samedi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_lever_Dimanche')[0].innerText = data.result["Heure_prochaine_action_lever_dimanche"]
-            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Lundi')[0].innerText = data.result["Heure_prochaine_action_coucher_lundi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Mardi')[0].innerText = data.result["Heure_prochaine_action_coucher_mardi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Mercredi')[0].innerText = data.result["Heure_prochaine_action_coucher_mercredi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Jeudi')[0].innerText = data.result["Heure_prochaine_action_coucher_jeudi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Vendredi')[0].innerText = data.result["Heure_prochaine_action_coucher_vendredi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Samedi')[0].innerText = data.result["Heure_prochaine_action_coucher_samedi"]
-            $('#tab_gestion ').find('.Heure_action_suivante_coucher_Dimanche')[0].innerText = data.result["Heure_prochaine_action_coucher_dimanche"]
-        }
 
-    })
-    nom_planification_erreur = []
+            if(onglet == 'Paramètres'){
 
-    var SELECT_LIST = Recup_select("planifications")
-    var CMD_LIST = Recup_liste_commandes_planification()
-    $.ajax({
-        type: "POST",
-        url: "plugins/planification/core/ajax/planification.ajax.php",
-        data: {
-            action: "Recup_planification",
-            eqLogic_id: _eqLogic["id"]
-        },
-        global: false,
-        async: false,
-        error: function(request, status, error) { handleAjaxError(request, status, error) },
-        success: function(data) {
-            console.log(data)
-            if (data.state != 'ok') {
-                jeedomUtils.showAlert({
-                    message: data.result,
-                    level: 'danger'
-                })
-                return
             }
-            if (data.result == false) {
-                return
+            if (onglet === 'Gestion_planifications') {
+              let numéro_planification = 0;
+              document.getElementById("div_GestionPlanifications").innerHTML = '';
+          
+              while (branche_json[numéro_planification]) {
+                  const currentPlanification = branche_json[numéro_planification][0];
+                  AjoutGestionPlanification({ nom: currentPlanification.Nom, Id: currentPlanification.Id });
+          
+                  const Gestion_planification = document.querySelector('.GestionPlanification:last-of-type');
+                  Gestion_planification.querySelectorAll('.expressionAttr').forEach(element => {
+                      const dataKey = element.getAttribute('data-l2key');
+                      const value = currentPlanification[dataKey];
+          
+                      if (dataKey === 'Conditions') {
+                          domUtils.ajax({
+                              type: "POST",
+                              url: "plugins/planification/core/ajax/planification.ajax.php",
+                              data: { action: "toHumanReadable", expression: value },
+                              global: false,
+                              async: false,
+                              error: handleAjaxError,
+                              success: (data) => {
+                                  if (data.state !== 'ok') {
+                                      jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+                                      return;
+                                  }
+                                  element.value = data.result;
+                                  const conditionIdElement = element.closest('.GestionPlanification').querySelector('.ConditionId');                                 
+                                  if (element.value) conditionIdElement.classList.add("alert-info");
+                                  conditionIdElement.innerHTML = value;
+                              }
+                          });
+                          const evaluation = Gestion_planification.querySelector('.Evaluation');
+                          const resultEvaluation = Gestion_planification.querySelector('.RésultatEvaluation');
+          
+                          if (value) {
+                              jeedom.scenario.testExpression({
+                                  expression: value,
+                                  error: (error) => {
+                                      jeedomUtils.showAlert({ message: error.message, level: 'danger' });
+                                  },
+                                  success: (data) => {
+                                      const isCorrect = data.correct !== 'nok';
+                                      evaluation.innerHTML = isCorrect ? data.evaluate : "Attention : il doit y avoir un souci avec l'expression";
+                                      evaluation.classList.toggle("alert-danger", !isCorrect);
+                                      evaluation.classList.toggle("alert-info", isCorrect);
+          
+                                      resultEvaluation.innerHTML = isCorrect ? data.result : "";
+                                      resultEvaluation.classList.toggle("alert-success", data.result && isCorrect);
+                                      resultEvaluation.classList.toggle("alert-danger", !data.result || !isCorrect);
+                                  }
+                              });
+                          }
+                      } else if (element.type === "checkbox") {
+                          element.checked = !!value;
+                      } else if (value !== undefined) {
+                          element.value = value;
+                      }
+                  });
+          
+                  numéro_planification++;
+                  const textarea = Gestion_planification.querySelector('textarea');
+                  textarea.style.height = `${textarea.scrollHeight}px`;
+              }
             }
-            
-            var array = JSON.parse("[" + data.result + "]");
-            if (array[0].length == 0) { return; }
-            var numéro_planification = 0
-
-            array[0].forEach(function(planifications) {
-                while (isset(planifications[numéro_planification])) {
-                    var nom_planification = ""
-                    var id_planification = ""
-                    var périodes = []
-
-                    planifications[numéro_planification].forEach(function(planification) {
-                        if (isset(planification.Nom)) { nom_planification = planification.Nom }
-                        if (isset(planification.Id)) { id_planification = planification.Id }
-                        if (isset(planification.Lundi)) { périodes['Lundi'] = planification.Lundi }
-                        if (isset(planification.Mardi)) { périodes['Mardi'] = planification.Mardi }
-                        if (isset(planification.Mercredi)) { périodes['Mercredi'] = planification.Mercredi }
-                        if (isset(planification.Jeudi)) { périodes['Jeudi'] = planification.Jeudi }
-                        if (isset(planification.Vendredi)) { périodes['Vendredi'] = planification.Vendredi }
-                        if (isset(planification.Samedi)) { périodes['Samedi'] = planification.Samedi }
-                        if (isset(planification.Dimanche)) { périodes['Dimanche'] = planification.Dimanche }
-
-                    })
-
-                    Ajoutplanification({ nom: nom_planification, Id: id_planification, nouveau: false })
-
-                    document.querySelectorAll('#div_planifications .planification')[numéro_planification].querySelectorAll('.JourSemaine').forEach(function(div_jour) {
-                        périodes[div_jour.classList[1]].forEach(function(periode) {
-                            if (!isset(periode.Type)) { return }
-                            Couleur = "erreur"
-                            Nom = ""
-                            Id = ""
-                            CMD_LIST.forEach(function(cmd) {
-                                if (periode.Id == cmd.Id || periode.Id == cmd.Nom) {
-                                    Couleur = "couleur-" + cmd.couleur
-                                    Nom = cmd.Nom
-                                    Id = cmd.Id
-                                }
-                            });
-                            var element = SELECT_LIST.replace("#COULEUR#", Couleur);
-                            element = element.replace("#VALUE#", Nom)
-                            element = element.replace("#ID#", Id)
-                            Ajout_Periode(element, div_jour, periode.Début, periode.Id, periode.Type)
-                        })
-                        triage_jour(div_jour)
-                        MAJ_Graphique_jour(div_jour)
-                    })
-                    numéro_planification += 1
-                }
-            })
-        }
-    })
-
-    var img = "plugins/planification/core/img/autre.png"
-    img = _eqLogic.configuration.Chemin_image
-    $(".bt_image_défaut").hide();
-    if (img != undefined) {
-        if (img.indexOf("/img/") !== 0) {
-            $(".bt_image_défaut").show();
-        }
-    }
-
-    $(".Poele").hide();
-    $(".Volet").hide();
-    $(".Chauffage").hide();
-    $(".Prise").hide();
-    $(".PAC").hide();
-    $(".Perso").hide();
-
-    if (_eqLogic.configuration.Type_équipement == "PAC") {
-        $(".PAC").show()
-        img = _eqLogic.configuration.chemin_image
-        if (img == "" || img == undefined) {
-            img = 'plugins/planification/core/img/pac.png'
-        }
-
-    } else if (_eqLogic.configuration.Type_équipement == "Volet") {
-        $(".Volet").show()
-        if (img == "" || img == undefined) {
-            img = "plugins/planification/core/img/volet.png"
-        }
-    } else if (_eqLogic.configuration.Type_équipement == "Chauffage") {
-        $(".Chauffage").show()
-        if (img == "" || img == undefined) {
-            img = "plugins/planification/core/img/chauffage.png"
-        }
-    } else if (_eqLogic.configuration.Type_équipement == "Poele") {
-        $(".Poele").show()
-        if (img == "" || img == undefined) {
-            img = "plugins/planification/core/img/poele.png"
-        }
-    } else if (_eqLogic.configuration.Type_équipement == "Prise") {
-        $(".Prise").show()
-        if (img == "" || img == undefined) {
-            img = "plugins/planification/core/img/prise.png"
-        }
-    } else if (_eqLogic.configuration.Type_équipement == "Perso") {
-        $(".Perso").show()
-        $(".bt_ajouter_commande").show()
-        if (img == "" || img == undefined) {
-            img = "plugins/planification/core/img/perso.png"
-        }
-
-    }
-    var http = new XMLHttpRequest();
-    http.open('HEAD', img, false);
-    http.send();
-    if (http.status != 200) {
-        $('#div_alert').showAlert({
-            message: "L'image " + img + " n'existe pas.",
-            level: 'danger'
+           
+            document.querySelectorAll(`.expressionAttr[data-l1key="${onglet}"]`).forEach(element => {
+              const dataKey = element.getAttribute('data-l2key');
+              const value = branche_json[dataKey];
+          
+              if (dataKey === 'Type_équipement_pilote') {
+          
+                  Array.from(element).forEach((option, i) => {
+                      
+                      if (option.value === value) {
+                        
+                          element.value = value;
+                          option.selected = true;
+                      }
+                  });
+          
+                  if (value && value !== 'Aucun') {
+                      const branche_json1 = branche_json;
+                      document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'block';
+                      
+                      let options = '';
+                      jeedom.eqLogic.byType({
+                          type: value,
+                          error: error => {
+                              jeedomUtils.showAlert({ message: error.message, level: 'danger' });
+                          },
+                          success: eqLogics => {
+                              modifyWithoutSave = false;
+          
+                              eqLogics.forEach(eqLogic => {
+                                  options += `<option id="#${eqLogic.id}#" ${"#" + eqLogic.id + "#" === branche_json1["Equipement_pilote"] ? 'selected' : ''}>{{${eqLogic.name}}}</option>`;
+                              });
+                              document.querySelector('#tab_Paramètres .expressionAttr[data-l2key="Equipement_pilote"]').innerHTML = options;
+                          }
+                      });
+                  } else {
+                      document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'none';
+                      document.querySelector('#tab_Paramètres .expressionAttr[data-l2key="Equipement_pilote"]').innerHTML = '';
+                  }
+              } else if (dataKey === 'Equipement_pilote') {
+                  Array.from(element).forEach((option, i) => {
+                      if (option.value === value) {
+                          option.selected = true;
+                      }
+                  });
+              } else if (onglet === 'Ouvrants') {
+                  let numéro_ouvrant = 0;
+                  while (branche_json[numéro_ouvrant]) {
+                      const ouvrant = document.querySelectorAll('.Ouvrant')[numéro_ouvrant];
+                      ouvrant.querySelectorAll('.expressionAttr').forEach(element => {
+                          const key = element.getAttribute('data-l2key');
+                          const val = branche_json[numéro_ouvrant][0][key];
+          
+                          if (key === 'Commande') {
+                              domUtils.ajax({
+                                  type: "POST",
+                                  url: "plugins/planification/core/ajax/planification.ajax.php",
+                                  data: { action: "toHumanReadable", expression: val },
+                                  global: false,
+                                  async: false,
+                                  error: handleAjaxError,
+                                  success: data => {
+                                      if (data.state !== 'ok') {
+                                          jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+                                          return;
+                                      }
+                                      element.value = data.result;
+                                  }
+                              });
+                          } else if (element.type === "checkbox") {
+                              element.checked = !!val;
+                          } else if (val !== undefined) {
+                              element.value = val;
+                          }
+                      });
+                      numéro_ouvrant++;
+                  }
+              } else if (onglet === 'Gestion_planifications') {
+                  // Add implementation if required
+              } else {
+                  if (value !== undefined) {
+                      element.value = value;
+                  }
+              }
+          });
         })
 
-        img = "plugins/planification/plugin_info/planification_icon.png"
+
+
+        }               
+      })
     }
-
-
-    $('#img_planificationModel').attr('src', img)
-    $('.image_perso .eqLogicAttr[data-l2key=chemin_image]').value(img)
+  })
+  const http = new XMLHttpRequest();
+  http.open('HEAD', img, false);
+  http.send();
+  
+  if (http.status !== 200) {
+      jeedomUtils.showAlert({
+          message: `L'image ${img} n'existe pas.`,
+          level: 'danger'
+      });
+      img = "plugins/planification/plugin_info/planification_icon.png";
+  }
+  
+  // Update image and set its value
+  document.querySelector('#img_planificationModel').setAttribute('src', img);
+  document.querySelector('.eqLogicAttr[data-l2key=Chemin_image]').value = img;
+  
+  // Manage active state for eqLogic elements
+  document.querySelectorAll('.li_eqLogic').forEach(li_eqLogic => {
+      li_eqLogic.classList.toggle('active', li_eqLogic.getAttribute("data-eqlogic_id") === _eqLogic.id);
+  });
 }
 
 function saveEqLogic(_eqLogic) {
-    if (!isset(_eqLogic.configuration)) {
-        _eqLogic.configuration = {}
-    }
-    var planifications = [];
-    var erreur = false
+  if (!isset(_eqLogic.configuration)) {
+    _eqLogic.configuration = {};
+  }
+  _eqLogic.configuration.Chemin_image = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l2key=Chemin_image]').value;
+  _eqLogic.configuration.Mode_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l2key=Mode_id]').value;
+  _eqLogic.configuration.Type_équipement = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l2key=Type_équipement]').value;
+  _eqLogic.configuration.Duree_mode_manuel_par_defaut = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').value;
+  const type_équipement = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l2key=Type_équipement]').value;
 
-    $('#div_planifications .planification').each(function() {
-        var _Cette_planification = {}
-        _Cette_planification.nom_planification = $(this).find('.nom_planification').html()
-        _Cette_planification.Id = $(this).attr("Id")
-        var semaine = []
-        $(this).find('th').find(".JourSemaine").each(function() {
-            var jour = {}
-            jour.jour = $(this).attr("class").split(' ')[1]
-            var periodes = []
-            $(this).find('.Periode_jour').each(function() {
-                var type_periode = ""
-                type_periode = "heure_fixe"
-                if ($(this).find('.checkbox_lever_coucher').prop("checked")) {
-                    type_periode = $(this).find('.select_lever_coucher').value()
-                    debut_periode = ""
-                } else {
-                    debut_periode = $(this).find('.clock-timepicker').val()
-                }
+  if (type_équipement === "Volet") {
+    _eqLogic.configuration.etat_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=etat_id]`).value;
+    _eqLogic.configuration.Alias_Ouvert = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_Ouvert]`).value;
+    _eqLogic.configuration.Alias_Ferme = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_Ferme]`).value;
+    _eqLogic.configuration.Alias_My = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_My]`).value;
 
-                Id = $(this).find('.select-selected')[0].getAttribute('id')
-                if (typeof(Id) != 'string') {
-                    erreur = true
-                    $(this).find('.select-selected')[0].classList.add("erreur")
-                }
-
-                if (type_periode == "heure_fixe" && debut_periode == "") {
-                    erreur = true
-                    $(this).find('.select-selected')[0].classList.add("erreur")
-                }
-                periodes.push({ 'Type_periode': type_periode, 'Debut_periode': debut_periode, 'Id': Id })
-            })
-            jour.periodes = periodes
-            semaine.push(jour)
-
-        })
-        _Cette_planification.semaine = semaine
-        planifications.push(_Cette_planification)
-    })
-    if (erreur) {
-        $('#div_alert').showAlert({
-            message: "Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.",
-            level: 'danger'
-        })
-
-        return false;
-    }
-    $.ajax({
-        type: "POST",
-        url: "plugins/planification/core/ajax/planification.ajax.php",
-        data: {
-            action: "Enregistrer_planifications",
-            id: _eqLogic["id"],
-            planifications: planifications
-        },
-        global: false,
-        error: function(request, status, error) { handleAjaxError(request, status, error) },
-        success: function(data) {
-            if (data.state != 'ok') {
-                $('#div_alert').showAlert({
-                    message: data.result,
-                    level: 'danger'
-                })
-                return
-            }
-        }
-    })
-
-
-    _eqLogic.configuration.Chemin_image = $('.eqLogicAttr[data-l2key=chemin_image]').val();
-    console.log($('.eqLogicAttr[data-l2key=chemin_image]').val())
-    if (_eqLogic.configuration.Type_équipement == 'Poele') {
-        _eqLogic.configuration.temperature_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').val();
-        _eqLogic.configuration.etat_allume_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.etat_boost_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_boost_id]').val();
-        _eqLogic.configuration.temperature_consigne_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_consigne_par_defaut]').val();
-        _eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
-    }
-    if (_eqLogic.configuration.Type_équipement == 'PAC') {
-        _eqLogic.configuration.temperature_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=temperature_id]').val();
-        _eqLogic.configuration.Duree_mode_manuel_par_defaut = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Duree_mode_manuel_par_defaut]').val();
-
-    }
-    if (_eqLogic.configuration.Type_équipement == 'Volet') {
-        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.Alias_Ouvert = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ouvert]').val();
-        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
-        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').val();
-        _eqLogic.configuration.Alias_My = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_My]').val();
-        _eqLogic.configuration.Alias_Ferme = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Ferme]').val();
-
-    }
-    if (_eqLogic.configuration.Type_équipement == 'Prise') {
-        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.Alias_On = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_On]').val();
-        _eqLogic.configuration.Alias_Off = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Off]').val();
-    }
-    if (_eqLogic.configuration.Type_équipement == 'Chauffage') {
-        _eqLogic.configuration.etat_id = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=etat_id]').val();
-        _eqLogic.configuration.Alias_Confort = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Confort]').val();
-        _eqLogic.configuration.Alias_Eco = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Eco]').val();
-        _eqLogic.configuration.Alias_Hg = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Hg]').val();
-        _eqLogic.configuration.Alias_Arret = $('#tab_eqlogic .' + _eqLogic.configuration.Type_équipement + ' .eqLogicAttr[data-l2key=Alias_Arret]').val();
-
-    }
-    if (_eqLogic.configuration.Type_équipement == 'Autre') {
-
-    }
-
-
-    _eqLogic.cmd.forEach(function(_cmd) {
-
-        $('#table_actions tbody tr').each(function() {
-            if (!isset(_cmd.configuration)) {
-                _cmd.configuration = {}
-            }
-            if (_cmd.id == '') {
-                _cmd.Type = 'action'
-                _cmd.subType = 'other'
-                _cmd.configuration.Type = 'Planification_perso'
-
-            }
-            if (($(this).getValues('.cmdAttr')[0].id == _cmd.id)) {
-
-                if (typeof($(this).getValues('.expressionAttr')[0].options) != "undefined") {
-                    _cmd.configuration.options = ($(this).getValues('.expressionAttr')[0].options)
-                } else {
-                    _cmd.configuration.options = ''
-                }
-            }
-
-
-        })
+    let type_fenêtre = "fenêtre";
+    document.querySelectorAll(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=type_fenêtre]`).forEach(_el => {
+      if (_el.checked) {
+        type_fenêtre = _el.id;
+      }
     });
-    return _eqLogic
+    _eqLogic.configuration.Type_fenêtre = type_fenêtre;
+
+    let sens_ouverture = "gauche";
+    document.querySelectorAll(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=sens_ouveture_fenêtre]`).forEach(_el => {
+      if (_el.value == 1) {
+        sens_ouverture = _el.id;
+      }
+    });
+    _eqLogic.configuration.Sens_ouverture = sens_ouverture;
+
+    _eqLogic.configuration.Etat_fenêtre_gauche_id = "";
+    _eqLogic.configuration.Niveau_batterie_gauche_id = "";
+    _eqLogic.configuration.Etat_fenêtre_droite_id = "";
+    _eqLogic.configuration.Niveau_batterie_droite_id = "";
+
+    if (sens_ouverture === "droite") {
+      _eqLogic.configuration.Etat_fenêtre_droite_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Etat_fenêtre_droite_id]`).value;
+      _eqLogic.configuration.Niveau_batterie_droite_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Niveau_batterie_droite_id]`).value;
+    }
+
+    if (sens_ouverture === "gauche") {
+      _eqLogic.configuration.Etat_fenêtre_gauche_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Etat_fenêtre_gauche_id]`).value;
+      _eqLogic.configuration.Niveau_batterie_gauche_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Niveau_batterie_gauche_id]`).value;
+    }
+
+    if (sens_ouverture === "gauche-droite") {
+      _eqLogic.configuration.Etat_fenêtre_gauche_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Etat_fenêtre_gauche_id]`).value;
+      _eqLogic.configuration.Niveau_batterie_gauche_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Niveau_batterie_gauche_id]`).value;
+      _eqLogic.configuration.Etat_fenêtre_droite_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Etat_fenêtre_droite_id]`).value;
+      _eqLogic.configuration.Niveau_batterie_droite_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Niveau_batterie_droite_id]`).value;
+    }
+
+    
+  }
+  if (type_équipement === 'PAC') {
+    _eqLogic.configuration.Temperature_ambiante_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_PAC"][data-l2key=Temperature_ambiante_id]').value;
+  }
+  if (type_équipement === 'Prise') {
+    _eqLogic.configuration.etat_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=etat_id]`).value;
+    _eqLogic.configuration.Alias_On = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_On]`).value;
+    _eqLogic.configuration.Alias_Off = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_Off]`).value;
+  }
+  if (type_équipement === 'Chauffage') {
+    _eqLogic.configuration.etat_id = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=etat_id]`).value;
+    _eqLogic.configuration.Alias_Confort = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_Confort]`).value;
+    _eqLogic.configuration.Alias_Eco = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_Eco]`).value;
+    _eqLogic.configuration.Alias_Hg = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_Hg]`).value;
+    _eqLogic.configuration.Alias_Arret = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .eqLogicAttr[data-l2key=Alias_Arret]`).value;
+  }
+  if (type_équipement === 'Autre') {
+  }
+  
+  let Json = '';
+  let Json1 = []
+  let erreur = false;
+  let numéro = 0;
+ 
+  document.querySelectorAll('#div_planifications .planification').forEach((Planification) => {
+    // Préparation des parties JSON pour chaque planification
+    let planificationJson = [
+      `"${numéro}":[{"Nom":"${Planification.querySelector('.nom_planification').innerHTML}"`,
+      `"Id":"${Planification.getAttribute("Id")}"`
+    ];
+    // Parcourir les jours
+    const jours = Array.from(Planification.querySelectorAll('th .JourSemaine'));
+    const joursJson = jours.map((Jour, index) => {
+      const jourClass = Jour.getAttribute("class").split(' ')[1];
+      let periodesJson = [];
+      Jour.querySelectorAll('.Periode_jour').forEach((Période, idx) => {
+        let type_periode = "heure_fixe";
+        let debut_periode = "";
+        const checkbox = Période.querySelector('.checkbox_lever_coucher');
+        if (checkbox.getAttribute("checked") === 'true') {
+          type_periode = Période.querySelector('.select_lever_coucher').value;
+        } else {
+          debut_periode = Période.querySelector('.in_timepicker').value;
+        }
+
+        const Id = Période.querySelector('.select-selected')?.getAttribute('id');
+        if (!Id || typeof Id !== 'string' || Période.querySelector('.select-selected').classList.contains("erreur")) {
+          erreur = true;
+          Période.querySelector('.select-selected')?.classList.add("erreur");
+        }
+
+        if (type_periode === "heure_fixe" && !debut_periode) {
+          erreur = true;
+          Période.querySelector('.select-selected')?.classList.add("erreur");
+        }
+
+        // JSON pour une période
+        periodesJson.push(`{"Type":"${type_periode}", "Début":"${debut_periode}", "Id":"${Id}"}`);
+      });
+
+      // JSON pour un jour
+      return `"${jourClass}":[${periodesJson.join(",")}]`;
+    });
+
+    // Finalisation de la planification
+    planificationJson.push(joursJson.join());
+    Json1.push(planificationJson.join(",") + "}]");
+    numéro++;
+  });
+  Json += `[{"Planifications":[{${Json1.join(",")}}]`;
+  if (Json === '[{"Planifications":[{}]') {
+    jeedom.cmd.execute({ id: set_planification_Id, value: { select: '', Id_planification: '' } });
+  }
+  if (erreur) {
+    jeedomUtils.showAlert({
+      message: "Impossible d'enregistrer la planification. Celle-ci comporte des erreurs.",
+      level: 'danger'
+    });
+    return;
+  }
+  
+  if (type_équipement === "Volet") {
+    Json1 = []
+    document.querySelectorAll('#tab_gestion_heures_lever_coucher .in_timepicker').forEach(element => {
+      if (!element.value) {
+        element.value = '00:00';
+        if (element.classList[1].includes('Max')) {
+          element.value = '23:59';
+        }
+      }
+      Json1.push(`"${element.classList[1]}_${element.classList[2]}":"${element.value}"`);
+      
+    });
+    Json += `,"Lever_coucher":[{${Json1.join(",")}}]`;
+  }
+  
+  
+  Json1 = []
+  document.querySelectorAll('#tab_Paramètres .' + type_équipement + ' select').forEach((parametre) => {
+    
+    if(document.querySelector(`.expressionAttr[data-l2key="${parametre.getAttribute('data-l2key')}"]`).options[document.querySelector('#tab_Paramètres .expressionAttr[data-l2key=Type_équipement_pilote]').selectedIndex] == undefined){
+      Json1.push(`"${parametre.getAttribute('data-l2key')}":""`)   
+    }else{
+      Json1.push(`"${parametre.getAttribute('data-l2key')}":"${parametre.options[parametre.selectedIndex].id || parametre.options[parametre.selectedIndex].value}"`)
+    }
+
+  })
+  if(Json1.length-1 > -1){
+    Json += `,"Paramètres":[{${Json1.join(",")}}]`;
+  }
+  numéro = 0
+  Json1 = []
+  document.querySelectorAll('.' + type_équipement + ' #div_ouvrants .Ouvrant').forEach((ouvrant) => {
+    
+    let Commande=''
+    domUtils.ajax({
+      type: "POST",
+      url: "plugins/planification/core/ajax/planification.ajax.php",
+      data: { action: "fromHumanReadable", expression: ouvrant.querySelector('[data-l2key=Commande]').value },
+      global: true,
+      async: false,
+      error: (request, status, error) => handleAjaxError(request, status, error),
+      success: (data) => {
+          if (data.state !== 'ok') {
+            jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+          } else {            
+            Commande= data.result
+          }
+      }
+    });
+    Json1.push(`"${numéro}":[{"Commande":"${Commande}", "Délai_ouverture":"${ ouvrant.querySelector('[data-l2key=Délai_ouverture]').value ||  ouvrant.querySelector('[data-l2key=Délai_ouverture]').getAttribute('placeholder')}", "Délai_fermeture":"${ouvrant.querySelector('[data-l2key=Délai_fermeture]').value ||  ouvrant.querySelector('[data-l2key=Délai_fermeture]').getAttribute('placeholder')}", "Alerte":${ouvrant.querySelector('[data-l2key=Alerte]').checked}}]`);
+    numéro ++
+  })
+  if(Json1.length-1 > -1){
+    Json += `,"Ouvrants":[{${Json1.join(",")}}]`;
+  }
+
+
+
+  Json1 = []
+  numéro = 0;
+  document.querySelectorAll('#div_GestionPlanifications .GestionPlanification').forEach((GestionPlanification) => {
+    Conditions=''
+    domUtils.ajax({
+      type: "POST",
+      url: "plugins/planification/core/ajax/planification.ajax.php",
+      data: { action: "fromHumanReadable", expression: GestionPlanification.querySelector('[data-l2key=Conditions]').value },
+      global: true,
+      async: false,
+      error: (request, status, error) => handleAjaxError(request, status, error),
+      success: (data) => {
+          if (data.state !== 'ok') {
+            jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+          } else {            
+             Conditions= data.result
+          }
+      }
+    });
+  
+    Json1.push(`"${numéro}":[{"Nom":"${GestionPlanification.querySelector('.Nom_planification').innerHTML}", "Id":"${GestionPlanification.classList[1]}", "Conditions":"${Conditions}", "Stop":${GestionPlanification.querySelector('[data-l2key=Stop]').checked}}]`);
+    numéro++;
+  })
+  
+ 
+
+
+  Json += `,"Gestion_planifications":[{${Json1.join(",")}}]`;
+
+  Json +='}]'
+ 
+ 
+
+
+
+  try {
+    JSON.stringify(JSON.parse(Json), null, " ");
+  } catch (error) {
+    jeedomUtils.showAlert({
+      message: 'Problème de JSON, vérifiez dans le debug.',
+      level: 'danger'
+    });
+    console.log(Json);
+    return;
+  }
+
+  domUtils.ajax({
+    type: "POST",
+    url: "plugins/planification/core/ajax/planification.ajax.php",
+    data: {
+      action: "Enregistrer_Json",
+      id: _eqLogic["id"],
+      Json: JSON.stringify(JSON.parse(Json), null, " ")
+    },
+    global: false,
+    error: function(request, status, error) {
+      console.log(request);
+      handleAjaxError(request, status, error);
+    },
+    success: function(data) {
+      if (data.state !== 'ok') {
+        jeedomUtils.showAlert({
+          message: data.result,
+          level: 'danger'
+        });
+        return;
+      }
+    }
+  });
+
+
+
+  const chauffageRows = Array.from(document.querySelectorAll('#table_chauffage tbody tr'));
+  const actionsRows = Array.from(document.querySelectorAll('#table_actions tbody tr'));
+
+  _eqLogic.cmd.forEach(_cmd => {
+    chauffageRows.forEach(_el => {
+      const cmdAttr = _el.querySelector('.cmdAttr');
+      if (cmdAttr && cmdAttr.value == _cmd.id) {
+        const numericInput = _el.querySelector('#numericInput');
+        if (numericInput) _cmd.value = numericInput.value;
+      }
+    });
+
+    _cmd.configuration = _cmd.configuration || {};
+
+    if (!_cmd.id) {
+      Object.assign(_cmd, {
+        Type: 'action',
+        subType: 'other',
+        configuration: { Type: 'Planification_perso' }
+      });
+    }
+    actionsRows.forEach(_el => {
+      const cmdAttr = _el.querySelector('.cmdAttr');
+      if (cmdAttr && cmdAttr.value == _cmd.id) {
+        const expressionAttrs = Array.from(_el.querySelectorAll('.expressionAttr'));
+        if (expressionAttrs.length > 0) {
+          const options = expressionAttrs.reduce((acc, attr) => {
+            const key = attr.getAttribute('data-l2key');
+            if (key) acc[key] = attr.value;
+            return acc;
+          }, {});
+          _cmd.configuration.options = options;
+        } else {
+          _cmd.configuration.options = '';
+        }
+      }
+    });
+  });
+
+  return _eqLogic;
 }
 
 function addCmdToTable(_cmd) {
-    if (_cmd.logicalId == "set_heure_fin" || _cmd.logicalId == "set_consigne_temperature" || _cmd.logicalId == "set_action_en_cours" || _cmd.logicalId == "manuel" || _cmd.logicalId == "refresh" || _cmd.logicalId == "boost_on" || _cmd.logicalId == "boost_off") {
-        return
+  const excludedLogicalIds = [
+    "set_heure_fin", "set_consigne_temperature", "set_action_en_cours",
+    "manuel", "refresh", "boost_on", "boost_off", "set_info", "mode_planification"
+  ];
+
+  if (excludedLogicalIds.includes(_cmd.logicalId)) {
+    return;
+  }
+
+  if (_cmd.logicalId === 'set_planification') {
+    set_planification_Id = _cmd.id;
+    return;
+  }
+
+  if (!isset(_cmd)) _cmd = { configuration: {} };
+  if (!isset(_cmd.configuration)) _cmd.configuration = {};
+  const heatingLogicalIds = [
+    "delta_chauffage_eco", "delta_chauffage_boost", "temperature_mini_chauffage_continu",
+    "temperature_mini_chauffage", "numéro_semaine_mini_chauffage", "numéro_semaine_max_chauffage",
+    "delta_climatisation_boost", "temperature_mini_climatisation"
+  ];
+
+  if (heatingLogicalIds.includes(_cmd.logicalId)) {
+    let tr = `
+        <tr class="cmd" data-cmd_id="${init(_cmd.id)}">
+            <td>
+                <input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none">
+                <input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">
+                <input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">
+                <input class="cmdAttr form-control input-sm" data-l1key="name" disabled="true" placeholder="{{Nom}}">
+            </td>
+            <td>
+                <div class="numeric-updown" style="display:inline-flex!important">
+                    <input class="cmdAttr form-control input-sm" type="numeric" 
+                        id="numericInput" value="${_cmd.value}" min="${_cmd.configuration.minValue}" max="${_cmd.configuration.maxValue}" step="1" readonly/>
+                    <div class="numeric-updown-button">
+                        <button class="btn_numeric up"><i class="icon fas fa-chevron-up"></i></button>
+                        <button class="btn_numeric down"><i class="icon fas fa-chevron-down"></i></button>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a>
+                <a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>
+            </td>
+        </tr>`
+    document.getElementById('table_chauffage').insertAdjacentHTML('beforeend', tr);
+    const _tr = document.getElementById('table_chauffage').lastChild;
+    _tr.setJeeValues(_cmd, '.cmdAttr');
+    jeedom.cmd.changeType(_tr, init(_cmd.subType));
+    _tr.querySelector('.cmdAttr[data-l1key=type],.cmdAttr[data-l1key=subType]').setAttribute("disabled", true);
+  } else if (_cmd.type === 'info') {
+    let tr = `
+      <tr class="cmd" data-cmd_id="${init(_cmd.id)}">
+          <td>
+              <input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none">
+              <input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">
+              <input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">
+              <input class="cmdAttr form-control input-sm" data-l1key="name" disabled="true" placeholder="{{Nom}}">
+          </td>
+          <td>
+          `
+    if (typeof jeeFrontEnd !== 'undefined' && jeeFrontEnd.jeedomVersion !== 'undefined') {
+      tr += `<span class="cmdAttr" data-l1key="htmlstate"></span>`;
     }
-    var type_eqlogic = $('#tab_eqlogic .eqLogicAttr[data-l2key=Type_équipement]').value()
-    if (_cmd.logicalId == 'set_planification') {
-        set_planification_Id = _cmd.id
-        return
+    tr += `
+      </td>
+      <td>
+          <span>
+              <label class="checkbox-inline">
+                  <input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/> {{Historiser}}
+              </label>
+          </span>
+      </td>
+      <td>
+      `;
+    if (is_numeric(_cmd.id)) {
+      tr += `
+        <a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a>
+        <a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>
+      `;
     }
-    if (!isset(_cmd)) var _cmd = { configuration: {} }
-    if (!isset(_cmd.configuration)) _cmd.configuration = {}
-
-
-
-
-    if (_cmd.type == 'info') {
-        var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
-        tr += '<td>'
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" disabled placeholder="{{Nom}} "</td>'
-        tr += '</td>'
-        if (typeof jeeFrontEnd !== 'undefined' && jeeFrontEnd.jeedomVersion !== 'undefined') {
-            tr += '<td>';
-            tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>';
-            tr += '</td>';
-        }
-        tr += '<td>'
-
-        tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span> '
-
-        tr += '</td>'
-
-        tr += '<td>'
-        if (is_numeric(_cmd.id)) {
-            tr += '<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a> '
-            tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>'
-        }
-        tr += '</td>'
-        tr += '</tr>'
-        $('#table_infos tbody').append(tr)
-        const $tr = $('#table_infos tbody tr:last');
-        $tr.setValues(_cmd, '.cmdAttr');
-        jeedom.cmd.changeType($tr, init(_cmd.subType));
-        $tr.find('.cmdAttr[data-l1key=type],.cmdAttr[data-l1key=subType]').prop("disabled", true);
-    } else if (_cmd.type == 'action') {
-
-        var SELECT_LIST = Recup_select("commandes");
-        var tr = ''
-        tr += '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">'
-        tr += '<td>'
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none" >'
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">'
-        tr += '<input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">'
-        if (_cmd.configuration.Type == "Planification" || _cmd.logicalId == 'auto') {
-            tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" disabled  placeholder="{{Nom}} "</td>'
-        } else {
-            tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom}} "</td>'
-        }
-
-        tr += '</td>'
-
-        tr += '<td>'
-        if (isset(_cmd.configuration.Type)) {
-
-            if (_cmd.configuration.Type == "Planification" || _cmd.configuration.Type == "Planification_perso") {
-                tr += '<div class="input-group" style=" width:100%;">'
-                tr += '<input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>'
-                tr += '<span class="input-group-btn">';
-                tr += '<a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>'
-                tr += '<a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>'
-                tr += '</span>'
-                tr += '</div>'
-                tr += '<div class="actionOptions">'
-                tr += '</div>'
-                tr += '</td>'
-                tr += '<td>'
-                tr += '<div class="custom-select">'
-                tr += SELECT_LIST
-                tr += '</div>'
-                tr += '</td>'
-            }
-        }
-        tr += '<td>'
-        if (_cmd.logicalId == 'auto' || _cmd.logicalId == 'absent') {
-            tr += '</td>'
-            tr += '<td>'
-
-        }
-        if (is_numeric(_cmd.id)) {
-            tr += '<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a>'
-            tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fa fa-rss"></i> {{Tester}}</a>'
-            if (_cmd.configuration.Type == "Planification_perso") {
-                tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i>'
-            }
-        }
-        tr += '</td>'
-        tr += '</tr>'
-
-
-
-        $('#table_actions tbody').append(tr)
-        $('#table_actions tbody tr:last').setValues(_cmd, '.cmdAttr')
-        if (isset(_cmd.type)) $('#table_actions tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type))
-        jeedom.cmd.changeType($('#table_actions tbody tr:last'), init(_cmd.subType))
-        $('#table_actions tbody tr:last').find(".actionOptions").append(jeedom.cmd.displayActionOption(_cmd.configuration.commande, init(_cmd.configuration.options)))
-        if (isset(_cmd.configuration.Type)) {
-            if (_cmd.configuration.Type == "Planification" || _cmd.configuration.Type == "Planification_perso") {
-                if (isset(_cmd.configuration.Couleur)) {
-                    couleur = _cmd.configuration.Couleur
-                    if (_cmd.configuration.Couleur == "<span>#VALUE#<\/span>") {
-                        couleur = "orange"
-                    }
-                } else {
-                    couleur = "orange"
-                }
-                $('#table_actions tbody tr:last').find(".select-selected")[0].classList.replace("#COULEUR#", "couleur-" + couleur)
-                $('#table_actions tbody tr:last .select-items ').find("." + "couleur-" + couleur)[0].classList.add("same-as-selected")
-                $('#table_actions tbody tr:last').find(".select-selected")[0].innerHTML = couleur
-            }
-        }
+    tr += `
+        </td>
+    </tr>
+    `;
+    document.getElementById('table_infos').insertAdjacentHTML('beforeend', tr);
+    const _tr = document.getElementById('table_infos').lastChild;
+    _tr.setJeeValues(_cmd, '.cmdAttr');
+    jeedom.cmd.changeType(_tr, init(_cmd.subType));
+    _tr.querySelector('.cmdAttr[data-l1key=type],.cmdAttr[data-l1key=subType]').setAttribute("disabled", true);
+  } else if (_cmd.type === 'action') {
+    const SELECT_LIST = Recup_select("commandes");
+    let tr = `
+      <tr class="cmd" data-cmd_id="${init(_cmd.id)}">
+          <td>
+              <input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none">
+              <input class="cmdAttr form-control input-sm" data-l1key="type" style="display : none">
+              <input class="cmdAttr form-control input-sm" data-l1key="subType" style="display : none">
+              <input class="cmdAttr form-control input-sm" data-l1key="name" disabled="true" placeholder="{{Nom}}">
+          </td>
+    `;
+    if (_cmd.configuration.Type === "Planification" || _cmd.configuration.Type === "Planification_perso") {
+      tr += `
+                    <td>
+                        <div class="input-group" style="width:100%;">
+                            <input class="cmdAttr form-control input-sm cmdAction" data-l1key="configuration" data-l2key="commande"/>
+                            <span class="input-group-btn">
+                                <a class="btn btn-success btn-sm listAction"><i class="fa fa-list-alt"></i></a>
+                                <a class="btn btn-success btn-sm listCmdAction"><i class="fa fa-tasks"></i></a>
+                            </span>
+                        </div>
+                        <div class="actionOptions"></div>
+                    </td>
+                    <td>
+                        <div class="custom-select">${SELECT_LIST}</div>
+                    </td>
+                `;
+    }else{
+      tr += `<td></td><td></td>`; 
     }
+    tr += `
+                    <td>
+                        <a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure"><i class="fa fa-cogs"></i></a>
+                        <a class="btn btn-default btn-xs cmdAction tester"><i class="fa fa-rss"></i> {{Tester}}</a>
+                `;
+    if (_cmd.configuration.Type === "Planification_perso") {
+      tr += `<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i>`;
+    }
+    tr += `
+                    </td>
+                </tr>
+            `;
+
+    document.getElementById('table_actions').insertAdjacentHTML('beforeend', tr);
+    const _tr = document.getElementById('table_actions').lastElementChild;
+    _tr.setJeeValues(_cmd, '.cmdAttr');
+    const actionOptions = _tr.querySelector(".actionOptions");
+    if (actionOptions) {
+      jeedom.cmd.displayActionOption(
+        _cmd.configuration.commande,
+        init(_cmd.configuration.options),
+        function (html) {
+          actionOptions.innerHTML = html;
+        }
+      );
+    }
+
+    if (isset(_cmd.configuration.Type)) {
+      if (_cmd.configuration.Type === "Planification" || _cmd.configuration.Type === "Planification_perso") {
+        let couleur = _cmd.configuration.Couleur || "orange"; 
+        if (couleur === "<span>#VALUE#</span>") {
+          couleur = "orange"; 
+        }
+
+        const selectSelected = _tr.querySelector(".select-selected");
+        const selectItem = _tr.querySelector(`.select-items .couleur-${couleur}`);
+
+        if (selectSelected && selectItem) {
+          selectSelected.classList.replace("#COULEUR#", `couleur-${couleur}`);
+          selectItem.classList.add("same-as-selected");
+          selectSelected.innerHTML = couleur;
+        } 
+      }
+    }
+
+
+
+  }
 }

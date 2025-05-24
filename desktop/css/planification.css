@@ -1,3 +1,17 @@
+.btn_numeric:hover , .btn_numeric > i:hover{
+  background-color: inherit;
+ 
+}
+.btn_numeric{
+  padding:0;
+  border:0;
+}
+.btn_numeric > input{
+  cursor: not-allowed;
+}
+input[readonly] {
+cursor: not-allowed;
+}
 .icon.far.fa-clock{
  
   color:black;
@@ -342,4 +356,3 @@ width:auto}
         text-shadow: 0 0 20px #00c6ff;
     }
 }
-.panel-body{padding-bottom: 10px;}

@@ -9,19 +9,106 @@
 
     ajax::init();
     if (init('action') == 'toHtml') {//OK
+      
       $eqLogic=planification::byId(init('eqLogic_id'));
       
       ajax::success($eqLogic->toHtml());
     }
     if (init('action') == 'récup_infos_widget') {//OK
       $eqLogic=planification::byId(init('eqLogic_id'));
-      $cmds=cmd::byEqLogicId(init('eqLogic_id'));
       $cmd_array=[];
-      foreach ($cmds as $cmd) {
+
+
+      if (config::byKey('cache::engine') == "MariadbCache"){       
+        $sql = "SELECT `key`,`datetime`,`value`,`lifetime` FROM cache WHERE cache.key like 'Planification_". init('eqLogic_id') . "%'";
+		    $caches =  DB::Prepare($sql,array(), DB::FETCH_TYPE_ALL, PDO::FETCH_CLASS,'cache');
+      }
+      foreach($caches as $cache){
+       $cmd_array[str_replace("Planification_" .init('eqLogic_id') . "_", "",$cache->getKey())] = unserialize($cache->getValue());
+       if (str_replace("Planification_" .init('eqLogic_id') . "_", "",$cache->getKey()) == 'heure_fin'){
+          $heure_fin = unserialize($cache->getValue());
+          if($eqLogic->getConfiguration("affichage_heure",false)){
+             
+            $interval = date_diff(new DateTime( $heure_fin), new DateTime("now"));
+            if(intval($interval->format('%a')) == 0){
+              if($heure_fin !=''){
+                $cmd_array['heure_fin'] = date('H:i',strtotime($heure_fin));
+              }else{
+                $cmd_array['heure_fin'] = '';
+              }
+            }else{                
+              $cmd_array['heure_fin'] = date('d/m/Y H:i',strtotime($heure_fin));
+                            
+            }
+          }else{
+            $cmd_array['heure_fin'] = date('d/m/Y H:i',strtotime($heure_fin));
+            
+          }
+          $cmd_array['datetimepicker'] =  $cmd_array['heure_fin'];
+         
+        }
+        if ($eqLogic->getConfiguration("Type_équipement") == "Volet"){
+          $cmd_Etat_volet=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
+          if (is_object($cmd_Etat_volet)){
+            $etat_volet=$cmd_Etat_volet->execCmd();
+            $alias_ouverture=strtolower($eqLogic->getConfiguration('Alias_Ouvert',""));
+            $alias_fermeture=strtolower($eqLogic->getConfiguration('Alias_Ferme',""));
+            $alias_my=strtolower($eqLogic->getConfiguration('Alias_My',""));
+            if(strtolower($etat_volet) == $alias_ouverture){ $cmd_array['action_en_cours'] = "ouverture";}
+            if(strtolower($etat_volet) == $alias_fermeture){$cmd_array['action_en_cours'] = "fermeture";}
+            if(strtolower($etat_volet) == $alias_my){$cmd_array['action_en_cours'] = "my" ;}
+          }
+          $cmd_Etat_fenêtre_gauche=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Etat_fenêtre_gauche_id',"")));
+          if (is_object($cmd_Etat_fenêtre_gauche)){
+            if($cmd_Etat_fenêtre_gauche->execCmd() == 1){
+               $cmd_array['ouverture_fenêtre_gauche'] = 1;
+            }else{
+              $cmd_array['ouverture_fenêtre_gauche'] = 0;
+            }
+          }
+          $cmd_Etat_fenêtre_droite=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Etat_fenêtre_droite_id',"")));
+          if (is_object($cmd_Etat_fenêtre_droite)){
+            if($cmd_Etat_fenêtre_droite->execCmd() == 1){
+              $cmd_array['ouverture_fenêtre_droite'] = 1;
+            }else{
+              $cmd_array['ouverture_fenêtre_droite'] = 0;
+            }  
+          }   
+          
+        }
+        if($eqLogic->getConfiguration("Type_équipement") == "PAC"){   
+          if (str_replace("Planification_" .init('eqLogic_id') . "_", "",$cache->getKey()) == 'cmds_id'){
+            $cmd_ids = unserialize($cache->getValue());
+            //planification::add_log("debug",init('eqLogic_id'),null,'aaa');
+            //planification::add_log("debug",$cmd_ids,null,'aaa');
+            //planification::add_log("debug",$cmd_ids["temperature_ambiante"],null,'aaa');
+            $cmd_temperature = cmd::byId($cmd_ids["temperature_ambiante"]);
+            //planification::add_log("debug",is_object($cmd_temperature),null,'aaa');
+            if (is_object($cmd_temperature)){
+              $cmd_array['temperature_ambiante'] = $cmd_temperature->execCmd();
+            }else{
+              $cmd_array['temperature_ambiante'] = '';
+            }
+          }
+        }
+      }
+
+
+
+
+
+
+
+
+
+      //$cmds=cmd::byEqLogicId(init('eqLogic_id'));
+      
+      /*foreach ($cmds as $cmd) {
         if ($cmd->getConfiguration("Type") == '' && 
         $cmd->getLogicalId() != "boost_off" && 
         $cmd->getLogicalId() != "boost_on" && 
-        $cmd->getLogicalId() != "set_heure_fin" && 
+        $cmd->getLogicalId() != "set_heure_fin" &&
+        $cmd->getLogicalId() != "set_information" &&  
         $cmd->getLogicalId() != "set_planification" && 
         $cmd->getLogicalId() != "set_consigne_temperature" && 
         $cmd->getLogicalId() != "consigne_temperature_chauffage" && 
@@ -58,15 +145,17 @@
           }
         }
       }
-      $cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('temperature_id',"")));
+      
+      }*/
+     /*  $cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Temperature_ambiante_id',"")));
       if (is_object($cmd_temperature)){
-        $cmd_array['Temperature'] = $cmd_temperature->execCmd();
+        $cmd_array['Temperature_ambiante'] = $cmd_temperature->execCmd();
       }else{
-        $cmd_array['Temperature']= '';
+        $cmd_array['Temperature_ambiante']= '';
       
       };
       //$cmd_array['Type_équipement']=$eqLogic->getConfiguration("Type_équipement");
-      if ($eqLogic->getConfiguration("Type_équipement") == "Volet"){
+     if ($eqLogic->getConfiguration("Type_équipement") == "Volet"){
         $type_fenêtre=$eqLogic->getConfiguration("Type_fenêtre",'fenêtre');
         $cmd_array['type_fenêtre']=$type_fenêtre;
         $cmd_array['sens_ouverture_fenêtre']='';
@@ -121,26 +210,27 @@
         }else{
           $cmd_array['show_my'] = true;
         }        
-      }
+      }*/
        
     
 
-      $cmd_array["page"]=$eqLogic->getCache('Page');
+      //$cmd_array["page"]=$eqLogic->getCache('Page');
       ajax::success($cmd_array);
     }
-    if (init('action') == 'Enregistrer_planifications') {//OK
+    
+    if (init('action') == 'Enregistrer_Json') {//OK
       $dossier = dirname(__FILE__) . '/../../planifications/';
       if (!is_dir($dossier)) mkdir($dossier, 0755, true);
       $nom_fichier_json=dirname(__FILE__) ."/../../planifications/" . init('id') . ".json";
       $fichier = fopen( $nom_fichier_json, 'w');
-      if(init('planifications')!=""){        
-        fwrite($fichier, init('planifications'));
+      if(init('Json')!=""){        
+        fwrite($fichier, init('Json'));
       }else{
         unlink ($nom_fichier_json) ;
       }
       ajax::success();
     }
-    if (init('action') == 'Recup_planification') {//OK
+    if (init('action') == 'Recup_Json') {//OK
       $dossier = dirname(__FILE__) . '/../../planifications/';
       if (!is_dir($dossier)) mkdir($dossier, 0755, true);
       
@@ -209,8 +299,8 @@
     }
     if (init('action') == 'Ajout_equipement') {
       $eqLogic = new planification();
-      $eqLogic->setLogicalId(init('nom'));
-      $eqLogic->setName(init('nom'));
+      $eqLogic->setLogicalId(init('Nom'));
+      $eqLogic->setName(init('Nom'));
       $eqLogic->setEqType_name('planification');
       $eqLogic->setIsVisible(0);
       $eqLogic->setIsEnable(1);
@@ -221,8 +311,9 @@
     }
     if (init('action') == 'Set_widget_cache') {
       $eqLogic=planification::byId(init('id'));
-      $eqLogic->setCache('Page', init('page'));
-
+      $eqLogic_id=$eqLogic->getId();
+      cache::set("Planification_". $eqLogic_id ."_page", init('page'));
+      // $eqLogic->setCache('Page', init('page'));
       ajax::success();
     }	
     if (init('action') == 'Recup_infos_lever_coucher_soleil') {
@@ -252,7 +343,7 @@
         }
       }
 
-      ajax::success($res);
+      ajax::success();
     }
     if (init('action') == 'Santé'){
       $recherche='chauffage';
@@ -271,9 +362,6 @@
             break;
           case 'PAC':
             $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fa jeedom-feu"> Mes pompes à chaleur</span></h3></td></tr>';
-            break;
-          case 'poele';
-            $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fa jeedom-feu"> Mes poêles à granules</span></h3></td></tr>';
             break;
           case 'volet';
             $div .= '<tr class="santé_titre"><td colspan="11"><h3><span class="fa jeedom-volet-ferme"> Mes volets</span></h3></td></tr>';
@@ -389,9 +477,6 @@
           $recherche = 'PAC';
           goto suivant;
         case 'PAC':
-          $recherche = 'poele';
-          goto suivant;
-        case 'poele';
           $recherche = 'volet';
           goto suivant;
         case 'volet';
@@ -403,9 +488,14 @@
       }
       ajax::success( $div);
     }
-   
+    if (init('action') == "fromHumanReadable"){
+      ajax::success(jeedom::fromHumanReadable(init('expression')));
+    }
+    if (init('action') == "toHumanReadable"){
+      ajax::success(jeedom::toHumanReadable(init('expression')));
+    }
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */
   } catch (Exception $e) {
-    ajax::error(displayExeption($e), $e->getCode());
+    ajax::error(displayException($e), $e->getCode());
   }

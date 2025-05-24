@@ -79,9 +79,6 @@ $eqLogics = planification::byType('planification');
             case 'PAC':
                 echo '<tr class="santé_titre PAC"><td colspan="11"><h3><span><i class="far fa-snowflake"></i> Mes pompes à chaleur</span></h3></td></tr>';
                 break;
-            case 'poele';
-                echo '<tr class="santé_titre poele"><td colspan="11"><h3><span><i class="fa jeedom-feu"></i> Mes poêles à granules</span></h3></td></tr>';
-                break;
             case 'volet';
                 echo '<tr class="santé_titre volet"><td colspan="11"><h3><span><i class="fa jeedom-volet-ferme"> Mes volets</span></h3></td></tr>';
                 break;
@@ -198,9 +195,6 @@ $eqLogics = planification::byType('planification');
         $recherche = 'PAC';
         goto suivant;
     case 'PAC':
-        $recherche = 'poele';
-        goto suivant;
-    case 'poele';
         $recherche = 'volet';
         goto suivant;
     case 'volet';

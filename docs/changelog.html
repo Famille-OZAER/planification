@@ -37,6 +37,33 @@
                 <li>Ajout de la possibilité d'ajouter un équipement personnalisé.</li>
                 <li>Création de la documentation.</li>
                 <li>Correction d'un bug lorsque un équipement est dupliqué.</li>
+                
+            </ul>
+            <h3>24/05/2025</h3>
+            <ul>
+                <li>Ajout numéro de version dans la configuration du plugin.</li>
+                <li>Suppression complète de la gestion de poêle à granule.</li>
+                <li>Correction d'un bug sur l'afficahge des widgets lors de la purge du cache.</li>
+                <li>Enregistrment des heures de levers et de coucher dans le fichier Json pour les volets.</li>
+                
+                <ul class="bloc ">Ajout de l'onglet Paramètres pour la PAC:                 
+                    <li>Ajout de la commande Delta chauffage boost.</li> 
+                    <li>Ajout de la commande Delta chauffage ECO.</li> 
+                    <li>Ajout de la commande Delta climatisation boost.</li> 
+                    <li>Ajout de la commande Numéro de semaine maximum pour activer le chauffage.</li> 
+                    <li>Ajout de la commande Numéro de semaine minimum pour activer le chauffage.</li> 
+                    <li>Ajout de la commande Température extérieure en dessous de laquelle la PAC doit être en chauffage continu.</li> 
+                    <li>Ajout de la commande Température extérieure au dessus de laquelle la PAC peut être en climatisation.</li> 
+                    <li>Ajout de la gestion des équipements boadlink.</li>
+                </ul>
+                <li>Ajout de l'onglet gestion des ouvrants pour la PAC.</li>    
+                <li>Ajout de l'onglet gestion des planifications. Celui ci est automatiquement alimenté en fonctoin des planifications enregistrées dans l'équipement/ </li> 
+                <li>Optimisations de la classe.</li>
+                <li>Optimisation des widgets, désormais la partie javascript est commune à chaque widget=> gain de performance à l'affichage.</li>
+                <li>Optimisation du code php et javascript.</li>
+                <li>Amélioration du démon</li>
+                <li>Ajout de la commande Mode Planification: cela permet de changer la planification manuellement sans que de démon reprenne celle en fonction des condition.</li>
+                
             </ul>
             <h3>17/04/2024</h3>
             <ul>
@@ -203,7 +230,7 @@
                 <li>Modification majeure du fonctionnement du plugin:
                     <li>Désormais l'onglet "commandes planifications " a disparu. les commandes sont donc maintenant des commandes de l'eqLogic.</li>
                 </li>
-                <li>Modification des widgets PAC et Poele:
+                <li>Modification des widgets PAC:
                     <ul class="bloc ">
                         <li>Lorsque l'on utilisait plusieurs eqlogics avec le même type, ceux-ci ne fonctionnaient pas correctement.</li>
                         <li>Lorsque l'on met le widget en mode absent, l'action arrêt est effectuée.</li>
