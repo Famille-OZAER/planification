@@ -83,7 +83,7 @@ function planification_update() {
 		$eqLogics=planification::byType('planification');   
 		$planifications_new='';   
 		foreach ($eqLogics as $eqLogic) {
-			$eqLogic->save(true);			
+			$eqLogic->save();			
 		}
 	}
 	catch (Exception $e){
