@@ -309,13 +309,6 @@
       $res=$eqLogic->getId();
       ajax::success($res);
     }
-    if (init('action') == 'Set_widget_cache') {
-      $eqLogic=planification::byId(init('id'));
-      $eqLogic_id=$eqLogic->getId();
-      cache::set("Planification_". $eqLogic_id ."_page", init('page'));
-      // $eqLogic->setCache('Page', init('page'));
-      ajax::success();
-    }	
     if (init('action') == 'Recup_infos_lever_coucher_soleil') {
       $res=planification::Recup_infos_lever_coucher_soleil(init('id'));
       ajax::success($res);

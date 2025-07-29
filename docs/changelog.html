@@ -27,7 +27,7 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer ">
 
-        <section id="main_content" class="inner ">
+        <section id="main_content" class="inner">
             <h2 id="documentation">Documentation</h2>
             <p>
                 <a target="_blank" href="https://raw.githack.com/Famille-OZAER/planification/main/docs/documentation.html">Voir la page dédiée.</a>
@@ -37,7 +37,19 @@
                 <li>Ajout de la possibilité d'ajouter un équipement personnalisé.</li>
                 <li>Création de la documentation.</li>
                 <li>Correction d'un bug lorsque un équipement est dupliqué.</li>
-                
+                <li>Trouver un moyen pour éviter le ToHtml intempestif.</li>
+                <li>Boost sur PAC ne fonctonne pas en manuel.</li>
+                <li>Correction sur la page santé: un équipement désactivé n'a pas d'image assossiée.</li>
+                <i>Correction d'un bug sur la selection lever/coucher dans la planification.</i>
+            </ul>
+            <h3>05/2025</h3>
+            <ul>
+                <li>Correction Gestion lever/coucher de soleil lors de la modification dans l'équipement.</li>
+                <li>Correction de bugs dans le démon.</li>
+                <li>Mise en place du min max sur la commande de température.</li>
+                <li>Correction renvoi de commande lorsque la PAC est en manuel et qu'il y a un changement de température de consigne.</li>
+                <li>Correction erreur javascript: Uncaught TypeError: Cannot read properties of undefined (reading 'value').</li>
+                <li>Correction affichage de la selection de la planification sur le widget.</li>
             </ul>
             <h3>24/05/2025</h3>
             <ul>
@@ -65,10 +77,7 @@
                 <li>Ajout de la commande Mode Planification: cela permet de changer la planification manuellement sans que de démon reprenne celle en fonction des condition.</li>
                 
             </ul>
-            <h3>17/04/2024</h3>
-            <ul>
-               
-            </ul>
+           
             <h3>17/04/2024</h3>
             <ul>
                 <li>Passage en pure Js en prévision de la nouvelle version de jeedom V4.4 se passant complétement de jqwery.</li>

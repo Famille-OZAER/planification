@@ -116,7 +116,6 @@ class planification extends eqLogic {
         $Json_heure_lever_coucher = $Json["Lever_coucher"][0]; 
 
       }
-      planification::add_log("debug",$Json_heure_lever_coucher);
       foreach ($Json_heure_lever_coucher as $key => $value) { 
         $Heure = $value;
         $Heure_int = str_replace ( ":" ,"" ,$value);
@@ -199,17 +198,13 @@ class planification extends eqLogic {
     
     
     $eqLogic_id = $eqLogic->getId();
-    if($eqLogic->getConfiguration("utiliser_automatisation_plugin",0)){
       if (!isset($equipementsInfos[$eqLogic_id])) {
         $equipementsInfos[$eqLogic_id] = new EquipementInfo1($eqLogic_id); 
         $Json=$eqLogic::Get_Json($eqLogic_id);
-        planification::add_log("debug",$Json,$eqLogic,"aaa");
-        planification::add_log("debug",$Json["Paramètres"],$eqLogic,"aaa");
         $equipementsInfos[$eqLogic_id]->planifications = $Json["Planifications"][0]; 
         if (isset($Json["Paramètres"])){
 
           $equipementsInfos[$eqLogic_id]->Automatisation_Paramètres = $Json["Paramètres"][0];
-          planification::add_log("debug",$Json["Paramètres"][0],$eqLogic,"aaa");
         }        
         if (isset($Json["Ouvrants"])){
           $equipementsInfos[$eqLogic_id]->Automatisation_Ouvrants = $Json["Ouvrants"][0];
@@ -218,48 +213,48 @@ class planification extends eqLogic {
           $equipementsInfos[$eqLogic_id]->Automatisation_Gestion_planifications =$Json["Gestion_planifications"][0];
         }
       }
-      planification::add_log("debug",$equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Type_équipement_pilote"],$eqLogic,"aaa");
-      if ($equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Type_équipement_pilote"] == "broadlink"){
-        $nom_commande=$eqLogic_cmd->getName();
-       //planification::add_log("info",' commande: ' . $nom_commande ,$eqLogic,"aaa");
-        $eqLogic_broalink = eqLogic::byId(trim($equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Equipement_pilote"], "#"));
-        if (is_object($eqLogic_broalink)){
-          if(strtolower( $nom_commande) == 'boost on' || strtolower($nom_commande) == 'boost off' ){
-            $cmd = cmd::byEqLogicIdCmdName( $eqLogic_broalink->getId(),  $nom_commande);
-            if (is_object($cmd)){
-              $cmd->execCmd();
-            }else{
-              planification::add_log("error",'La commande: ' . $nom_commande . " n'existe pas dans l'équipement broadlink: " . $eqLogic_broalink->getName(),$eqLogic,"aaa");	
-            }
-          } else{
-            $température_consigne =  cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'consigne_temperature')->execCmd();
-            if (strtolower($nom_commande) == 'chauffage eco') {
-              $nom_commande_broadlink = 'Chauffage ' . strval( $température_consigne - ($equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Delta_chauffage_eco"]));
-            }elseif (strtolower($nom_commande) == 'chauffage'){
-              $nom_commande_broadlink = 'Chauffage ' .  $température_consigne;
-            }elseif(strtolower($nom_commande) == 'climatisation'){
-              $nom_commande_broadlink = 'Climatisation ' .  $température_consigne;
-            }elseif(strtolower($nom_commande) == 'ventilation'){
-              $nom_commande_broadlink = 'Ventilation';
-            }elseif(strtolower($nom_commande) == 'arrêt'){
-              $nom_commande_broadlink = 'Arrêt';
-            }
-            planification::add_log("info",'exeution commande: ' . $nom_commande_broadlink . " sur l'équipement broadlink: " . $eqLogic_broalink->getName(),$eqLogic,"aaa");	
-          
-            $cmd = cmd::byEqLogicIdCmdName( $eqLogic_broalink->getId(),  $nom_commande_broadlink);
-            if (is_object($cmd)){
-              $cmd->execute();
-            }else{
-              planification::add_log("info",'La commande: ' . $nom_commande_broadlink . " n'existe pas dans l'équipement broadlink: " . $eqLogic_broalink->getName(),$eqLogic,"aaa");	
+      if ($eqLogic->getConfiguration('Type_équipement','') == 'PAC'){
+        planification::add_log("debug",$equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Type_équipement_pilote"],$eqLogic);
+        if ($equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Type_équipement_pilote"] == "broadlink"){
+          $nom_commande=$eqLogic_cmd->getName();
+          $eqLogic_broalink = eqLogic::byId(trim($equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Equipement_pilote"], "#"));
+          if (is_object($eqLogic_broalink)){
+            if(strtolower( $nom_commande) == 'boost on' || strtolower($nom_commande) == 'boost off' ){
+              $cmd = cmd::byEqLogicIdCmdName( $eqLogic_broalink->getId(),  $nom_commande);
+              if (is_object($cmd)){
+                $cmd->execCmd();
+              }
+            } else{
+              $température_consigne =  cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'consigne_temperature')->execCmd();
+              if (strtolower($nom_commande) == 'chauffage eco') {
+                $nom_commande_broadlink = 'Chauffage ' . strval( $température_consigne - ($equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Delta_chauffage_eco"]));
+              }elseif (strtolower($nom_commande) == 'chauffage'){
+                $nom_commande_broadlink = 'Chauffage ' .  $température_consigne;
+              }elseif(strtolower($nom_commande) == 'climatisation'){
+                $nom_commande_broadlink = 'Climatisation ' .  $température_consigne;
+              }elseif(strtolower($nom_commande) == 'ventilation'){
+                $nom_commande_broadlink = 'Ventilation';
+              }elseif(strtolower($nom_commande) == 'arrêt'){
+                $nom_commande_broadlink = 'Arrêt';
+              }
+              planification::add_log("info",'exeution commande: ' . $nom_commande_broadlink . " sur l'équipement broadlink: " . $eqLogic_broalink->getName(),$eqLogic);	
+            
+              $cmd = cmd::byEqLogicIdCmdName( $eqLogic_broalink->getId(),  $nom_commande_broadlink);
+              if (is_object($cmd)){
+                $cmd->execute();
+              }else{
+                planification::add_log("info",'La commande: ' . $nom_commande_broadlink . " n'existe pas dans l'équipement broadlink: " . $eqLogic_broalink->getName(),$eqLogic);	
+              }
             }
           }
+          
+        
+          
         }
-        
-      
-        
       }
+      
 
-    }
+    
     
 
 
@@ -441,7 +436,77 @@ class planification extends eqLogic {
       }
 
       //action suivante 
-      if (true){       
+      if(true){
+        $noms_jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+        $maintenant = date_create_from_format('Y-m-d H:i', date('Y-m-d H:i'));
+        $jour_actuel = date('N');
+        $trouve = false;
+
+        for ($i = 0; $i < 7; $i++) {
+            $index_jour = ($jour_actuel + $i - 1) % 7;
+            $jour_nom = $noms_jours[$index_jour];
+            $periodes = $planifications[$jour_nom];
+
+            if ($periodes == [[]]) continue;
+
+            foreach ($periodes as &$periode) {
+                $jour_minuscule = strtolower($jour_nom);
+                switch ($periode["Type"]) {
+                    case "lever":
+                        $periode["Début"] = $infos_lever_coucher_soleil["Heure_action_suivante_lever_$jour_minuscule"];
+                        planification::add_log("debug", "lever: " . $periode["Début"], $eqLogic, "aa");
+                        break;
+                    case "coucher":
+                        $periode["Début"] = $infos_lever_coucher_soleil["Heure_action_suivante_coucher_$jour_minuscule"];
+                        planification::add_log("debug", "coucher: " . $periode["Début"], $eqLogic, "aa");
+                        break;
+                    default:
+                        $periode["Début"] = str_pad($periode["Début"], 5, "0", STR_PAD_LEFT);
+                }
+            }
+            unset($periode); // protection contre modification de la dernière référence
+
+            array_multisort(array_column($periodes, 'Début'), SORT_ASC, $periodes);
+
+            foreach ($periodes as $periode) {
+                $datetime_action = date_create_from_format('Y-m-d H:i', date('Y-m-d ') . $periode["Début"]);
+                $datetime_action->modify("+$i days");
+
+                $cmd_name = cmd::byId($periode["Id"])->getName();
+                if ($datetime_action > $maintenant && !$trouve && $_objet->action_en_cours !== $cmd_name) {
+                    $trouve = true;
+                    $action = [
+                        "Id" => $periode["Id"],
+                        "Nom" => $cmd_name,
+                        "date" => $datetime_action
+                    ];
+                    planification::add_log("debug", "action suivante: " . $cmd_name . " à " . $datetime_action->format('H:i'), $eqLogic, "planification_deamon");
+                    break 2; // Sortir des deux boucles dès qu'on a trouvé
+                }
+            }
+        }
+
+        if ($trouve) {
+            $cmd_nom = $eqLogic->getCmd(null, "action_suivante");
+            $cmd_date = $eqLogic->getCmd(null, "heure_fin");
+
+            if ($cmd_nom->execCmd() !== $action["Nom"] || $cmd_date->execCmd() !== $action["date"]->format('d-m-Y H:i')) {
+                $cmd_nom->set_value($action["Nom"]);
+                $cmd_date->set_value($action["date"]->format('d-m-Y H:i'));
+            }
+        } else {
+            $cmd_nom = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'action_suivante');
+            $cmd_date = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'heure_fin');
+
+            if ($cmd_nom->getValue() !== "" || $cmd_date->getValue() !== "") {
+                $cmd_nom->set_value('');
+                $cmd_date->set_value('');
+                planification::add_log("debug", "Aucune action suivante trouvée.", $eqLogic, "planification_deamon");
+            }
+        }
+      }
+      /*if (true){    
+        $noms_jours = array("Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche");     
         $maintenant=date_create_from_format ('Y-m-d H:i' ,date('Y-m-d H:i'));
         $numéro_jour=date('N');
         $trouve=false;
@@ -456,8 +521,10 @@ class planification extends eqLogic {
           foreach($periodes as $periode){
             if($periode["Type"] == "lever"){
               $periode["Début"]=$infos_lever_coucher_soleil["Heure_action_suivante_lever_".strtolower ($noms_jours[$numéro_jour-1])];
+               planification::add_log("debug","lever: " . $periode["Début"],$eqLogic,"aa");
             }else if ($periode["Type"] == "coucher"){
               $periode["Début"]=$infos_lever_coucher_soleil["Heure_action_suivante_coucher_".strtolower ($noms_jours[$numéro_jour-1])];
+              planification::add_log("debug","coucher: " . $periode["Début"],$eqLogic,"aa");
             }else{
               $periode["Début"] = "0". $periode["Début"];
               $periode["Début"] = substr($periode["Début"],-5);
@@ -472,7 +539,6 @@ class planification extends eqLogic {
 
           foreach($periodes as $periode){
             $date=date_add(date_create_from_format ( 'Y-m-d H:i' ,date('Y-m-d '). $periode["Début"]), date_interval_create_from_date_string($i-1 .' days'));
-
             if($date->getTimestamp() > $maintenant->getTimestamp() && !$trouve &&  $_objet->action_en_cours != cmd::byId($periode["Id"])->getName()){
               $trouve=true;
               $action["Id"]=$periode["Id"];
@@ -504,7 +570,7 @@ class planification extends eqLogic {
           
 
         }
-      }
+      }*/
     }else if ($_objet->mode_fonctionnement == "Manuel"){
       $eqLogic_cmd=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),strtolower( $_objet->action_en_cours));
       if( $_objet->action_en_cours == $_objet->mode_fonctionnement || strtolower( $_objet->action_en_cours) == $eqLogic_cmd->getLogicalId()){
@@ -979,7 +1045,6 @@ class planification extends eqLogic {
        }else if ($cmd_name == 'consigne_temperature'){
          $eqLogic::replace_into_html($eqLogic, $erreur, $liste_erreur, $replace, $parametre, cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),$cmd_name), 'value', true);
         }else{
-         //log::add("aaa","debug", $parametre .":" . $cache_array[$cmd_name]);
           $eqLogic::replace_into_html($eqLogic, $erreur, $liste_erreur, $replace, $parametre, $cache_array[$cmd_name], 'value', true);
         }     
 
@@ -1028,7 +1093,7 @@ class planification extends eqLogic {
     }
   }
   function toHtml($_version = 'dashboard') { 
-
+   
     try {
 
       $eqLogic=$this;
@@ -1036,7 +1101,7 @@ class planification extends eqLogic {
       $replace = $eqLogic->preToHtml($_version);
       if (!is_array($replace)) {return $replace; }
       //planification::add_log("info","tohtml",$eqLogic);
-        planification::add_log("info", $eqLogic->getConfiguration("Type_équipement",""),$eqLogic);
+      // planification::add_log("info", $eqLogic->getConfiguration("Type_équipement",""),$eqLogic);
     
       //$eqLogic = document.querySelector('.eqLogic[data-eqLogic_id="' + _params[i].eqLogic_id + '"]')
       //planification::add_log("info","debug_backtrace: " . json_encode(debug_backtrace(false, 2)),$eqLogic);
@@ -1061,13 +1126,7 @@ class planification extends eqLogic {
       if ($eqLogic->getDisplay('hideOn' . $version_alias) == 1) { return ''; }
       $erreur=false;
       $liste_erreur=[];
-      //$replace['#type_equipement#']=$eqLogic->getConfiguration("Type_équipement","");
-      //$timestamp_key = "Planification_". $eqLogic_id ."_Timestamp_Json";
-      //$Id_planification_en_cours_key = "Planification_". $eqLogic_id ."_Id_planification_en_cours";
-      //$cached_timestamp = cache::byKey( $timestamp_key)->getValue();
-      //$cached_planification_id =cache::byKey($Id_planification_en_cours_key)->getValue();
-      //$current_timestamp = filemtime(dirname(__FILE__) . "/../../planifications/" . $eqLogic_id . ".json");
-      //$current_planification_id = $eqLogic->getConfiguration("Id_planification_en_cours", "");
+     
 
 
 
@@ -1375,7 +1434,7 @@ class planificationCmd extends cmd {
     $eqLogic = $this->getEqLogic();
     $logical_id = $this->getLogicalId();
     $cmd_id= $this->getId();
-    //planification::add_log("debug",$logical_id . ":" . $value,$eqLogic);
+    planification::add_log("debug",$logical_id . ":" . $value,$eqLogic);
     cache::set("Planification_". $eqLogic->getId() ."_" . $logical_id, $value);
     //if(cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),$logical_id)->execCmd() != $value){
     cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),$logical_id)->setValue($value)->save();
@@ -1388,7 +1447,7 @@ class planificationCmd extends cmd {
     $cmd=$this;
     $eqLogic = $cmd->getEqLogic();
     $eqLogic_id = $eqLogic->getId();
-    //planification::add_log("info", $cmd->getName() . "(" . $cmd->getLogicalId() .  ")" ,$eqLogic);
+    planification::add_log("info", $cmd->getName() . "(" . $cmd->getLogicalId() .  ")" ,$eqLogic);
     switch ($cmd->getLogicalId()) {
       /*case 'refresh':
 
@@ -1426,13 +1485,16 @@ class planificationCmd extends cmd {
         break;
       case 'set_planification':
         $planification_actuelle=cache::byKey("Planification_". $eqLogic_id ."_planification_en_cours")->GetValue();
+      
+        if (!isset($_options["select"])){
+          return;
+        }
         if ($_options["select"] == $planification_actuelle &&  !isset($_options["user_login"])){
           return;
         }
-         planification::add_log("debug",$_options,$eqLogic);
+        
         if(!isset($_options["mode"])){
             planification::add_log("info","Passage planification en Manuel" ,$eqLogic);
-            //cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement')->set_value("Manuel");
             $eqLogic->getCmd(null, "mode_planification")->set_value("Manuel");
         }else{
             $eqLogic->getCmd(null, "mode_planification")->set_value("Auto");
@@ -1454,7 +1516,7 @@ class planificationCmd extends cmd {
         $planification_id='';
         $planification_nom='';
         $planification_actuelle=cache::byKey("Planification_". $eqLogic_id ."_planification_en_cours")->GetValue();
-        planification::add_log("debug","Planification actuelle: "  .$planification_actuelle,$eqLogic);	
+        
         foreach($planifications as $planification){
           
           if($_options["select"] == $planification[0]["Nom"]){
@@ -1475,11 +1537,17 @@ class planificationCmd extends cmd {
           $calendar_selector .= '<option id=' .$planification[0]["Id"]. ' value=' .$valuecalendar . '>' . $planification[0]["Nom"] . '</option>';          
 
         }
-        cache::set("Planification_". $eqLogic_id ."_calendar_selector", $calendar_selector);
-
+        cache::set("Planification_". $eqLogic_id ."_calendar_selector", $calendar_selector);   
+        planification::add_log("debug","_calendar_selector: " .  $calendar_selector,$eqLogic);	
+             
+        if ($_options["select"] ==""){
+          cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'planification_en_cours')->set_value("");
+          $eqLogic->setConfiguration("Id_planification_en_cours","");
+          return;
+        }
 
         if( $planification_nom != '' &&  $planification_id != '' ){
-          planification::add_log("debug","Mise à jour planification: ". $planification_nom . "(" . $planification_id . ")",$eqLogic);	
+          planification::add_log("debug","Mise à jour planification: ". $planification_actuelle ." =>". $planification_nom . "(" . $planification_id . ")",$eqLogic);	
           cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'planification_en_cours')->set_value($planification_nom);
           cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'heure_fin')->set_value("");
           cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'action_suivante')->set_value("");
@@ -1495,6 +1563,9 @@ class planificationCmd extends cmd {
        // }
         break;
       case 'set_information':
+        if(!isset($_options["message"])){
+          return;
+        }
         if( cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'info')->getValue() != $_options["message"]){
           planification::add_log("info",'execute: ' . $cmd->getLogicalId() . ": " . $_options["message"],$eqLogic); 
           cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'info')->set_value($_options["message"]);
@@ -1522,9 +1593,11 @@ class planificationCmd extends cmd {
                 cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'action_en_cours')->set_value(ucwords($cmd->getName()));
                 if(!isset($_options["mode"])){
                   planification::add_log("info","Passage en Manuel(" . $cmd->getName() . ")" ,$eqLogic);
+                  
                   cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement')->set_value("Manuel");
                   $eqLogic->getCmd(null, "heure_fin")->set_value("");
                   $eqLogic->getCmd(null, "action_suivante")->set_value("");
+                  $eqLogic->getCmd(null, "set_planification")->execCmd();
                 
                 }
                 $eqLogic_cmd=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),$cmd->getLogicalId());

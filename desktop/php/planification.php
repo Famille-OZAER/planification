@@ -231,7 +231,7 @@
 			</span>
 		</div>
 		<ul class="nav nav-tabs" role="tablist" style="display:inline-block">
-			<li class="PAC" role="presentation" id = ""><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
+			<li role="presentation" id = ""><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fa fa-arrow-circle-left"></i></a></li>
 			<li role="presentation" id = "menu_tab_eqlogic" ><a href="#tab_eqlogic" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-tachometer-alt"></i> {{Equipement}}</a></li>
 			<li role="presentation" id = "menu_tab_planifications"><a href="#tab_planifications" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Planifications}}</a></li>
 			<li role="presentation" id = "menu_tab_gestion"><a href="#tab_gestion_heures_lever_coucher" aria-controls="home" role="tab" data-toggle="tab" ><i class="fa fa-cog"></i> {{Gestion Lever/Coucher soleil}}</a></li>
@@ -314,14 +314,6 @@
 								</label>
 							</div>
 
-						</div>
-						<div class="form-group">
-							<label class="col-sm-4 control-label">{{Automatisation du plugin}}</label>
-							<div class="col-sm-6">
-								<label class="checkbox-inline">
-									<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="utiliser_automatisation_plugin"\>Utiliser automatisation du plugin
-								</label>
-							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
@@ -593,119 +585,119 @@
 				</div>
 
 				<?php
-				$display='block';
-				for ($i = 1; $i <= 7; $i++) {
-					switch ($i){
-						case 1:
-							$jour = "Lundi";
-							break;
-						case 2:
-							$jour = "Mardi";
-							break;
-						case 3:
-							$jour = "Mercredi";
-							break;
-						case 4:
-							$jour = "Jeudi";
-							break;
-						case 5:
-							$jour = "Vendredi";
-							break;
-						case 6:
-							$jour = "Samedi";
-							break;
-						case 7:
-							$jour = "Dimanche";
-							break;
-					}
-					if ($jour != 'Lundi'){$display="none";}
-					echo '<div class="' . $jour .' col-sm-12" style="display:'.  $display . '">';
-					echo '<div class="col-sm-6 Lever">
-								<form class="form-horizontal">
-									<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
-									<fieldset>
-										<div class="well">
-											<div class="form-group ">
-												<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
-												<div class="col-sm-2">
-													<span class="HeureLever ' . $jour . ' ' . $i . ' label label-success"></span>
-												</div>
-											</div>
-											<div class="form-group ">
-												<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-												<div class="col-sm-2">
-													<span class="Heure_action_suivante_Lever ' . $jour . ' ' . $i . ' label label-warning"></span>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-												<div class="col-sm-5">
-													<div class="input-group">
-														<input class="in_timepicker HeureLeverMin '. $jour . ' ' . $i .' eqLogicAttr input-sm" data-l1key="configuration_lever_coucher" data-l2key="LeverMin_'.$jour.'">
-															<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
-														</input>
-													</div>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-												<div class="col-sm-5">
-													<div class="input-group">
-														<input class="in_timepicker HeureLeverMax ' . $jour . ' ' . $i .' eqLogicAttr input-sm" data-l1key="configuration_lever_coucher" data-l2key="LeverMax_'.$jour.'">
-															<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
-														</input>
-													</div>
-												</div>
-											</div>
-										</div>
-									</fieldset>
-								</form>
-							</div>
-							<div class="col-sm-6 Coucher">
-								<form class="form-horizontal">
-									<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
-									<fieldset>
-										<div class="well">
-											<div class="form-group ">
-												<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
-												<div class="col-sm-2">
-													<span class="HeureCoucher ' . $jour . ' ' . $i . ' label label-success"></span>
-												</div>
-											</div>
-											<div class="form-group ">
-												<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
-												<div class="col-sm-2">
-													<span class="Heure_action_suivante_Coucher ' . $jour . ' ' . $i . ' label label-warning"></span>
-												</div>
-											</div>
-											<div class="form-group">
-
-												<label class="col-sm-7 control-label">{{Heure minimum}}</label>
-												<div class="col-sm-5">
-													<div class="input-group">
-														<input class="in_timepicker HeureCoucherMin ' . $jour . ' ' . $i . ' eqLogicAttr input-sm" data-l1key="configuration_lever_coucher" data-l2key="CoucherMin_'.$jour.'">
-															<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
-														</input>
-													</div>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-7 control-label">{{Heure maximum}}</label>
-												<div class="col-sm-5">
-													<div class="input-group">
-														<input class="in_timepicker HeureCoucherMax ' . $jour . ' ' . $i . ' eqLogicAttr input-sm" data-l1key="configuration_lever_coucher" data-l2key="CoucherMax_'.$jour.'">
-															<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
-														</input>
-													</div>
-												</div>
-											</div>
-										</div>
-									</fieldset>
-								</form>
-							</div>	
-						</div>';
+					$display='block';
+					for ($i = 1; $i <= 7; $i++) {
+						switch ($i){
+							case 1:
+								$jour = "Lundi";
+								break;
+							case 2:
+								$jour = "Mardi";
+								break;
+							case 3:
+								$jour = "Mercredi";
+								break;
+							case 4:
+								$jour = "Jeudi";
+								break;
+							case 5:
+								$jour = "Vendredi";
+								break;
+							case 6:
+								$jour = "Samedi";
+								break;
+							case 7:
+								$jour = "Dimanche";
+								break;
 						}
-						?>
+						if ($jour != 'Lundi'){$display="none";}
+						echo '<div class="' . $jour .' col-sm-12" style="display:'.  $display . '">';
+						echo '<div class="col-sm-6 Lever">
+									<form class="form-horizontal">
+										<legend> <i class="fa fa-sun"></i> Gestion lever de soleil</legend>
+										<fieldset>
+											<div class="well">
+												<div class="form-group ">
+													<label class="col-sm-7 control-label">{{Heure de lever de soleil}}</label>
+													<div class="col-sm-2">
+														<span class="HeureLever ' . $i . ' ' . $jour  . ' label label-success"></span>
+													</div>
+												</div>
+												<div class="form-group ">
+													<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
+													<div class="col-sm-2">
+														<span class="Heure_action_suivante_Lever '. $i . ' '. $jour .   ' label label-warning"></span>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-7 control-label">{{Heure minimum}}</label>
+													<div class="col-sm-5">
+														<div class="input-group">
+															<input class="in_timepicker HeureLeverMin '. $jour . ' ' . $i .' eqLogicAttr input-sm" data-l1key="configuration_lever_coucher" data-l2key="LeverMin_'.$jour.'">
+																<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+															</input>
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-7 control-label">{{Heure maximum}}</label>
+													<div class="col-sm-5">
+														<div class="input-group">
+															<input class="in_timepicker HeureLeverMax ' . $jour . ' ' . $i .' eqLogicAttr input-sm" data-l1key="configuration_lever_coucher" data-l2key="LeverMax_'.$jour.'">
+																<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+															</input>
+														</div>
+													</div>
+												</div>
+											</div>
+										</fieldset>
+									</form>
+								</div>
+								<div class="col-sm-6 Coucher">
+									<form class="form-horizontal">
+										<legend><i class="fa fa-moon"></i> Gestion coucher de soleil</legend>
+										<fieldset>
+											<div class="well">
+												<div class="form-group ">
+													<label class="col-sm-7 control-label">{{Heure de coucher de soleil}}</label>
+													<div class="col-sm-2">
+														<span class="HeureCoucher '. $i . ' ' . $jour . ' label label-success"></span>
+													</div>
+												</div>
+												<div class="form-group ">
+													<label class="col-sm-7 control-label">{{Heure prochaine action}}</label>
+													<div class="col-sm-2">
+														<span class="Heure_action_suivante_Coucher ' . $i . ' ' . $jour . ' label label-warning"></span>
+													</div>
+												</div>
+												<div class="form-group">
+
+													<label class="col-sm-7 control-label">{{Heure minimum}}</label>
+													<div class="col-sm-5">
+														<div class="input-group">
+															<input class="in_timepicker HeureCoucherMin ' . $jour . ' ' . $i . ' eqLogicAttr input-sm" data-l1key="configuration_lever_coucher" data-l2key="CoucherMin_'.$jour.'">
+																<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+															</input>
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-7 control-label">{{Heure maximum}}</label>
+													<div class="col-sm-5">
+														<div class="input-group">
+															<input class="in_timepicker HeureCoucherMax ' . $jour . ' ' . $i . ' eqLogicAttr input-sm" data-l1key="configuration_lever_coucher" data-l2key="CoucherMax_'.$jour.'">
+																<a class="btn btn-default bt_afficher_timepicker btn-sm" style="background-color: var(--form-bg-color) !important;"><i class="icon far fa-clock"></i></a>
+															</input>
+														</div>
+													</div>
+												</div>
+											</div>
+										</fieldset>
+									</form>
+								</div>	
+							</div>';
+					}
+				?>
 			</div>
 
 			<!--Commands Tab-->

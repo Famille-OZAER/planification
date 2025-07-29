@@ -1,5 +1,5 @@
 <div class="eqLogic eqLogic-widget allowResize allowReorderCmd #custom_layout# #class#" data-eqType="#eqType#" data-eqLogic_id="#id#" data-eqLogic_uid="#uid#" data-version="#version#" data-translate-category="#translate_category#" data-category="#category#"
-    data-tags="#tags#" style="min-width:270px!important;max-width:270px!important;min-height:170px!important;max-height:170px!important;width: 270px;height: 170px;">
+    data-tags="#tags#" style="min-width:270px!important;max-width:270px!important;min-height:220px!important;max-height:220px!important;width: 270px;height: 1170px;">
 
     <center class="object_name" style="overflow: hidden;padding-right:22px;padding-left:12px;font-weight:300;word-break: break-all;max-height:45px;font-size:16px;background-color: rgb(0 0 0);font-family:Arial;font-weight:normal;">
         <a href="#eqLink#">#object_name#</a>
@@ -7,58 +7,44 @@
     
 
    
-   <div class="tuile" style="height: 100%; background-color: rgb(255 255 255 /5%);">
+   <div class="tuile" style="background-color: rgb(255 255 255 /5%);">
 
-        <div class="page_1" style="margin: 0px;height:100%;margin: 0px;display: noney;">
-            <div class="col-xs-6 gauche" style="height:60%;margin:0px;padding: 0px!important;">
-                <i class="cmd fa fa-fire boost cursor tooltips" title="Activer le mode boost" style="position:relative;float:right;top: calc(100% - 30px);display:none;font-size: 1.9em;margin-left: 5px;color:white!important"></i>
-                <img class="img cmd cmd-widget" style="position:relative;top:calc(100% - 80px);float: right;height: 80px;" />
-              
-                <span>
-                    <img class="img_auto_manu cmd cmd-widget" data-type="info" src='' style="position: absolute;top: 65px;right: 5px;height:20px" />       
-                </span>
-            </div>
-            <div class="col-xs-6 droite" style="height:60%;margin:0px;padding: 0px!important;">
-                <div class="Thermostat" style="top: calc(100% - 90px);"></div>
-            </div>
-             <div class="col-xs-12 center" style="margin:0px;padding-top: 10px!important;">
-                <i data-cmd_id="#arret_id#" class="Arrêt cmd fa fa-times cursor tooltips" title="Arrêter la planification." style="position: relative;top: calc(100% - 40px);font-size: 30px;margin-right: 7px;color:#3498db!important"></i>
-                <i data-cmd_id="#ventilation_id#" class="Ventilation cmd icon techno-ventilation cursor tooltips" title="Forçage de la planification en mode ventilation." style="position: relative;top: calc(100% - 40px);font-size: 30px;margin-right: 7px;color:#3498db!important"></i>
-                <i data-cmd_id="#chauffage_id#" class="Chauffage cmd icon nature-weather1 cursor tooltips" title="Forçage de la planification en mode chauffage." style="position: relative;left:2px;top: calc(100% - 40px);font-size:30px;margin-right: 7px;color:#3498db!important"></i>
-                <i data-cmd_id="#climatisation_id#" class="Climatisation cmd icon nature-snowflake cursor tooltips" title="Forçage de la planification mode climatisation." style="position: relative;top: calc(100% - 27px);font-size: 30px;margin-left: 2px;color:#3498db!important"></i>
-           </div>
-           <div class="prochaine_action tooltips col-xs-12 center" style="font-size: 0.9em;margin: 5px;color:white!important">
-            <span style="cursor:default;"></span>
-            </div>
-        </div>
-
-        <div class="page_2 center" style="padding-top: 10px;margin: 0px;display:none">
-            <div style="height:25%;">
-                <select class="selectPlanification cmd cursor tooltips" style="top: calc(100% - 26px);position: relative;width:70%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
-					#calendar_selector#
-				</select>
-            </div>
-            <div style="height:25%">
-                <div style="display: block;">
-                    <a class='bt_afficher_timepicker input-group-addon cursor tooltips' style=" top: 2px;margin: auto;padding: 5px 12px!important;display:block;width:70%;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
-                        <span class="center fa fa-calendar" style="color:white"> 
-                            <input class="in_timepicker input-sm" style="position:absolute;left:30%;top:50%;height: 0px!important;width: 0px!important; padding: 0px!important;">
-                        </span>
-                    </a>
-                </div>
-
-            </div>
-            <div style="height:50%">
-                <div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.9em;color:white!important">
-                </div>
-            </div>
+        
+        <div class="col-xs-6 gauche" style="margin:0px;padding: 0px!important;">
+            <i class="cmd fa fa-fire boost cursor tooltips" title="Activer le mode boost" style="position:relative;float:right;top: 50px;display:none;font-size: 1.9em;margin-left: 5px;color:white!important"></i>
+            <img class="img cmd cmd-widget" style="position:relative;top:calc(100% - 80px);float: right;height: 80px;" />
             
+            <span>
+                <img class="img_auto_manu cmd cmd-widget" data-type="info" src='' style="position: absolute;top: 65px;right: 5px;height:20px" />       
+            </span>
+        </div>
+        <div class="col-xs-6 droite" style="margin:0px;padding: 0px!important;">
+            <div class="Thermostat"></div>
+        </div>
+        <div class="col-xs-12 center" style="margin:0px;padding-top: 10px!important;">
+            <i data-cmd_id="#arret_id#" class="Arrêt cmd fa fa-times cursor tooltips" title="Arrêter la planification." style="position: relative;top: calc(100% - 40px);font-size: 30px;margin-right: 7px;color:#3498db!important"></i>
+            <i data-cmd_id="#ventilation_id#" class="Ventilation cmd icon techno-ventilation cursor tooltips" title="Forçage de la planification en mode ventilation." style="position: relative;top: calc(100% - 40px);font-size: 30px;margin-right: 7px;color:#3498db!important"></i>
+            <i data-cmd_id="#chauffage_id#" class="Chauffage cmd icon nature-weather1 cursor tooltips" title="Forçage de la planification en mode chauffage." style="position: relative;left:2px;top: calc(100% - 40px);font-size:30px;margin-right: 7px;color:#3498db!important"></i>
+            <i data-cmd_id="#climatisation_id#" class="Climatisation cmd icon nature-snowflake cursor tooltips" title="Forçage de la planification mode climatisation." style="position: relative;top: calc(100% - 27px);font-size: 30px;margin-left: 2px;color:#3498db!important"></i>
+        </div>
+        <div class="col-xs-12 center" style="margin:0px;padding-top: 10px!important;">
+            <select class="selectPlanification cmd cursor tooltips" style="top: calc(100% - 26px);position: relative;width:80%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
+                #calendar_selector#
+            </select>
+            <a class='bt_afficher_timepicker input-group-addon cursor tooltips' style="padding: 5px 12px!important;display:block;width:40px;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
+                <span class="center fa fa-calendar" style="color:white"> 
+                    <input class="in_timepicker input-sm" style="position:absolute;left:30%;top:50%;height: 0px!important;width: 0px!important; padding: 0px!important;">
+                </span>
+            </a>
+        </div>
+        
+        <div class="prochaine_action tooltips col-xs-12 center" style="font-size: 0.9em;margin: 5px;color:white!important">
+            <span style="cursor:default;"></span>
         </div>
         <span class="refresh cmd pull-right cursor" style="position: absolute;right: 0px;top:0px" data-cmd_id="#refresh_id#">
             <i class="fas fa-sync"></i>
         </span>
-        <i class="changecmd fa fa-retweet cursor tooltips noRefresh" title="Afficher la deuxième page" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
-    
+      
     </div>
 
     <link rel="stylesheet" type="text/css" href="plugins/planification/core/template/dashboard/css/widget.css" media="all" />
@@ -96,17 +82,16 @@
             eqLogic_id: '#id#',
             page: '#page#',
             mode: '#mode#', mode_id: '#mode_id#',
+            mode_planification : '#mode_planification#',
             etat: '#etat#', etat_id: '#etat_id#',
             action_en_cours:'#action_en_cours#',action_en_cours_id:'#action_en_cours_id#',
             action_suivante:'#action_suivante#',action_suivante_id:'#action_suivante_id#',
             calendar_selector: '#calendar_selector#',
             heure_fin: '#heure_fin#',heure_fin_id: '#heure_fin_id#',
             planification_en_cours : '#planification_en_cours#', planification_en_cours_id: '#planification_en_cours_id#',
-            info_widget:'#info_widget#',info_widget_id:'#info_widget_id#',
             set_heure_fin_id: '#set_heure_fin_id#',
 			set_planification_id: '#set_planification_id#',
-	        
-            
+	       
             boost_on_id: '#boost_on_id#',
           	boost_off_id: '#boost_off_id#',
             consigne_min: '#consigne_min#',
@@ -121,6 +106,7 @@
             boost: '#boost#',
             boost_id: '#boost_id#',
         };
+        console.log(cmds_id)
         Affichage_widget('PAC',cmds_id)
     })
     </script>

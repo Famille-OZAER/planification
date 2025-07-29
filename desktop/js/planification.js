@@ -1,7 +1,7 @@
 JSONCLIPBOARD = null
 flatpickr.localize(flatpickr.l10ns.fr)
 var typesEquipements = ['chauffages', 'PACs', 'volets', 'prises', 'persos'];
-
+var Json_lever_coucher=''
 document.getElementById('div_pageContainer').addEventListener('click', function(event) {
   var _target = null
   closeAllSelect(event.target)
@@ -224,7 +224,7 @@ document.getElementById('div_pageContainer').addEventListener('click', function(
     }, 50);
   }
   if (event.target.closest('.bt_afficher_timepicker') || event.target.closest('.bt_afficher_timepicker_planification')) {
-    flatpickr(_target.closest('div').querySelector('.in_timepicker'), {
+    flatpickr(event.target.closest('div').querySelector('.in_timepicker'), {
       enableTime: true,
       noCalendar: true,
       dateFormat: "H:i",
@@ -261,7 +261,7 @@ document.getElementById('div_pageContainer').addEventListener('click', function(
       },
       onValueUpdate: function(selectedDates, dateStr, instance) {}
     });
-    _target.closest("div").querySelector('.in_timepicker')._flatpickr.open();
+    event.target.closest("div").querySelector('.in_timepicker')._flatpickr.open();
   }
 })
 document.getElementById('tab_eqlogic').addEventListener('click', function(event) {
@@ -577,6 +577,7 @@ document.getElementById('tab_planifications').addEventListener('click', function
     const tab_gestion = document.querySelector('#tab_gestion_heures_lever_coucher');
 
     if (_target.checked) {
+      console.log(nb_checked)
       if (nb_checked === 1) {
         Divjour.querySelectorAll('.checkbox_lever_coucher').forEach(_periode => {
           if (_periode.getAttribute("checked")) {
@@ -592,13 +593,22 @@ document.getElementById('tab_planifications').addEventListener('click', function
             (numero_cette_periode < numero_autre_periode && autre_valeur_select_lever_coucher === "lever")) {
           return;
         }
-        const adjustSelectAndTime = (type) => {
-          Periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", type === "lever" ? 0 : 1);
-          Periode.querySelector('.select_lever_coucher').value = type;
-          time = tab_gestion.querySelector(`.Heure_action_suivante_${type}.${Divjour.classList[1]}`).innerText;
-        };
+        const updateSelectAndTime = (type) => {
+        const selectEl = currentPeriod.querySelector('.select_lever_coucher');
 
-        autre_valeur_select_lever_coucher === "coucher" ? adjustSelectAndTime("lever") : adjustSelectAndTime("coucher");
+          // Sélectionne la valeur uniquement si elle existe parmi les options
+          const foundOption = Array.from(selectEl.options).find(opt => opt.value === type);
+          if (foundOption) {
+            selectEl.value = type;
+            selectEl.selectedIndex = foundOption.index;
+            selectEl.dispatchEvent(new Event('change')); // Pour déclencher les effets liés
+          } else {
+            console.warn(`Valeur '${type}' non disponible dans la liste.`);
+          }
+
+          const timeSelector = `.Heure_action_suivante_${type}.${dayDiv.classList[1]}`;
+          selectedTime = scheduleTab.querySelector(timeSelector).innerText;
+        };
       }
 
       Periode.querySelector('.in_timepicker').style.display = 'none';
@@ -916,6 +926,107 @@ document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('cl
     });
   }
 });
+document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('keydown', function(e) {
+  
+
+    if (e.target.closest('.in_timepicker')) {
+      const adjustTimeForLeverCoucher = (_target, selector) => {
+        _target=_target.closest(".well")
+        adjustNextActionTime(
+          _target.querySelector(`.Heure${selector}`).innerText,
+          _target.querySelector(`.Heure${selector}Min`).value,
+          _target.querySelector(`.Heure${selector}Max`).value,
+          _target.querySelector(`.Heure_action_suivante_${selector}`),
+        );
+      };
+      
+
+       
+    
+      let value = e.target.value;
+      let cursorPos = e.target.selectionStart; // Position actuelle du curseur
+      let char = e.key;
+
+      // Autoriser touches de contrôle (Backspace, Delete, Tab, Flèches)
+      if (['Tab', 'ArrowLeft', 'ArrowRight', 'Control', 'F5'].includes(char)) {
+            return;
+      }
+      if (['Backspace', 'Delete'].includes(char)) {
+          e.target.value=''
+
+          return;
+      }
+      switch (cursorPos) {
+        case 0: // 🚫 Bloquer toute modification du premier chiffre si le deuxième est déjà >3
+          if (value.length >= 1 && value[0] > '3' &&!/[0-1]/.test(char)) {
+              e.preventDefault();
+          } else if (!/[0-2]/.test(char)) { // Bloquer les valeurs supérieures à 2 en première position
+              e.preventDefault();
+          }
+          break;
+        case 1: // 🚫 Empêcher les heures supérieures à 23
+          if (value[0] === '2' && !/[0-3]/.test(char)) {
+            e.preventDefault(); // Bloque >23
+          } else if ((value[0] === '1' || value[0] === '0') && !/[0-9]/.test(char)) {
+            e.preventDefault(); // Bloque tout ce qui n’est pas 0–9
+          } else {
+            // 👍 L’heure semble correcte, on ajoute le caractère et le ":"
+            e.target.value = value + char + ':';
+            e.preventDefault();
+          }
+
+
+          break;
+        case 3: // 🚫 Bloquer minutes hors plage 0-5
+            if (!/[0-5]/.test(char)) e.preventDefault();
+            break;
+        case 4: // 🚫 Bloquer minutes hors plage 0-9
+          if (!/[0-9]/.test(char)) e.preventDefault();
+          
+            
+          e.target.value += char ;
+          e.preventDefault();
+          var jour=this.querySelector(".selection_jour").value
+          console.log("vérification")
+          //vérification heures min et max 
+          if (e.target.classList.contains('HeureCoucherMin') && e.target.value > document.querySelector('.HeureCoucherMax.' + jour).value) {
+            alert("L'heure minimale ne peut pas être supérieure à l'heure maximale !");
+            e.target.value =Json_lever_coucher["Heure_coucher_min_" + jour.toLowerCase()]
+          }
+          if (e.target.classList.contains('HeureCoucherMax') && e.target.value < document.querySelector('.HeureCoucherMin.' + jour).value) {
+            alert("L'heure maximale ne peut pas être inférieure à l'heure minimale !");
+            e.target.value =Json_lever_coucher["Heure_coucher_max_" + jour.toLowerCase()]
+          }
+          if (e.target.classList.contains('HeureLeverMin')  && e.target.value >  document.querySelector('.HeureLeverMax.' + jour).value) {
+            alert("L'heure minimale ne peut pas être supérieure à l'heure maximale !");
+            e.target.value =Json_lever_coucher["Heure_lever_min_" + jour.toLowerCase()]
+          }
+          if (e.target.classList.contains('HeureCoucherMax')  && e.target.value <  document.querySelector('.HeureLeverMin.' + jour).value) {
+            alert("L'heure maximale ne peut pas être inférieure à l'heure minimale !");
+            e.target.value =Json_lever_coucher["Heure_lever_max_" + jour.toLowerCase()]
+          }
+          //mise à jour de l'heure de prochine action
+          if (e.target.closest('.HeureLeverMin') || e.target.closest('.HeureLeverMax')) {
+            adjustTimeForLeverCoucher(e.target, 'Lever');
+          }  
+          if (e.target.closest('.HeureCoucherMin') || e.target.closest('.HeureCoucherMax')) {
+            adjustTimeForLeverCoucher(e.target, 'Coucher');
+          } 
+          break;
+      
+        default: // 🚫 Bloquer toute saisie supplémentaire           
+        e.preventDefault()
+            
+      }
+       
+    }
+});
+
+
+
+
+
+
 document.getElementById('tab_commandes').addEventListener('click', function(event) {
   let _target;
 
@@ -1731,15 +1842,6 @@ function Recup_liste_commandes_planification() {
 
   return COMMANDE_LIST;
 }
-function test_Json(Json){
-  try {
-    JSON.parse(Json); 
-    return true; 
-  } catch (error) {
-    return error; 
-  }
-}
-
 function printEqLogic(_eqLogic) {
   // Masquer les éléments spécifiques
 [".bt_image_défaut", ".Volet", ".Chauffage", ".Prise", ".PAC"].forEach(selector => {
@@ -1806,19 +1908,38 @@ if (_eqLogic.configuration.Type_équipement === 'Volet') {
               });
               return;
           }
-          
+          Json_lever_coucher=data.result
+          console.log(Json_lever_coucher)
           // Update DOM with result values
-          const updateElements = (selector, key, defaultValue = "00:00") => {
+          const updateElements = (selector, key) => {
               document.querySelectorAll(selector).forEach(element => {
-                  const value = data.result[key + element.classList[2]?.toLowerCase()] ?? defaultValue;
-                  element[selector.includes("Min") || selector.includes("Max") ? 'value' : 'innerText'] = value;
-              });
-          };
+              
+                  if (key == "Lever_soleil" ||key == "Coucher_soleil"){
+                    element[selector.includes("Min") || selector.includes("Max") ? 'value' : 'innerText'] = data.result[key];
 
-          updateElements('#tab_gestion_heures_lever_coucher .HeureLever', "Lever_soleil", "00:00");
-          updateElements('#tab_gestion_heures_lever_coucher .Heure_action_suivante_Lever', "Heure_action_suivante_lever_", "00:00");
-          updateElements('#tab_gestion_heures_lever_coucher .HeureCoucher', "Coucher_soleil", "23:59");
-          updateElements('#tab_gestion_heures_lever_coucher .Heure_action_suivante_Coucher', "Heure_action_suivante_coucher_", "00:00");
+                  }else{
+                  //['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'].forEach(day => {
+                    
+                    element[selector.includes("Min") || selector.includes("Max") ? 'value' : 'innerText'] = data.result[key + element.classList[2].toLowerCase()];
+                    //});
+                  
+                    
+                  }
+                
+              });
+          };         
+              updateElements('#tab_gestion_heures_lever_coucher .HeureLever' , "Lever_soleil");
+              updateElements('#tab_gestion_heures_lever_coucher .HeureCoucher', "Coucher_soleil");
+              updateElements('#tab_gestion_heures_lever_coucher .Heure_action_suivante_Lever' , "Heure_action_suivante_lever_");
+              updateElements('#tab_gestion_heures_lever_coucher .Heure_action_suivante_Coucher' , "Heure_action_suivante_coucher_");
+              updateElements('#tab_gestion_heures_lever_coucher .HeureLeverMin' , "Heure_lever_min_");
+              updateElements('#tab_gestion_heures_lever_coucher .HeureLeverMax', "Heure_lever_max_");
+              updateElements('#tab_gestion_heures_lever_coucher .HeureCoucherMin' , "Heure_coucher_min_");
+              updateElements('#tab_gestion_heures_lever_coucher .HeureCoucherMax' , "Heure_coucher_max_");
+        
+          
+
+        
       }
   });
 
@@ -1917,235 +2038,235 @@ if (_eqLogic.configuration.Type_équipement === 'Prise') {
           while (isset(branche_json[numéro_planification])) {
 
             var nom_planification = ""
-      var id_planification = ""
-      var périodes = []
+            var id_planification = ""
+            var périodes = []
 
-      branche_json[numéro_planification].forEach(planification => {
-        nom_planification = planification.Nom || nom_planification;
-        id_planification = planification.Id || id_planification;
-        ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].forEach(day => {
-            périodes[day] = planification[day] || périodes[day];
-        });
-      });
+            branche_json[numéro_planification].forEach(planification => {
+              nom_planification = planification.Nom || nom_planification;
+              id_planification = planification.Id || id_planification;
+              ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'].forEach(day => {
+                  périodes[day] = planification[day] || périodes[day];
+              });
+            });
 
-      const planificationData = { nom: nom_planification, Id: id_planification };
-      Ajoutplanification(planificationData);
-      AjoutGestionPlanification(planificationData);
-      
-      document.querySelectorAll(`#div_planifications .planification`)[numéro_planification].querySelectorAll('.JourSemaine').forEach(div_jour => {
-        périodes[div_jour.classList[1]].forEach(periode => {
-          if (!periode?.Type) return;
+            const planificationData = { nom: nom_planification, Id: id_planification };
+            Ajoutplanification(planificationData);
+            AjoutGestionPlanification(planificationData);
+            
+            document.querySelectorAll(`#div_planifications .planification`)[numéro_planification].querySelectorAll('.JourSemaine').forEach(div_jour => {
+              périodes[div_jour.classList[1]].forEach(periode => {
+                if (!periode?.Type) return;
 
-          const cmdMatch = CMD_LIST.find(cmd => periode.Id === cmd.Id || periode.Id === cmd.Nom);
-          const Couleur = cmdMatch ? `couleur-${cmdMatch.couleur}` : "erreur";
-          const Nom = cmdMatch?.Nom || "";
-          const Id = cmdMatch?.Id || "";
+                const cmdMatch = CMD_LIST.find(cmd => periode.Id === cmd.Id || periode.Id === cmd.Nom);
+                const Couleur = cmdMatch ? `couleur-${cmdMatch.couleur}` : "erreur";
+                const Nom = cmdMatch?.Nom || "";
+                const Id = cmdMatch?.Id || "";
 
-          let element = SELECT_LIST.replace("#COULEUR#", Couleur)
-                                  .replace("#VALUE#", Nom)
-                                  .replace("#ID#", Id);
+                let element = SELECT_LIST.replace("#COULEUR#", Couleur)
+                                        .replace("#VALUE#", Nom)
+                                        .replace("#ID#", Id);
 
-          Ajout_Periode(element, div_jour, periode.Début, periode.Id, periode.Type, _eqLogic.configuration.Type_équipement);
-        });
+                Ajout_Periode(element, div_jour, periode.Début, periode.Id, periode.Type, _eqLogic.configuration.Type_équipement);
+              });
 
-        triage_jour(div_jour);
-        MAJ_Graphique_jour(div_jour);
-      });
-      numéro_planification += 1
-    }
+              triage_jour(div_jour);
+              MAJ_Graphique_jour(div_jour);
+            });
+            numéro_planification += 1
+          }
 
 
-    if (_eqLogic.configuration.etat_id) {
-      const aliasElement = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .alias`);
-      if (aliasElement) {
-          aliasElement.style.display = 'block';
-      }
-    } else {
-      const aliasElement = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .alias`);
-      if (aliasElement) {
-          aliasElement.style.display = 'none';
-      }
-    }
-  
+          if (_eqLogic.configuration.etat_id) {
+            const aliasElement = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .alias`);
+            if (aliasElement) {
+                aliasElement.style.display = 'block';
+            }
+          } else {
+            const aliasElement = document.querySelector(`#tab_eqlogic .${_eqLogic.configuration.Type_équipement} .alias`);
+            if (aliasElement) {
+                aliasElement.style.display = 'none';
+            }
+          }
+        
 
 
           document.querySelectorAll('.tab-pane').forEach(function(onglet){
 
-            if (onglet.classList.length === 1 || onglet.classList[1] === 'active') {
-              return;
-            }
-
-
-           onglet = onglet.classList[1];
-
-            if (Json?.[onglet]) {
-              branche_json = Json[onglet][0];  
-              
-              if (onglet === 'Ouvrants') {
-                  let numéro_ouvrant = 0;
-                  while (branche_json[numéro_ouvrant]) {
-                      ajoutOuvrant();
-                      numéro_ouvrant++;
-                  }
+              if (onglet.classList.length === 1 || onglet.classList[1] === 'active') {
+                return;
               }
-            }else{
-              return
-            }
 
-            if(onglet == 'Paramètres'){
 
-            }
-            if (onglet === 'Gestion_planifications') {
-              let numéro_planification = 0;
-              document.getElementById("div_GestionPlanifications").innerHTML = '';
-          
-              while (branche_json[numéro_planification]) {
-                  const currentPlanification = branche_json[numéro_planification][0];
-                  AjoutGestionPlanification({ nom: currentPlanification.Nom, Id: currentPlanification.Id });
-          
-                  const Gestion_planification = document.querySelector('.GestionPlanification:last-of-type');
-                  Gestion_planification.querySelectorAll('.expressionAttr').forEach(element => {
-                      const dataKey = element.getAttribute('data-l2key');
-                      const value = currentPlanification[dataKey];
-          
-                      if (dataKey === 'Conditions') {
-                          domUtils.ajax({
-                              type: "POST",
-                              url: "plugins/planification/core/ajax/planification.ajax.php",
-                              data: { action: "toHumanReadable", expression: value },
-                              global: false,
-                              async: false,
-                              error: handleAjaxError,
-                              success: (data) => {
-                                  if (data.state !== 'ok') {
-                                      jeedomUtils.showAlert({ message: data.result, level: 'danger' });
-                                      return;
-                                  }
-                                  element.value = data.result;
-                                  const conditionIdElement = element.closest('.GestionPlanification').querySelector('.ConditionId');                                 
-                                  if (element.value) conditionIdElement.classList.add("alert-info");
-                                  conditionIdElement.innerHTML = value;
-                              }
-                          });
-                          const evaluation = Gestion_planification.querySelector('.Evaluation');
-                          const resultEvaluation = Gestion_planification.querySelector('.RésultatEvaluation');
-          
-                          if (value) {
-                              jeedom.scenario.testExpression({
-                                  expression: value,
-                                  error: (error) => {
-                                      jeedomUtils.showAlert({ message: error.message, level: 'danger' });
-                                  },
-                                  success: (data) => {
-                                      const isCorrect = data.correct !== 'nok';
-                                      evaluation.innerHTML = isCorrect ? data.evaluate : "Attention : il doit y avoir un souci avec l'expression";
-                                      evaluation.classList.toggle("alert-danger", !isCorrect);
-                                      evaluation.classList.toggle("alert-info", isCorrect);
-          
-                                      resultEvaluation.innerHTML = isCorrect ? data.result : "";
-                                      resultEvaluation.classList.toggle("alert-success", data.result && isCorrect);
-                                      resultEvaluation.classList.toggle("alert-danger", !data.result || !isCorrect);
-                                  }
-                              });
-                          }
-                      } else if (element.type === "checkbox") {
-                          element.checked = !!value;
-                      } else if (value !== undefined) {
-                          element.value = value;
-                      }
-                  });
-          
-                  numéro_planification++;
-                  const textarea = Gestion_planification.querySelector('textarea');
-                  textarea.style.height = `${textarea.scrollHeight}px`;
+            onglet = onglet.classList[1];
+
+              if (Json?.[onglet]) {
+                branche_json = Json[onglet][0];  
+                
+                if (onglet === 'Ouvrants') {
+                    let numéro_ouvrant = 0;
+                    while (branche_json[numéro_ouvrant]) {
+                        ajoutOuvrant();
+                        numéro_ouvrant++;
+                    }
+                }
+              }else{
+                return
               }
-            }
-           
-            document.querySelectorAll(`.expressionAttr[data-l1key="${onglet}"]`).forEach(element => {
-              const dataKey = element.getAttribute('data-l2key');
-              const value = branche_json[dataKey];
-          
-              if (dataKey === 'Type_équipement_pilote') {
-          
-                  Array.from(element).forEach((option, i) => {
-                      
-                      if (option.value === value) {
+
+              if(onglet == 'Paramètres'){
+
+              }
+              if (onglet === 'Gestion_planifications') {
+                let numéro_planification = 0;
+                document.getElementById("div_GestionPlanifications").innerHTML = '';
+            
+                while (branche_json[numéro_planification]) {
+                    const currentPlanification = branche_json[numéro_planification][0];
+                    AjoutGestionPlanification({ nom: currentPlanification.Nom, Id: currentPlanification.Id });
+            
+                    const Gestion_planification = document.querySelector('.GestionPlanification:last-of-type');
+                    Gestion_planification.querySelectorAll('.expressionAttr').forEach(element => {
+                        const dataKey = element.getAttribute('data-l2key');
+                        const value = currentPlanification[dataKey];
+            
+                        if (dataKey === 'Conditions') {
+                            domUtils.ajax({
+                                type: "POST",
+                                url: "plugins/planification/core/ajax/planification.ajax.php",
+                                data: { action: "toHumanReadable", expression: value },
+                                global: false,
+                                async: false,
+                                error: handleAjaxError,
+                                success: (data) => {
+                                    if (data.state !== 'ok') {
+                                        jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+                                        return;
+                                    }
+                                    element.value = data.result;
+                                    const conditionIdElement = element.closest('.GestionPlanification').querySelector('.ConditionId');                                 
+                                    if (element.value) conditionIdElement.classList.add("alert-info");
+                                    conditionIdElement.innerHTML = value;
+                                }
+                            });
+                            const evaluation = Gestion_planification.querySelector('.Evaluation');
+                            const resultEvaluation = Gestion_planification.querySelector('.RésultatEvaluation');
+            
+                            if (value) {
+                                jeedom.scenario.testExpression({
+                                    expression: value,
+                                    error: (error) => {
+                                        jeedomUtils.showAlert({ message: error.message, level: 'danger' });
+                                    },
+                                    success: (data) => {
+                                        const isCorrect = data.correct !== 'nok';
+                                        evaluation.innerHTML = isCorrect ? data.evaluate : "Attention : il doit y avoir un souci avec l'expression";
+                                        evaluation.classList.toggle("alert-danger", !isCorrect);
+                                        evaluation.classList.toggle("alert-info", isCorrect);
+            
+                                        resultEvaluation.innerHTML = isCorrect ? data.result : "";
+                                        resultEvaluation.classList.toggle("alert-success", data.result && isCorrect);
+                                        resultEvaluation.classList.toggle("alert-danger", !data.result || !isCorrect);
+                                    }
+                                });
+                            }
+                        } else if (element.type === "checkbox") {
+                            element.checked = !!value;
+                        } else if (value !== undefined) {
+                            element.value = value;
+                        }
+                    });
+            
+                    numéro_planification++;
+                    const textarea = Gestion_planification.querySelector('textarea');
+                    textarea.style.height = `${textarea.scrollHeight}px`;
+                }
+              }
+            
+              document.querySelectorAll(`.expressionAttr[data-l1key="${onglet}"]`).forEach(element => {
+                const dataKey = element.getAttribute('data-l2key');
+                const value = branche_json[dataKey];
+            
+                if (dataKey === 'Type_équipement_pilote') {
+            
+                    Array.from(element).forEach((option, i) => {
                         
-                          element.value = value;
-                          option.selected = true;
-                      }
-                  });
-          
-                  if (value && value !== 'Aucun') {
-                      const branche_json1 = branche_json;
-                      document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'block';
-                      
-                      let options = '';
-                      jeedom.eqLogic.byType({
-                          type: value,
-                          error: error => {
-                              jeedomUtils.showAlert({ message: error.message, level: 'danger' });
-                          },
-                          success: eqLogics => {
-                              modifyWithoutSave = false;
-          
-                              eqLogics.forEach(eqLogic => {
-                                  options += `<option id="#${eqLogic.id}#" ${"#" + eqLogic.id + "#" === branche_json1["Equipement_pilote"] ? 'selected' : ''}>{{${eqLogic.name}}}</option>`;
-                              });
-                              document.querySelector('#tab_Paramètres .expressionAttr[data-l2key="Equipement_pilote"]').innerHTML = options;
-                          }
-                      });
-                  } else {
-                      document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'none';
-                      document.querySelector('#tab_Paramètres .expressionAttr[data-l2key="Equipement_pilote"]').innerHTML = '';
-                  }
-              } else if (dataKey === 'Equipement_pilote') {
-                  Array.from(element).forEach((option, i) => {
-                      if (option.value === value) {
-                          option.selected = true;
-                      }
-                  });
-              } else if (onglet === 'Ouvrants') {
-                  let numéro_ouvrant = 0;
-                  while (branche_json[numéro_ouvrant]) {
-                      const ouvrant = document.querySelectorAll('.Ouvrant')[numéro_ouvrant];
-                      ouvrant.querySelectorAll('.expressionAttr').forEach(element => {
-                          const key = element.getAttribute('data-l2key');
-                          const val = branche_json[numéro_ouvrant][0][key];
-          
-                          if (key === 'Commande') {
-                              domUtils.ajax({
-                                  type: "POST",
-                                  url: "plugins/planification/core/ajax/planification.ajax.php",
-                                  data: { action: "toHumanReadable", expression: val },
-                                  global: false,
-                                  async: false,
-                                  error: handleAjaxError,
-                                  success: data => {
-                                      if (data.state !== 'ok') {
-                                          jeedomUtils.showAlert({ message: data.result, level: 'danger' });
-                                          return;
-                                      }
-                                      element.value = data.result;
-                                  }
-                              });
-                          } else if (element.type === "checkbox") {
-                              element.checked = !!val;
-                          } else if (val !== undefined) {
-                              element.value = val;
-                          }
-                      });
-                      numéro_ouvrant++;
-                  }
-              } else if (onglet === 'Gestion_planifications') {
-                  // Add implementation if required
-              } else {
-                  if (value !== undefined) {
-                      element.value = value;
-                  }
-              }
-          });
-        })
+                        if (option.value === value) {
+                          
+                            element.value = value;
+                            option.selected = true;
+                        }
+                    });
+            
+                    if (value && value !== 'Aucun') {
+                        const branche_json1 = branche_json;
+                        document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'block';
+                        
+                        let options = '';
+                        jeedom.eqLogic.byType({
+                            type: value,
+                            error: error => {
+                                jeedomUtils.showAlert({ message: error.message, level: 'danger' });
+                            },
+                            success: eqLogics => {
+                                modifyWithoutSave = false;
+            
+                                eqLogics.forEach(eqLogic => {
+                                    options += `<option id="#${eqLogic.id}#" ${"#" + eqLogic.id + "#" === branche_json1["Equipement_pilote"] ? 'selected' : ''}>{{${eqLogic.name}}}</option>`;
+                                });
+                                document.querySelector('#tab_Paramètres .expressionAttr[data-l2key="Equipement_pilote"]').innerHTML = options;
+                            }
+                        });
+                    } else {
+                        document.querySelector('#tab_Paramètres .options_type_équipement_pilote').style.display = 'none';
+                        document.querySelector('#tab_Paramètres .expressionAttr[data-l2key="Equipement_pilote"]').innerHTML = '';
+                    }
+                } else if (dataKey === 'Equipement_pilote') {
+                    Array.from(element).forEach((option, i) => {
+                        if (option.value === value) {
+                            option.selected = true;
+                        }
+                    });
+                } else if (onglet === 'Ouvrants') {
+                    let numéro_ouvrant = 0;
+                    while (branche_json[numéro_ouvrant]) {
+                        const ouvrant = document.querySelectorAll('.Ouvrant')[numéro_ouvrant];
+                        ouvrant.querySelectorAll('.expressionAttr').forEach(element => {
+                            const key = element.getAttribute('data-l2key');
+                            const val = branche_json[numéro_ouvrant][0][key];
+            
+                            if (key === 'Commande') {
+                                domUtils.ajax({
+                                    type: "POST",
+                                    url: "plugins/planification/core/ajax/planification.ajax.php",
+                                    data: { action: "toHumanReadable", expression: val },
+                                    global: false,
+                                    async: false,
+                                    error: handleAjaxError,
+                                    success: data => {
+                                        if (data.state !== 'ok') {
+                                            jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+                                            return;
+                                        }
+                                        element.value = data.result;
+                                    }
+                                });
+                            } else if (element.type === "checkbox") {
+                                element.checked = !!val;
+                            } else if (val !== undefined) {
+                                element.value = val;
+                            }
+                        });
+                        numéro_ouvrant++;
+                    }
+                } else if (onglet === 'Gestion_planifications') {
+                    // Add implementation if required
+                } else {
+                    if (value !== undefined) {
+                        element.value = value;
+                    }
+                }
+            });
+          })
 
 
 
@@ -2486,7 +2607,7 @@ function saveEqLogic(_eqLogic) {
 function addCmdToTable(_cmd) {
   const excludedLogicalIds = [
     "set_heure_fin", "set_consigne_temperature", "set_action_en_cours",
-    "manuel", "refresh", "boost_on", "boost_off", "set_info", "mode_planification"
+    "manuel", "refresh", "boost_on", "boost_off", "set_info", "mode_planifications"
   ];
 
   if (excludedLogicalIds.includes(_cmd.logicalId)) {
@@ -2554,7 +2675,14 @@ function addCmdToTable(_cmd) {
       <td>
           <span>
               <label class="checkbox-inline">
-                  <input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/> {{Historiser}}
+                  <input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/> {{Historiser}}`
+                  if(_cmd.logicalId == "consigne_temperature"){
+                     tr += `<div style="margin-top:7px;">
+                    <input class="tooltips cmdAttr form-control input-sm tippied" data-l1key="configuration" data-l2key="minValue" placeholder="Min" style="width: 80%; max-width: 80px; margin-right: 2px;" data-title="Min">
+                    <input class="tooltips cmdAttr form-control input-sm tippied" data-l1key="configuration" data-l2key="maxValue" placeholder="Max" style="width: 80%; max-width: 80px; margin-right: 2px;" data-title="Max">
+                  </div>`
+                  }
+          tr += `        
               </label>
           </span>
       </td>

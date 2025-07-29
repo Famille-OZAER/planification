@@ -33,7 +33,7 @@ function Affichage_widget(type_eqLogic, cmds_id) {
     } else {
         fetchData(cmds_id).then((data) => {
             if (!data) return;
-
+            console.log(data)
             Object.assign(cmds_id, {
                 mode: data.mode_fonctionnement,
                 planification_en_cours: data.planification_en_cours,
@@ -41,7 +41,7 @@ function Affichage_widget(type_eqLogic, cmds_id) {
                 action_en_cours: data.action_en_cours,
                 action_suivante: data.action_suivante,
                 heure_fin: data.heure_fin,
-                info_widget: data.info,
+                calendar_selector: data.calendar_selector,
                 page: data.page
             });
 
@@ -69,13 +69,13 @@ function Affichage_widget(type_eqLogic, cmds_id) {
 }
 
 function Commun_widget(type_eqLogic,cmds_id) {
-  
     const element = document.querySelector('.eqLogic[data-eqlogic_id="' + cmds_id.eqLogic_id + '"] .tuile');
     if (!element.getAttribute('listener')) {
         document.querySelector(`.eqLogic[data-eqlogic_id="${cmds_id.eqLogic_id}"] .tuile`)
         .addEventListener('click', function(event) {
-            let target = event.target.closest('.bt_afficher_timepicker, .changecmd, .img, .img_auto_manu, .nom_eqLogic, .refresh, .boost, .Climatisation, .Chauffage, .Arrêt, .Ventilation, .confort, .eco, .hors_gel, .arret, .ouvrir, .my, .fermer, .on, .off');
+            let target = event.target.closest('.bt_afficher_timepicker, .img, .img_auto_manu, .nom_eqLogic, .refresh, .boost, .Climatisation, .Chauffage, .Arrêt, .Ventilation, .confort, .eco, .hors_gel, .arret, .ouvrir, .my, .fermer, .on, .off');
             if (!target) return;
+            console.log(target)
             if (target.classList.contains('bt_afficher_timepicker')) {
                 flatpickr(target.closest('div div').querySelector('.in_timepicker'), {
                     enableTime: true,
@@ -85,7 +85,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
                     minuteIncrement: 1,
                     allowInput: true,
                     clickOpens: false,
-                    onOpen: function(instance) {
+                    onOpen: function(selectedDates, dateStr,instance) {
                         if (!instance.element.value) {
                             let date = new Date();
                             date.setMinutes(date.getMinutes() + 1);
@@ -101,23 +101,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
                 target.closest("div").querySelector('.in_timepicker')._flatpickr.open();
             }
     
-            const cmdMapping = {
-                'changecmd': () => {
-                    cmds_id.page = document.querySelector(`.eqLogic[data-eqlogic_id="${cmds_id.eqLogic_id}"] .page_2`).style.display === 'block' ? "page1" : "page2";
-                    Reset_page(cmds_id);
-                    domUtils.ajax({
-                        type: "POST",
-                        url: "plugins/planification/core/ajax/planification.ajax.php",
-                        data: { action: "Set_widget_cache", id: cmds_id.eqLogic_id, page: cmds_id.page },
-                        global: false,
-                        error: handleAjaxError,
-                        success: (data) => {
-                            if (data.state !== 'ok') {
-                                jeedomUtils.showAlert({ message: data.result, level: 'danger' });
-                            }
-                        }
-                    });
-                },
+            const cmdMapping = {                
                 'boost': () => {
                     jeedom.cmd.execute({
                         id: target.style.color === "white" ? cmds_id.boost_on_id : cmds_id.boost_off_id,
@@ -147,7 +131,6 @@ function Commun_widget(type_eqLogic,cmds_id) {
             };
     
             if (cmdMapping[target.classList[0]]) {
-                console.log(cmdMapping[target.classList[0]])
                 cmdMapping[target.classList[0]]();
             } else if (cmdIds[target.classList[0]]) {
                 if (target.classList[0] == "img" || target.classList[0] == "img_auto_manu" ||target.classList[0] == "nom_eqLogic"){
@@ -176,7 +159,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
         // Ajout des fonctions d'update de manière dynamique
         cmdKeys.forEach(cmdKey => {
             jeedom.cmd.addUpdateFunction(cmds_id[cmdKey], function (_options) {
-                Affichage_widget_(type_eqLogic, cmds_id);
+                Affichage_widget(type_eqLogic, cmds_id);
             });
         });
         
@@ -188,12 +171,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
             }
         });
         
-        jeedom.cmd.addUpdateFunction(cmds_id.info_widget_id, function (_options) {
-            if (cmds_id.info_widget !== _options.value) {
-                cmds_id.info_widget = _options.value;
-                Affichage_widget(type_eqLogic, cmds_id);
-            }
-        });
+        
     }
  
 
@@ -205,24 +183,23 @@ function Commun_widget(type_eqLogic,cmds_id) {
     const page1 = eqLogicElement.querySelector(".page_1");
     const page2 = eqLogicElement.querySelector(".page_2");
     const selectPlanification = eqLogicElement.querySelector(".selectPlanification");
-    const changeCmd = eqLogicElement.querySelector(".changecmd");
     const btTimepicker = eqLogicElement.querySelector(".bt_afficher_timepicker");
     const objectName = eqLogicElement.querySelector(".object_name");
     const refreshElement = eqLogicElement.querySelector(".refresh");
     const prochaineAction = eqLogicElement.querySelector(".prochaine_action");
     const thermostat = eqLogicElement.querySelector(".Thermostat");
-    
-       
-        
+    const imgboost = eqLogicElement.querySelector(".boost")
+    const tuile  =eqLogicElement.querySelector(".tuile")
        
     // Mise en style
-    eqLogicElement.querySelector(".tuile").style.backgroundColor = "rgba(0,0,0,0.5)";
+    tuile.style.backgroundColor = "rgba(0,0,0,0.5)";
     eqLogicElement.style.boxShadow = "0px 0px 1px 0.5px rgba(255,255,255,1)";
 
     // Affichage des pages
-    page1.style.display = cmds_id.page === "page1" ? "block" : "none";
-    page2.style.display = cmds_id.page === "page2" ? "block" : "none";
+    
 
+    if (page1) page1.style.display = cmds_id.page === "page1" ? "block" : "none";
+    if (page2) page2.style.display = cmds_id.page === "page2" ? "block" : "none";
     // Réinitialisation de la page
     
     Reset_page(cmds_id);
@@ -237,42 +214,99 @@ function Commun_widget(type_eqLogic,cmds_id) {
             }
         });
     };
-
+    console.log(cmds_id)
+    selectPlanification.innerHTML = cmds_id.calendar_selector
     // Gestion de l'affichage des éléments
-    changeCmd.style.display = "block";
+
+   
 
     if (selectPlanification.children.length > 1) {
         selectPlanification.style.display = "inline";
     } else {
         selectPlanification.style.display = "none";
-        changeCmd.style.display = "none";
+       
     }
 
     if (!cmds_id.set_planification_id.trim()) {
         selectPlanification.style.display = "none";
-        changeCmd.style.display = "none";
+       
     }
 
-    if (btTimepicker.style.display === "block") {
-        changeCmd.style.display = "block";
-    }
+    
+    if(cmds_id.mode == "Manuel" || cmds_id.mode_planification == "Manuel"){
+            
+        // **Affichage du timepicker et curseur**
+        btTimepicker.style.display = "block";
+        imgElement.classList.add("cursor");
+        imgAutoManu.classList.add("cursor");
+        if (nomEqLogic) nomEqLogic.classList.add("cursor");
+        
+        // **Ajout du titre pour PAC et Prise**
+        const autoTitle = `Cliquez pour remettre ${type_eqLogic === "PAC" || type_eqLogic === "Prise" ? "la" : "le"} ${type_eqLogic} en auto.`;
+        imgElement.setAttribute("title", autoTitle);
+        imgAutoManu.setAttribute("title", autoTitle);
+        
+        // **Gestion de la prochaine action**
+        if (cmds_id.heure_fin == "") {
+            prochaineAction.innerHTML = "";
+        } else {
+            prochaineAction.innerHTML = cmds_id.heure_fin.length === 5 
+                ? `Auto à ${cmds_id.heure_fin}`
+                : `Auto le ${cmds_id.heure_fin}`;
+        }
+    }else if(cmds_id.mode_planification == "Manuel"){
+        btTimepicker.style.display = "block";
+        imgElement.classList.add("cursor");
+        imgAutoManu.classList.add("cursor");
+        if (nomEqLogic) nomEqLogic.classList.add("cursor");
+        
+        // **Ajout du titre pour PAC et Prise**
+        const autoTitle = `Cliquez pour remettre ${type_eqLogic === "PAC" || type_eqLogic === "Prise" ? "la" : "le"} ${type_eqLogic} en auto.`;
+        imgElement.setAttribute("title", autoTitle);
+        imgAutoManu.setAttribute("title", autoTitle);
+        // **Mise à jour de la prochaine action**
+       
+        if (cmds_id.heure_fin == "") {
+            prochaineAction.innerHTML = "";
+        } else {
+            prochaineAction.innerHTML = cmds_id.heure_fin.length === 5 
+                ? `${cmds_id.action_suivante} à ${cmds_id.heure_fin}`
+                : `${cmds_id.action_suivante} le ${cmds_id.heure_fin}`;
+        }
+    }else if(cmds_id.mode == "Auto"){
+        // **Masquer le timepicker et supprimer les classes du curseur**
+        btTimepicker.style.display = "none";
+        imgElement.classList.remove("cursor");
+        imgAutoManu.classList.remove("cursor");
+        selectPlanification.style.width = type_eqLogic === "PAC" ? "100%" : ["Chauffage", "Volet","Prise"].includes(type_eqLogic) ? "80%" :"100%"
+        // **Ajout du titre pour la planification en cours**
+       
+        imgElement.removeAttribute("title");
+        imgAutoManu.removeAttribute("title");
+        
+        // **Mise à jour de la prochaine action**
+       
+        if (cmds_id.heure_fin == "") {
+            prochaineAction.innerHTML = "";
+        } else {
+            prochaineAction.innerHTML = cmds_id.heure_fin.length === 5 
+                ? `${cmds_id.action_suivante} à ${cmds_id.heure_fin}`
+                : `${cmds_id.action_suivante} le ${cmds_id.heure_fin}`;
+        }
 
-    if (cmds_id.info_widget.trim()) {
-        eqLogicElement.querySelector(".info_widget").innerHTML = cmds_id.info_widget;
-        changeCmd.style.display = "block";
-    } else if (selectPlanification.children.length <= 1) {
-        changeCmd.style.display = "none";
+
+        // **Activation du mode Thermostat si l'action suivante est spécifique**
+        if (["Chauffage", "Chauffage ECO", "Climatisation"].includes(cmds_id.action_suivante)) {
+            thermostat.setAttribute("mode", "on");
+        }
+
     }
+    
     var show_object = false
     var show_name = false
 
     if (type_eqLogic == 'PAC'){
         const actions = ["Climatisation", "Chauffage", "Arrêt", "Ventilation"];
-        
-        // Appliquer le style général
-        eqLogicElement.querySelector(".tuile").style.backgroundColor = "rgba(0,0,0,0.5)";
-        eqLogicElement.style.boxShadow = "0px 0px 1px 0.5px rgba(255,255,255,1)";
-        
         // Appliquer le style et pointerEvents aux actions
         actions.forEach(action => {
             let element = eqLogicElement.querySelector(`.${action}`);
@@ -283,10 +317,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
         });
         
         // Mise en page des sections
-        eqLogicElement.querySelector(".Thermostat").setAttribute("mode", "on");
-        eqLogicElement.querySelector(".page_1 .gauche").style.height = "50%";
-        eqLogicElement.querySelector(".page_1 .droite").style.height = "50%";
-        eqLogicElement.querySelector(".refresh").style.top = "0px";
+        thermostat.setAttribute("mode", "on");
 
         // **Mise à jour de l’image**
         const imageType = {"": "Arrêt.png","arrêt": "Arrêt.png", "chauffage": "Chauffage.png", "chauffage eco": "Chauffage ECO.png", "climatisation": "Climatisation.png", "ventilation": "Ventilation.png" };    
@@ -321,10 +352,10 @@ function Commun_widget(type_eqLogic,cmds_id) {
             }
         }
         
-        eqLogicElement.querySelector(".boost").style.display = actionConfig.boost || "none";
-        eqLogicElement.querySelector(".img_auto_manu").style.right = actionConfig.autoManuRight || "10px";
-        eqLogicElement.querySelector(".Thermostat").setAttribute("mode", actionConfig.thermostat || "on");
-        eqLogicElement.querySelector(".selectPlanification").style.display = actionConfig.selectPlanification || "block";
+        imgboost.style.display = actionConfig.boost || "none";
+        imgAutoManu.style.right = actionConfig.autoManuRight || "10px";
+        thermostat.setAttribute("mode", actionConfig.thermostat || "on");
+     
         
         // Gestion du mode Boost
         if (cmds_id.boost == 1) {
@@ -333,16 +364,15 @@ function Commun_widget(type_eqLogic,cmds_id) {
                 : null;
         
             if (boostConfig) {
-                let boostElement = eqLogicElement.querySelector(".boost");
-                boostElement.style.display = "inline-block";
-                boostElement.style.setProperty("color", boostConfig.color, "important");
-                boostElement.setAttribute("title", boostConfig.title);
+                
+                imgboost.style.display = "inline-block";
+                imgboost.style.setProperty("color", boostConfig.color, "important");
+                imgboost.setAttribute("title", boostConfig.title);
             }
-        } else {
-            let boostElement = eqLogicElement.querySelector(".boost");
-            boostElement.style.display = cmds_id.action_en_cours === "Chauffage" || cmds_id.action_en_cours === "Climatisation" ? "inline-block" : "none";
-            boostElement.style.setProperty("color", "white", "important");
-            boostElement.setAttribute("title", "Activer le mode boost");
+        } else {            
+            imgboost.style.display = cmds_id.action_en_cours === "Chauffage" || cmds_id.action_en_cours === "Climatisation" ? "inline-block" : "none";
+            imgboost.style.setProperty("color", "white", "important");
+            imgboost.setAttribute("title", "Activer le mode boost");
         }
     }
 
@@ -380,7 +410,9 @@ function Commun_widget(type_eqLogic,cmds_id) {
                     element.style.background = actionConfig.background === mode ? "steelblue" : "transparent";
                 }
             });
-        }
+        }       
+       
+      
         // **Mise à jour de l'image**
         const imageType = {"": "arrêt.png","arrêt": "arrêt.png", "confort": "confort.png", "eco": "eco.png", "hors gel": "hors gel.png" };    
         imgElement.setAttribute("src", `plugins/planification/core/template/dashboard/images/Chauffage/${imageType[cmds_id.action_en_cours.toLowerCase()]}`);
@@ -418,7 +450,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
         Object.assign(myElement.style, { display: cmds_id.show_my !== "#show_my#" ? "inline-block" : "none" });
         Object.assign(ouvrirElement.style, { left: cmds_id.show_my !== "#show_my#" ? "5px" : "3px" });
         Object.assign(fermerElement.style, { right: cmds_id.show_my !== "#show_my#" ? "5px" : "3px" });
-    
+  
     
     }
     if (type_eqLogic == 'Prise'){       
@@ -439,87 +471,20 @@ function Commun_widget(type_eqLogic,cmds_id) {
         // **Mise à jour de l'image**
         const imageType = {"": "off.png", "on": "on.png", "off": "off.png"};      
         imgElement.setAttribute("src", `plugins/planification/core/template/dashboard/images/Prise/${imageType[cmds_id.action_en_cours.toLowerCase()]}`);
-        
+  
    }
    
-    if(cmds_id.mode == "Manuel"){
-        
-        
-        // **Affichage du timepicker et curseur**
-        btTimepicker.style.display = "block";
-        imgElement.classList.add("cursor");
-        imgAutoManu.classList.add("cursor");
-        if (nomEqLogic) nomEqLogic.classList.add("cursor");
-        
-        // **Ajout du titre pour PAC et Prise**
-        const autoTitle = `Cliquez pour remettre ${type_eqLogic === "PAC" || type_eqLogic === "Prise" ? "la" : "le"} ${type_eqLogic} en auto.`;
-        imgElement.setAttribute("title", autoTitle);
-        imgAutoManu.setAttribute("title", autoTitle);
-        
-        // **Gestion de la prochaine action**
-        if (cmds_id.heure_fin == "") {
-            prochaineAction.innerHTML = "";
-        } else {
-            prochaineAction.innerHTML = cmds_id.heure_fin.length === 5 
-                ? `${cmds_id.action_suivante} à ${cmds_id.heure_fin}`
-                : `${cmds_id.action_suivante} le ${cmds_id.heure_fin}`;
-        }
-    }else if(cmds_id.mode_planification == "Manuel"){
-        imgElement.classList.add("cursor");
-        imgAutoManu.classList.add("cursor");
-        if (nomEqLogic) nomEqLogic.classList.add("cursor");
-        
-        // **Ajout du titre pour PAC et Prise**
-        const autoTitle = `Cliquez pour remettre ${type_eqLogic === "PAC" || type_eqLogic === "Prise" ? "la" : "le"} ${type_eqLogic} en auto.`;
-        imgElement.setAttribute("title", autoTitle);
-        imgAutoManu.setAttribute("title", autoTitle);
-        // **Mise à jour de la prochaine action**
-       
-        if (cmds_id.heure_fin == "") {
-            prochaineAction.innerHTML = "";
-        } else {
-            prochaineAction.innerHTML = cmds_id.heure_fin.length === 5 
-                ? `${cmds_id.action_suivante} à ${cmds_id.heure_fin}`
-                : `${cmds_id.action_suivante} le ${cmds_id.heure_fin}`;
-        }
-    }else{
-        // **Masquer le timepicker et supprimer les classes du curseur**
-        btTimepicker.style.display = "none";
-        imgElement.classList.remove("cursor");
-        imgAutoManu.classList.remove("cursor");
+    
 
-        // **Ajout du titre pour la planification en cours**
-        const planningTitle = `Planification en cours: ${cmds_id.planification_en_cours}`;
-        imgElement.setAttribute("title", planningTitle);
-        imgAutoManu.setAttribute("title", planningTitle);
-        prochaineAction.setAttribute("title", planningTitle);
-        if (nomEqLogic) nomEqLogic.setAttribute("title", planningTitle);
-
-        // **Mise à jour de la prochaine action**
-       
-        if (cmds_id.heure_fin == "") {
-            prochaineAction.innerHTML = "";
-        } else {
-            prochaineAction.innerHTML = cmds_id.heure_fin.length === 5 
-                ? `${cmds_id.action_suivante} à ${cmds_id.heure_fin}`
-                : `${cmds_id.action_suivante} le ${cmds_id.heure_fin}`;
-        }
-
-
-        // **Activation du mode Thermostat si l'action suivante est spécifique**
-        if (["Chauffage", "Chauffage ECO", "Climatisation"].includes(cmds_id.action_suivante)) {
-            thermostat.setAttribute("mode", "on");
-        }
-
-    }
+    selectPlanification.closest("div").style.display = btTimepicker?.offsetParent ? "inline-flex" : "block";
+    
 
 
     //  redimensionnement tuile
-   
 
     if (eqLogicElement.classList.contains("displayObjectName") && !eqLogicElement.classList.contains("hideEqLogicName")) {
-        eqLogicElement.querySelector(".widget-name").style.display = "none";
-        eqLogicElement.querySelector(".nom_eqLogic").style.display = "block";
+        if (widgetName) widgetName.style.display = "none";
+        if (nomEqLogic) nomEqLogic.style.display = "block";
     }
 
    
@@ -527,10 +492,8 @@ function Commun_widget(type_eqLogic,cmds_id) {
 
     if (eqLogicElement.classList.contains("displayObjectName") && !show_object) {
         show_object = true;
-        
         const objectHeight = objectName.offsetHeight;
         const minHeight = Number(eqLogicElement.style.minHeight.replace(/px/i, ""));
-        
         Object.assign(eqLogicElement.style, {
             height: `${minHeight + objectHeight}px!important`,
             minHeight: `${minHeight + objectHeight}px!important`,
@@ -541,7 +504,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
 
         if (type_eqLogic === "PAC") {
             imgAutoManu.style.top = `${imgElement.offsetTop + imgElement.offsetHeight - 35}px`;
-            imgAutoManu.style.top = "50px";
+            imgAutoManu.style.top = "45px";
         } else if (["Chauffage", "Volet", "Prise"].includes(type_eqLogic)) {
             imgAutoManu.style.top = "45px";
         }
@@ -556,11 +519,11 @@ function Commun_widget(type_eqLogic,cmds_id) {
     
     if (!eqLogicElement.classList.contains("hideEqLogicName") && !show_name) {
         show_name = true;
-
         if (widgetName) {
+           widgetName.style.backgroundColor= "rgba(0,0,0,0.6)"
             const minHeight = Number(eqLogicElement.style.minHeight.replace(/px/i, ""));
             const newHeight = minHeight + widgetName.offsetHeight;
-
+            imgAutoManu.style.top = "45px";
             Object.assign(eqLogicElement.style, {
                 height: `${newHeight}px!important`,
                 minHeight: `${newHeight}px!important`,
@@ -570,10 +533,21 @@ function Commun_widget(type_eqLogic,cmds_id) {
             eqLogicElement.style.height = eqLogicElement.style.minHeight;
         }
 
-        imgAutoManu.style.top = type_eqLogic === "PAC" ? "50px" : ["Chauffage", "Volet"].includes(type_eqLogic) ? "45px" : imgAutoManu.style.top;
+        imgAutoManu.style.top = type_eqLogic === "PAC" ? "45px" : ["Chauffage", "Volet","Prise"].includes(type_eqLogic) ? "45px" : imgAutoManu.style.top;
         refreshElement.style.top = "0px";
     } else {
         eqLogicElement.style.height = eqLogicElement.style.minHeight;
+    }
+    if(show_name || show_object){
+        if(widgetName){       
+            const newHeight = eqLogicElement.offsetHeight - widgetName.offsetHeight;
+            tuile.style.setProperty("height", `${newHeight}px`, "important");
+
+        } 
+        if(objectName){
+            const newHeight = eqLogicElement.offsetHeight - objectName.offsetHeight;
+            tuile.style.setProperty("height", `${newHeight}px`, "important");
+        } 
     }
     
     
@@ -590,7 +564,6 @@ function Commun_widget(type_eqLogic,cmds_id) {
     const mode = cmds_id.mode?.toLowerCase();
     const modePlanification = (cmds_id.mode_planification?.toLowerCase() === "#mode_planification#")  ? "auto"  : cmds_id.mode_planification?.toLowerCase() ?? "auto";
     const image = (imageType[mode] === imageType[modePlanification]) ? imageType[mode] : imageType["manuel"];
-
     imgAutoManu.setAttribute("src", `plugins/planification/core/template/dashboard/images/${image}`);
     
     
@@ -704,6 +677,10 @@ function Maj_Thermostat(cmds_id, click) {
 
 function Reset_page(cmds_id) {
     const eqLogicElement = document.querySelector(`.eqLogic[data-eqlogic_id="${cmds_id.eqLogic_id}"]`);
+    if (!eqLogicElement) {    
+        return;
+    }
+
     const page1 = eqLogicElement.querySelector(".page_1");
     const page2 = eqLogicElement.querySelector(".page_2");
     const thermostat = eqLogicElement.querySelector(".Thermostat");
@@ -712,8 +689,9 @@ function Reset_page(cmds_id) {
     if (!page1) return;
 
     if (cmds_id.page === "page1") {
-        Object.assign(page1.style, { display: "block" });
-        Object.assign(page2.style, { display: "none" });
+        if (page1) Object.assign(page1.style, { display: "block" });
+        if (page2) Object.assign(page2.style, { display: "none" });
+       
 
         if (droiteElements.length > 1) {
             const mode = [" ", "Arrêt", "Absent", "Ventilation"].includes(cmds_id.action_en_cours) ? "off" : "on";
@@ -722,8 +700,9 @@ function Reset_page(cmds_id) {
     } 
 
     if (cmds_id.page === "page2") {
-        Object.assign(page2.style, { display: "block" });
-        Object.assign(page1.style, { display: "none" });
+        if (page1) Object.assign(page1.style, { display: "none" });
+        if (page2) Object.assign(page2.style, { display: "block" });
+       
 
         setTimeout(() => {
             domUtils.ajax({
