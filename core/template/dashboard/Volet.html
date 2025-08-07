@@ -73,7 +73,7 @@
         }
 
     function waitForFunctions(callback) {
-        if (typeof Affichage_widget === 'function' && typeof Commun_widget === 'function' && typeof SetWidget_Thermostat == 'function' && typeof Maj_Thermostat == 'function' && typeof Reset_page == 'function') {
+        if (typeof Affichage_widget === 'function' && typeof Commun_widget === 'function' && typeof SetWidget_Thermostat == 'function' && typeof Maj_Thermostat == 'function') {
             callback();
         } else {
             setTimeout(() => waitForFunctions(callback), 50);
