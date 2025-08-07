@@ -198,9 +198,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
   
 
     
-    // Réinitialisation de la page
-    
-    Reset_page(cmds_id);
+   
 
     // Gestion du changement de sélection
     selectPlanification.onchange = (select) => {
@@ -673,49 +671,3 @@ function Maj_Thermostat(cmds_id, click) {
     centerCircle.style.background = couleurFond;
 }
 
-function Reset_page(cmds_id) {
-    const eqLogicElement = document.querySelector(`.eqLogic[data-eqlogic_id="${cmds_id.eqLogic_id}"]`);
-    if (!eqLogicElement) {    
-        return;
-    }
-
-    const page1 = eqLogicElement.querySelector(".page_1");
-    const page2 = eqLogicElement.querySelector(".page_2");
-    const thermostat = eqLogicElement.querySelector(".Thermostat");
-    const droiteElements = eqLogicElement.querySelectorAll(".droite");
-
-    if (!page1) return;
-
-    if (cmds_id.page === "page1") {
-        if (page1) Object.assign(page1.style, { display: "block" });
-        if (page2) Object.assign(page2.style, { display: "none" });
-       
-
-        if (droiteElements.length > 1) {
-            const mode = [" ", "Arrêt", "Absent", "Ventilation"].includes(cmds_id.action_en_cours) ? "off" : "on";
-            thermostat.setAttribute("mode", mode);
-        }
-    } 
-
-    if (cmds_id.page === "page2") {
-        if (page1) Object.assign(page1.style, { display: "none" });
-        if (page2) Object.assign(page2.style, { display: "block" });
-       
-
-        setTimeout(() => {
-            domUtils.ajax({
-                type: "POST",
-                url: "plugins/planification/core/ajax/planification.ajax.php",
-                data: { action: "Set_widget_cache", id: cmds_id.eqLogic_id, page: "page1" },
-                global: false,
-                error: handleAjaxError,
-                success: function(data) {
-                    if (data.state !== "ok") {
-                        jeedomUtils.showAlert({ message: data.result, level: "danger" });
-                    }
-                }
-            });            
-            Reset_page(cmds_id);
-        }, 60000);
-    }
-}
