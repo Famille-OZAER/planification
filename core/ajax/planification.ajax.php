@@ -19,10 +19,15 @@
       $cmd_array=[];
 
 
-      if (config::byKey('cache::engine') == "MariadbCache"){       
-        $sql = "SELECT `key`,`datetime`,`value`,`lifetime` FROM cache WHERE cache.key like 'Planification_". init('eqLogic_id') . "%'";
-		    $caches =  DB::Prepare($sql,array(), DB::FETCH_TYPE_ALL, PDO::FETCH_CLASS,'cache');
+      
+      $cmds=$eqLogic->getCmd();
+      foreach($cmds as $cmd){
+        if($cmd->getType() == 'info'){
+          $cmd_array[$cmd->getLogicalId()] = $cmd->execCmd();
+        }
+        $cmd_array["cmds_id"][str_replace(" " , "_", $cmd->getLogicalId())] = $cmd->getId();
       }
+
       foreach($caches as $cache){
        $cmd_array[str_replace("Planification_" .init('eqLogic_id') . "_", "",$cache->getKey())] = unserialize($cache->getValue());
        if (str_replace("Planification_" .init('eqLogic_id') . "_", "",$cache->getKey()) == 'heure_fin'){

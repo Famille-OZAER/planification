@@ -25,21 +25,19 @@
             <img class="on cmd cmd-widget cursor" data-type="action" id="#on_id#" src='plugins/planification/core/template/dashboard/images/Prise/power_off.png' style='width:30px' title="Allumer la prise" />
             <img class="off cmd cmd-widget cursor" data-type="action" id="#off_id#" src='plugins/planification/core/template/dashboard/images/Prise/power_on.png' style='width:30px' title="Eteindre la prise" />
         </div>
-        <div class="prochaine_action tooltips" style="font-size: 0.9em;margin: 5px;color:white!important">
-            <span style="cursor:default;"></span>
-        </div>
-          
-    
-        <div style="display: block;"> 
-            <select class="selectPlanification cmd cursor tooltips" style="display:none;position: relative;width:70%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
-            #calendar_selector#
-            </select>    
-            <a class='bt_afficher_timepicker input-group-addon cursor tooltips' style=" top: 2px;margin: auto;padding: 5px 12px!important;display:block;width:70%;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
+        <div class="col-xs-12 center" style="margin:0px;padding-top: 10px!important;">
+            <select class="selectPlanification cmd cursor tooltips" style="top: calc(100% - 26px);position: relative;width:80%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
+                #calendar_selector#
+            </select>
+            <a class='bt_afficher_timepicker input-group-addon cursor tooltips' style="padding: 5px 12px!important;display:block;width:40px;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
                 <span class="center fa fa-calendar" style="color:white"> 
                     <input class="in_timepicker input-sm" style="position:absolute;left:30%;top:50%;height: 0px!important;width: 0px!important; padding: 0px!important;">
                 </span>
             </a>
-        </div> 
+        </div>
+        <div class="prochaine_action tooltips" style="font-size: 0.9em;margin: 5px;color:white!important">
+            <span style="cursor:default;"></span>
+        </div>  
     </div>
    <script>
    function loadScript(url, callback) {

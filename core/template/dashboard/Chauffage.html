@@ -27,7 +27,16 @@
             <img class="hors_gel cmd cmd-widget  cursor" data-type="action" src="plugins/planification/core/template/dashboard/images/Chauffage/bouton_hors_gel.png" style="width:30px;">
             <img class="arret cmd cmd-widget  cursor" data-type="action" src="plugins/planification/core/template/dashboard/images/Chauffage/bouton_arret.png" style="width:30px;">
         </div>
-
+        <div class="col-xs-12 center" style="margin:0px;padding-top: 10px!important;">
+            <select class="selectPlanification cmd cursor tooltips" style="top: calc(100% - 26px);position: relative;width:80%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
+                #calendar_selector#
+            </select>
+            <a class='bt_afficher_timepicker input-group-addon cursor tooltips' style="padding: 5px 12px!important;display:block;width:40px;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
+                <span class="center fa fa-calendar" style="color:white"> 
+                    <input class="in_timepicker input-sm" style="position:absolute;left:30%;top:50%;height: 0px!important;width: 0px!important; padding: 0px!important;">
+                </span>
+            </a>
+        </div>
         <div class="center prochaine_action tooltips" style="font-size: 0.9em;margin: 5px;color:white!important">
             <span style="cursor:default;"></span>
         </div> 
@@ -38,11 +47,7 @@
     
     
         
-        <a class='input-group-addon cursor tooltips  bt_afficher_timepicker' style="margin: auto;padding: 5px 12px!important;display:block;width:40px;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
-            <span class="center fa fa-calendar" style="color:white"> 
-                <input class="in_timepicker input-sm" style="position:absolute;left:30%;top:50%;height: 0px!important;width: 0px!important; padding: 0px!important;">
-            </span>
-        </a>
+        
         </div>       
         
     </div>

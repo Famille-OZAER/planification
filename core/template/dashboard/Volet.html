@@ -10,7 +10,7 @@
         
    
     <div class="tuile" style="height:100%">
-        <div class="page_1 center" style="padding-top: 10px;margin: 0px;display:none;">
+        <div class="page_1 center" style="padding-top: 10px;margin: 0px;">
 
             
             <img class="img cmd cmd-widget" data-type="info" src='' style='height:90px' />
@@ -31,39 +31,26 @@
                 <img class="my cmd cmd-widget cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/Volet/bouton_my.png' style='display:none;width:30px' />
                 <img class="fermer cmd cmd-widget cursor" data-type="action" src='plugins/planification/core/template/dashboard/images/Volet/bouton_fermer.png' style='position: relative;right: 5px;width:30px' />
             </div>
+             <div class="col-xs-12 center" style="margin:0px;padding-top: 10px!important;">
+                <select class="selectPlanification cmd cursor tooltips" style="top: calc(100% - 26px);position: relative;width:80%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
+                    #calendar_selector#
+                </select>
+                <a class='bt_afficher_timepicker input-group-addon cursor tooltips' style="padding: 5px 12px!important;display:block;width:40px;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
+                    <span class="center fa fa-calendar" style="color:white"> 
+                        <input class="in_timepicker input-sm" style="position:absolute;left:30%;top:50%;height: 0px!important;width: 0px!important; padding: 0px!important;">
+                    </span>
+                </a>
+            </div>
             <div class="prochaine_action tooltips" style="font-size: 0.9em;margin: 5px;color:white!important">
                 <span style="cursor:default;"></span>
             </div>
         </div>
 
-        <div class="page_2 center" style="padding-top: 10px;margin: 0px;display:none">
-
-            <div style="height:25%;">
-                <select class="selectPlanification cmd cursor tooltips" style="top: calc(100% - 26px);position: relative;width:70%;color:white!important;border-radius: 10px!important" title="Choisir une planification">
-					#calendar_selector#
-				</select>
-            </div>
-            <div style="height:25%">
-                <div style="display: block;">
-                    <a class='bt_afficher_timepicker input-group-addon cursor tooltips  ' style=" top: 2px;margin: auto;padding: 5px 12px!important;display:block;width:70%;color:white!important;border-radius: 10px!important;position:relative;" title="Choisir Fin">
-                        <span class="center fa fa-calendar" style="color:white"> 
-                            <input class="in_timepicker input-sm" style="position:absolute;left:30%;top:50%;height: 0px!important;width: 0px!important; padding: 0px!important;">
-                        </span>
-                    </a>
-                </div>
-
-            </div>
-            <div style="height:50%">
-                <div class="info_widget" style="width:100%;overflow:auto;height:100%;margin: auto;font-size: 0.9em;color:white!important">
-                </div>
-            </div>
-
-        </div>
+        
         <span class="refresh cmd pull-right cursor" style="position: absolute;right: 0px;top:0px" data-cmd_id="#refresh_id#">
             <i class="fas fa-sync"></i>
         </span>
-        <i class="changecmd fa fa-retweet cursor tooltips noRefresh" title="Afficher la deuxième page" style="position : absolute;bottom: 3px;right: 3px;z-index: 500;"></i>
-
+        
     </div>
   
     

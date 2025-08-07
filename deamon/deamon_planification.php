@@ -30,14 +30,16 @@
 
     $eqLogic = eqLogic::ById($eqLogic_id);
     $Json = $eqLogic::Get_Json($eqLogic_id);
-    if (config::byKey('cache::engine') == "MariadbCache"){       
-      $sql = "SELECT `key`,`datetime`,`value`,`lifetime` FROM cache WHERE cache.key LIKE 'Planification_". $eqLogic_id . "%'";
-      $caches =  DB::Prepare($sql,array(), DB::FETCH_TYPE_ALL, PDO::FETCH_CLASS,'cache');
-      $cache_array=[];
-      foreach($caches as $cache){
-          $cache_array[str_replace("Planification_" . $eqLogic_id . "_", "",$cache->getKey())] = unserialize($cache->getValue());
+    
+    $cache_array=[];
+    $cmds=$eqLogic->getCmd();
+    foreach($cmds as $cmd){
+        if($cmd->getType() == 'info'){
+          $cache_array[$cmd->getLogicalId()] = $cmd->execCmd();
         }
-    }
+          $cache_array["cmds_id"][str_replace(" " , "_", $cmd->getLogicalId())] = $cmd->getId();
+        }
+    //planification::add_log( 'info', $cache_array, $eqLogic);
     if ($complet){
       if($eqLogic->getConfiguration("Type_équipement","") == "Volet"){
         $_equipementsInfos->infos_lever_coucher_soleil = $eqLogic::Recup_infos_lever_coucher_soleil($eqLogic_id,$Json["Lever_coucher"][0]);
@@ -542,7 +544,7 @@
           if ($execute_action){
             planification::add_log("debug"," execute_action  ",$eqLogic);
             $eqLogic->Get_actions_planification($equipementsInfos[$eqLogic_id]);
-           
+
             if(cmd::byEqLogicIdAndLogicalId($eqLogic_id,'heure_fin')->execCmd() == ''){
               planification::add_log("debug","Aucune action suivante ",$eqLogic);
               

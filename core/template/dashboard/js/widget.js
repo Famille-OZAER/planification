@@ -195,11 +195,9 @@ function Commun_widget(type_eqLogic,cmds_id) {
     tuile.style.backgroundColor = "rgba(0,0,0,0.5)";
     eqLogicElement.style.boxShadow = "0px 0px 1px 0.5px rgba(255,255,255,1)";
 
-    // Affichage des pages
-    
+  
 
-    if (page1) page1.style.display = cmds_id.page === "page1" ? "block" : "none";
-    if (page2) page2.style.display = cmds_id.page === "page2" ? "block" : "none";
+    
     // Réinitialisation de la page
     
     Reset_page(cmds_id);

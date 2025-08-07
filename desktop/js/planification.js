@@ -1,4 +1,5 @@
 JSONCLIPBOARD = null
+localStorage.setItem("JSONCLIPBOARD", null);
 flatpickr.localize(flatpickr.l10ns.fr)
 var typesEquipements = ['chauffages', 'PACs', 'volets', 'prises', 'persos'];
 var Json_lever_coucher=''
@@ -549,90 +550,9 @@ document.getElementById('tab_planifications').addEventListener('click', function
     }
     select.click();
   }
-  if (event.target.closest('.checkbox_lever_coucher')) {
-    const _target = event.target.closest('.checkbox_lever_coucher');
-    const Divjour = _target.closest('.JourSemaine');
-    const Periode = _target.closest('.Periode_jour');
-    let numero_cette_periode = 0, numero_autre_periode = 0;
-    let autre_valeur_select_lever_coucher = "";
-    const nb_checked = Array.from(Divjour.querySelectorAll('.checkbox_lever_coucher'))
-    .filter(lever_coucher => lever_coucher.getAttribute("checked") === 'true').length;
-
-    if (nb_checked > 2) {
-      _target.setAttribute("checked", false);
-      _target.checked = false;
-      return;
-    } else {
-      _target.setAttribute("checked", _target.checked);
-    }
-
-    modifyWithoutSave = true;
-
-
-    numero_cette_periode = Array.from(Periode.classList)
-      .find(classe => classe.includes("periode"))?.substr(7) || 0;
-
-    const valeur_select_lever_coucher = Periode.querySelector('.select_lever_coucher').value;
-    let time = '00:00';
-    const tab_gestion = document.querySelector('#tab_gestion_heures_lever_coucher');
-
-    if (_target.checked) {
-      console.log(nb_checked)
-      if (nb_checked === 1) {
-        Divjour.querySelectorAll('.checkbox_lever_coucher').forEach(_periode => {
-          if (_periode.getAttribute("checked")) {
-            const cette_periode = _periode.closest('.Periode_jour');
-            const autreClasse = Array.from(cette_periode.classList).find(classe => classe.includes("periode"));
-            if (autreClasse && autreClasse.substr(7) !== numero_cette_periode) {
-              autre_valeur_select_lever_coucher = cette_periode.querySelector('.select_lever_coucher').value;
-              numero_autre_periode = autreClasse.substr(7);
-            }
-          }
-        });
-        if ((numero_cette_periode > numero_autre_periode && autre_valeur_select_lever_coucher === "coucher") ||
-            (numero_cette_periode < numero_autre_periode && autre_valeur_select_lever_coucher === "lever")) {
-          return;
-        }
-        const updateSelectAndTime = (type) => {
-        const selectEl = currentPeriod.querySelector('.select_lever_coucher');
-
-          // Sélectionne la valeur uniquement si elle existe parmi les options
-          const foundOption = Array.from(selectEl.options).find(opt => opt.value === type);
-          if (foundOption) {
-            selectEl.value = type;
-            selectEl.selectedIndex = foundOption.index;
-            selectEl.dispatchEvent(new Event('change')); // Pour déclencher les effets liés
-          } else {
-            console.warn(`Valeur '${type}' non disponible dans la liste.`);
-          }
-
-          const timeSelector = `.Heure_action_suivante_${type}.${dayDiv.classList[1]}`;
-          selectedTime = scheduleTab.querySelector(timeSelector).innerText;
-        };
-      }
-
-      Periode.querySelector('.in_timepicker').style.display = 'none';
-      Periode.querySelector('.bt_afficher_timepicker_planification').style.display = 'none';
-      Periode.querySelector('.select_lever_coucher').style.display = 'block';
-
-      const timePicker = Periode.querySelector('.in_timepicker');
-      timePicker.setAttribute("oldvalue", timePicker.getAttribute("value"));
-      timePicker.setAttribute("time_int", convertTimeToInt(time));
-      timePicker.setAttribute("value", time);
-    } else {
-      const timePicker = Periode.querySelector('.in_timepicker');
-      time = timePicker.getAttribute("oldvalue") || time;
-      timePicker.setAttribute("value", time);
-      timePicker.setAttribute("time_int", convertTimeToInt(time));
-      timePicker.removeAttribute('oldvalue');
-
-      Periode.querySelector('.select_lever_coucher').style.display = 'none';
-      timePicker.style.display = 'block';
-      Periode.querySelector('.bt_afficher_timepicker_planification').style.display = 'block';
-    }
-    triage_jour(Divjour);
-    MAJ_Graphique_jour(Divjour);
-  }    
+  
+ 
+  
   if (event.target.closest('.bt_supprimer_perdiode')) {
     const _target = event.target.closest('.bt_supprimer_perdiode');
     const Divjour = _target.closest('.JourSemaine');
@@ -678,18 +598,22 @@ document.getElementById('tab_planifications').addEventListener('click', function
 
     jour.querySelectorAll('.Periode_jour').forEach((_jour) => {
       const checkbox = _jour.querySelector('.checkbox_lever_coucher');
-      const type_periode = checkbox.getAttribute("checked") ? _jour.querySelector('.select_lever_coucher').value : "heure_fixe";
+      const type_periode = checkbox.checked ? _jour.querySelector('.select_lever_coucher').value : "heure_fixe";
 
       const debut_periode = _jour.querySelector('.in_timepicker').value;
       const Id = _jour.querySelector('.select-selected').getAttribute("id");
       const Nom = _jour.querySelector('.select-selected span').innerHTML;
       const Couleur = recup_class_couleur(_jour.querySelector('.select-selected').classList);
-
       JSONCLIPBOARD.data.push({ type_periode, debut_periode, Id, Nom, Couleur });
-    });
+      localStorage.setItem("JSONCLIPBOARD", JSON.stringify(JSONCLIPBOARD));
+   });
   }
   if (event.target.closest('.bt_coller_jour')) {
     const _target = event.target.closest('.bt_coller_jour');
+  
+   const JSONCLIPBOARD = JSON.parse(localStorage.getItem("JSONCLIPBOARD"));
+
+   
     if (!JSONCLIPBOARD) return;
 
     modifyWithoutSave = true;
@@ -765,72 +689,96 @@ document.getElementById('tab_planifications').addEventListener('focusout', funct
     }
   }
 });
+
 document.getElementById('tab_planifications').addEventListener('change', function(event) {
-  const _target = event.target.closest('.select_lever_coucher');
-  if (_target) {
-    modifyWithoutSave = true;
-    const Divjour = _target.closest('.JourSemaine');
-    const Periode = _target.closest('.Periode_jour');
-    let numero_cette_periode = 0;
-    let autre_valeur_select_lever_coucher = "";
+  if (event.target.closest('.select_lever_coucher')) {
+    const selectElement = event.target.closest('.select_lever_coucher');
+    if (selectElement) {
+      modifyWithoutSave = true;
 
-    Periode.classList.forEach((classe) => {
-      if (classe.includes("periode")) {
-        numero_cette_periode = classe.substr(7);
+      const jourDiv = selectElement.closest('.JourSemaine');
+      const periodeDiv = selectElement.closest('.Periode_jour');
+
+      let existeLever = false;
+      let existeCoucher = false;
+
+      jourDiv.querySelectorAll('.checkbox_lever_coucher').forEach((checkbox) => {
+        if (checkbox.checked) {
+          const autrePeriode = checkbox.closest('.Periode_jour');
+          if (autrePeriode === periodeDiv) return;
+
+          const autreSelect = autrePeriode.querySelector('.select_lever_coucher');
+          if (autreSelect?.value === "lever") existeLever = true;
+          if (autreSelect?.value === "coucher") existeCoucher = true;
+        }
+      });
+
+      if (selectElement.value === "lever" && existeLever) {
+        selectElement.value = "coucher";
       }
-    });
 
-    Divjour.querySelectorAll('.checkbox_lever_coucher').forEach((checkbox) => {
-      if (checkbox.getAttribute("checked") === 'true') {
-        const cette_periode = checkbox.closest('.Periode_jour');
-        cette_periode.classList.forEach((classe) => {
-          if (classe.includes("periode") && classe.substr(7) !== numero_cette_periode) {
-            autre_valeur_select_lever_coucher = cette_periode.querySelector('.select_lever_coucher').value;
-          }
+      if (selectElement.value === "coucher" && existeCoucher) {
+        selectElement.value = "lever";
+      }
+
+      modifHeure(jourDiv,selectElement);
+
+      triage_jour(jourDiv);
+      MAJ_Graphique_jour(jourDiv);
+    }
+
+  }
+  if (event.target.closest('.checkbox_lever_coucher')) {
+    const checkbox = event.target.closest('.checkbox_lever_coucher');
+    if (!checkbox) return;
+
+    const jourDiv = checkbox.closest('.JourSemaine');
+    const checkedBoxes = Array.from(jourDiv.querySelectorAll('.checkbox_lever_coucher')).filter(cb => cb.checked);
+
+    if ( checkedBoxes.length > 2) {
+      event.preventDefault();
+      checkbox.checked = false;
+      return;
+    }
+
+    setTimeout(() => {      
+      if (checkbox.checked) {
+        const periodeDiv = checkbox.closest('.Periode_jour');
+        const select = periodeDiv.querySelector('.select_lever_coucher');
+        if (!select) return;
+
+        const jourDiv = checkbox.closest('.JourSemaine');
+        let existeLever = false;
+        let existeCoucher = false;
+
+        checkedBoxes.forEach(cb => {
+          const autrePeriode = cb.closest('.Periode_jour');
+          if (autrePeriode === periodeDiv) return;
+
+          const autreSelect = autrePeriode.querySelector('.select_lever_coucher');
+          if (autreSelect?.value === "lever") existeLever = true;
+          if (autreSelect?.value === "coucher") existeCoucher = true;
         });
+
+        if (!existeLever) {
+          select.value = "lever";
+        } else if (!existeCoucher) {
+          select.value = "coucher";
+        }
       }
-    });
 
-    if (_target.value === "lever" && autre_valeur_select_lever_coucher === "lever") {
-      modifyWithoutSave = false;
-      Periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 1);
-      Periode.querySelector('.select_lever_coucher').value = 'coucher';
-    } else if (_target.value === "coucher" && autre_valeur_select_lever_coucher === "coucher") {
-      modifyWithoutSave = false;
-      Periode.querySelector('.select_lever_coucher').setAttribute("selectedIndex", 0);
-      Periode.querySelector('.select_lever_coucher').value = 'lever';
-    }
+      jourDiv.querySelectorAll('.checkbox_lever_coucher').forEach(updateDisplay);
+      
+      modifHeure(jourDiv,checkbox.closest("div").querySelector(".select_lever_coucher"));
+      triage_jour(jourDiv);
+      MAJ_Graphique_jour(jourDiv);
+    }, 10);
 
-    let time;
-    const timepicker = Periode.querySelector('.in_timepicker');
-    const dayClasses = {
-      "Lundi": ".Heure_action_suivante_Lever.Lundi",
-      "Mardi": ".Heure_action_suivante_Lever.Mardi",
-      "Mercredi": ".Heure_action_suivante_Lever.Mercredi",
-      "Jeudi": ".Heure_action_suivante_Lever.Jeudi",
-      "Vendredi": ".Heure_action_suivante_Lever.Vendredi",
-      "Samedi": ".Heure_action_suivante_Lever.Samedi",
-      "Dimanche": ".Heure_action_suivante_Lever.Dimanche"
-    };
-
-    for (const day in dayClasses) {
-      if (Divjour.classList.contains(day)) {
-        time = document.querySelector(`#tab_gestion_heures_lever_coucher ${dayClasses[day]}`).innerText;
-      }
-    }
-
-    if (_target.value !== 'lever') {
-      timepicker.setAttribute("selectedIndex", 1);
-    }
-
-    timepicker.setAttribute("oldvalue", timepicker.getAttribute("value"));
-    timepicker.setAttribute("time_int", (parseInt(time.split(':')[0]) * 60) + parseInt(time.split(':')[1]));
-    timepicker.setAttribute("value", time);
-
-    triage_jour(Divjour);
-    MAJ_Graphique_jour(Divjour);
   }
 });
+
+
+
 document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('change', function(event) {
   const adjustTimeForLeverCoucher = (_target, selector) => {
     _target=_target.closest(".well")
@@ -898,34 +846,7 @@ document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('cl
     }
   });
 });
-document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('click', function(event) {
-  const _target = event.target.closest('.bt_copier_lever_coucher');
-  if (_target) {
-    let jour_trouvé = false;
-    let Ce_jour = "", jour_min = "";
 
-    const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-    jours.forEach((jour, index) => {
-      const jourElement = document.querySelector(`#tab_gestion_heures_lever_coucher .${jour}`);
-      if (jourElement.style.display === "block") {
-        Ce_jour = jour;
-        jour_min = jours[(index + 1) % jours.length];
-      }
-    });
-
-    document.querySelector('#tab_gestion_heures_lever_coucher').querySelectorAll('.in_timepicker').forEach(function(input) {
-      if (input.classList[2] === jour_min || jour_trouvé) {
-        jour_trouvé = true;
-        const tab_gestion = document.querySelector('#tab_gestion_heures_lever_coucher');
-
-        ["HeureLeverMin", "HeureLeverMax", "HeureCoucherMin", "HeureCoucherMax"].forEach((timeClass) => {
-          tab_gestion.querySelector(`.${timeClass}.${input.classList[2]}`).value = 
-            tab_gestion.querySelector(`.${timeClass}.${Ce_jour}`).value;
-        });
-      }
-    });
-  }
-});
 document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('keydown', function(e) {
   
 
@@ -1021,10 +942,6 @@ document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('ke
        
     }
 });
-
-
-
-
 
 
 document.getElementById('tab_commandes').addEventListener('click', function(event) {
@@ -1301,6 +1218,66 @@ function afficherSectionsParType(types) {
       if (sidenav) sidenav.style.display = 'block';
     }
   });
+}
+function updateDisplay(checkbox) {
+  const periodeDiv = checkbox.closest('.Periode_jour');
+  const select = periodeDiv.querySelector('.select_lever_coucher');
+  const timepicker = periodeDiv.querySelector('.in_timepicker');
+  const boutonTimepicker = periodeDiv.querySelector('.bt_afficher_timepicker_planification');
+
+  if (checkbox.checked) {
+    select.style.display = 'block';
+    timepicker.style.display = 'none';
+    boutonTimepicker.style.display = 'none';
+  } else {
+    select.style.display = 'none';
+    timepicker.style.display = 'block';
+    boutonTimepicker.style.display = 'block';
+  }
+
+}
+function modifHeure(jourDiv,selectElement){
+  const periodeDiv = selectElement.closest('.Periode_jour');
+  const timepicker = periodeDiv.querySelector('.in_timepicker');
+  const joursMapLever = {
+    "Lundi": ".Heure_action_suivante_Lever.Lundi",
+    "Mardi": ".Heure_action_suivante_Lever.Mardi",
+    "Mercredi": ".Heure_action_suivante_Lever.Mercredi",
+    "Jeudi": ".Heure_action_suivante_Lever.Jeudi",
+    "Vendredi": ".Heure_action_suivante_Lever.Vendredi",
+    "Samedi": ".Heure_action_suivante_Lever.Samedi",
+    "Dimanche": ".Heure_action_suivante_Lever.Dimanche"
+  };
+
+  const joursMapCoucher = {
+    "Lundi": ".Heure_action_suivante_Coucher.Lundi",
+    "Mardi": ".Heure_action_suivante_Coucher.Mardi",
+    "Mercredi": ".Heure_action_suivante_Coucher.Mercredi",
+    "Jeudi": ".Heure_action_suivante_Coucher.Jeudi",
+    "Vendredi": ".Heure_action_suivante_Coucher.Vendredi",
+    "Samedi": ".Heure_action_suivante_Coucher.Samedi",
+    "Dimanche": ".Heure_action_suivante_Coucher.Dimanche"
+  };
+
+  const joursMap = selectElement.value === "lever" ? joursMapLever : joursMapCoucher;
+
+  let heureSuivante = "";
+  for (const jour in joursMap) {
+    if (jourDiv.classList.contains(jour)) {
+      const heureElement = document.querySelector(`#tab_gestion_heures_lever_coucher ${joursMap[jour]}`);
+      heureSuivante = heureElement?.innerText || "";
+      break;
+    }
+  }
+
+  if (selectElement.value !== 'lever') {
+    timepicker.selectedIndex = 1;
+  }
+
+  timepicker.setAttribute("oldvalue", timepicker.getAttribute("value"));
+  const [heures, minutes] = heureSuivante.split(':').map(Number);
+  timepicker.setAttribute("time_int", (heures * 60) + minutes);
+  timepicker.setAttribute("value", heureSuivante);
 }
 function set_sortable(Element_id,draggable,filter){
   new Sortable(Element_id, {
@@ -1718,24 +1695,45 @@ function Ajout_Periode(PROGRAM_MODE_LIST, Div_jour, time = null, Mode_periode = 
 function triage_jour(Div_jour) {
   let div = "";
 
-  Array.from(Div_jour.querySelectorAll(".in_timepicker"))
-    .map(période => {
-    return { val: période.getAttribute("time_int"), el: période.closest(".Periode_jour") };
-  })
-    .sort((a, b) => a.val - b.val)
-    .forEach(map => {
+  // Ajout automatique d’un identifiant unique si absent
+  let index = 0;
+  Div_jour.querySelectorAll('.Periode_jour').forEach(p => {
+    if (!p.hasAttribute('data-id')) {
+      p.setAttribute('data-id', `periode_${Date.now()}_${index++}`);
+    }
+  });
+
+  // Sauvegarde des états
+  const états = Array.from(Div_jour.querySelectorAll('.Periode_jour')).map(p => ({
+    id: p.getAttribute('data-id'),
+    checked: p.querySelector('.checkbox_lever_coucher')?.checked,
+    select: p.querySelector('.select_lever_coucher')?.value
+  }));
+
+  // Tri des périodes
+  const triées = Array.from(Div_jour.querySelectorAll(".in_timepicker"))
+    .map(période => ({
+      val: parseInt(période.getAttribute("time_int"), 10),
+      el: période.closest(".Periode_jour")
+    }))
+    .sort((a, b) => a.val - b.val);
+
+  triées.forEach(map => {
     div += map.el.outerHTML;
   });
 
   Div_jour.innerHTML = div;
 
-  Div_jour.querySelectorAll('.checkbox_lever_coucher').forEach(checkbox => {
-    checkbox.checked = checkbox.getAttribute("checked") === 'true';
-  });
+  // Restauration des états
+  états.forEach(({ id, checked, select }) => {
+    const période = Div_jour.querySelector(`.Periode_jour[data-id="${id}"]`);
+    if (période) {
+      const cb = période.querySelector('.checkbox_lever_coucher');
+      if (cb) cb.checked = checked;
 
-  Div_jour.querySelectorAll('.select_lever_coucher').forEach(lever_coucher => {
-    const selectedIndex = lever_coucher.getAttribute("selectedIndex");
-    lever_coucher.value = selectedIndex === '0' ? 'lever' : selectedIndex === '1' ? 'coucher' : lever_coucher.value;
+      const sel = période.querySelector('.select_lever_coucher');
+      if (sel) sel.value = select;
+    }
   });
 }
 function MAJ_Graphique_jour(Div_jour) {
@@ -2390,7 +2388,8 @@ function saveEqLogic(_eqLogic) {
         let type_periode = "heure_fixe";
         let debut_periode = "";
         const checkbox = Période.querySelector('.checkbox_lever_coucher');
-        if (checkbox.getAttribute("checked") === 'true') {
+        
+        if (checkbox.checked) {
           type_periode = Période.querySelector('.select_lever_coucher').value;
         } else {
           debut_periode = Période.querySelector('.in_timepicker').value;
