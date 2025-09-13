@@ -114,8 +114,8 @@
     $pid=getmypid();
     $pid_file = jeedom::getTmpFolder('planification') . '/deamon_planification.pid';
     file_put_contents($pid_file, $pid);
-    planification::add_log( 'info', "pid $pid enregistré dans $pid_file",null,"");
-    planification::add_log( 'info', "Listage des eqLogics utilisant le démon",null,"");
+    planification::add_log( 'info', "pid $pid enregistré dans $pid_file",null);
+    planification::add_log( 'info', "Listage des eqLogics utilisant le démon",null);
     $equipementsInfos = array(); // Tableau des objets equipementsInfos
     $nb_eqLogic=0;
    
@@ -134,9 +134,9 @@
       if ($nb_eqLogic != count((array)$eqLogics)){
         $nb_eqLogic=count((array)$eqLogics);
         if (count((array)$eqLogics) <= 1){
-          planification::add_log( 'info', count((array)$eqLogics) . " équipement découvert",null,"");
+          planification::add_log( 'info', count((array)$eqLogics) . " équipement découvert",null);
         }else{
-          planification::add_log( 'info', count((array)$eqLogics) . " équipenments découverts",null,"");
+          planification::add_log( 'info', count((array)$eqLogics) . " équipenments découverts",null);
         }
         foreach ($eqLogics as $eqLogic){
           //$eqLogic->save();
@@ -144,9 +144,9 @@
           if (!isset($equipementsInfos[$eqLogic_id])) {
             $equipementsInfos[$eqLogic_id] = new EquipementInfo($eqLogic_id); 
             $equipementsInfos[$eqLogic_id]=MAJ_equipementsInfos($eqLogic_id, $equipementsInfos[$eqLogic_id],true);
-            planification::add_log('info', "Création equipementsInfos pour ". $eqLogic->getHumanName(),null,""); 
+            planification::add_log('info', "Création equipementsInfos pour ". $eqLogic->getHumanName(),null); 
           }else{
-            planification::add_log( 'info', $eqLogic->getHumanName(),null,"");
+            planification::add_log( 'info', $eqLogic->getHumanName(),null);
           }
         }
       }
@@ -167,7 +167,7 @@
         if ($currentHour == 2 && $currentMinute == 0 && $currentSeconde == 0 && $equipementsInfos[$eqLogic_id]->type_équipement == "Volet") {
            planification::add_log('info', "Infos lever coucher soleil mises à jour pour ". $eqLogic->getHumanName(),null,""); 
           $equipementsInfos[$eqLogic_id]->infos_lever_coucher_soleil = $eqLogic::Recup_infos_lever_coucher_soleil($eqLogic_id, $equipementsInfos[$eqLogic_id]->Json_infos_lever_coucher_soleil);
-        planification::add_log('info', $equipementsInfos[$eqLogic_id]->infos_lever_coucher_soleil,$eqLogic,""); 
+        planification::add_log('info', $equipementsInfos[$eqLogic_id]->infos_lever_coucher_soleil,$eqLogic); 
         }     
         //mise à jour de la commande en cas de changement de température consigne pour la PAC
         if ($equipementsInfos[$eqLogic_id]->type_équipement == "PAC") {
@@ -362,7 +362,7 @@
             
             if($equipementsInfos[$eqLogic_id]->eqLogic_sans_action_suivante == false){
               $equipementsInfos[$eqLogic_id]->eqLogic_sans_action_suivante = true;
-              planification::add_log("debug",$eqLogic->getName() .": Aucun Id de planification enregistré",$eqLogic,"");
+              planification::add_log("debug",$eqLogic->getName() .": Aucun Id de planification enregistré",$eqLogic);
             }
           
             

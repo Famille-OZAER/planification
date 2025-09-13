@@ -381,7 +381,7 @@ class planification extends eqLogic {
       $planifications=$eqLogic::Get_planifications(false,$_objet);
 
       if(count($planifications) == 0){
-        planification::add_log("debug",'pas de planification' ,$eqLogic,);
+        planification::add_log("debug",'pas de planification' ,$eqLogic);
         return;
       }
       //action actuelle
@@ -1194,14 +1194,12 @@ class planification extends eqLogic {
 
           $Mode_fonctionnement=$cmd_Mode_fonctionnement->execCmd();
           $mode="manu";
-          planification::add_log("info", $Mode_fonctionnement,$eqLogic,"a");
           if ($Mode_fonctionnement == "Auto"){
             $mode="auto";
           }
           $cmd_Etat=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
           if (is_object($cmd_Etat)){
             $etat=$cmd_Etat->execCmd();
-            planification::add_log("info", $etat,$eqLogic,"a");
             $alias_on=strtolower($eqLogic->getConfiguration('Alias_On',""));
             $alias_off=strtolower($eqLogic->getConfiguration('Alias_Off',""));
             if(strtolower($etat) == $alias_on){$etat = "on";}
