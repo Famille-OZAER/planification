@@ -52,6 +52,7 @@ $eqLogics = planification::byType('planification');
     <th>{{Equipement}}</th>
     <th>{{Actif}}</th>
     <th>{{Mode}}</th>
+    <th>{{Mode planification}}</th>
     <th>{{Planification en cours}}</th>
     <th>{{Action en cours}}</th>
     <th>{{Heure Prochaine action}}</th>
@@ -99,10 +100,10 @@ $eqLogics = planification::byType('planification');
       if (file_exists(dirname(__FILE__) . '/../../core/img/' . $type_eqLogic . '.png')) {
         $img = '<img src="plugins/planification/core/img/' . $type_eqLogic . '.png" height="55" width="55"/>';
       } else {
-        $img = "";
+        $img = $image;
       } 
     }else{
-      $img = '<img src="' . $image . '" height="55" width="55"/>';
+      $img = '<img ' . $type_eqLogic . 'src="' . $image . '" height="55" width="55"/>';
     }
     if($eqLogic->getObject()==""){
         $Object = "Aucun";
@@ -110,7 +111,7 @@ $eqLogics = planification::byType('planification');
         $Object = $eqLogic->getObject()->getName();
       }
     echo '<tr class="santé ' .$recherche .'">';
-    echo '<td><span class="label id">' . $eqLogic->getId() . '</span></td>';
+    echo '<td><span class="label id">' . $eqLogic->getId() .'</span></td>';
     echo '<td>' . $img . '</td>';
     echo '<td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $Object . " " . $eqLogic->getName() . '</a></td>';
 
@@ -124,11 +125,20 @@ $eqLogics = planification::byType('planification');
       echo '<td></td>';
       echo '<td></td>';
       echo '<td></td>';
-      
+      echo '<td></td>';
       echo '</tr>';
       continue;
     }
     $valeur=$eqLogic->getCmd(null,'mode_fonctionnement')->execCmd();;
+    if ($valeur == "Auto"){
+        echo '<td><span class="label label-success" style="font-size : 1em;">{{'. $valeur.'}}</span></td>';
+    }elseif ($valeur == "Manuel"){
+        $cmd_auto= $eqLogic->getCmd(null,'auto');
+        echo '<td><span class="label label-warning cursor manuel" cmd_id='. $cmd_auto->getId().' style="font-size : 1em;">{{'. $valeur.'}}</span></td>';
+    }else{
+        echo '<td><span class="label label-danger" style="font-size : 1em;">{{Inconnu}}</span></td>';
+      }
+      $valeur=$eqLogic->getCmd(null,'mode_planification')->execCmd();;
     if ($valeur == "Auto"){
         echo '<td><span class="label label-success" style="font-size : 1em;">{{'. $valeur.'}}</span></td>';
     }elseif ($valeur == "Manuel"){

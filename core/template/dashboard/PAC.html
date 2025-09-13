@@ -11,7 +11,7 @@
 
         
         <div class="col-xs-6 gauche" style="margin:0px;padding: 0px!important;">
-            <i class="cmd fa fa-fire boost cursor tooltips" title="Activer le mode boost" style="position:relative;float:right;top: 50px;display:none;font-size: 1.9em;margin-left: 5px;color:white!important"></i>
+            <i class="boost cmd fa fa-fire  cursor tooltips" title="Activer le mode boost" style="position:relative;float:right;top: 50px;display:none;font-size: 1.9em;margin-left: 5px;color:white!important"></i>
             <img class="img cmd cmd-widget" style="position:relative;top:calc(100% - 80px);float: right;height: 80px;" />
             
             <span>
@@ -67,7 +67,7 @@
 }
 
     function waitForFunctions(callback) {
-        if (typeof Affichage_widget === 'function' && typeof Commun_widget === 'function' && typeof SetWidget_Thermostat == 'function' && typeof Maj_Thermostat == 'function' && typeof Reset_page == 'function') {
+        if (typeof Affichage_widget === 'function' && typeof Commun_widget === 'function' && typeof SetWidget_Thermostat == 'function' && typeof Maj_Thermostat == 'function') {
             callback();
         } else {
             setTimeout(() => waitForFunctions(callback), 50);
@@ -80,7 +80,6 @@
             nom_eqlogic: '#nom_eqlogic#',
             auto_id: '#auto_id#',          	
             eqLogic_id: '#id#',
-            page: '#page#',
             mode: '#mode#', mode_id: '#mode_id#',
             mode_planification : '#mode_planification#',
             etat: '#etat#', etat_id: '#etat_id#',
@@ -88,6 +87,7 @@
             action_suivante:'#action_suivante#',action_suivante_id:'#action_suivante_id#',
             calendar_selector: '#calendar_selector#',
             heure_fin: '#heure_fin#',heure_fin_id: '#heure_fin_id#',
+            affichage_heure: '#affichage_heure#',
             planification_en_cours : '#planification_en_cours#', planification_en_cours_id: '#planification_en_cours_id#',
             set_heure_fin_id: '#set_heure_fin_id#',
 			set_planification_id: '#set_planification_id#',
@@ -106,8 +106,8 @@
             boost: '#boost#',
             boost_id: '#boost_id#',
         };
-        console.log(cmds_id)
-        Affichage_widget('PAC',cmds_id)
+       
+        Affichage_widget('#type_equipement#',cmds_id)
     })
     </script>
 </div>

@@ -33,7 +33,11 @@ function Affichage_widget(type_eqLogic, cmds_id) {
     } else {
         fetchData(cmds_id).then((data) => {
             if (!data) return;
-            console.log(data)
+           
+            if(data.affichage_heure == '1'){                          
+                data.heure_fin = data.heure_fin.slice(-5)
+            }
+           
             Object.assign(cmds_id, {
                 mode: data.mode_fonctionnement,
                 planification_en_cours: data.planification_en_cours,
@@ -42,7 +46,7 @@ function Affichage_widget(type_eqLogic, cmds_id) {
                 action_suivante: data.action_suivante,
                 heure_fin: data.heure_fin,
                 calendar_selector: data.calendar_selector,
-                page: data.page
+                affichage_heure:data.affichage_heure
             });
 
             if (type_eqLogic === "PAC") {
@@ -75,7 +79,6 @@ function Commun_widget(type_eqLogic,cmds_id) {
         .addEventListener('click', function(event) {
             let target = event.target.closest('.bt_afficher_timepicker, .img, .img_auto_manu, .nom_eqLogic, .refresh, .boost, .Climatisation, .Chauffage, .Arrêt, .Ventilation, .confort, .eco, .hors_gel, .arret, .ouvrir, .my, .fermer, .on, .off');
             if (!target) return;
-            console.log(target)
             if (target.classList.contains('bt_afficher_timepicker')) {
                 flatpickr(target.closest('div div').querySelector('.in_timepicker'), {
                     enableTime: true,
@@ -109,7 +112,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
                     });
                 }
             };
-    
+   
             const cmdIds = {
                 'img': cmds_id.auto_id,
                 'img_auto_manu': cmds_id.auto_id,
@@ -119,6 +122,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
                 'Chauffage': cmds_id.chauffage_id,
                 'Arrêt': cmds_id.arret_id,
                 'Ventilation': cmds_id.ventilation_id,
+                'boost' : cmds_id.boost_id,
                 'confort': cmds_id.confort_id,
                 'eco': cmds_id.eco_id,
                 'hors_gel': cmds_id.hors_gel_id,
@@ -180,8 +184,6 @@ function Commun_widget(type_eqLogic,cmds_id) {
     const imgElement = eqLogicElement.querySelector(".img");
     const imgAutoManu = eqLogicElement.querySelector(".img_auto_manu");
     const nomEqLogic = eqLogicElement.querySelector(".nom_eqLogic");
-    const page1 = eqLogicElement.querySelector(".page_1");
-    const page2 = eqLogicElement.querySelector(".page_2");
     const selectPlanification = eqLogicElement.querySelector(".selectPlanification");
     const btTimepicker = eqLogicElement.querySelector(".bt_afficher_timepicker");
     const objectName = eqLogicElement.querySelector(".object_name");
@@ -210,7 +212,6 @@ function Commun_widget(type_eqLogic,cmds_id) {
             }
         });
     };
-    console.log(cmds_id)
     selectPlanification.innerHTML = cmds_id.calendar_selector
     // Gestion de l'affichage des éléments
 
@@ -243,6 +244,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
         imgAutoManu.setAttribute("title", autoTitle);
         
         // **Gestion de la prochaine action**
+       
         if (cmds_id.heure_fin == "") {
             prochaineAction.innerHTML = "";
         } else {
@@ -312,7 +314,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
             }
         });
         
-        // Mise en page des sections
+        // Mise en forme des sections
         thermostat.setAttribute("mode", "on");
 
         // **Mise à jour de l’image**
@@ -410,7 +412,7 @@ function Commun_widget(type_eqLogic,cmds_id) {
        
       
         // **Mise à jour de l'image**
-        const imageType = {"": "arrêt.png","arrêt": "arrêt.png", "confort": "confort.png", "eco": "eco.png", "hors gel": "hors gel.png" };    
+        const imageType = {"": "arrêt.png","arrêt": "arrêt.png", "confort": "confort.png", "eco": "eco.png", "hors gel": "hors gel.png" };   
         imgElement.setAttribute("src", `plugins/planification/core/template/dashboard/images/Chauffage/${imageType[cmds_id.action_en_cours.toLowerCase()]}`);
     }
     if(type_eqLogic == 'Volet'){

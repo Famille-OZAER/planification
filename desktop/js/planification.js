@@ -432,8 +432,7 @@ document.getElementById('tab_planifications').addEventListener('click', function
         if (resultat && resultat.trim() !== '') {
           modifyWithoutSave = true;
           planificationElement.querySelector("span.nom_planification").innerHTML = resultat;
-
-          const gestionPlanificationsElement = document.querySelector(`#Gestion_planifications .${planificationElement.getAttribute('id')}`);
+          const gestionPlanificationsElement = document.querySelector(`#div_GestionPlanifications .${planificationElement.getAttribute('id')}`);
           if (gestionPlanificationsElement) {
             gestionPlanificationsElement.querySelector(".Nom_planification").innerHTML = resultat;
           }
@@ -1907,7 +1906,6 @@ if (_eqLogic.configuration.Type_équipement === 'Volet') {
               return;
           }
           Json_lever_coucher=data.result
-          console.log(Json_lever_coucher)
           // Update DOM with result values
           const updateElements = (selector, key) => {
               document.querySelectorAll(selector).forEach(element => {
@@ -1916,10 +1914,8 @@ if (_eqLogic.configuration.Type_équipement === 'Volet') {
                     element[selector.includes("Min") || selector.includes("Max") ? 'value' : 'innerText'] = data.result[key];
 
                   }else{
-                  //['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'].forEach(day => {
-                    
+                 
                     element[selector.includes("Min") || selector.includes("Max") ? 'value' : 'innerText'] = data.result[key + element.classList[2].toLowerCase()];
-                    //});
                   
                     
                   }

@@ -11,8 +11,6 @@
 
    
     <div class="tuile center">
-        
-
         <img class="img cmd cmd-widget" data-type="info" src='' style='height:80px' />
         <span class="nom_eqLogic" style="display:none;position: absolute;top: 80px;width: 100%;color: black;font-weight: 300;font-size: 16px;">#name_display#</span>
         <span>
@@ -57,7 +55,7 @@
     }
 
     function waitForFunctions(callback) {
-        if (typeof Affichage_widget === 'function' && typeof Commun_widget === 'function' && typeof SetWidget_Thermostat == 'function' && typeof Maj_Thermostat == 'function' && typeof Reset_page == 'function') {
+        if (typeof Affichage_widget === 'function' && typeof Commun_widget === 'function' && typeof SetWidget_Thermostat == 'function' && typeof Maj_Thermostat == 'function') {
             callback();
         } else {
             setTimeout(() => waitForFunctions(callback), 50);
@@ -70,22 +68,21 @@
             nom_eqlogic:'#nom_eqlogic#',
             auto_id: '#auto_id#',          	
             eqLogic_id: '#id#',
-            page: '#page#',
             mode: '#mode#', mode_id: '#mode_id#',
             mode_planification : '#mode_planification#',
             etat: '#etat#', etat_id: '#etat_id#',
-            action_en_cours:'#action_en_cours#',action_en_cours_id:'#action_en_cours_id#',
-            action_suivante:'#action_suivante#',action_suivante_id:'#action_suivante_id#',
+            action_en_cours: '#action_en_cours#', action_en_cours_id: '#action_en_cours_id#',
+            action_suivante: '#action_suivante#', action_suivante_id: '#action_suivante_id#',
+            affichage_heure: '#affichage_heure#',
             calendar_selector: '#calendar_selector#',
             heure_fin: '#heure_fin#',heure_fin_id: '#heure_fin_id#',
             planification_en_cours : '#planification_en_cours#', planification_en_cours_id: '#planification_en_cours_id#',
             set_heure_fin_id: '#set_heure_fin_id#',
 			set_planification_id: '#set_planification_id#',
-	                    
             on_id: '#on_id#',
             off_id : '#off_id#'
         };
-        Affichage_widget('Prise',cmds_id)
+        Affichage_widget('#type_equipement#',cmds_id)
     })
 
     

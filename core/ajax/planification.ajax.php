@@ -28,30 +28,10 @@
         $cmd_array["cmds_id"][str_replace(" " , "_", $cmd->getLogicalId())] = $cmd->getId();
       }
 
-      foreach($caches as $cache){
-       $cmd_array[str_replace("Planification_" .init('eqLogic_id') . "_", "",$cache->getKey())] = unserialize($cache->getValue());
-       if (str_replace("Planification_" .init('eqLogic_id') . "_", "",$cache->getKey()) == 'heure_fin'){
-          $heure_fin = unserialize($cache->getValue());
-          if($eqLogic->getConfiguration("affichage_heure",false)){
-             
-            $interval = date_diff(new DateTime( $heure_fin), new DateTime("now"));
-            if(intval($interval->format('%a')) == 0){
-              if($heure_fin !=''){
-                $cmd_array['heure_fin'] = date('H:i',strtotime($heure_fin));
-              }else{
-                $cmd_array['heure_fin'] = '';
-              }
-            }else{                
-              $cmd_array['heure_fin'] = date('d/m/Y H:i',strtotime($heure_fin));
-                            
-            }
-          }else{
-            $cmd_array['heure_fin'] = date('d/m/Y H:i',strtotime($heure_fin));
-            
-          }
-          $cmd_array['datetimepicker'] =  $cmd_array['heure_fin'];
-         
-        }
+
+      $cmd_array["affichage_heure"] = $eqLogic->getConfiguration("affichage_heure",false);
+        
+      
         if ($eqLogic->getConfiguration("Type_équipement") == "Volet"){
           $cmd_Etat_volet=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('etat_id',"")));
           if (is_object($cmd_Etat_volet)){
@@ -82,23 +62,37 @@
           
         }
         if($eqLogic->getConfiguration("Type_équipement") == "PAC"){   
-          if (str_replace("Planification_" .init('eqLogic_id') . "_", "",$cache->getKey()) == 'cmds_id'){
-            $cmd_ids = unserialize($cache->getValue());
-            //planification::add_log("debug",init('eqLogic_id'),null,'aaa');
-            //planification::add_log("debug",$cmd_ids,null,'aaa');
-            //planification::add_log("debug",$cmd_ids["temperature_ambiante"],null,'aaa');
-            $cmd_temperature = cmd::byId($cmd_ids["temperature_ambiante"]);
-            //planification::add_log("debug",is_object($cmd_temperature),null,'aaa');
+          $cmd_array['temperature_ambiante'] = "";
+          
+            $cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Temperature_ambiante_id',"")));
             if (is_object($cmd_temperature)){
               $cmd_array['temperature_ambiante'] = $cmd_temperature->execCmd();
-            }else{
-              $cmd_array['temperature_ambiante'] = '';
             }
-          }
+          
         }
+      
+      
+      if (isset($cmd_array['planification_en_cours'])) {
+       
+        $Json = $eqLogic::Get_Json($eqLogic->getId());
+        $planifications = $Json["Planifications"][0];
+        $id_planification_en_cours = $eqLogic->getConfiguration("Id_planification_en_cours", "");
+
+        $calendar_selector = '';
+
+        foreach ($planifications as $planification) {
+          $selected = ($planification[0]["Id"] === $id_planification_en_cours) ? ' selected' : '';
+          $calendar_selector .= sprintf(
+            '<option id="%s" value="%s"%s>%s</option>',
+            $planification[0]["Id"],
+            $planification[0]["Nom"],
+            $selected,
+            $planification[0]["Nom"]
+          );
+        }
+
+        $cmd_array['calendar_selector'] = $calendar_selector;
       }
-
-
 
 
 
@@ -219,7 +213,6 @@
        
     
 
-      //$cmd_array["page"]=$eqLogic->getCache('Page');
       ajax::success($cmd_array);
     }
     
@@ -323,7 +316,7 @@
       $eqLogic->save(false);
       ajax::success();
     }
-    if (init('action') == 'Copy_JSON') {
+    if (init('action') == 'Copy_JSON1') {
       $nom_fichier_source = dirname(__FILE__) ."/../../planifications/" . init('id_source') . ".json"; 
       $nom_fichier_cible =  dirname(__FILE__) ."/../../planifications/" . init('id_cible') . ".json"; 
       if(file_exists ( $nom_fichier_source ) ){
@@ -333,6 +326,41 @@
 
       ajax::success(true);
     }
+    if (init('action') == 'Copy_JSON') {
+      $id_source = init('id_source');
+      $id_cible = init('id_cible');
+      $nom_fichier_source = dirname(__FILE__) . "/../../planifications/" . $id_source . ".json";
+      $nom_fichier_cible = dirname(__FILE__) . "/../../planifications/" . $id_cible . ".json";
+  
+      copy( $nom_fichier_source , $nom_fichier_cible);
+      $json = file_get_contents($nom_fichier_cible);
+
+      $source = eqLogic::byId($id_source);
+   
+
+      $cible = eqLogic::byId($id_cible);
+
+
+      $correspondance = [];
+      foreach ($source->getCmd() as $cmd_src) {
+          foreach ($cible->getCmd() as $cmd_cible) {
+              if ($cmd_src->getName() == $cmd_cible->getName()) {
+                  $correspondance[$cmd_src->getId()] = $cmd_cible->getId();
+              }
+          }
+      }
+      foreach ($correspondance as $id_source => $id_cible) {
+          $json = str_replace('"Id": "' . $id_source . '"', '"Id": "' . $id_cible . '"', $json);
+          $json = str_replace("#$id_source#", "#$id_cible#", $json); // pour les conditions
+      }
+
+
+      file_put_contents($nom_fichier_cible, $json);
+
+
+      ajax::success(true);
+    }
+
     if (init('action') == 'Remove_log') {
       if (!config::byKey('UseLogByeqLogic', 'planification')){
         $liste_log=log::liste("planification_");
