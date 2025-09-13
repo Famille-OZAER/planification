@@ -775,7 +775,73 @@ document.getElementById('tab_planifications').addEventListener('change', functio
 
   }
 });
+document.getElementById('tab_planifications').addEventListener('keydown', function(e) {
+  
 
+    if (e.target.closest('.in_timepicker')) {
+      const adjustTimeForLeverCoucher = (_target, selector) => {
+        _target=_target.closest(".well")
+        adjustNextActionTime(
+          _target.querySelector(`.Heure${selector}`).innerText,
+          _target.querySelector(`.Heure${selector}Min`).value,
+          _target.querySelector(`.Heure${selector}Max`).value,
+          _target.querySelector(`.Heure_action_suivante_${selector}`),
+        );
+      };
+      
+
+       
+    
+      let value = e.target.value;
+      let cursorPos = e.target.selectionStart; // Position actuelle du curseur
+      let char = e.key;
+
+      // Autoriser touches de contrôle (Backspace, Delete, Tab, Flèches)
+      if (['Tab', 'ArrowLeft', 'ArrowRight', 'Control', 'F5'].includes(char)) {
+            return;
+      }
+      if (['Backspace', 'Delete'].includes(char)) {
+          e.target.value=''
+
+          return;
+      }
+      switch (cursorPos) {
+        case 0: // 🚫 Bloquer toute modification du premier chiffre si le deuxième est déjà >3
+          if (value.length >= 1 && value[0] > '3' &&!/[0-1]/.test(char)) {
+              e.preventDefault();
+          } else if (!/[0-2]/.test(char)) { // Bloquer les valeurs supérieures à 2 en première position
+              e.preventDefault();
+          }
+          break;
+        case 1: // 🚫 Empêcher les heures supérieures à 23
+          if (value[0] === '2' && !/[0-3]/.test(char)) {
+            e.preventDefault(); // Bloque >23
+          } else if ((value[0] === '1' || value[0] === '0') && !/[0-9]/.test(char)) {
+            e.preventDefault(); // Bloque tout ce qui n’est pas 0–9
+          } else {
+            // 👍 L’heure semble correcte, on ajoute le caractère et le ":"
+            e.target.value = value + char + ':';
+            e.preventDefault();
+          }
+
+
+          break;
+        case 3: // 🚫 Bloquer minutes hors plage 0-5
+            if (!/[0-5]/.test(char)) e.preventDefault();
+            break;
+        case 4: // 🚫 Bloquer minutes hors plage 0-9
+          if (!/[0-9]/.test(char)) e.preventDefault();
+          e.target.value += char ;
+          e.preventDefault();
+          break;
+      
+        default: // 🚫 Bloquer toute saisie supplémentaire           
+        e.preventDefault()
+            
+      }
+       
+    }
+});
 
 
 document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('change', function(event) {
@@ -941,6 +1007,7 @@ document.getElementById('tab_gestion_heures_lever_coucher').addEventListener('ke
        
     }
 });
+
 
 
 document.getElementById('tab_commandes').addEventListener('click', function(event) {
