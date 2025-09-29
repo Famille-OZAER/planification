@@ -723,14 +723,14 @@
 					</tbody>
 				</table>
 			</div>
-
+			<!--Paramètres Tab-->
 			<div role="tabpanel" class="tab-pane Paramètres" id="tab_Paramètres">
 				<div class="col-sm-12 PAC" style="display:none">	
 					<legend><i class="fab fa-hotjar"></i>  {{Chauffage}}<a class="btn btn-sm btn-success bt_ajouter_commande pull-right" style="display:none"><i class="fa fa-plus-circle"></i> {{Ajouter une commande}}</a></legend>
 					<table id="table_chauffage" class="table table-bordered table-condensed">
 						<thead>
 							<tr>
-								<th width="20%">{{Nom}}</th><th width="55%" align="center">{{Etat}}</th><th width="15%" align="right">{{Options}}</th><th width="20%" align="right"></th>
+								<th width="80%">{{Nom}}</th><th width="10%" align="center">{{Etat}}</th><th width="10%" align="right">{{Options}}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -759,6 +759,7 @@
 					</fieldset>
 				</div>
 			</div>
+			<!--Gestion_planifications Tab-->
 			<div role="tabpanel" class="tab-pane Gestion_planifications" id="tab_Gestion_planifications">
 				<div class="col-sm-12">
 					<form class="form-horizontal">
@@ -773,6 +774,7 @@
 					</form>
 				</div>
 			</div>
+			<!--Ouvrants Tab-->
 			<div role="tabpanel" class="tab-pane Ouvrants" id="tab_Ouvrants">
 				<div class="col-sm-12 PAC Volet " style="display: none;">		
 					<form class="form-horizontal">

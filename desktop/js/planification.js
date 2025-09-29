@@ -1074,7 +1074,16 @@ document.getElementById('tab_Gestion_planifications').addEventListener('click', 
     const textarea = _target.closest('div').querySelector('textarea');
 
     jeedom.cmd.getSelectModal({ cmd: { type: 'info' } }, function(result) {
-      textarea.value += result.human;
+      const startPos = textarea.selectionStart;
+      const endPos = textarea.selectionEnd;
+      const before = textarea.value.substring(0, startPos);
+      const after = textarea.value.substring(endPos);
+      textarea.value = before + result.human + after;
+
+      // Repositionner le curseur juste après l’insertion
+      const cursorPos = startPos + result.human.length;
+      textarea.selectionStart = textarea.selectionEnd = cursorPos;
+
       textarea.style.height = `${textarea.scrollHeight}px`;
 
       const evaluation = textarea.closest('.GestionPlanification').querySelector('.Evaluation');

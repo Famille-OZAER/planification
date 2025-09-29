@@ -316,7 +316,8 @@
                } elseif (isset($mapping[$equipementsInfos[$eqLogic_id]->action_en_cours])) {
                 if($temperature_consigne != $eqLogic->getCmd(null,$mapping[$equipementsInfos[$eqLogic_id]->action_en_cours])->execCmd()){
                   planification::add_log("debug",'Modification temperature suite à action actuelle: ',$eqLogic);
-                  $eqLogic->getCmd(null, "consigne_temperature")->set_value($eqLogic->getCmd(null,$mapping[$equipementsInfos[$eqLogic_id]->action_en_cours->execCmd()])->execCmd());
+                   planification::add_log("debug",$mapping[$equipementsInfos[$eqLogic_id]->action_en_cours],$eqLogic);
+                  $eqLogic->getCmd(null, "consigne_temperature")->set_value($eqLogic->getCmd(null,$mapping[$equipementsInfos[$eqLogic_id]->action_en_cours])->execCmd());
                 }
               }
             }
