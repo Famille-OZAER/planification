@@ -722,7 +722,6 @@ class planification extends eqLogic {
       $eqLogic->Ajout_Commande('refresh','Rafraichir','action','other');
       $eqLogic->Ajout_Commande('auto','Auto','action','other');
       $eqLogic->Ajout_Commande('set_heure_fin','Set heure fin','action','message');
-      $eqLogic->Ajout_Commande('info','Info','info','string');
       $eqLogic->Ajout_Commande('set_information','Set info','action','message');
       $cmd_set_planification = $eqLogic->getCmd(null, "set_planification");
     } 
