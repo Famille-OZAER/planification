@@ -167,7 +167,7 @@
         if ($currentHour == 2 && $currentMinute == 0 && $currentSeconde == 0 && $equipementsInfos[$eqLogic_id]->type_équipement == "Volet") {
            planification::add_log('info', "Infos lever coucher soleil mises à jour pour ". $eqLogic->getHumanName(),null,""); 
           $equipementsInfos[$eqLogic_id]->infos_lever_coucher_soleil = $eqLogic::Recup_infos_lever_coucher_soleil($eqLogic_id, $equipementsInfos[$eqLogic_id]->Json_infos_lever_coucher_soleil);
-        planification::add_log('info', $equipementsInfos[$eqLogic_id]->infos_lever_coucher_soleil,$eqLogic); 
+          planification::add_log('info', $equipementsInfos[$eqLogic_id]->infos_lever_coucher_soleil,$eqLogic); 
         }     
         //mise à jour de la commande en cas de changement de température consigne pour la PAC
         if ($equipementsInfos[$eqLogic_id]->type_équipement == "PAC") {
@@ -237,13 +237,7 @@
                         planification::add_log('debug', 'boost OFF' ,$eqLogic);
                     } 
                   }
-                
-                
               }
-            
-
-
-
             $duree_mode_manuel_par_defaut=$eqLogic->getConfiguration("Duree_mode_manuel_par_defaut",0);
             if($duree_mode_manuel_par_defaut == 0  ){
               if($eqLogic->getCmd(null, "heure_fin")->execCmd() != ""){
@@ -380,34 +374,29 @@
              
             $equipementsInfos[$eqLogic_id] = MAJ_equipementsInfos($eqLogic_id,$equipementsInfos[$eqLogic_id],false);
             //gestion du mode boost sur une PAC
-              
-              if($equipementsInfos[$eqLogic_id]->type_équipement == "PAC" && $equipementsInfos[$eqLogic_id]->boost !== null){ 
+              if($equipementsInfos[$eqLogic_id]->type_équipement == "PAC" && $equipementsInfos[$eqLogic_id]->boost !== null){
                 
                 if ($equipementsInfos[$eqLogic_id]->action_en_cours == 'Chauffage ECO'  && $equipementsInfos[$eqLogic_id]->boost == 1){
                   
                   $cmd = cmd::byId($equipementsInfos[$eqLogic_id]->cmd_ids["boost_off"]);
                   if ($cmd) {                  
-                      $cmd->execCmd(); 
+                      $cmd->execCmd();
                       planification::add_log('debug', 'boost_off suite à chauffage ECO' ,$eqLogic);
                   } 
-
-                  
                 }
                 if ($equipementsInfos[$eqLogic_id]->action_en_cours == 'Arrêt'  && $equipementsInfos[$eqLogic_id]->boost == 1){
                   
                   $cmd = cmd::byId($equipementsInfos[$eqLogic_id]->cmd_ids["boost_off"]);
                   if ($cmd) {                  
-                      $cmd->execCmd(); 
+                      $cmd->execCmd();
                       planification::add_log('debug', 'boost_off suite à arrêt' ,$eqLogic);
                   } 
-
-                  
                 }
                 if ($equipementsInfos[$eqLogic_id]->action_en_cours == 'Chauffage' && $equipementsInfos[$eqLogic_id]->temperature_ambiante !== null){
                   if($equipementsInfos[$eqLogic_id]->temperature_ambiante <= $equipementsInfos[$eqLogic_id]->temperature_consigne - $equipementsInfos[$eqLogic_id]->Paramètres["Delta_chauffage_boost"] && $equipementsInfos[$eqLogic_id]->boost == 0){
                     $cmd = cmd::byId($equipementsInfos[$eqLogic_id]->cmd_ids["boost_on"]);
                     if ($cmd) {                  
-                        $cmd->execCmd(); 
+                        $cmd->execCmd();
                         planification::add_log('debug', 'boost ON' ,$eqLogic);
                     } 
                   }
@@ -425,14 +414,14 @@
                   if($equipementsInfos[$eqLogic_id]->temperature_ambiante >= $equipementsInfos[$eqLogic_id]->temperature_consigne + $equipementsInfos[$eqLogic_id]->Paramètres["Delta_climatisation_boost"] && $equipementsInfos[$eqLogic_id]->boost == 0){
                     $cmd = cmd::byId($equipementsInfos[$eqLogic_id]->cmd_ids["boost_on"]);
                     if ($cmd) {                  
-                        $cmd->execCmd(); 
+                        $cmd->execCmd();
                         planification::add_log('debug', 'boost ON' ,$eqLogic);
                     } 
                   }
                   if($equipementsInfos[$eqLogic_id]->temperature_ambiante <= $equipementsInfos[$eqLogic_id]->temperature_consigne && $equipementsInfos[$eqLogic_id]->boost == 1){
                     $cmd = cmd::byId($equipementsInfos[$eqLogic_id]->cmd_ids["boost_off"]);
                     if ($cmd) {                  
-                        $cmd->execCmd(); 
+                        $cmd->execCmd();
                         planification::add_log('debug', 'boost OFF' ,$eqLogic);
                     } 
                   }
@@ -524,6 +513,8 @@
               $equipementsInfos[$eqLogic_id]->eqLogic_sans_action_suivante = true;
             }
           }
+        
+          
         }
         //gestion des conditions de changement de planification
         if ($equipementsInfos[$eqLogic_id]->Gestion_planifications != "" && $equipementsInfos[$eqLogic_id]->mode_planification == "Auto"){
@@ -558,14 +549,17 @@
             $arr["select"] = "";
             $arr["Id_planification"] = "";
 
-
-            cmd::byEqLogicIdAndLogicalId($eqLogic_id,'action_en_cours')->set_value("");
-            cmd::byEqLogicIdAndLogicalId($eqLogic_id,'action_suivante')->set_value("");
-            cmd::byEqLogicIdAndLogicalId($eqLogic_id,'heure_fin')->set_value("");
-            $equipementsInfos[$eqLogic_id]->action_en_cours =  "";
-            $equipementsInfos[$eqLogic_id]->timestamp_action_suivante = strtotime(cmd::byEqLogicIdAndLogicalId($eqLogic_id,'heure_fin')->execCmd());
-            $equipementsInfos[$eqLogic_id]->Id_planification_en_cours = $eqLogic->getConfiguration("Id_planification_en_cours","");
-            $execute_action = true;               
+            if($equipementsInfos[$eqLogic_id]->mode_fonctionnement == "Auto"){
+              cmd::byEqLogicIdAndLogicalId($eqLogic_id,'action_en_cours')->set_value("");
+              cmd::byEqLogicIdAndLogicalId($eqLogic_id,'action_suivante')->set_value("");
+              cmd::byEqLogicIdAndLogicalId($eqLogic_id,'heure_fin')->set_value("");
+            
+              $equipementsInfos[$eqLogic_id]->action_en_cours =  "";
+              $equipementsInfos[$eqLogic_id]->timestamp_action_suivante = strtotime(cmd::byEqLogicIdAndLogicalId($eqLogic_id,'heure_fin')->execCmd());
+              $equipementsInfos[$eqLogic_id]->Id_planification_en_cours = $eqLogic->getConfiguration("Id_planification_en_cours","");
+              $execute_action = true; 
+                          
+            }
           }
         }
       }

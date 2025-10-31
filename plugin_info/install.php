@@ -83,6 +83,10 @@ function planification_update() {
 		$eqLogics=planification::byType('planification');   
 		$planifications_new='';   
 		foreach ($eqLogics as $eqLogic) {
+			$cmd=$eqLogic->getCmd(null, "info");
+			if (is_object($cmd)){
+				$cmd->remove();
+			}
 			$eqLogic->save();			
 		}
 	}
