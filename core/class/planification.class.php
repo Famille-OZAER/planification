@@ -1056,8 +1056,6 @@ class planification extends eqLogic {
         '#set_heure_fin_id#' => 'set_heure_fin',
         '#heure_fin_id#' => 'heure_fin',
         '#heure_fin_value#' => 'heure_fin',
-        '#info_widget_id#' => 'info',
-        '#info_widget_value#' => 'info',
         '#set_planification_id#' => 'set_planification'
         
       ];
