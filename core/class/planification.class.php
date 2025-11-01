@@ -793,7 +793,7 @@ class planification extends eqLogic {
       if (isset($Json["Planifications"])){
         $equipementsInfos[$eqLogic_id]->planifications = $Json["Planifications"][0]; 
       }
-
+      
       
       if (isset($Json["Paramètres"])){
         $equipementsInfos[$eqLogic_id]->Automatisation_Paramètres = $Json["Paramètres"][0];
@@ -808,7 +808,6 @@ class planification extends eqLogic {
 
     //cmd::byEqLogicIdAndLogicalId($eqLogic_id,"heure_fin")->event('');
     //cmd::byEqLogicIdAndLogicalId($eqLogic_id,"action_suivante")->event('');
-
     $planifications=$eqLogic::Get_planifications(true,$equipementsInfos[$eqLogic_id]);
     if($planifications=="" ||$planifications == []){
       $arr["select"]="";
@@ -879,8 +878,12 @@ class planification extends eqLogic {
       $cmd_set_planification->execute($arr);
     }
    
-     
-   
+    $cmds = $eqLogic->getCmd( 'info', null, null,true) ;
+    foreach ($cmds as $cmd){
+      if($cmd->getValue() != $cmd->execCmd()){
+        $cmd->set_value($cmd->getValue());
+      }
+    }
       
    
   }

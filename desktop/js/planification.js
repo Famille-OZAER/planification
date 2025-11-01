@@ -2650,13 +2650,14 @@
         if (cmdAttr && cmdAttr.value == _cmd.id) {
           const numericInput = _el.querySelector('#numericInput');
           if (numericInput){
+             console.log(numericInput.value)
+            console.log(_cmd.id)
             domUtils.ajax({
               type: "POST",
               url: "core/ajax/cmd.ajax.php",
               data: {
-                action: 'save',
-                id: _cmd.id,
-                value: _cmd.value
+                action: 'byId',
+                id: _cmd.id
               },
 
               global: false,
@@ -2672,8 +2673,39 @@
                   });
                   return;
                 }
+                const rawCmd = data.result;
+                const validatedCmd = prepareCmdForSave(rawCmd, {
+                  name: _cmd.name,
+                  type: _cmd.type,
+                  subType: _cmd.subType,
+                  eqLogic_id: _cmd.eqLogic_id                  
+                });
+                validatedCmd.value=numericInput.value
+                console.log("Commande validée :", JSON.stringify(validatedCmd, null, 2));
+                domUtils.ajax({
+                  type: "POST",
+                  url: "core/ajax/cmd.ajax.php",
+                  data: {
+                    action: 'save',
+                    cmd: JSON.stringify(validatedCmd)
+                   
+                  },
+                  success: function(data) {
+                    if (data.state !== 'ok') {
+                      jeedomUtils.showAlert({ message: data.result, level: 'danger' });
+                    }
+                  },
+                  error: handleAjaxError
+                });
+
+               
               }
             });
+
+
+
+
+
                    
           } 
           
@@ -2710,6 +2742,33 @@
   //return true;
     return _eqLogic;
   }
+function prepareCmdForSave(rawCmd, fallback = {}) {
+  const cmd = { ...rawCmd };
+
+  // Champs obligatoires avec valeurs par défaut
+  cmd.name = cmd.name?.trim() || fallback.name || 'Commande sans nom';
+  cmd.type = cmd.type || fallback.type || 'action';
+  cmd.subType = cmd.subType || fallback.subType || 'other';
+  cmd.eqLogic_id = cmd.eqLogic_id || fallback.eqLogic_id || _eqLogic?.id || 0;
+
+  // Champs optionnels nettoyés
+  cmd.logicalId = cmd.logicalId?.trim() || '';
+  cmd.generic_type = cmd.generic_type || null;
+  cmd.isHistorized = cmd.isHistorized ?? 0;
+  cmd.isVisible = cmd.isVisible ?? 1;
+  // Nettoyage des paramètres d’affichage
+  if (cmd.display?.parameters) {
+    const keys = Object.keys(cmd.display.parameters).map(k => k.trim());
+    const values = Object.values(cmd.display.parameters).map(v => v.trim());
+    cmd.display.parameters = Object.fromEntries(keys.map((k, i) => [k, values[i]]));
+  }
+
+  // Initialisation des objets vides si manquants
+  cmd.configuration = cmd.configuration || {};
+  cmd.display = cmd.display || { parameters: {} };
+
+  return cmd;
+}
 
   function addCmdToTable(_cmd) {
     const excludedLogicalIds = [

@@ -217,7 +217,7 @@
           $equipementsInfos[$eqLogic_id] = MAJ_equipementsInfos($eqLogic_id, $equipementsInfos[$eqLogic_id],true);
           $execute_action = true;
           $eqLogic->Get_actions_planification($equipementsInfos[$eqLogic_id]);
-              
+          continue;    
         }
 
         $equipementsInfos[$eqLogic_id]->mode_fonctionnement = cmd::byEqLogicIdAndLogicalId($eqLogic_id,'mode_fonctionnement')->execCmd();

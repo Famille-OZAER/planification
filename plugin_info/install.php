@@ -86,8 +86,9 @@ function planification_update() {
 			$cmd=$eqLogic->getCmd(null, "info");
 			if (is_object($cmd)){
 				$cmd->remove();
+				$eqLogic->save();
 			}
-			$eqLogic->save();			
+						
 		}
 	}
 	catch (Exception $e){
