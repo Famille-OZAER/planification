@@ -47,7 +47,7 @@
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Thermostats" style="display:none !important"><i class="far fa-snowflake"></i> Mes thermostats connectés
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav thermostats" style="display:none !important"><i class="far fa-snowflake"></i> Mes thermostats connectés
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'thermostat') {	
@@ -114,7 +114,7 @@
 			<div class="cursor restart_demon">
 				<i class="fas fa-redo" style="color :rgb(195, 52, 52)"></i>
 				<br/>
-				<span style="color :rgb(195, 52, 52)" >{{Redémarrer le Démo}}</span>
+				<span style="color :rgb(195, 52, 52)" >{{Redémarrer le Démon}}</span>
 			</div>
 		</div>
 
@@ -161,7 +161,7 @@
 				}
 			?>
 		</div>
-		<div class="eqLogicThumbnailContainer Thermostats" style="display:none !important">
+		<div class="eqLogicThumbnailContainer thermostats" style="display:none !important">
 			<legend><i class="far fa-snowflake"></i> {{Mes thermostats connectés}}</legend>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -409,11 +409,31 @@
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Pourcentage ouverture}}</label>
 								<div class="col-sm-6 input-group">
-									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_Thermostat" data-l2key="Pourcentage_ouverture"/>
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_Thermostat" data-l2key="Pourcentage_ouverture_id"/>
 									<span class="input-group-btn">
 										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
 									</span>
 								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Consigne thermostat}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_Thermostat" data-l2key="Consigne_thermostat_id"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Batterie}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_Thermostat" data-l2key="Batterie_id"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+							<div class="alias" style="display:none">
 							</div>
 						</div>
 						<div class="option Volet" style="display:none">

@@ -754,7 +754,6 @@ class planification extends eqLogic {
       $eqLogic->Ajout_Commande('refresh','Rafraichir','action','other');
       $eqLogic->Ajout_Commande('auto','Auto','action','other');
       $eqLogic->Ajout_Commande('set_heure_fin','Set heure fin','action','message');
-      $eqLogic->Ajout_Commande('set_information','Set info','action','message');
       $cmd_set_planification = $eqLogic->getCmd(null, "set_planification");
     } 
     
@@ -1473,16 +1472,7 @@ class planificationCmd extends cmd {
 
         // }
         break;
-      case 'set_information':
-        if(!isset($_options["message"])){
-          return;
-        }
-        if( cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'info')->getValue() != $_options["message"]){
-          planification::add_log("info",'execute: ' . $cmd->getLogicalId() . ": " . $_options["message"],$eqLogic); 
-          cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'info')->set_value($_options["message"]);
-          $eqLogic->save(true);
-        }
-        break;
+      
       case 'auto':
         cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement')->set_value("Auto");
         cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_planification')->set_value("Auto");

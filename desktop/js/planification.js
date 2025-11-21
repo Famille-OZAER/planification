@@ -1,7 +1,7 @@
   JSONCLIPBOARD = null
   localStorage.setItem("JSONCLIPBOARD", null);
   flatpickr.localize(flatpickr.l10ns.fr)
-  var typesEquipements = ['chauffages', 'PACs', 'volets', 'prises', 'persos'];
+  var typesEquipements = ['chauffages', 'PACs', 'volets', 'prises', 'thermostats', 'persos'];
   var Json_lever_coucher=''
   document.getElementById('div_pageContainer').addEventListener('click', function(event) {
     var _target = null
@@ -24,7 +24,7 @@
                           </div>
                           <div class="radio zwave">
                               <label>
-                                  <input type="radio" name="Type_équipement" id="Thermostat" value="Thermostat"> {{Thermostat connécté Zwave}}
+                                  <input type="radio" name="Type_équipement" id="Thermostat" value="Thermostat"> {{Thermostat connecté Zwave}}
                               </label>
                           </div>
                           <div class="radio">
@@ -1296,10 +1296,12 @@
   afficherSectionsParType(typesEquipements);
 
   function afficherSectionsParType(types) {
+    console.log(types)
     types.forEach(type => {
       const container = document.querySelector(`.eqLogicThumbnailContainer.${type}`);
       const sidenav = document.querySelector(`.bs-sidenav.${type}`);
       const cards = document.querySelectorAll(`div .${type} .eqLogicDisplayCard`);
+      console.log(type)
       if (cards.length !== 0) {
         if (container) container.style.display = 'block';
         if (sidenav) sidenav.style.display = 'block';
@@ -1929,7 +1931,7 @@
   }
   function printEqLogic(_eqLogic) {
     // Masquer les éléments spécifiques
-  [".bt_image_défaut", ".Volet", ".Chauffage", ".Prise", ".PAC"].forEach(selector => {
+  [".bt_image_défaut", ".Volet", ".Chauffage", ".Prise", ".PAC",".Thermostat"].forEach(selector => {
     document.querySelectorAll(selector).forEach(block => {
         block.style.display = (selector === '.' + _eqLogic.configuration.Type_équipement) ? 'block' : 'none';
     });
@@ -1979,6 +1981,8 @@
   
     document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Temperature_ambiante_id]').value = eqConfig.Temperature_ambiante_id || '';
     document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Pourcentage_ouverture_id]').value = eqConfig.Pourcentage_ouverture_id || '';
+    document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Consigne_thermostat_id]').value = eqConfig.Consigne_thermostat_id || '';
+    document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Batterie_id]').value = eqConfig.Batterie_id || '';
   }
 
   if (_eqLogic.configuration.Type_équipement === 'Volet') {
@@ -2453,6 +2457,10 @@
     if (type_équipement === 'Thermostat') {
       configuration_eqLogic.Temperature_ambiante_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_Thermostat"][data-l2key=Temperature_ambiante_id]').value;
       configuration_eqLogic.Pourcentage_ouverture_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_Thermostat"][data-l2key=Pourcentage_ouverture_id]').value;
+  
+      configuration_eqLogic.Consigne_thermostat_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_Thermostat"][data-l2key=Consigne_thermostat_id]').value;
+      configuration_eqLogic.Batterie_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_Thermostat"][data-l2key=Batterie_id]').value;
+   
     }
     if (type_équipement === 'Prise') {
       configuration_eqLogic.etat_id = document.querySelector(`#tab_eqlogic .${configuration_eqLogic.Type_équipement} .eqLogicAttr[data-l2key=etat_id]`).value;
