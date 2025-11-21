@@ -284,6 +284,38 @@ class planification extends eqLogic {
 
       }
     }
+    if ($eqLogic->getConfiguration('Type_équipement','') == 'Thermostat'){
+      planification::add_log("debug",$equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Type_équipement_pilote"],$eqLogic);
+      $température_consigne = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'consigne_temperature')->execCmd();
+      if ($equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Type_équipement_pilote"] == "zwave"){
+        $nom_commande=$eqLogic_cmd->getName();
+        $eqLogic_zwave = eqLogic::byId(trim($equipementsInfos[$eqLogic_id]->Automatisation_Paramètres["Equipement_pilote"], "#"));
+        if (is_object($eqLogic_zwave)){
+         
+            $température_consigne =  cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'consigne_temperature')->execCmd();
+            if (strtolower($nom_commande) == 'chauffage eco') {
+              $nom_commande_zwave = 'Chauffage ' . strval( $température_consigne - cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'delta_chauffage_eco')->execCmd());
+            }elseif (strtolower($nom_commande) == 'chauffage'){
+              $nom_commande_zwave = 'Chauffage ' .  $température_consigne;
+            }elseif(strtolower($nom_commande) == 'arrêt'){
+              $nom_commande_zwave = 'Arrêt';
+            }
+            
+          
+          planification::add_log("info",'exeution commande: ' . $nom_commande_zwave . " sur l'équipement zwave: " . $eqLogic_broalink->getName(),$eqLogic);	
+
+          $cmd = cmd::byEqLogicIdCmdName( $eqLogic_zwave->getId(),  $nom_commande_zwave);
+          if (is_object($cmd)){
+            $cmd->execute();
+          }else{
+            planification::add_log("info",'La commande: ' . $nom_commande_zwave . " n'existe pas dans l'équipement zwave: " . $eqLogic_broalink->getName(),$eqLogic);	
+          }
+        }
+
+
+
+      }
+    }
   }
 
   static function Recup_liste_commandes_planification($eqLogic_id) {
@@ -760,10 +792,22 @@ class planification extends eqLogic {
       $eqLogic->Ajout_Commande('delta_chauffage_boost','Delta chauffage boost','info','numeric',0,5,1,'°C');
       $eqLogic->Ajout_Commande('temperature_mini_chauffage_continu','Température extérieure en dessous de laquelle la PAC doit être en chauffage continu','info','numeric',0,10,5,'°C');
       $eqLogic->Ajout_Commande('temperature_mini_chauffage','Température extérieure en dessous de laquelle la PAC peut être en chauffage','info','numeric',10,20,18,'°C');
-      $eqLogic->Ajout_Commande('numéro_semaine_mini_chauffage','Numéro de semaine minimum pour activer le chauffage','info','numeric',1,52,39,'°C');
-      $eqLogic->Ajout_Commande('numéro_semaine_max_chauffage','Numéro de semaine maximum pour activer le chauffage','info','numeric',1,52,18,'°C');
+      $eqLogic->Ajout_Commande('numéro_semaine_mini_chauffage','Numéro de semaine minimum pour activer le chauffage','info','numeric',1,52,39,'');
+      $eqLogic->Ajout_Commande('numéro_semaine_max_chauffage','Numéro de semaine maximum pour activer le chauffage','info','numeric',1,52,18,'');
       $eqLogic->Ajout_Commande('delta_climatisation_boost','Delta climatisation boost','info','numeric',0,5,1,'°C');
       $eqLogic->Ajout_Commande('temperature_mini_climatisation','Température extérieure en dessus de laquelle la PAC peut être en climatisation','info','numeric',20,25,22,'°C');
+    }
+     if ($eqLogic->getConfiguration('Type_équipement','') == 'Thermostat'){    
+      $eqLogic->Ajout_Commande('chauffage','Chauffage','action','other');
+      $eqLogic->Ajout_Commande('chauffage ECO','Chauffage ECO','action','other');
+      $eqLogic->Ajout_Commande('arret','Arrêt','action','other');
+      $eqLogic->Ajout_Commande('set_consigne_temperature','Set consigne température','action','slider',7,30);
+      $eqLogic->Ajout_Commande('consigne_temperature','Consigne Temperature','info','numeric',null,null,20,'°C');
+      $eqLogic->Ajout_Commande('delta_chauffage_eco','Delta chauffage ECO','info','numeric',0,5,2,'°C');
+      $eqLogic->Ajout_Commande('temperature_mini_chauffage_continu','Température extérieure en dessous de laquelle la PAC doit être en chauffage continu','info','numeric',0,10,5,'°C');
+      $eqLogic->Ajout_Commande('temperature_mini_chauffage','Température extérieure en dessous de laquelle la PAC peut être en chauffage','info','numeric',10,20,18,'°C');
+      $eqLogic->Ajout_Commande('numéro_semaine_mini_chauffage','Numéro de semaine minimum pour activer le chauffage','info','numeric',1,52,39,'');
+      $eqLogic->Ajout_Commande('numéro_semaine_max_chauffage','Numéro de semaine maximum pour activer le chauffage','info','numeric',1,52,18,'');
     }
 
     if ($eqLogic->getConfiguration('Type_équipement','') == 'Chauffage'){
@@ -1114,7 +1158,30 @@ class planification extends eqLogic {
           $replace['#temperature_ambiante_id#']="";
         }        
       }
+      if ($eqLogic->getConfiguration("Type_équipement","") == "Thermostat"){
+        $eqLogic::replaceCmds($eqLogic,$cache_array, $replace, $erreur, $liste_erreur, [
+          '#arret_id#' => 'arret',
+          '#pourcentage_ouverture_id#' => 'pourcentage_ouverture',
+          '#pourcentage_ouverture_value#' => 'pourcentage_ouverture',
+          '#boost_value#' => 'boost',
+          '#chauffage_id#' => 'chauffage',
+          '#set_consigne_temperature_id#' => 'set_consigne_temperature',
+          '#consigne_min#' => 'consigne_temperature',
+          '#consigne_max#' => 'consigne_temperature',
+          '#consigne_temperature_value#' => 'consigne_temperature',
+          '#consigne_temperature_id#' => 'consigne_temperature'
 
+        ]);
+
+        $cmd_temperature=cmd::byId(str_replace ("#" ,"" , $eqLogic->getConfiguration('Temperature_ambiante_id',"")));
+        if (is_object($cmd_temperature)){
+          $replace['#temperature_ambiante#'] = $cmd_temperature->execCmd();
+          $replace['#temperature_ambiante_id#'] = $cmd_temperature->getId();
+        }else{
+          $replace['#temperature_ambiante#'] = "";
+          $replace['#temperature_ambiante_id#']="";
+        }        
+      }
 
 
 
@@ -1433,7 +1500,7 @@ class planificationCmd extends cmd {
               case 'climatisation':
               case 'ventilation':
 
-                cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'action_en_cours')->set_value(ucwords($cmd->getName()));
+                
                 cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'action_en_cours')->set_value(ucwords($cmd->getName()));
                 if(!isset($_options["mode"])){
                   planification::add_log("info","Passage en Manuel(" . $cmd->getName() . ")" ,$eqLogic);
@@ -1483,6 +1550,35 @@ class planificationCmd extends cmd {
                 }else if ($cmd_action_en_cours->execCmd() == "Climatisation"){
                   cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'consigne_temperature_climatisation')->set_value($_options["slider"]);
                 }
+                cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'consigne_temperature')->set_value($_options["slider"]);
+                break;
+              default:
+            }
+            break;
+          case "Thermostat":
+            switch ($cmd->getLogicalId()) {
+              case 'arret':
+              case 'chauffage':
+              case 'chauffage ECO':
+                         
+                cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'action_en_cours')->set_value(ucwords($cmd->getName()));
+                if(!isset($_options["mode"])){
+                  planification::add_log("info","Passage en Manuel(" . $cmd->getName() . ")" ,$eqLogic);
+
+                  cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'mode_fonctionnement')->set_value("Manuel");
+                  $eqLogic->getCmd(null, "heure_fin")->set_value("");
+                  $eqLogic->getCmd(null, "action_suivante")->set_value("");
+                  $eqLogic->getCmd(null, "set_planification")->execCmd();
+
+                }
+                $eqLogic_cmd=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),$cmd->getLogicalId());
+                planification::execute_action($eqLogic,$cmd,$eqLogic_cmd->getConfiguration("commande",""));
+                break;            
+
+              case 'set_consigne_temperature':
+                //planification::add_log("debug","nouvelle consigne: " . $_options["slider"],$eqLogic);
+                $cmd_action_en_cours=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'action_en_cours');
+                $cmd_action_suivante=cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'action_suivante');
                 cmd::byEqLogicIdAndLogicalId($eqLogic->getId(),'consigne_temperature')->set_value($_options["slider"]);
                 break;
               default:

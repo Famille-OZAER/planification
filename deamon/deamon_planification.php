@@ -393,7 +393,7 @@
                   } 
                 }
                 if ($equipementsInfos[$eqLogic_id]->action_en_cours == 'Chauffage' && $equipementsInfos[$eqLogic_id]->temperature_ambiante !== null){
-                  if($equipementsInfos[$eqLogic_id]->temperature_ambiante <= $equipementsInfos[$eqLogic_id]->temperature_consigne - $equipementsInfos[$eqLogic_id]->Paramètres["Delta_chauffage_boost"] && $equipementsInfos[$eqLogic_id]->boost == 0){
+                  if($equipementsInfos[$eqLogic_id]->temperature_ambiante <= $equipementsInfos[$eqLogic_id]->temperature_consigne - 1 && $equipementsInfos[$eqLogic_id]->boost == 0){
                     $cmd = cmd::byId($equipementsInfos[$eqLogic_id]->cmd_ids["boost_on"]);
                     if ($cmd) {                  
                         $cmd->execCmd();

@@ -47,7 +47,16 @@
 						}
 					?>
 				</ul>
-				
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav Thermostats" style="display:none !important"><i class="far fa-snowflake"></i> Mes thermostats connectés
+					<?php
+						foreach ($eqLogics as $eqLogic) {
+							if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'thermostat') {	
+								$opacity = ($eqLogic->getIsEnable()) ? 1 : 0.4;
+								echo '<li class="cursor li_eqLogic " data-eqLogic_id="' . $eqLogic->getId() . '" style= opacity:' . $opacity .'><a>' . $eqLogic->getHumanName(true) . '</a></li>';
+							}
+						}
+					?>
+				</ul>
 				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav volets" style="display:none !important"><i class="fa jeedom-volet-ferme"></i> Mes volets
 					<?php
 						foreach ($eqLogics as $eqLogic) {
@@ -152,7 +161,25 @@
 				}
 			?>
 		</div>
-
+		<div class="eqLogicThumbnailContainer Thermostats" style="display:none !important">
+			<legend><i class="far fa-snowflake"></i> {{Mes thermostats connectés}}</legend>
+			<?php
+				foreach ($eqLogics as $eqLogic) {
+					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'pac') {	
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						$imgPath = $eqLogic->getConfiguration('Chemin_image');
+						if ($imgPath == '') {
+							$imgPath = 'plugins/planification/core/img/pac.png';
+						}
+						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="' . $imgPath . '"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) .'</span>';
+						echo '</div>';
+					}
+				}
+			?>
+		</div>
 		
 
 		<div class="eqLogicThumbnailContainer volets" style="display:none !important">
@@ -365,6 +392,27 @@
 									<div class="col-sm-6 input-group">
 										<input class="eqLogicAttr form-control" data-l1key="configuration_PAC" data-l2key="Alias_Eteint"/>
 									</div>
+								</div>
+							</div>
+						</div>
+						<div class="option Thermostat" style="display:none">
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Commande de température ambiante}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_Thermostat" data-l2key="Temperature_ambiante_id"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm list_Cmd_info_numeric"><i class="fa fa-tasks"></i></a>
+									</span>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Pourcentage ouverture}}</label>
+								<div class="col-sm-6 input-group">
+									<input class="eqLogicAttr form-control cmdAction" data-l1key="configuration_Thermostat" data-l2key="Pourcentage_ouverture"/>
+									<span class="input-group-btn">
+										<a class="btn btn-success btn-sm list_Cmd_info"><i class="fa fa-tasks"></i></a>
+									</span>
 								</div>
 							</div>
 						</div>

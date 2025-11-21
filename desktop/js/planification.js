@@ -22,6 +22,11 @@
                                   <input type="radio" name="Type_équipement" id="PAC" value="PAC"> {{Pompe à chaleur}}
                               </label>
                           </div>
+                          <div class="radio zwave">
+                              <label>
+                                  <input type="radio" name="Type_équipement" id="Thermostat" value="Thermostat"> {{Thermostat connécté Zwave}}
+                              </label>
+                          </div>
                           <div class="radio">
                               <label>
                                   <input type="radio" name="Type_équipement" id="Prise" value="Prise"> {{Prise}}
@@ -340,6 +345,7 @@
       const typeEquipement = document.querySelector('.eqLogicAttr[data-l2key=Type_équipement]').value;
       const typeIcons = {
         "PAC": 'plugins/planification/core/img/pac.png',
+        "Thermostat": 'plugins/planification/core/img/thermostat.png',
         "Volet": 'plugins/planification/core/img/volet.png',
         "Chauffage": 'plugins/planification/core/img/chauffage.png',
         "Prise": 'plugins/planification/core/img/prise.png',
@@ -1961,7 +1967,19 @@
     // Afficher la section alias si Mode_id est défini
     document.querySelector('#tab_eqlogic .alias').style.display = eqConfig.Mode_id ? 'block' : 'none';
   }
-    
+  if (_eqLogic.configuration.Type_équipement === 'Thermostat') { 
+    const eqConfig = _eqLogic.configuration;
+    const imgPath = 'plugins/planification/core/img/thermostat.png';
+    img = eqConfig.Chemin_image || imgPath;
+
+    // Gérer l'affichage de l'image
+    document.querySelector(".bt_image_défaut").style.display = (img === imgPath) ? 'none' : 'block';
+
+    // Mettre à jour les champs Thermostat
+  
+    document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Temperature_ambiante_id]').value = eqConfig.Temperature_ambiante_id || '';
+    document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Pourcentage_ouverture_id]').value = eqConfig.Pourcentage_ouverture_id || '';
+  }
 
   if (_eqLogic.configuration.Type_équipement === 'Volet') {
     const eqConfig = _eqLogic.configuration;
@@ -2432,6 +2450,10 @@
     if (type_équipement === 'PAC') {
       configuration_eqLogic.Temperature_ambiante_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_PAC"][data-l2key=Temperature_ambiante_id]').value;
     }
+    if (type_équipement === 'Thermostat') {
+      configuration_eqLogic.Temperature_ambiante_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_Thermostat"][data-l2key=Temperature_ambiante_id]').value;
+      configuration_eqLogic.Pourcentage_ouverture_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_Thermostat"][data-l2key=Pourcentage_ouverture_id]').value;
+    }
     if (type_équipement === 'Prise') {
       configuration_eqLogic.etat_id = document.querySelector(`#tab_eqlogic .${configuration_eqLogic.Type_équipement} .eqLogicAttr[data-l2key=etat_id]`).value;
       configuration_eqLogic.Alias_On = document.querySelector(`#tab_eqlogic .${configuration_eqLogic.Type_équipement} .eqLogicAttr[data-l2key=Alias_On]`).value;
@@ -2742,33 +2764,33 @@
   //return true;
     return _eqLogic;
   }
-function prepareCmdForSave(rawCmd, fallback = {}) {
-  const cmd = { ...rawCmd };
+  function prepareCmdForSave(rawCmd, fallback = {}) {
+    const cmd = { ...rawCmd };
 
-  // Champs obligatoires avec valeurs par défaut
-  cmd.name = cmd.name?.trim() || fallback.name || 'Commande sans nom';
-  cmd.type = cmd.type || fallback.type || 'action';
-  cmd.subType = cmd.subType || fallback.subType || 'other';
-  cmd.eqLogic_id = cmd.eqLogic_id || fallback.eqLogic_id || _eqLogic?.id || 0;
+    // Champs obligatoires avec valeurs par défaut
+    cmd.name = cmd.name?.trim() || fallback.name || 'Commande sans nom';
+    cmd.type = cmd.type || fallback.type || 'action';
+    cmd.subType = cmd.subType || fallback.subType || 'other';
+    cmd.eqLogic_id = cmd.eqLogic_id || fallback.eqLogic_id || _eqLogic?.id || 0;
 
-  // Champs optionnels nettoyés
-  cmd.logicalId = cmd.logicalId?.trim() || '';
-  cmd.generic_type = cmd.generic_type || null;
-  cmd.isHistorized = cmd.isHistorized ?? 0;
-  cmd.isVisible = cmd.isVisible ?? 1;
-  // Nettoyage des paramètres d’affichage
-  if (cmd.display?.parameters) {
-    const keys = Object.keys(cmd.display.parameters).map(k => k.trim());
-    const values = Object.values(cmd.display.parameters).map(v => v.trim());
-    cmd.display.parameters = Object.fromEntries(keys.map((k, i) => [k, values[i]]));
+    // Champs optionnels nettoyés
+    cmd.logicalId = cmd.logicalId?.trim() || '';
+    cmd.generic_type = cmd.generic_type || null;
+    cmd.isHistorized = cmd.isHistorized ?? 0;
+    cmd.isVisible = cmd.isVisible ?? 1;
+    // Nettoyage des paramètres d’affichage
+    if (cmd.display?.parameters) {
+      const keys = Object.keys(cmd.display.parameters).map(k => k.trim());
+      const values = Object.values(cmd.display.parameters).map(v => v.trim());
+      cmd.display.parameters = Object.fromEntries(keys.map((k, i) => [k, values[i]]));
+    }
+
+    // Initialisation des objets vides si manquants
+    cmd.configuration = cmd.configuration || {};
+    cmd.display = cmd.display || { parameters: {} };
+
+    return cmd;
   }
-
-  // Initialisation des objets vides si manquants
-  cmd.configuration = cmd.configuration || {};
-  cmd.display = cmd.display || { parameters: {} };
-
-  return cmd;
-}
 
   function addCmdToTable(_cmd) {
     const excludedLogicalIds = [
