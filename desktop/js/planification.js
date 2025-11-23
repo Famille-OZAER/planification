@@ -1976,9 +1976,10 @@
 
     // Gérer l'affichage de l'image
     document.querySelector(".bt_image_défaut").style.display = (img === imgPath) ? 'none' : 'block';
-
+    document.querySelector(".duree").style.display = 'none' ;
     // Mettre à jour les champs Thermostat
-  
+  Utiliser_mode_boost
+  document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Utiliser_mode_boost]').checked = eqConfig.Utiliser_mode_boost || false;
     document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Temperature_ambiante_id]').value = eqConfig.Temperature_ambiante_id || '';
     document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Pourcentage_ouverture_id]').value = eqConfig.Pourcentage_ouverture_id || '';
     document.querySelector('#tab_eqlogic .Thermostat .eqLogicAttr[data-l2key=Consigne_thermostat_id]').value = eqConfig.Consigne_thermostat_id || '';
@@ -2453,6 +2454,7 @@
     }
     if (type_équipement === 'PAC') {
       configuration_eqLogic.Temperature_ambiante_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_PAC"][data-l2key=Temperature_ambiante_id]').value;
+      configuration_eqLogic.Utiliser_mode_boost = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_PAC"][data-l2key=Utiliser_mode_boost]').value;
     }
     if (type_équipement === 'Thermostat') {
       configuration_eqLogic.Temperature_ambiante_id = document.querySelector('#tab_eqlogic .eqLogicAttr[data-l1key="configuration_Thermostat"][data-l2key=Temperature_ambiante_id]').value;

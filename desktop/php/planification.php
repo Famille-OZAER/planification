@@ -47,7 +47,7 @@
 						}
 					?>
 				</ul>
-				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav thermostats" style="display:none !important"><i class="far fa-snowflake"></i> Mes thermostats connectés
+				<ul id="ul_eqLogic" class="nav nav-list bs-sidenav thermostats" style="display:none !important"><i class="icon jeedomapp-thermostat"></i> Mes thermostats connectés
 					<?php
 						foreach ($eqLogics as $eqLogic) {
 							if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'thermostat') {	
@@ -162,14 +162,16 @@
 			?>
 		</div>
 		<div class="eqLogicThumbnailContainer thermostats" style="display:none !important">
-			<legend><i class="far fa-snowflake"></i> {{Mes thermostats connectés}}</legend>
+			<legend><i class="icon jeedomapp-thermostat"></i> {{Mes thermostats connectés}}</legend>
 			<?php
+			
 				foreach ($eqLogics as $eqLogic) {
-					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'pac') {	
+					
+					if (strtolower($eqLogic->getConfiguration('Type_équipement')) == 'thermostat') {	
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						$imgPath = $eqLogic->getConfiguration('Chemin_image');
 						if ($imgPath == '') {
-							$imgPath = 'plugins/planification/core/img/pac.png';
+							$imgPath = 'plugins/planification/core/img/thermostat.png';
 						}
 						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
 						echo '<img src="' . $imgPath . '"/>';
@@ -342,13 +344,20 @@
 							</div>
 
 						</div>
-						<div class="form-group">
+						<div class="form-group duree">
 							<label class="col-sm-4 control-label">{{Durée mode manuel par defaut (en minutes)}}</label>
 							<div class="col-sm-3">
 								<input type="number" class="eqLogicAttr form-control" placeholder="0" data-l1key="configuration" data-l2key="Duree_mode_manuel_par_defaut" title="Mettre 0 pour réactivation manuelle."/>
 							</div>
 						</div>
 						<div class="option PAC" style="display:none">
+							<div class="form-group">
+								<label class="col-sm-4 control-label"></label>
+								<div class="col-sm-6 input-group">
+									<input type="checkbox"class="eqLogicAttr" data-l1key="configuration_PAC" data-l2key="Utiliser_mode_boost"/> Utiliser le mode boost
+									
+								</div>
+							</div>
 							<div class="form-group">
 								<label class="col-sm-4 control-label">{{Commande de température ambiante}}</label>
 								<div class="col-sm-6 input-group">
@@ -813,6 +822,7 @@
 								<select required class="expressionAttr form-control" data-l1key="Paramètres" data-l2key="Type_équipement_pilote">
 									<option value="Aucun" selected>{{Aucun}}</option>
 									<option value="broadlink">{{Broadlink}}</option>
+									<option value="zwavejs">{{Z-wave}}</option>
 								</select>
 							</div>
 						</div>

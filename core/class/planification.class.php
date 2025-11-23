@@ -302,13 +302,13 @@ class planification extends eqLogic {
             }
             
           
-          planification::add_log("info",'exeution commande: ' . $nom_commande_zwave . " sur l'équipement zwave: " . $eqLogic_broalink->getName(),$eqLogic);	
+          planification::add_log("info",'exeution commande: ' . $nom_commande_zwave . " sur l'équipement zwave: " . $eqLogic_zwave->getName(),$eqLogic);	
 
           $cmd = cmd::byEqLogicIdCmdName( $eqLogic_zwave->getId(),  $nom_commande_zwave);
           if (is_object($cmd)){
             $cmd->execute();
           }else{
-            planification::add_log("info",'La commande: ' . $nom_commande_zwave . " n'existe pas dans l'équipement zwave: " . $eqLogic_broalink->getName(),$eqLogic);	
+            planification::add_log("info",'La commande: ' . $nom_commande_zwave . " n'existe pas dans l'équipement zwave: " . $eqLogic_zwave->getName(),$eqLogic);	
           }
         }
 
@@ -692,7 +692,7 @@ class planification extends eqLogic {
 
     }
 
-    if($eqLogic->getconfiguration("Type_équipement","")=="PAC"){
+    if($eqLogic->getconfiguration("Type_équipement","")=="PAC" || $eqLogic->getconfiguration("Type_équipement","")=="Thermostat"){
       if($cmd->getLogicalId() == "arret" || $cmd->getLogicalId() == "climatisation" || $cmd->getLogicalId() == "ventilation" || $cmd->getLogicalId() == "chauffage" || $cmd->getLogicalId()== "chauffage ECO"){
         $cmd->setConfiguration('Type',"Planification");
         if ($cmd->getConfiguration('Couleur',"")== ""){
